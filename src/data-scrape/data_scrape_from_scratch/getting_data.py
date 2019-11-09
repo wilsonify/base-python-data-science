@@ -1,8 +1,11 @@
+import csv
+import json
+import re
 from collections import Counter
-import math, random, csv, json, re
 
-from bs4 import BeautifulSoup
 import requests
+from bs4 import BeautifulSoup
+
 
 ######
 #
@@ -17,6 +20,7 @@ def is_video(td):
     return (len(pricelabels) == 1 and
             pricelabels[0].text.strip().startswith("Video"))
 
+
 def book_info(td):
     """given a BeautifulSoup <td> Tag representing a book,
     extract the book's details and return a dict"""
@@ -29,17 +33,19 @@ def book_info(td):
     date = td.find("span", "directorydate").text.strip()
 
     return {
-        "title" : title,
-        "authors" : authors,
-        "isbn" : isbn,
-        "date" : date
+        "title": title,
+        "authors": authors,
+        "isbn": isbn,
+        "date": date
     }
+
 
 from time import sleep
 
+
 def scrape(num_pages=31):
     base_url = "http://shop.oreilly.com/category/browse-subjects/" + \
-           "data.do?sortby=publicationDate&page="
+               "data.do?sortby=publicationDate&page="
 
     books = []
 
@@ -57,10 +63,12 @@ def scrape(num_pages=31):
 
     return books
 
+
 def get_year(book):
     """book["date"] looks like 'November 2014' so we need to
     split on the space and then take the second piece"""
     return int(book["date"].split()[1])
+
 
 def plot_years(plt, books):
     # 2014 is the last complete year of data (when I ran this)
@@ -74,6 +82,7 @@ def plot_years(plt, books):
     plt.ylabel("# of data books")
     plt.title("Data is Big!")
     plt.show()
+
 
 ##
 #
@@ -105,8 +114,8 @@ CONSUMER_SECRET = ""
 ACCESS_TOKEN = ""
 ACCESS_TOKEN_SECRET = ""
 
-def call_twitter_search_api():
 
+def call_twitter_search_api():
     twitter = Twython(CONSUMER_KEY, CONSUMER_SECRET)
 
     # search for tweets containing the phrase "data science"
@@ -116,11 +125,13 @@ def call_twitter_search_api():
         print(user, ":", text)
         print()
 
+
 from twython import TwythonStreamer
 
 # appending data to a global variable is pretty poor form
 # but it makes the example much simpler
 tweets = []
+
 
 class MyStreamer(TwythonStreamer):
     """our own subclass of TwythonStreamer that specifies
@@ -142,6 +153,7 @@ class MyStreamer(TwythonStreamer):
         print(status_code, data)
         self.disconnect()
 
+
 def call_twitter_streaming_api():
     stream = MyStreamer(CONSUMER_KEY, CONSUMER_SECRET,
                         ACCESS_TOKEN, ACCESS_TOKEN_SECRET)
@@ -155,9 +167,10 @@ if __name__ == "__main__":
     def process(date, symbol, price):
         print(date, symbol, price)
 
+
     print("tab delimited stock prices:")
 
-    with open('tab_delimited_stock_prices.txt', 'r', encoding='utf8',newline='') as f:
+    with open('tab_delimited_stock_prices.txt', 'r', encoding='utf8', newline='') as f:
         reader = csv.reader(f, delimiter='\t')
         # reader = csv.reader(codecs.iterdecode(f, 'utf-8'), delimiter='\t')
         for row in reader:
@@ -170,7 +183,7 @@ if __name__ == "__main__":
 
     print("colon delimited stock prices:")
 
-    with open('colon_delimited_stock_prices.txt', 'r', encoding='utf8',newline='') as f:
+    with open('colon_delimited_stock_prices.txt', 'r', encoding='utf8', newline='') as f:
         reader = csv.DictReader(f, delimiter=':')
         # reader = csv.DictReader(codecs.iterdecode(f, 'utf-8'), delimiter=':')
         for row in reader:
@@ -183,9 +196,9 @@ if __name__ == "__main__":
 
     print("writing out comma_delimited_stock_prices.txt")
 
-    today_prices = { 'AAPL' : 90.91, 'MSFT' : 41.68, 'FB' : 64.5 }
+    today_prices = {'AAPL': 90.91, 'MSFT': 41.68, 'FB': 64.5}
 
-    with open('comma_delimited_stock_prices.txt','w', encoding='utf8',newline='') as f:
+    with open('comma_delimited_stock_prices.txt', 'w', encoding='utf8', newline='') as f:
         writer = csv.writer(f, delimiter=',')
         for stock, price in today_prices.items():
             writer.writerow([stock, price])

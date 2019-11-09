@@ -1,5 +1,19 @@
+import math
+import random
+
+import matplotlib
 import matplotlib.image as mpimg
 import matplotlib.pyplot as plt
+from data_plots_from_scratch.plot_state_borders import plot_state_borders
+from data_science_from_scratch.clustering import KMeans, squared_clustering_errors
+from data_science_from_scratch.gradient_descent import difference_quotient
+from data_science_from_scratch.introduction import salaries_and_tenures
+from data_science_from_scratch.linear_algebra import get_column, shape, dot, scalar_multiply
+from data_science_from_scratch.nearest_neighbors import cities
+from data_science_from_scratch.nearest_neighbors import knn_classify
+from data_science_from_scratch.neural_networks import network
+from data_science_from_scratch.probability import normal_pdf, normal_cdf, inverse_normal_cdf, binomial
+from data_science_from_scratch.working_with_data import random_normal, make_histogram
 
 
 def plot_normal_pdfs(plt):
@@ -12,7 +26,7 @@ def plot_normal_pdfs(plt):
     plt.show()
 
 
-def recolor_image(input_file, k=5):
+def recolor_image(path_to_png_file, k=5):
     img = mpimg.imread(path_to_png_file)
     pixels = [pixel for row in img for pixel in row]
     clusterer = KMeans(k)
@@ -30,7 +44,7 @@ def recolor_image(input_file, k=5):
     plt.show()
 
 
-def plot_squared_clustering_errors():
+def plot_squared_clustering_errors(inputs):
     ks = range(1, len(inputs) + 1)
     errors = [squared_clustering_errors(inputs, k) for k in ks]
 
@@ -159,6 +173,7 @@ def make_hist(p, n, num_points):
     plt.show()
 
 
+# noinspection PyUnresolvedReferences
 def patch(x, y, hatch, color):
     """return a matplotlib 'patch' object with the specified
     location, crosshatch pattern, and color"""
@@ -166,6 +181,7 @@ def patch(x, y, hatch, color):
                                         hatch=hatch, fill=False, color=color)
 
 
+# noinspection PyUnresolvedReferences
 def show_weights(neuron_idx):
     weights = network[0][neuron_idx]
     abs_weights = [abs(weight) for weight in weights]
@@ -207,7 +223,7 @@ def plot_histogram(points, bucket_size, title=""):
     plt.show()
 
 
-def scatter():
+def scatter(xs, ys1, ys2):
     plt.scatter(xs, ys1, marker='.', color='black', label='ys1')
     plt.scatter(xs, ys2, marker='.', color='gray', label='ys2')
     plt.xlabel('xs')
