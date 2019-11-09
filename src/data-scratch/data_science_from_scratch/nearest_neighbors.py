@@ -120,10 +120,6 @@ cities = [
 cities = [([longitude, latitude], language) for longitude, latitude, language in cities]
 
 
-def plot_state_borders(plt, color="0.8"):
-    pass
-
-
 #
 # the curse of dimensionality
 #

@@ -1,3 +1,4 @@
+import logging
 import random
 
 
@@ -34,10 +35,18 @@ def accuracy(tp, fp, fn, tn):
 
 
 def precision(tp, fp, fn, tn):
+    logging.debug("%s", "tp = {}".format(tp))
+    logging.debug("%s", "fp = {}".format(fp))
+    logging.debug("%s", "fn = {}".format(fn))
+    logging.debug("%s", "tn = {}".format(tn))
     return tp / (tp + fp)
 
 
 def recall(tp, fp, fn, tn):
+    logging.debug("%s", "tp = {}".format(tp))
+    logging.debug("%s", "fp = {}".format(fp))
+    logging.debug("%s", "fn = {}".format(fn))
+    logging.debug("%s", "tn = {}".format(tn))
     return tp / (tp + fn)
 
 

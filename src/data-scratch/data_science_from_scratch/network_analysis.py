@@ -112,6 +112,7 @@ for user in users:
 
 for source in users:
     source_id = source["id"]
+    # noinspection PyUnresolvedReferences
     for target_id, paths in source["shortest_paths"].items():
         if source_id < target_id:  # don't double count
             num_paths = len(paths)  # how many shortest paths?

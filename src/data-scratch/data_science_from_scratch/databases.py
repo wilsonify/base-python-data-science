@@ -113,7 +113,7 @@ class Table:
             # if no rows match and it's a left join, output with Nones
             if left_join and not other_rows:
                 join_table.insert(
-                    [row[c] for c in self.columns] + [None for c in additional_columns]
+                    [row[_] for _ in self.columns] + [None for _ in additional_columns]
                 )
 
         return join_table

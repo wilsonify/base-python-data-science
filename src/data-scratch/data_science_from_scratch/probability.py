@@ -58,6 +58,7 @@ def inverse_normal_cdf(p, mu=0, sigma=1, tolerance=0.00001):
 
     low_z, low_p = -10.0, 0  # normal_cdf(-10) is (very close to) 0
     hi_z, hi_p = 10.0, 1  # normal_cdf(10)  is (very close to) 1
+    mid_z = (low_z + hi_z) / 2
     while hi_z - low_z > tolerance:
         mid_z = (low_z + hi_z) / 2  # consider the midpoint
         mid_p = normal_cdf(mid_z)  # and the cdf's value there

@@ -1,4 +1,5 @@
 import datetime
+import logging
 from collections import defaultdict, Counter
 from functools import partial
 
@@ -148,6 +149,7 @@ def matrix_multiply_mapper(m, element):
 
 
 def matrix_multiply_reducer(m, key, indexed_values):
+    logging.debug("%s", "m = {}".format(m))
     results_by_index = defaultdict(list)
     for index, value in indexed_values:
         results_by_index[index].append(value)
