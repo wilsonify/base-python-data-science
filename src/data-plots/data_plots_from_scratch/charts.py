@@ -8,11 +8,21 @@ from data_plots_from_scratch.plot_state_borders import plot_state_borders
 from data_science_from_scratch.clustering import KMeans, squared_clustering_errors
 from data_science_from_scratch.gradient_descent import difference_quotient
 from data_science_from_scratch.introduction import salaries_and_tenures
-from data_science_from_scratch.linear_algebra import get_column, shape, dot, scalar_multiply
+from data_science_from_scratch.linear_algebra import (
+    get_column,
+    shape,
+    dot,
+    scalar_multiply,
+)
 from data_science_from_scratch.nearest_neighbors import cities
 from data_science_from_scratch.nearest_neighbors import knn_classify
 from data_science_from_scratch.neural_networks import _network
-from data_science_from_scratch.probability import normal_pdf, normal_cdf, inverse_normal_cdf, binomial
+from data_science_from_scratch.probability import (
+    normal_pdf,
+    normal_cdf,
+    inverse_normal_cdf,
+    binomial,
+)
 from data_science_from_scratch.working_with_data import random_normal, make_histogram
 
 
@@ -36,11 +46,10 @@ def recolor_image(path_to_png_file, k=5):
         cluster = clusterer.classify(pixel)  # index of the closest cluster
         return clusterer.means[cluster]  # mean of the closest cluster
 
-    new_img = [[recolor(pixel) for pixel in row]
-               for row in img]
+    new_img = [[recolor(pixel) for pixel in row] for row in img]
 
     plt.imshow(new_img)
-    plt.axis('off')
+    plt.axis("off")
     plt.show()
 
 
@@ -66,9 +75,10 @@ def plot_estimated_derivative():
 
     # plot to show they're basically the same
     import matplotlib.pyplot as plt
+
     x = range(-10, 10)
-    plt.plot(x, map(derivative, x), 'rx')  # red  x
-    plt.plot(x, map(derivative_estimate, x), 'b+')  # blue +
+    plt.plot(x, map(derivative, x), "rx")  # red  x
+    plt.plot(x, map(derivative_estimate, x), "b+")  # blue +
     plt.show()
 
 
@@ -83,23 +93,27 @@ def make_chart_salaries_by_tenure():
 
 def make_graph_dot_product_as_vector_projection(plt):
     v = [2, 1]
-    w = [math.sqrt(.25), math.sqrt(.75)]
+    w = [math.sqrt(0.25), math.sqrt(0.75)]
     c = dot(v, w)
     vonw = scalar_multiply(c, w)
     o = [0, 0]
 
-    plt.arrow(0, 0, v[0], v[1],
-              width=0.002, head_width=.1, length_includes_head=True)
+    plt.arrow(0, 0, v[0], v[1], width=0.002, head_width=0.1, length_includes_head=True)
     plt.annotate("v", v, xytext=[v[0] + 0.1, v[1]])
-    plt.arrow(0, 0, w[0], w[1],
-              width=0.002, head_width=.1, length_includes_head=True)
+    plt.arrow(0, 0, w[0], w[1], width=0.002, head_width=0.1, length_includes_head=True)
     plt.annotate("w", w, xytext=[w[0] - 0.1, w[1]])
     plt.arrow(0, 0, vonw[0], vonw[1], length_includes_head=True)
     plt.annotate(u"(vâ¢w)w", vonw, xytext=[vonw[0] - 0.1, vonw[1] + 0.1])
-    plt.arrow(v[0], v[1], vonw[0] - v[0], vonw[1] - v[1],
-              linestyle='dotted', length_includes_head=True)
-    plt.scatter(*zip(v, w, o), marker='.')
-    plt.axis('equal')
+    plt.arrow(
+        v[0],
+        v[1],
+        vonw[0] - v[0],
+        vonw[1] - v[1],
+        linestyle="dotted",
+        length_includes_head=True,
+    )
+    plt.scatter(*zip(v, w, o), marker=".")
+    plt.axis("equal")
     plt.show()
 
 
@@ -116,10 +130,16 @@ def classify_and_plot_grid(k=1):
 
     # create a scatter series for each language
     for language, (x, y) in plots.items():
-        plt.scatter(x, y, color=colors[language], marker=markers[language],
-                    label=language, zorder=0)
+        plt.scatter(
+            x,
+            y,
+            color=colors[language],
+            marker=markers[language],
+            label=language,
+            zorder=0,
+        )
 
-    plot_state_borders(plt, color='black')  # assume we have a function that does this
+    plot_state_borders(plt, color="black")  # assume we have a function that does this
 
     plt.legend(loc=0)  # let matplotlib choose the location
     plt.axis([-130, -60, 20, 55])  # set the axes
@@ -141,8 +161,14 @@ def plot_cities():
 
     # create a scatter series for each language
     for language, (x, y) in plots.items():
-        plt.scatter(x, y, color=colors[language], marker=markers[language],
-                    label=language, zorder=10)
+        plt.scatter(
+            x,
+            y,
+            color=colors[language],
+            marker=markers[language],
+            label=language,
+            zorder=10,
+        )
 
     plot_state_borders(plt)  # assume we have a function that does this
 
@@ -157,18 +183,19 @@ def make_hist(p, n, num_points):
 
     # use a bar chart to show the actual binomial samples
     histogram = Counter(data)
-    plt.bar([x - 0.4 for x in histogram.keys()],
-            [v / num_points for v in histogram.values()],
-            0.8,
-            color='0.75')
+    plt.bar(
+        [x - 0.4 for x in histogram.keys()],
+        [v / num_points for v in histogram.values()],
+        0.8,
+        color="0.75",
+    )
 
     mu = p * n
     sigma = math.sqrt(n * p * (1 - p))
 
     # use a line chart to show the normal approximation
     xs = range(min(data), max(data) + 1)
-    ys = [normal_cdf(i + 0.5, mu, sigma) - normal_cdf(i - 0.5, mu, sigma)
-          for i in xs]
+    ys = [normal_cdf(i + 0.5, mu, sigma) - normal_cdf(i - 0.5, mu, sigma) for i in xs]
     plt.plot(xs, ys)
     plt.show()
 
@@ -177,8 +204,9 @@ def make_hist(p, n, num_points):
 def patch(x, y, hatch, color):
     """return a matplotlib 'patch' object with the specified
     location, crosshatch pattern, and color"""
-    return matplotlib.patches.Rectangle((x - 0.5, y - 0.5), 1, 1,
-                                        hatch=hatch, fill=False, color=color)
+    return matplotlib.patches.Rectangle(
+        (x - 0.5, y - 0.5), 1, 1, hatch=hatch, fill=False, color=color
+    )
 
 
 # noinspection PyUnresolvedReferences
@@ -186,22 +214,26 @@ def show_weights(neuron_idx):
     weights = _network[0][neuron_idx]
     abs_weights = [abs(weight) for weight in weights]
 
-    grid = [abs_weights[row:(row + 5)]  # turn the weights into a 5x5 grid
-            for row in range(0, 25, 5)]  # [weights[0:5], ..., weights[20:25]]
+    grid = [
+        abs_weights[row : (row + 5)]  # turn the weights into a 5x5 grid
+        for row in range(0, 25, 5)
+    ]  # [weights[0:5], ..., weights[20:25]]
 
     ax = plt.gca()  # to use hatching, we'll need the axis
 
-    ax.imshow(grid,  # here same as plt.imshow
-              cmap=matplotlib.cm.binary,  # use white-black color scale
-              interpolation='none')  # plot blocks as blocks
+    ax.imshow(
+        grid,  # here same as plt.imshow
+        cmap=matplotlib.cm.binary,  # use white-black color scale
+        interpolation="none",
+    )  # plot blocks as blocks
 
     # cross-hatch the negative weights
     for i in range(5):  # row
         for j in range(5):  # column
             if weights[5 * i + j] < 0:  # row i, column j = weights[5*i + j]
                 # add black and white hatches, so visible whether dark or light
-                ax.add_patch(patch(j, i, '/', "white"))
-                ax.add_patch(patch(j, i, '\\', "black"))
+                ax.add_patch(patch(j, i, "/", "white"))
+                ax.add_patch(patch(j, i, "\\", "black"))
     plt.show()
 
 
@@ -209,8 +241,7 @@ def compare_two_distributions():
     random.seed(0)
 
     uniform = [random.randrange(-100, 101) for _ in range(200)]
-    normal = [57 * inverse_normal_cdf(random.random())
-              for _ in range(200)]
+    normal = [57 * inverse_normal_cdf(random.random()) for _ in range(200)]
 
     plot_histogram(uniform, 10, "Uniform Histogram")
     plot_histogram(normal, 10, "Normal Histogram")
@@ -224,10 +255,10 @@ def plot_histogram(points, bucket_size, title=""):
 
 
 def scatter(xs, ys1, ys2):
-    plt.scatter(xs, ys1, marker='.', color='black', label='ys1')
-    plt.scatter(xs, ys2, marker='.', color='gray', label='ys2')
-    plt.xlabel('xs')
-    plt.ylabel('ys')
+    plt.scatter(xs, ys1, marker=".", color="black", label="ys1")
+    plt.scatter(xs, ys2, marker=".", color="gray", label="ys2")
+    plt.xlabel("xs")
+    plt.ylabel("ys")
     plt.legend(loc=9)
     plt.show()
 
@@ -246,8 +277,7 @@ def make_scatterplot_matrix():
         return row
 
     random.seed(0)
-    data = [random_row()
-            for _ in range(num_points)]
+    data = [random_row() for _ in range(num_points)]
 
     # then plot it
 
@@ -263,13 +293,19 @@ def make_scatterplot_matrix():
 
             # unless i == j, in which case show the series name
             else:
-                ax[i][j].annotate("series " + str(i), (0.5, 0.5),
-                                  xycoords='axes fraction',
-                                  ha="center", va="center")
+                ax[i][j].annotate(
+                    "series " + str(i),
+                    (0.5, 0.5),
+                    xycoords="axes fraction",
+                    ha="center",
+                    va="center",
+                )
 
             # then hide axis labels except left and bottom charts
-            if i < num_columns - 1: ax[i][j].xaxis.set_visible(False)
-            if j > 0: ax[i][j].yaxis.set_visible(False)
+            if i < num_columns - 1:
+                ax[i][j].xaxis.set_visible(False)
+            if j > 0:
+                ax[i][j].yaxis.set_visible(False)
 
     # fix the bottom right and top left axis labels, which are wrong because
     # their charts only have text in them
@@ -284,7 +320,7 @@ def make_chart_simple_line_chart():
     gdp = [300.2, 543.3, 1075.9, 2862.5, 5979.6, 10289.7, 14958.3]
 
     # create a line chart, years on x-axis, gdp on y-axis
-    plt.plot(years, gdp, color='green', marker='o', linestyle='solid')
+    plt.plot(years, gdp, color="green", marker="o", linestyle="solid")
 
     # add a title
     plt.title("Nominal GDP")
@@ -321,9 +357,11 @@ def make_chart_histogram():
     decile = lambda grade: grade // 10 * 10
     histogram = Counter(decile(grade) for grade in grades)
 
-    plt.bar([x - 4 for x in histogram.keys()],  # shift each bar to the left by 4
-            histogram.values(),  # give each bar its correct height
-            8)  # give each bar a width of 8
+    plt.bar(
+        [x - 4 for x in histogram.keys()],  # shift each bar to the left by 4
+        histogram.values(),  # give each bar its correct height
+        8,
+    )  # give each bar a width of 8
     plt.axis([-5, 105, 0, 5])  # x-axis from -5 to 105,
     # y-axis from 0 to 5
     plt.xticks([10 * i for i in range(11)])  # x-axis labels at 0, 10, ..., 100
@@ -364,9 +402,9 @@ def make_chart_several_line_charts():
 
     # we can make multiple calls to plt.plot
     # to show multiple series on the same chart
-    plt.plot(xs, variance, 'g-', label='variance')  # green solid line
-    plt.plot(xs, bias_squared, 'r-.', label='bias^2')  # red dot-dashed line
-    plt.plot(xs, total_error, 'b:', label='total error')  # blue dotted line
+    plt.plot(xs, variance, "g-", label="variance")  # green solid line
+    plt.plot(xs, bias_squared, "r-.", label="bias^2")  # red dot-dashed line
+    plt.plot(xs, total_error, "b:", label="total error")  # blue dotted line
 
     # because we've assigned labels to each series
     # we can get a legend for free
@@ -380,16 +418,18 @@ def make_chart_several_line_charts():
 def make_chart_scatter_plot():
     friends = [70, 65, 72, 63, 71, 64, 60, 64, 67]
     minutes = [175, 170, 205, 120, 220, 130, 105, 145, 190]
-    labels = ['a', 'b', 'c', 'd', 'e', 'f', 'g', 'h', 'i']
+    labels = ["a", "b", "c", "d", "e", "f", "g", "h", "i"]
 
     plt.scatter(friends, minutes)
 
     # label each point
     for label, friend_count, minute_count in zip(labels, friends, minutes):
-        plt.annotate(label,
-                     xy=(friend_count, minute_count),  # put the label with its point
-                     xytext=(5, -5),  # but slightly offset
-                     textcoords='offset points')
+        plt.annotate(
+            label,
+            xy=(friend_count, minute_count),  # put the label with its point
+            xytext=(5, -5),  # but slightly offset
+            textcoords="offset points",
+        )
 
     plt.title("Daily Minutes vs. Number of Friends")
     plt.xlabel("# of friends")

@@ -261,13 +261,13 @@ if __name__ == "__main__":
     _x = [[1] + row[:2] for row in data]  # each element is [1, experience, salary]
     _y = [row[2] for row in data]  # each element is paid_account
 
-    logging.info("%r","".format("linear regression:"))
+    logging.info("%r", "".format("linear regression:"))
 
     rescaled_x = rescale(_x)
     _beta = estimate_beta(rescaled_x, _y)
-    logging.info("%r","".format(_beta))
+    logging.info("%r", "".format(_beta))
 
-    logging.info("%r","".format("logistic regression:"))
+    logging.info("%r", "".format("logistic regression:"))
 
     random.seed(0)
     x_train, x_test, y_train, y_test = train_test_split(rescaled_x, _y, 0.33)
@@ -282,14 +282,14 @@ if __name__ == "__main__":
     # and maximize using gradient descent
     beta_hat = maximize_batch(fn, gradient_fn, beta_0)
 
-    logging.info("%r","".format("beta_batch", beta_hat))
+    logging.info("%r", "".format("beta_batch", beta_hat))
 
     beta_0 = [1, 1, 1]
     beta_hat = maximize_stochastic(
         logistic_log_likelihood_i, logistic_log_gradient_i, x_train, y_train, beta_0
     )
 
-    logging.info("%r","".format("beta stochastic", beta_hat))
+    logging.info("%r", "".format("beta stochastic", beta_hat))
 
     true_positives = false_positives = true_negatives = false_negatives = 0
 
@@ -308,5 +308,5 @@ if __name__ == "__main__":
     precision = true_positives / (true_positives + false_positives)
     recall = true_positives / (true_positives + false_negatives)
 
-    logging.info("%r","".format("precision", precision))
-    logging.info("%r","".format("recall", recall))
+    logging.info("%r", "".format("precision", precision))
+    logging.info("%r", "".format("recall", recall))

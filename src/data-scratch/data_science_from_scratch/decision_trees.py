@@ -131,32 +131,41 @@ if __name__ == "__main__":
     ]
 
     for _key in ["level", "lang", "tweets", "phd"]:
-        logging.info("%r","".format(_key, partition_entropy_by(inputs_list, _key)))
-    logging.info("%r","".format())
+        logging.info("%r", "".format(_key, partition_entropy_by(inputs_list, _key)))
+    logging.info("%r", "".format())
 
     senior_inputs = [
         (in_put, label) for in_put, label in inputs_list if in_put["level"] == "Senior"
     ]
 
     for _key in ["lang", "tweets", "phd"]:
-        logging.info("%r","".format(_key, partition_entropy_by(senior_inputs, _key)))
-    logging.info("%r","".format())
+        logging.info("%r", "".format(_key, partition_entropy_by(senior_inputs, _key)))
+    logging.info("%r", "".format())
 
-    logging.info("%r","".format("building the tree"))
+    logging.info("%r", "".format("building the tree"))
     _tree = build_tree_id3(inputs_list)
-    logging.info("%r","".format(_tree))
+    logging.info("%r", "".format(_tree))
 
-    logging.info("%r","".format(
-        "Junior / Java / tweets / no phd",
-        classify(
-            _tree, {"level": "Junior", "lang": "Java", "tweets": "yes", "phd": "no"}
-        )))
+    logging.info(
+        "%r",
+        "".format(
+            "Junior / Java / tweets / no phd",
+            classify(
+                _tree, {"level": "Junior", "lang": "Java", "tweets": "yes", "phd": "no"}
+            ),
+        ),
+    )
 
-    logging.info("%r","".format(
-        "Junior / Java / tweets / phd",
-        classify(
-            _tree, {"level": "Junior", "lang": "Java", "tweets": "yes", "phd": "yes"}
-        )))
+    logging.info(
+        "%r",
+        "".format(
+            "Junior / Java / tweets / phd",
+            classify(
+                _tree,
+                {"level": "Junior", "lang": "Java", "tweets": "yes", "phd": "yes"},
+            ),
+        ),
+    )
 
-    logging.info("%r","".format("Intern", classify(_tree, {"level": "Intern"})))
-    logging.info("%r","".format("Senior", classify(_tree, {"level": "Senior"})))
+    logging.info("%r", "".format("Intern", classify(_tree, {"level": "Intern"})))
+    logging.info("%r", "".format("Senior", classify(_tree, {"level": "Senior"})))

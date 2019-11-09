@@ -151,7 +151,7 @@ def maximize_stochastic(target_fn, gradient_fn, x, y, theta_0, alpha_0=0.01):
 
 if __name__ == "__main__":
 
-    logging.info("%r","".format("using the gradient"))
+    logging.info("%r", "".format("using the gradient"))
 
     _v = [random.randint(-10, 10) for i in range(3)]
 
@@ -165,15 +165,15 @@ if __name__ == "__main__":
             break
         _v = next_v  # continue if we're not
 
-    logging.info("%r","".format("minimum v", _v))
-    logging.info("%r","".format("minimum value", sum_of_squares(_v)))
-    logging.info("%r","".format())
+    logging.info("%r", "".format("minimum v", _v))
+    logging.info("%r", "".format("minimum value", sum_of_squares(_v)))
+    logging.info("%r", "".format())
 
-    logging.info("%r","".format("using minimize_batch"))
+    logging.info("%r", "".format("using minimize_batch"))
 
     _v = [random.randint(-10, 10) for i in range(3)]
 
     _v = minimize_batch(sum_of_squares, sum_of_squares_gradient, _v)
 
-    logging.info("%r","".format("minimum v", _v))
-    logging.info("%r","".format("minimum value", sum_of_squares(_v)))
+    logging.info("%r", "".format("minimum v", _v))
+    logging.info("%r", "".format("minimum value", sum_of_squares(_v)))

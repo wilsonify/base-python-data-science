@@ -285,10 +285,10 @@ if __name__ == "__main__":
         _transitions[prev].append(_current)
 
     random.seed(0)
-    logging.info("%r","".format("bigram sentences"))
+    logging.info("%r", "".format("bigram sentences"))
     for i in range(10):
-        logging.info("%r","".format(i, generate_using_bigrams(_transitions)))
-    logging.info("%r","".format())
+        logging.info("%r", "".format(i, generate_using_bigrams(_transitions)))
+    logging.info("%r", "".format())
 
     # trigrams
 
@@ -303,10 +303,12 @@ if __name__ == "__main__":
 
         trigram_transitions[(prev, _current)].append(next_gram)
 
-    logging.info("%r","".format("trigram sentences"))
+    logging.info("%r", "".format("trigram sentences"))
     for i in range(10):
-        logging.info("%r","".format(i, generate_using_trigrams(starts, trigram_transitions)))
-    logging.info("%r","".format())
+        logging.info(
+            "%r", "".format(i, generate_using_trigrams(starts, trigram_transitions))
+        )
+    logging.info("%r", "".format())
 
     grammar = {
         "_S": ["_NP _VP"],
@@ -318,22 +320,22 @@ if __name__ == "__main__":
         "_V": ["learns", "trains", "tests", "is"],
     }
 
-    logging.info("%r","".format("grammar sentences"))
+    logging.info("%r", "".format("grammar sentences"))
     for i in range(10):
-        logging.info("%r","".format(i, " ".join(generate_sentence(grammar))))
-    logging.info("%r","".format())
+        logging.info("%r", "".format(i, " ".join(generate_sentence(grammar))))
+    logging.info("%r", "".format())
 
-    logging.info("%r","".format("gibbs sampling"))
+    logging.info("%r", "".format("gibbs sampling"))
     comparison = compare_distributions()
     for roll, (gibbs, direct) in comparison.items():
-        logging.info("%r","".format(roll, gibbs, direct))
+        logging.info("%r", "".format(roll, gibbs, direct))
 
     # topic MODELING
 
     for kth, word_counts in enumerate(topic_word_counts):
         for word, count in word_counts.most_common():
             if count > 0:
-                logging.info("%r","".format(kth, word, count))
+                logging.info("%r", "".format(kth, word, count))
 
     topic_names = [
         "Big Data and programming languages",
@@ -343,8 +345,8 @@ if __name__ == "__main__":
     ]
 
     for document, topic_counts in zip(documents, document_topic_counts):
-        logging.info("%r","".format(document))
+        logging.info("%r", "".format(document))
         for _topic, count in topic_counts.most_common():
             if count > 0:
-                logging.info("%r","".format(topic_names[_topic], count))
-        logging.info("%r","".format())
+                logging.info("%r", "".format(topic_names[_topic], count))
+        logging.info("%r", "".format())

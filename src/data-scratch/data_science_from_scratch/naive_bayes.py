@@ -121,22 +121,22 @@ def train_and_test_model(path):
         for _, is_spam, spam_probability in classified
     )
 
-    logging.info("%r","".format(counts))
+    logging.info("%r", "".format(counts))
 
     classified.sort(key=lambda row: row[2])
     spammiest_hams = list(filter(lambda row: not row[1], classified))[-5:]
     hammiest_spams = list(filter(lambda row: row[1], classified))[:5]
 
-    logging.info("%r","".format("spammiest_hams", spammiest_hams))
-    logging.info("%r","".format("hammiest_spams", hammiest_spams))
+    logging.info("%r", "".format("spammiest_hams", spammiest_hams))
+    logging.info("%r", "".format("hammiest_spams", hammiest_spams))
 
     words = sorted(classifier.word_probs, key=p_spam_given_word)
 
     spammiest_words = words[-5:]
     hammiest_words = words[:5]
 
-    logging.info("%r","".format("spammiest_words", spammiest_words))
-    logging.info("%r","".format("hammiest_words", hammiest_words))
+    logging.info("%r", "".format("spammiest_words", spammiest_words))
+    logging.info("%r", "".format("hammiest_words", hammiest_words))
 
 
 if __name__ == "__main__":

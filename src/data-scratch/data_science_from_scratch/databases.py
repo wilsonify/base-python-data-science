@@ -134,36 +134,48 @@ if __name__ == "__main__":
     users.insert([9, "Klein", 3])
     users.insert([10, "Jen", 1])
 
-    logging.info("%r","".format("users table"))
-    logging.info("%r","".format(users))
-    logging.info("%r","".format())
+    logging.info("%r", "".format("users table"))
+    logging.info("%r", "".format(users))
+    logging.info("%r", "".format())
 
     # SELECT
 
-    logging.info("%r","".format("users.select()"))
-    logging.info("%r","".format(users.select()))
-    logging.info("%r","".format())
+    logging.info("%r", "".format("users.select()"))
+    logging.info("%r", "".format(users.select()))
+    logging.info("%r", "".format())
 
-    logging.info("%r","".format("users.limit(2)"))
-    logging.info("%r","".format(users.limit(2)))
-    logging.info("%r","".format())
+    logging.info("%r", "".format("users.limit(2)"))
+    logging.info("%r", "".format(users.limit(2)))
+    logging.info("%r", "".format())
 
-    logging.info("%r","".format('users.select(keep_columns=["user_id"])'))
-    logging.info("%r","".format(users.select(keep_columns=["user_id"])))
-    logging.info("%r","".format())
+    logging.info("%r", "".format('users.select(keep_columns=["user_id"])'))
+    logging.info("%r", "".format(users.select(keep_columns=["user_id"])))
+    logging.info("%r", "".format())
 
-    logging.info("%r","".format('where(lambda row: row["name"] == "Dunn")'))
-    logging.info("%r","".format(users.where(lambda row: row["name"] == "Dunn").select(keep_columns=["user_id"])))
-    logging.info("%r","".format())
+    logging.info("%r", "".format('where(lambda row: row["name"] == "Dunn")'))
+    logging.info(
+        "%r",
+        "".format(
+            users.where(lambda row: row["name"] == "Dunn").select(
+                keep_columns=["user_id"]
+            )
+        ),
+    )
+    logging.info("%r", "".format())
 
 
     def name_len(row):
         return len(row["name"])
 
 
-    logging.info("%r","".format("with name_length:"))
-    logging.info("%r","".format(users.select(keep_columns=[], additional_columns={"name_length": name_len})))
-    logging.info("%r","".format())
+    logging.info("%r", "".format("with name_length:"))
+    logging.info(
+        "%r",
+        "".format(
+            users.select(keep_columns=[], additional_columns={"name_length": name_len})
+        ),
+    )
+    logging.info("%r", "".format())
 
 
     def min_user_id(rows):
@@ -175,9 +187,9 @@ if __name__ == "__main__":
         aggregates={"min_user_id": min_user_id, "num_users": len},
     )
 
-    logging.info("%r","".format("stats by length"))
-    logging.info("%r","".format(stats_by_length))
-    logging.info("%r","".format())
+    logging.info("%r", "".format("stats by length"))
+    logging.info("%r", "".format(stats_by_length))
+    logging.info("%r", "".format())
 
 
     def first_letter_of_name(row):
@@ -200,9 +212,9 @@ if __name__ == "__main__":
         having=enough_friends,
     )
 
-    logging.info("%r","".format("avg friends by letter"))
-    logging.info("%r","".format(avg_friends_by_letter))
-    logging.info("%r","".format())
+    logging.info("%r", "".format("avg friends by letter"))
+    logging.info("%r", "".format(avg_friends_by_letter))
+    logging.info("%r", "".format())
 
 
     def sum_user_ids(rows):
@@ -213,9 +225,9 @@ if __name__ == "__main__":
         group_by_columns=[], aggregates={"user_id_sum": sum_user_ids}
     )
 
-    logging.info("%r","".format("user id sum"))
-    logging.info("%r","".format(user_id_sum))
-    logging.info("%r","".format())
+    logging.info("%r", "".format("user id sum"))
+    logging.info("%r", "".format(user_id_sum))
+    logging.info("%r", "".format())
 
     # ORDER BY
 
@@ -223,9 +235,9 @@ if __name__ == "__main__":
         lambda row: -row["avg_num_friends"]
     ).limit(4)
 
-    logging.info("%r","".format("friendliest letters"))
-    logging.info("%r","".format(friendliest_letters))
-    logging.info("%r","".format())
+    logging.info("%r", "".format("friendliest letters"))
+    logging.info("%r", "".format(friendliest_letters))
+    logging.info("%r", "".format())
 
     # JOINs
 
@@ -236,12 +248,14 @@ if __name__ == "__main__":
     user_interests.insert([2, "MySQL"])
 
     sql_users = (
-        users.join(user_interests).where(lambda row: row["interest"] == "SQL").select(keep_columns=["name"])
+        users.join(user_interests)
+            .where(lambda row: row["interest"] == "SQL")
+            .select(keep_columns=["name"])
     )
 
-    logging.info("%r","".format("sql users"))
-    logging.info("%r","".format(sql_users))
-    logging.info("%r","".format())
+    logging.info("%r", "".format("sql users"))
+    logging.info("%r", "".format(sql_users))
+    logging.info("%r", "".format())
 
 
     def count_interests(rows):
@@ -253,8 +267,8 @@ if __name__ == "__main__":
         group_by_columns=["user_id"], aggregates={"num_interests": count_interests}
     )
 
-    logging.info("%r","".format("user interest counts"))
-    logging.info("%r","".format(user_interest_counts))
+    logging.info("%r", "".format("user interest counts"))
+    logging.info("%r", "".format(user_interest_counts))
 
     # SUBQUERIES
 
@@ -266,5 +280,5 @@ if __name__ == "__main__":
         group_by_columns=[], aggregates={"min_user_id": min_user_id}
     )
 
-    logging.info("%r","".format("likes sql user ids"))
-    logging.info("%r","".format(likes_sql_user_ids))
+    logging.info("%r", "".format("likes sql user ids"))
+    logging.info("%r", "".format(likes_sql_user_ids))

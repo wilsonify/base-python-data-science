@@ -468,14 +468,19 @@ if __name__ == "__main__":
     ]
 
     alpha_, beta_ = least_squares_fit(num_friends_good, daily_minutes_good)
-    logging.info("%r","".format("alpha", alpha_))
-    logging.info("%r","".format("beta", beta_))
+    logging.info("%r", "".format("alpha", alpha_))
+    logging.info("%r", "".format("beta", beta_))
 
-    logging.info("%r","".format("r-squared", r_squared(alpha_, beta_, num_friends_good, daily_minutes_good)))
+    logging.info(
+        "%r",
+        "".format(
+            "r-squared", r_squared(alpha_, beta_, num_friends_good, daily_minutes_good)
+        ),
+    )
 
-    logging.info("%r","".format())
+    logging.info("%r", "".format())
 
-    logging.info("%r","".format("gradient descent:"))
+    logging.info("%r", "".format("gradient descent:"))
     # choose random value to start
     random.seed(0)
     theta_ = [random.random(), random.random()]
@@ -487,5 +492,5 @@ if __name__ == "__main__":
         theta_,
         0.0001,
     )
-    logging.info("%r","".format("alpha", alpha_))
-    logging.info("%r","".format("beta", beta_))
+    logging.info("%r", "".format("alpha", alpha_))
+    logging.info("%r", "".format("beta", beta_))

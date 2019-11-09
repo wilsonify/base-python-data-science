@@ -9,4 +9,4 @@ if __name__ == "__main__":
         count += 1
 
     # print goes to sys.stdout
-    logging.info("%r","".format(count))
+    logging.info("%r", "".format(count))

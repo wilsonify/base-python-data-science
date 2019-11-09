@@ -58,7 +58,25 @@ def f1_score(tp, fp, fn, tn):
 
 
 if __name__ == "__main__":
-    logging.info("%r","".format("accuracy(70, 4930, 13930, 981070)", accuracy(70, 4930, 13930, 981070)))
-    logging.info("%r","".format("precision(70, 4930, 13930, 981070)", precision(70, 4930, 13930, 981070)))
-    logging.info("%r","".format("recall(70, 4930, 13930, 981070)", recall(70, 4930, 13930, 981070)))
-    logging.info("%r","".format("f1_score(70, 4930, 13930, 981070)", f1_score(70, 4930, 13930, 981070)))
+    logging.info(
+        "%r",
+        "".format(
+            "accuracy(70, 4930, 13930, 981070)", accuracy(70, 4930, 13930, 981070)
+        ),
+    )
+    logging.info(
+        "%r",
+        "".format(
+            "precision(70, 4930, 13930, 981070)", precision(70, 4930, 13930, 981070)
+        ),
+    )
+    logging.info(
+        "%r",
+        "".format("recall(70, 4930, 13930, 981070)", recall(70, 4930, 13930, 981070)),
+    )
+    logging.info(
+        "%r",
+        "".format(
+            "f1_score(70, 4930, 13930, 981070)", f1_score(70, 4930, 13930, 981070)
+        ),
+    )

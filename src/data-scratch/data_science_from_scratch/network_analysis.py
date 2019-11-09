@@ -49,8 +49,12 @@ for _user in users_dict:
 # and populate it
 for friend_i, friend_j in friendships:
     # this works because users[i] is the user whose id is i
-    users_dict[friend_i]["friends"].append(users_dict[friend_j])  # add i as a friend of j
-    users_dict[friend_j]["friends"].append(users_dict[friend_i])  # add j as a friend of i
+    users_dict[friend_i]["friends"].append(
+        users_dict[friend_j]
+    )  # add i as a friend of j
+    users_dict[friend_j]["friends"].append(
+        users_dict[friend_i]
+    )  # add j as a friend of i
 
 
 #
@@ -90,7 +94,8 @@ def shortest_paths_from(from_user):
         new_paths_to_here = [
             path_via_prev
             for path_via_prev in paths_via_prev
-            if len(path_via_prev) <= min_path_length and path_via_prev not in old_paths_to_here
+            if len(path_via_prev) <= min_path_length
+               and path_via_prev not in old_paths_to_here
         ]
 
         shortest_paths_to[user_id] = old_paths_to_here + new_paths_to_here
@@ -264,21 +269,21 @@ def page_rank(users, damping=0.85, num_iters=100):
 
 if __name__ == "__main__":
 
-    logging.info("%r","".format("Betweenness Centrality"))
+    logging.info("%r", "".format("Betweenness Centrality"))
     for _user in users_dict:
-        logging.info("%r","".format(_user["id"], _user["betweenness_centrality"]))
-    logging.info("%r","".format())
+        logging.info("%r", "".format(_user["id"], _user["betweenness_centrality"]))
+    logging.info("%r", "".format())
 
-    logging.info("%r","".format("Closeness Centrality"))
+    logging.info("%r", "".format("Closeness Centrality"))
     for _user in users_dict:
-        logging.info("%r","".format(_user["id"], _user["closeness_centrality"]))
-    logging.info("%r","".format())
+        logging.info("%r", "".format(_user["id"], _user["closeness_centrality"]))
+    logging.info("%r", "".format())
 
-    logging.info("%r","".format("Eigenvector Centrality"))
+    logging.info("%r", "".format("Eigenvector Centrality"))
     for _user_id, centrality in enumerate(eigenvector_centralities):
-        logging.info("%r","".format(_user_id, centrality))
-    logging.info("%r","".format())
+        logging.info("%r", "".format(_user_id, centrality))
+    logging.info("%r", "".format())
 
-    logging.info("%r","".format("PageRank"))
+    logging.info("%r", "".format("PageRank"))
     for _user_id, _pr in page_rank(users_dict).items():
-        logging.info("%r","".format(_user_id, _pr))
+        logging.info("%r", "".format(_user_id, _pr))
