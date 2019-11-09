@@ -1,6 +1,6 @@
+import math
 from collections import Counter, defaultdict
 from functools import partial
-import math, random
 
 
 def entropy(class_probabilities):

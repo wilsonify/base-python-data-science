@@ -1,5 +1,7 @@
+import math
+import random
+
 from data_science_from_scratch.probability import normal_cdf, inverse_normal_cdf
-import math, random
 
 
 def normal_approximation_to_binomial(n, p):

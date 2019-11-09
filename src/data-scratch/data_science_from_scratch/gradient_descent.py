@@ -1,11 +1,10 @@
-from collections import Counter
+import random
+
 from data_science_from_scratch.linear_algebra import (
     distance,
     vector_subtract,
     scalar_multiply,
 )
-from functools import reduce
-import math, random
 
 
 def sum_of_squares(v):

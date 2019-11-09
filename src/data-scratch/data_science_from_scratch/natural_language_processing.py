@@ -1,7 +1,9 @@
-import math, random, re
+import random
+import re
 from collections import defaultdict, Counter
-from bs4 import BeautifulSoup
+
 import requests
+from bs4 import BeautifulSoup
 
 
 def plot_resumes(plt):

@@ -1,14 +1,15 @@
-from collections import Counter
+import math
+import random
 from functools import partial, reduce
-from data_science_from_scratch.linear_algebra import dot, vector_add
+
 from data_science_from_scratch.gradient_descent import (
     maximize_stochastic,
     maximize_batch,
 )
-from data_science_from_scratch.working_with_data import rescale
+from data_science_from_scratch.linear_algebra import dot, vector_add
 from data_science_from_scratch.machine_learning import train_test_split
-from data_science_from_scratch.multiple_regression import estimate_beta, predict
-import math, random
+from data_science_from_scratch.multiple_regression import estimate_beta
+from data_science_from_scratch.working_with_data import rescale
 
 
 def logistic(x):

@@ -1,5 +1,6 @@
-import math, random, re
-from collections import defaultdict, Counter, deque
+from collections import deque
+from functools import partial
+
 from data_science_from_scratch.linear_algebra import (
     dot,
     get_row,
@@ -10,7 +11,6 @@ from data_science_from_scratch.linear_algebra import (
     shape,
     distance,
 )
-from functools import partial
 
 users = [
     {"id": 0, "name": "Hero"},

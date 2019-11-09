@@ -1,5 +1,5 @@
-from collections import Counter
-import math, random
+import math
+import random
 
 
 def random_kid():

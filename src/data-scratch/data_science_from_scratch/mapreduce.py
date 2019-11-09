@@ -1,6 +1,7 @@
-import math, random, re, datetime
+import datetime
 from collections import defaultdict, Counter
 from functools import partial
+
 from data_science_from_scratch.naive_bayes import tokenize
 
 

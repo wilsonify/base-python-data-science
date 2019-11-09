@@ -1,7 +1,8 @@
+import random
 from collections import Counter
+
 from data_science_from_scratch.linear_algebra import distance
 from data_science_from_scratch.stats import mean
-import math, random
 
 
 def raw_majority_vote(labels):

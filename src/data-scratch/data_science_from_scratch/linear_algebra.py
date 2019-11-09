@@ -1,8 +1,7 @@
 # -*- coding: iso-8859-15 -*-
 
-import re, math, random  # regexes, math functions, random numbers
-from collections import defaultdict, Counter
-from functools import partial, reduce
+import math  # regexes, math functions, random numbers
+from functools import reduce
 
 
 #

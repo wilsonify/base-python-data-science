@@ -1,9 +1,10 @@
+import random
+
 from data_science_from_scratch.linear_algebra import (
     squared_distance,
     vector_mean,
     distance,
 )
-import math, random
 
 
 class KMeans:

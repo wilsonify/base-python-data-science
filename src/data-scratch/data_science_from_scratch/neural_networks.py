@@ -1,7 +1,7 @@
-from collections import Counter
-from functools import partial
+import math
+import random
+
 from data_science_from_scratch.linear_algebra import dot
-import math, random
 
 
 def step_function(x):

@@ -1,6 +1,10 @@
+import glob
+import math
+import random
+import re
 from collections import Counter, defaultdict
+
 from data_science_from_scratch.machine_learning import split_data
-import math, random, re, glob
 
 
 def tokenize(message):

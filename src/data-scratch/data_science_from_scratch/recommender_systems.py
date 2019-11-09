@@ -1,5 +1,6 @@
-import math, random
+import math
 from collections import defaultdict, Counter
+
 from data_science_from_scratch.linear_algebra import dot
 
 users_interests = [

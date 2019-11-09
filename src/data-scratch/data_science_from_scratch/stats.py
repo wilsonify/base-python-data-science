@@ -1,6 +1,7 @@
-from collections import Counter
-from data_science_from_scratch.linear_algebra import sum_of_squares, dot
 import math
+from collections import Counter
+
+from data_science_from_scratch.linear_algebra import sum_of_squares, dot
 
 num_friends = [
     100,

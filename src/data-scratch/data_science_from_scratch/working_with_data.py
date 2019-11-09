@@ -1,25 +1,26 @@
+import csv
+import math
+import random
 from collections import Counter, defaultdict
 from functools import partial, reduce
+
+import dateutil.parser
+from data_science_from_scratch.gradient_descent import (
+    maximize_stochastic,
+    maximize_batch,
+)
 from data_science_from_scratch.linear_algebra import (
     shape,
-    get_row,
     get_column,
     make_matrix,
-    vector_mean,
     vector_sum,
     dot,
     magnitude,
     vector_subtract,
     scalar_multiply,
 )
-from data_science_from_scratch.stats import correlation, standard_deviation, mean
 from data_science_from_scratch.probability import inverse_normal_cdf
-from data_science_from_scratch.gradient_descent import (
-    maximize_stochastic,
-    maximize_batch,
-)
-import math, random, csv
-import dateutil.parser
+from data_science_from_scratch.stats import correlation, standard_deviation, mean
 
 
 def bucketize(point, bucket_size):
