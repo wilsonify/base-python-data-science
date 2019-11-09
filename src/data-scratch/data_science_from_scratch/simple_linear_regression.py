@@ -1,9 +1,3 @@
-from data_science_from_scratch.stats import (
-    mean,
-    correlation,
-    standard_deviation,
-    de_mean,
-)
 import random
 
 from data_science_from_scratch.gradient_descent import minimize_stochastic
