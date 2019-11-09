@@ -1,7 +1,7 @@
 import math, random, re, datetime
 from collections import defaultdict, Counter
 from functools import partial
-from naive_bayes import tokenize
+from data_science_from_scratch.naive_bayes import tokenize
 
 def word_count_old(documents):
     """word count not using MapReduce"""

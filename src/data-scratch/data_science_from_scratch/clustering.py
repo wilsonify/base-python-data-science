@@ -1,7 +1,5 @@
-from linear_algebra import squared_distance, vector_mean, distance
+from data_science_from_scratch.linear_algebra import squared_distance, vector_mean, distance
 import math, random
-import matplotlib.image as mpimg
-import matplotlib.pyplot as plt
 
 class KMeans:
     """performs k-means clustering"""
@@ -47,38 +45,12 @@ def squared_clustering_errors(inputs, k):
     return sum(squared_distance(input,means[cluster])
                for input, cluster in zip(inputs, assignments))
 
-def plot_squared_clustering_errors():
 
-    ks = range(1, len(inputs) + 1)
-    errors = [squared_clustering_errors(inputs, k) for k in ks]
-
-    plt.plot(ks, errors)
-    plt.xticks(ks)
-    plt.xlabel("k")
-    plt.ylabel("total squared error")
-    plt.show()
 
 #
 # using clustering to recolor an image
 #
 
-def recolor_image(input_file, k=5):
-
-    img = mpimg.imread(path_to_png_file)
-    pixels = [pixel for row in img for pixel in row]
-    clusterer = KMeans(k)
-    clusterer.train(pixels) # this might take a while
-
-    def recolor(pixel):
-        cluster = clusterer.classify(pixel) # index of the closest cluster
-        return clusterer.means[cluster]     # mean of the closest cluster
-
-    new_img = [[recolor(pixel) for pixel in row]
-               for row in img]
-
-    plt.imshow(new_img)
-    plt.axis('off')
-    plt.show()
 
 #
 # hierarchical clustering

@@ -1,10 +1,10 @@
 from collections import Counter
 from functools import partial, reduce
-from linear_algebra import dot, vector_add
-from gradient_descent import maximize_stochastic, maximize_batch
-from working_with_data import rescale
-from machine_learning import train_test_split
-from multiple_regression import estimate_beta, predict
+from data_science_from_scratch.linear_algebra import dot, vector_add
+from data_science_from_scratch.gradient_descent import maximize_stochastic, maximize_batch
+from data_science_from_scratch.working_with_data import rescale
+from data_science_from_scratch.machine_learning import train_test_split
+from data_science_from_scratch.multiple_regression import estimate_beta, predict
 import math, random
 
 def logistic(x):

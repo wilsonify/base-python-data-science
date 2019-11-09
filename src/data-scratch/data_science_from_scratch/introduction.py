@@ -1,6 +1,5 @@
 # at this stage in the book we haven't actually installed matplotlib,
 # comment this out if you need to
-from matplotlib import pyplot as plt
 
 ##########################
 #                        #
@@ -133,13 +132,7 @@ salaries_and_tenures = [(83000, 8.7), (88000, 8.1),
                         (60000, 2.5), (83000, 10),
                         (48000, 1.9), (63000, 4.2)]
 
-def make_chart_salaries_by_tenure():
-    tenures = [tenure for salary, tenure in salaries_and_tenures]
-    salaries = [salary for salary, tenure in salaries_and_tenures]
-    plt.scatter(tenures, salaries)
-    plt.xlabel("Years Experience")
-    plt.ylabel("Salary")
-    plt.show()
+
 
 # keys are years
 # values are the salaries for each tenure

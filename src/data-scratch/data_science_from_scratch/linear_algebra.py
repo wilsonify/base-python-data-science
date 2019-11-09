@@ -1,7 +1,6 @@
 # -*- coding: iso-8859-15 -*-
 
 import re, math, random # regexes, math functions, random numbers
-import matplotlib.pyplot as plt # pyplot
 from collections import defaultdict, Counter
 from functools import partial, reduce
 
@@ -101,24 +100,3 @@ def matrix_add(A, B):
     return make_matrix(num_rows, num_cols, entry_fn)
 
 
-def make_graph_dot_product_as_vector_projection(plt):
-
-    v = [2, 1]
-    w = [math.sqrt(.25), math.sqrt(.75)]
-    c = dot(v, w)
-    vonw = scalar_multiply(c, w)
-    o = [0,0]
-
-    plt.arrow(0, 0, v[0], v[1],
-              width=0.002, head_width=.1, length_includes_head=True)
-    plt.annotate("v", v, xytext=[v[0] + 0.1, v[1]])
-    plt.arrow(0 ,0, w[0], w[1],
-              width=0.002, head_width=.1, length_includes_head=True)
-    plt.annotate("w", w, xytext=[w[0] - 0.1, w[1]])
-    plt.arrow(0, 0, vonw[0], vonw[1], length_includes_head=True)
-    plt.annotate(u"(v•w)w", vonw, xytext=[vonw[0] - 0.1, vonw[1] + 0.1])
-    plt.arrow(v[0], v[1], vonw[0] - v[0], vonw[1] - v[1],
-              linestyle='dotted', length_includes_head=True)
-    plt.scatter(*zip(v,w,o),marker='.')
-    plt.axis('equal')
-    plt.show()

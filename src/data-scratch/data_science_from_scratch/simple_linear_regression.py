@@ -1,7 +1,7 @@
 from collections import Counter, defaultdict
-from linear_algebra import vector_subtract
-from stats import mean, correlation, standard_deviation, de_mean
-from gradient_descent import minimize_stochastic
+from data_science_from_scratch.linear_algebra import vector_subtract
+from data_science_from_scratch.stats import mean, correlation, standard_deviation, de_mean
+from data_science_from_scratch.gradient_descent import minimize_stochastic
 import math, random
 
 def predict(alpha, beta, x_i):

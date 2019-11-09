@@ -1,6 +1,6 @@
 import math, random, re
 from collections import defaultdict, Counter, deque
-from linear_algebra import dot, get_row, get_column, make_matrix, magnitude, scalar_multiply, shape, distance
+from data_science_from_scratch.linear_algebra import dot, get_row, get_column, make_matrix, magnitude, scalar_multiply, shape, distance
 from functools import partial
 
 users = [
