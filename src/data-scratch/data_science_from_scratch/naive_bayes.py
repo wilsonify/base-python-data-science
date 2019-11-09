@@ -35,7 +35,7 @@ def word_probabilities(counts, total_spams, total_non_spams, k=0.5):
     ]
 
 
-def spam_probability(word_probs, message):
+def get_spam_probability(word_probs, message):
     message_words = tokenize(message)
     log_prob_if_spam = log_prob_if_not_spam = 0.0
 
@@ -75,7 +75,7 @@ class NaiveBayesClassifier:
         )
 
     def classify(self, message):
-        return spam_probability(self.word_probs, message)
+        return get_spam_probability(self.word_probs, message)
 
 
 def get_subject_data(path):

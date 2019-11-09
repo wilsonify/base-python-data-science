@@ -104,10 +104,10 @@ class Table:
             other_rows = other_table.where(is_join).rows
 
             # each other row that matches this one produces a result row
-            for other_row in other_rows:
+            for other_row_ in other_rows:
                 join_table.insert(
                     [row[c] for c in self.columns]
-                    + [other_row[c] for c in additional_columns]
+                    + [other_row_[c] for c in additional_columns]
                 )
 
             # if no rows match and it's a left join, output with Nones

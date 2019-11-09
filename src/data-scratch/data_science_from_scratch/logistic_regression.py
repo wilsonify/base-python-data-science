@@ -257,19 +257,19 @@ if __name__ == "__main__":
     ]
     data = list(map(list, data))  # change tuples to lists
 
-    x = [[1] + row[:2] for row in data]  # each element is [1, experience, salary]
-    y = [row[2] for row in data]  # each element is paid_account
+    _x = [[1] + row[:2] for row in data]  # each element is [1, experience, salary]
+    _y = [row[2] for row in data]  # each element is paid_account
 
     print("linear regression:")
 
-    rescaled_x = rescale(x)
-    beta = estimate_beta(rescaled_x, y)
-    print(beta)
+    rescaled_x = rescale(_x)
+    _beta = estimate_beta(rescaled_x, _y)
+    print(_beta)
 
     print("logistic regression:")
 
     random.seed(0)
-    x_train, x_test, y_train, y_test = train_test_split(rescaled_x, y, 0.33)
+    x_train, x_test, y_train, y_test = train_test_split(rescaled_x, _y, 0.33)
 
     # want to maximize log likelihood on the training data
     fn = partial(logistic_log_likelihood, x_train, y_train)
@@ -292,12 +292,12 @@ if __name__ == "__main__":
 
     true_positives = false_positives = true_negatives = false_negatives = 0
 
-    for x_i, y_i in zip(x_test, y_test):
-        predict = logistic(dot(beta_hat, x_i))
+    for _x_i, _y_i in zip(x_test, y_test):
+        predict = logistic(dot(beta_hat, _x_i))
 
-        if y_i == 1 and predict >= 0.5:  # TP: paid and we predict paid
+        if _y_i == 1 and predict >= 0.5:  # TP: paid and we predict paid
             true_positives += 1
-        elif y_i == 1:  # FN: paid and we predict unpaid
+        elif _y_i == 1:  # FN: paid and we predict unpaid
             false_negatives += 1
         elif predict >= 0.5:  # FP: unpaid and we predict paid
             false_positives += 1

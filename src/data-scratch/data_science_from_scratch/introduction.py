@@ -8,7 +8,7 @@
 from collections import Counter
 from collections import defaultdict
 
-users = [
+users_list = [
     {"id": 0, "name": "Hero"},
     {"id": 1, "name": "Dunn"},
     {"id": 2, "name": "Sue"},
@@ -38,25 +38,25 @@ friendships = [
 ]
 
 # first give each user an empty list
-for user in users:
+for user in users_list:
     # noinspection PyTypeChecker
     user["friends"] = []
 
 # and then populate the lists with friendships
 for i, j in friendships:
     # this works because users[i] is the user whose id is i
-    users[i]["friends"].append(users[j])  # add i as a friend of j
-    users[j]["friends"].append(users[i])  # add j as a friend of i
+    users_list[i]["friends"].append(users_list[j])  # add i as a friend of j
+    users_list[j]["friends"].append(users_list[i])  # add j as a friend of i
 
 
-def number_of_friends(user):
+def number_of_friends(_user):
     """how many friends does _user_ have?"""
-    return len(user["friends"])  # length of friend_ids list
+    return len(_user["friends"])  # length of friend_ids list
 
 
-total_connections = sum(number_of_friends(user) for user in users)  # 24
+total_connections = sum(number_of_friends(user) for user in users_list)  # 24
 
-num_users = len(users)
+num_users = len(users_list)
 avg_connections = total_connections / num_users  # 2.4
 
 
@@ -67,38 +67,38 @@ avg_connections = total_connections / num_users  # 2.4
 ################################
 
 
-def friends_of_friend_ids_bad(user):
+def friends_of_friend_ids_bad(user_):
     # "foaf" is short for "friend of a friend"
     return [
         foaf["id"]
-        for friend in user["friends"]  # for each of user's friends
+        for friend in user_["friends"]  # for each of user's friends
         for foaf in friend["friends"]
     ]  # get each of _their_ friends
 
 
-def not_the_same(user, other_user):
+def not_the_same(user_, other_user):
     """two users are not the same if they have different ids"""
-    return user["id"] != other_user["id"]
+    return user_["id"] != other_user["id"]
 
 
-def not_friends(user, other_user):
+def not_friends(user_, other_user):
     """other_user is not a friend if he's not in user["friends"];
     that is, if he's not_the_same as all the people in user["friends"]"""
-    return all(not_the_same(friend, other_user) for friend in user["friends"])
+    return all(not_the_same(friend, other_user) for friend in user_["friends"])
 
 
-def friends_of_friend_ids(user):
+def friends_of_friend_ids(user_):
     return Counter(
         foaf["id"]
-        for friend in user["friends"]  # for each of my friends
+        for friend in user_["friends"]  # for each of my friends
         for foaf in friend["friends"]  # count *their* friends
-        if not_the_same(user, foaf) and not_friends(user, foaf)  # who aren't me
+        if not_the_same(user_, foaf) and not_friends(user_, foaf)  # who aren't me
     )  # and aren't my friends
 
 
-print(friends_of_friend_ids(users[3]))  # Counter({0: 2, 5: 1})
+print(friends_of_friend_ids(users_list[3]))  # Counter({0: 2, 5: 1})
 
-interests = [
+interests_list = [
     (0, "Hadoop"),
     (0, "Big Data"),
     (0, "HBase"),
@@ -153,8 +153,8 @@ interests = [
 
 def data_scientists_who_like(target_interest):
     return [
-        user_id
-        for user_id, user_interest in interests
+        user_id_
+        for user_id_, user_interest in interests_list
         if user_interest == target_interest
     ]
 
@@ -162,21 +162,21 @@ def data_scientists_who_like(target_interest):
 # keys are interests, values are lists of user_ids with that interest
 user_ids_by_interest = defaultdict(list)
 
-for user_id, interest in interests:
-    user_ids_by_interest[interest].append(user_id)
+for _user_id, interest in interests_list:
+    user_ids_by_interest[interest].append(_user_id)
 
 # keys are user_ids, values are lists of interests for that user_id
 interests_by_user_id = defaultdict(list)
 
-for user_id, interest in interests:
-    interests_by_user_id[user_id].append(interest)
+for _user_id, interest in interests_list:
+    interests_by_user_id[_user_id].append(interest)
 
 
 def most_common_interests_with(user_id):
     return Counter(
         interested_user_id
-        for interest in interests_by_user_id["user_id"]
-        for interested_user_id in user_ids_by_interest[interest]
+        for interest_ in interests_by_user_id["user_id"]
+        for interested_user_id in user_ids_by_interest[interest_]
         if interested_user_id != user_id
     )
 
@@ -204,8 +204,8 @@ salaries_and_tenures = [
 # values are the salaries for each tenure
 salary_by_tenure = defaultdict(list)
 
-for salary, tenure in salaries_and_tenures:
-    salary_by_tenure[tenure].append(salary)
+for salary, _tenure in salaries_and_tenures:
+    salary_by_tenure[_tenure].append(salary)
 
 average_salary_by_tenure = {
     tenure: sum(salaries) / len(salaries)
@@ -224,8 +224,8 @@ def tenure_bucket(tenure):
 
 salary_by_tenure_bucket = defaultdict(list)
 
-for salary, tenure in salaries_and_tenures:
-    bucket = tenure_bucket(tenure)
+for salary, _tenure in salaries_and_tenures:
+    bucket = tenure_bucket(_tenure)
     salary_by_tenure_bucket[bucket].append(salary)
 
 average_salary_by_bucket = {
@@ -257,7 +257,7 @@ def predict_paid_or_unpaid(years_experience):
 ######################
 
 words_and_counts = Counter(
-    word for user, interest in interests for word in interest.lower().split()
+    word for user, _interest in interests_list for word in _interest.lower().split()
 )
 
 if __name__ == "__main__":
@@ -276,7 +276,7 @@ if __name__ == "__main__":
     print()
 
     # create a list (user_id, number_of_friends)
-    num_friends_by_id = [(user["id"], number_of_friends(user)) for user in users]
+    num_friends_by_id = [(user["id"], number_of_friends(user)) for user in users_list]
 
     print("users sorted by number of friends:")
     print(
@@ -295,8 +295,8 @@ if __name__ == "__main__":
     print("######################")
     print()
 
-    print("friends of friends bad for user 0:", friends_of_friend_ids_bad(users[0]))
-    print("friends of friends for user 3:", friends_of_friend_ids(users[3]))
+    print("friends of friends bad for user 0:", friends_of_friend_ids_bad(users_list[0]))
+    print("friends of friends for user 3:", friends_of_friend_ids(users_list[3]))
 
     print()
     print("######################")

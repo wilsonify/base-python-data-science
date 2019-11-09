@@ -136,7 +136,7 @@ def random_distances(dim, num_pairs):
 if __name__ == "__main__":
 
     # try several different values for k
-    for k in [1, 3, 5, 7]:
+    for _k in [1, 3, 5, 7]:
         num_correct = 0
 
         for location, actual_language in cities:
@@ -147,12 +147,12 @@ if __name__ == "__main__":
                 if other_city != (location, actual_language)
             ]
 
-            predicted_language = knn_classify(k, other_cities, location)
+            predicted_language = knn_classify(_k, other_cities, location)
 
             if predicted_language == actual_language:
                 num_correct += 1
 
-        print(k, "neighbor[s]:", num_correct, "correct out of", len(cities))
+        print(_k, "neighbor[s]:", num_correct, "correct out of", len(cities))
 
     dimensions = range(1, 101, 5)
 
@@ -160,8 +160,8 @@ if __name__ == "__main__":
     min_distances = []
 
     random.seed(0)
-    for dim in dimensions:
-        distances = random_distances(dim, 10000)  # 10,000 random pairs
+    for _dim in dimensions:
+        distances = random_distances(_dim, 10000)  # 10,000 random pairs
         avg_distances.append(mean(distances))  # track the average
         min_distances.append(min(distances))  # track the minimum
-        print(dim, min(distances), mean(distances), min(distances) / mean(distances))
+        print(_dim, min(distances), mean(distances), min(distances) / mean(distances))

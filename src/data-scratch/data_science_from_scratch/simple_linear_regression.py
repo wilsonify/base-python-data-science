@@ -466,25 +466,25 @@ if __name__ == "__main__":
         23.84,
     ]
 
-    alpha, beta = least_squares_fit(num_friends_good, daily_minutes_good)
-    print("alpha", alpha)
-    print("beta", beta)
+    alpha_, beta_ = least_squares_fit(num_friends_good, daily_minutes_good)
+    print("alpha", alpha_)
+    print("beta", beta_)
 
-    print("r-squared", r_squared(alpha, beta, num_friends_good, daily_minutes_good))
+    print("r-squared", r_squared(alpha_, beta_, num_friends_good, daily_minutes_good))
 
     print()
 
     print("gradient descent:")
     # choose random value to start
     random.seed(0)
-    theta = [random.random(), random.random()]
-    alpha, beta = minimize_stochastic(
+    theta_ = [random.random(), random.random()]
+    alpha_, beta_ = minimize_stochastic(
         squared_error,
         squared_error_gradient,
         num_friends_good,
         daily_minutes_good,
-        theta,
+        theta_,
         0.0001,
     )
-    print("alpha", alpha)
-    print("beta", beta)
+    print("alpha", alpha_)
+    print("beta", beta_)

@@ -117,16 +117,16 @@ def reject_fairness(experiment):
 ##
 
 
-def estimated_parameters(N, n):
-    p = n / N
-    sigma = math.sqrt(p * (1 - p) / N)
+def estimated_parameters(n_matrix, n):
+    p = n / n_matrix
+    sigma = math.sqrt(p * (1 - p) / n_matrix)
     return p, sigma
 
 
-def a_b_test_statistic(N_A, n_A, N_B, n_B):
-    p_A, sigma_A = estimated_parameters(N_A, n_A)
-    p_B, sigma_B = estimated_parameters(N_B, n_B)
-    return (p_B - p_A) / math.sqrt(sigma_A ** 2 + sigma_B ** 2)
+def a_b_test_statistic(a_matrix, a_weight, b_matrix, b_weight):
+    density_a, sigma_a = estimated_parameters(a_matrix, a_weight)
+    density_b, sigma_b = estimated_parameters(b_matrix, b_weight)
+    return (density_b - density_a) / math.sqrt(sigma_a ** 2 + sigma_b ** 2)
 
 
 ##
@@ -136,7 +136,7 @@ def a_b_test_statistic(N_A, n_A, N_B, n_B):
 ##
 
 
-def B(alpha, beta):
+def normalizer(alpha, beta):
     """a normalizing constant so that the total probability is 1"""
     return math.gamma(alpha) * math.gamma(beta) / math.gamma(alpha + beta)
 
@@ -144,7 +144,7 @@ def B(alpha, beta):
 def beta_pdf(x, alpha, beta):
     if x < 0 or x > 1:  # no weight outside of [0, 1]
         return 0
-    return x ** (alpha - 1) * (1 - x) ** (beta - 1) / B(alpha, beta)
+    return x ** (alpha - 1) * (1 - x) ** (beta - 1) / normalizer(alpha, beta)
 
 
 if __name__ == "__main__":
@@ -160,9 +160,9 @@ if __name__ == "__main__":
 
     print("95% bounds based on assumption p is 0.5")
 
-    lo, hi = normal_two_sided_bounds(0.95, mu_0, sigma_0)
-    print("lo", lo)
-    print("hi", hi)
+    _lo, _hi = normal_two_sided_bounds(0.95, mu_0, sigma_0)
+    print("lo", _lo)
+    print("hi", _hi)
 
     print("actual mu and sigma based on p = 0.55")
     mu_1, sigma_1 = normal_approximation_to_binomial(1000, 0.55)
@@ -171,16 +171,16 @@ if __name__ == "__main__":
 
     # a type 2 error means we fail to reject the null hypothesis
     # which will happen when X is still in our original interval
-    type_2_probability = normal_probability_between(lo, hi, mu_1, sigma_1)
+    type_2_probability = normal_probability_between(_lo, _hi, mu_1, sigma_1)
     power = 1 - type_2_probability  # 0.887
 
     print("type 2 probability", type_2_probability)
     print("power", power)
 
     print("one-sided test")
-    hi = normal_upper_bound(0.95, mu_0, sigma_0)
-    print("hi", hi)  # is 526 (< 531, since we need more probability in the upper tail)
-    type_2_probability = normal_probability_below(hi, mu_1, sigma_1)
+    _hi = normal_upper_bound(0.95, mu_0, sigma_0)
+    print("hi", _hi)  # is 526 (< 531, since we need more probability in the upper tail)
+    type_2_probability = normal_probability_below(_hi, mu_1, sigma_1)
     power = 1 - type_2_probability  # = 0.936
     print("type 2 probability", type_2_probability)
     print("power", power)

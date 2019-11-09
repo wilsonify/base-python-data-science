@@ -12,7 +12,7 @@ from data_science_from_scratch.linear_algebra import (
     distance,
 )
 
-users = [
+users_dict = [
     {"id": 0, "name": "Hero"},
     {"id": 1, "name": "Dunn"},
     {"id": 2, "name": "Sue"},
@@ -41,15 +41,15 @@ friendships = [
 ]
 
 # give each user a friends list
-for user in users:
+for _user in users_dict:
     # noinspection PyTypeChecker
-    user["friends"] = []
+    _user["friends"] = []
 
 # and populate it
-for i, j in friendships:
+for friend_i, friend_j in friendships:
     # this works because users[i] is the user whose id is i
-    users[i]["friends"].append(users[j])  # add i as a friend of j
-    users[j]["friends"].append(users[i])  # add j as a friend of i
+    users_dict[friend_i]["friends"].append(users_dict[friend_j])  # add i as a friend of j
+    users_dict[friend_j]["friends"].append(users_dict[friend_i])  # add j as a friend of i
 
 
 #
@@ -74,7 +74,7 @@ def shortest_paths_from(from_user):
         # the fact that we're pulling from our queue means that
         # necessarily we already know a shortest path to prev_user
         paths_to_prev = shortest_paths_to[prev_user["id"]]
-        paths_via_prev = [path + [user_id] for path in paths_to_prev]
+        paths_via_prev = [_ + [user_id] for _ in paths_to_prev]
 
         # it's possible we already know a shortest path to here as well
         old_paths_to_here = shortest_paths_to.get(user_id, [])
@@ -104,25 +104,25 @@ def shortest_paths_from(from_user):
     return shortest_paths_to
 
 
-for user in users:
+for _user in users_dict:
     # noinspection PyTypeChecker
-    user["shortest_paths"] = shortest_paths_from(user)
+    _user["shortest_paths"] = shortest_paths_from(_user)
 
-for user in users:
+for _user in users_dict:
     # noinspection PyTypeChecker
-    user["betweenness_centrality"] = 0.0
+    _user["betweenness_centrality"] = 0.0
 
-for source in users:
+for source in users_dict:
     source_id = source["id"]
     # noinspection PyUnresolvedReferences
-    for target_id, paths in source["shortest_paths"].items():
+    for target_id, paths_item in source["shortest_paths"].items():
         if source_id < target_id:  # don't double count
-            num_paths = len(paths)  # how many shortest paths?
+            num_paths = len(paths_item)  # how many shortest paths?
             contrib = 1 / num_paths  # contribution to centrality
-            for path in paths:
-                for id in path:
-                    if id not in [source_id, target_id]:
-                        users[id]["betweenness_centrality"] += contrib
+            for path in paths_item:
+                for identification in path:
+                    if identification not in [source_id, target_id]:
+                        users_dict[identification]["betweenness_centrality"] += contrib
 
 
 #
@@ -135,9 +135,9 @@ def farness(user):
     return sum(len(paths[0]) for paths in user["shortest_paths"].values())
 
 
-for user in users:
+for _user in users_dict:
     # noinspection PyTypeChecker
-    user["closeness_centrality"] = 1 / farness(user)
+    _user["closeness_centrality"] = 1 / farness(_user)
 
 
 #
@@ -145,17 +145,17 @@ for user in users:
 #
 
 
-def matrix_product_entry(A, B, i, j):
-    return dot(get_row(A, i), get_column(B, j))
+def matrix_product_entry(a_matrix, b_matrix, i, j):
+    return dot(get_row(a_matrix, i), get_column(b_matrix, j))
 
 
-def matrix_multiply(A, B):
-    n1, k1 = shape(A)
-    n2, k2 = shape(B)
+def matrix_multiply(a_matrix, b_matrix):
+    n1, k1 = shape(a_matrix)
+    n2, k2 = shape(b_matrix)
     if k1 != n2:
         raise ArithmeticError("incompatible shapes!")
 
-    return make_matrix(n1, k2, partial(matrix_product_entry, A, B))
+    return make_matrix(n1, k2, partial(matrix_product_entry, a_matrix, b_matrix))
 
 
 def vector_as_matrix(v):
@@ -168,17 +168,17 @@ def vector_from_matrix(v_as_matrix):
     return [row[0] for row in v_as_matrix]
 
 
-def matrix_operate(A, v):
+def matrix_operate(a_matrix, v):
     v_as_matrix = vector_as_matrix(v)
-    product = matrix_multiply(A, v_as_matrix)
+    product = matrix_multiply(a_matrix, v_as_matrix)
     return vector_from_matrix(product)
 
 
-def find_eigenvector(A, tolerance=0.00001):
-    guess = [1 for __ in A]
+def find_eigenvector(a_matrix, tolerance=0.00001):
+    guess = [1 for __ in a_matrix]
 
     while True:
-        result = matrix_operate(A, guess)
+        result = matrix_operate(a_matrix, guess)
         length = magnitude(result)
         next_guess = scalar_multiply(1 / length, result)
 
@@ -197,7 +197,7 @@ def entry_fn(i, j):
     return 1 if (i, j) in friendships or (j, i) in friendships else 0
 
 
-n = len(users)
+n = len(users_dict)
 adjacency_matrix = make_matrix(n, n, entry_fn)
 
 eigenvector_centralities, _ = find_eigenvector(adjacency_matrix)
@@ -224,17 +224,17 @@ endorsements = [
     (8, 9),
 ]
 
-for user in users:
+for _user in users_dict:
     # noinspection PyTypeChecker
-    user["endorses"] = []  # add one list to track outgoing endorsements
+    _user["endorses"] = []  # add one list to track outgoing endorsements
     # noinspection PyTypeChecker
-    user["endorsed_by"] = []  # and another to track endorsements
+    _user["endorsed_by"] = []  # and another to track endorsements
 
 for source_id, target_id in endorsements:
-    users[source_id]["endorses"].append(users[target_id])
-    users[target_id]["endorsed_by"].append(users[source_id])
+    users_dict[source_id]["endorses"].append(users_dict[target_id])
+    users_dict[target_id]["endorsed_by"].append(users_dict[source_id])
 
-endorsements_by_id = [(user["id"], len(user["endorsed_by"])) for user in users]
+endorsements_by_id = [(user["id"], len(user["endorsed_by"])) for user in users_dict]
 
 sorted(endorsements_by_id, key=lambda pair: pair[1], reverse=True)
 
@@ -264,20 +264,20 @@ def page_rank(users, damping=0.85, num_iters=100):
 if __name__ == "__main__":
 
     print("Betweenness Centrality")
-    for user in users:
-        print(user["id"], user["betweenness_centrality"])
+    for _user in users_dict:
+        print(_user["id"], _user["betweenness_centrality"])
     print()
 
     print("Closeness Centrality")
-    for user in users:
-        print(user["id"], user["closeness_centrality"])
+    for _user in users_dict:
+        print(_user["id"], _user["closeness_centrality"])
     print()
 
     print("Eigenvector Centrality")
-    for user_id, centrality in enumerate(eigenvector_centralities):
-        print(user_id, centrality)
+    for _user_id, centrality in enumerate(eigenvector_centralities):
+        print(_user_id, centrality)
     print()
 
     print("PageRank")
-    for user_id, pr in page_rank(users).items():
-        print(user_id, pr)
+    for _user_id, _pr in page_rank(users_dict).items():
+        print(_user_id, _pr)

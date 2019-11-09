@@ -1,4 +1,5 @@
 import csv
+import logging
 import math
 import random
 from collections import Counter, defaultdict
@@ -70,15 +71,14 @@ def parse_rows_with(reader, parsers):
         yield parse_row1(row, parsers)
 
 
-def try_or_none(f):
+def try_or_none(arbitrary_function):
     """wraps f to return None if f raises an exception
     assumes f takes only one input"""
 
     def f_or_none(x):
-        # noinspection PyBroadException
         try:
-            return f(x)
-        except:
+            return arbitrary_function(x)
+        except (ValueError, IndexError, KeyError, TypeError, OSError):
             return None
 
     return f_or_none
@@ -187,7 +187,7 @@ def rescale(data_matrix):
 # DIMENSIONALITY REDUCTION
 #
 
-X = [
+x_matrix_list = [
     [20.9666776351559, -13.1138080189357],
     [22.7719907680008, -19.8890894944696],
     [25.6687103160153, -11.9956004517219],
@@ -290,12 +290,12 @@ X = [
 ]
 
 
-def de_mean_matrix(A):
+def de_mean_matrix(a_matrix):
     """returns the result of subtracting from every value in A the mean
     value of its column. the resulting matrix has mean 0 in every column"""
-    nr, nc = shape(A)
-    column_means, _ = scale(A)
-    return make_matrix(nr, nc, lambda i, j: A[i][j] - column_means[j])
+    nr, nc = shape(a_matrix)
+    column_means, _ = scale(a_matrix)
+    return make_matrix(nr, nc, lambda i, j: a_matrix[i][j] - column_means[j])
 
 
 def direction(w):
@@ -308,9 +308,9 @@ def directional_variance_i(x_i, w):
     return dot(x_i, direction(w)) ** 2
 
 
-def directional_variance(X, w):
+def directional_variance(x_matrix, w):
     """the variance of the data in the direction w"""
-    return sum(directional_variance_i(x_i, w) for x_i in X)
+    return sum(directional_variance_i(x_i, w) for x_i in x_matrix)
 
 
 def directional_variance_gradient_i(x_i, w):
@@ -320,27 +320,27 @@ def directional_variance_gradient_i(x_i, w):
     return [2 * projection_length * x_ij for x_ij in x_i]
 
 
-def directional_variance_gradient(X, w):
-    return vector_sum(directional_variance_gradient_i(x_i, w) for x_i in X)
+def directional_variance_gradient(x_matrix, w):
+    return vector_sum(directional_variance_gradient_i(x_i, w) for x_i in x_matrix)
 
 
-def first_principal_component(X):
-    guess = [1 for _ in X[0]]
+def first_principal_component(x_matrix):
+    guess = [1 for _ in x_matrix[0]]
     unscaled_maximizer = maximize_batch(
-        partial(directional_variance, X),  # is now a function of w
-        partial(directional_variance_gradient, X),  # is now a function of w
+        partial(directional_variance, x_matrix),  # is now a function of w
+        partial(directional_variance_gradient, x_matrix),  # is now a function of w
         guess,
     )
     return direction(unscaled_maximizer)
 
 
-def first_principal_component_sgd(X):
-    guess = [1 for _ in X[0]]
+def first_principal_component_sgd(matrix_x):
+    guess = [1 for _ in matrix_x[0]]
     unscaled_maximizer = maximize_stochastic(
         lambda x, _, w: directional_variance_i(x, w),
         lambda x, _, w: directional_variance_gradient_i(x, w),
-        X,
-        [None for _ in X],
+        matrix_x,
+        [None for _ in matrix_x],
         guess,
     )
     return direction(unscaled_maximizer)
@@ -357,10 +357,10 @@ def remove_projection_from_vector(v, w):
     return vector_subtract(v, project(v, w))
 
 
-def remove_projection(X, w):
+def remove_projection(x_matrix, w):
     """for each row of X
     projects the row onto w, and subtracts the result from the row"""
-    return [remove_projection_from_vector(x_i, w) for x_i in X]
+    return [remove_projection_from_vector(x_i, w) for x_i in x_matrix]
 
 
 def principal_component_analysis(x_vector, num_components):
@@ -381,6 +381,7 @@ def transform(x_vector, components):
     return [transform_vector(x_i, components) for x_i in x_vector]
 
 
+# noinspection PyPep8,PyPep8
 if __name__ == "__main__":
 
     print("correlation(xs, ys1)", correlation(xs, ys1))
@@ -388,48 +389,48 @@ if __name__ == "__main__":
 
     # safe parsing
 
-    data = []
+    _data = []
 
     with open(
             "comma_delimited_stock_prices.csv", "r", encoding="utf8", newline=""
     ) as f:
-        reader = csv.reader(f)
-        for line in parse_rows_with(reader, [dateutil.parser.parse, None, float]):
-            data.append(line)
+        reader_csv = csv.reader(f)
+        for line in parse_rows_with(reader_csv, [dateutil.parser.parse, None, float]):
+            _data.append(line)
 
-    for row in data:
-        if any(x is None for x in row):
-            print(row)
+    for row_data in _data:
+        if any(x is None for x in row_data):
+            print(row_data)
 
     print("stocks")
     with open("stocks.txt", "r", encoding="utf8", newline="") as f:
-        reader = csv.DictReader(f, delimiter="\t")
-        data = [
-            parse_dict(row, {"date": dateutil.parser.parse, "closing_price": float})
-            for row in reader
+        reader_dict = csv.DictReader(f, delimiter="\t")
+        _data = [
+            parse_dict(row_dict, {"date": dateutil.parser.parse, "closing_price": float})
+            for row_dict in reader_dict
         ]
 
     max_aapl_price = max(
-        row["closing_price"] for row in data if row["symbol"] == "AAPL"
+        row_aapl["closing_price"] for row_aapl in _data if row_aapl["symbol"] == "AAPL"
     )
     print("max aapl price", max_aapl_price)
 
     # group rows by symbol
     by_symbol = defaultdict(list)
 
-    for row in data:
-        by_symbol[row["symbol"]].append(row)
+    for row_data in _data:
+        by_symbol[row_data["symbol"]].append(row_data)
 
     # use a dict comprehension to find the max for each symbol
     max_price_by_symbol = {
-        symbol: max(row["closing_price"] for row in grouped_rows)
+        symbol: max(row_of_group["closing_price"] for row_of_group in grouped_rows)
         for symbol, grouped_rows in by_symbol.items()
     }
     print("max price by symbol")
     print(max_price_by_symbol)
 
     # key is symbol, value is list of "change" dicts
-    changes_by_symbol = group_by(picker("symbol"), data, day_over_day_changes)
+    changes_by_symbol = group_by(picker("symbol"), _data, day_over_day_changes)
     # collect all "change" dicts into one big list
     all_changes = [
         change for changes in changes_by_symbol.values() for change in changes
@@ -438,10 +439,11 @@ if __name__ == "__main__":
     print("max change", max(all_changes, key=picker("change")))
     print("min change", min(all_changes, key=picker("change")))
 
-
-    # to combine percent changes, we add 1 to each, multiply them, and subtract 1
+    logging.info("""to combine percent changes, we add 1 to each, multiply them, and subtract 1
     # for instance, if we combine +10% and -20%, the overall change is
-    # (1 + 10%) * (1 - 20%) - 1 = 1.1 * .8 - 1 = -12%
+    # (1 + 10%) * (1 - 20%) - 1 = 1.1 * .8 - 1 = -12%""")
+
+
     def combine_pct_changes(pct_change1, pct_change2):
         return (1 + pct_change1) * (1 + pct_change2) - 1
 
@@ -451,24 +453,24 @@ if __name__ == "__main__":
 
 
     overall_change_by_month = group_by(
-        lambda row: row["date"].month, all_changes, overall_change
+        lambda row_r: row_r["date"].month, all_changes, overall_change
     )
     print("overall change by month")
     print(overall_change_by_month)
 
     print("rescaling")
 
-    data = [[1, 20, 2], [1, 30, 3], [1, 40, 4]]
+    _data = [[1, 20, 2], [1, 30, 3], [1, 40, 4]]
 
-    print("original: ", data)
-    print("scale: ", scale(data))
-    print("rescaled: ", rescale(data))
+    print("original: ", _data)
+    print("scale: ", scale(_data))
+    print("rescaled: ", rescale(_data))
     print()
 
     print("PCA")
 
-    Y = de_mean_matrix(X)
-    components = principal_component_analysis(Y, 2)
-    print("principal components", components)
+    Y = de_mean_matrix(x_matrix_list)
+    components_p = principal_component_analysis(Y, 2)
+    print("principal components", components_p)
     print("first point", Y[0])
-    print("first point transformed", transform_vector(Y[0], components))
+    print("first point transformed", transform_vector(Y[0], components_p))

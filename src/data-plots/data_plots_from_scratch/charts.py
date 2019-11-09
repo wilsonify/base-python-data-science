@@ -11,7 +11,7 @@ from data_science_from_scratch.introduction import salaries_and_tenures
 from data_science_from_scratch.linear_algebra import get_column, shape, dot, scalar_multiply
 from data_science_from_scratch.nearest_neighbors import cities
 from data_science_from_scratch.nearest_neighbors import knn_classify
-from data_science_from_scratch.neural_networks import network
+from data_science_from_scratch.neural_networks import _network
 from data_science_from_scratch.probability import normal_pdf, normal_cdf, inverse_normal_cdf, binomial
 from data_science_from_scratch.working_with_data import random_normal, make_histogram
 
@@ -183,7 +183,7 @@ def patch(x, y, hatch, color):
 
 # noinspection PyUnresolvedReferences
 def show_weights(neuron_idx):
-    weights = network[0][neuron_idx]
+    weights = _network[0][neuron_idx]
     abs_weights = [abs(weight) for weight in weights]
 
     grid = [abs_weights[row:(row + 5)]  # turn the weights into a 5x5 grid

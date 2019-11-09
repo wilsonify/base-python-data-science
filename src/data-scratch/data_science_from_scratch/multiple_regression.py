@@ -107,7 +107,7 @@ def lasso_penalty(beta, alpha):
 
 if __name__ == "__main__":
 
-    x = [
+    _x = [
         [1, 49, 4, 0],
         [1, 41, 9, 0],
         [1, 40, 8, 0],
@@ -519,9 +519,9 @@ if __name__ == "__main__":
     ]
 
     random.seed(0)
-    beta = estimate_beta(x, daily_minutes_good)  # [30.63, 0.972, -1.868, 0.911]
-    print("beta", beta)
-    print("r-squared", multiple_r_squared(x, daily_minutes_good, beta))
+    _beta = estimate_beta(_x, daily_minutes_good)  # [30.63, 0.972, -1.868, 0.911]
+    print("beta", _beta)
+    print("r-squared", multiple_r_squared(_x, daily_minutes_good, _beta))
     print()
 
     print("digression: the bootstrap")
@@ -544,7 +544,7 @@ if __name__ == "__main__":
     random.seed(0)  # so that you get the same results as me
 
     bootstrap_betas = bootstrap_statistic(
-        list(zip(x, daily_minutes_good)), estimate_sample_beta, 100
+        list(zip(_x, daily_minutes_good)), estimate_sample_beta, 100
     )
 
     bootstrap_standard_errors = [
@@ -563,10 +563,10 @@ if __name__ == "__main__":
     print("regularization")
 
     random.seed(0)
-    for alpha in [0.0, 0.01, 0.1, 1, 10]:
-        beta = estimate_beta_ridge(x, daily_minutes_good, alpha=alpha)
-        print("alpha", alpha)
-        print("beta", beta)
-        print("dot(beta[1:],beta[1:])", dot(beta[1:], beta[1:]))
-        print("r-squared", multiple_r_squared(x, daily_minutes_good, beta))
+    for _alpha in [0.0, 0.01, 0.1, 1, 10]:
+        _beta = estimate_beta_ridge(_x, daily_minutes_good, alpha=_alpha)
+        print("alpha", _alpha)
+        print("beta", _beta)
+        print("dot(beta[1:],beta[1:])", dot(_beta[1:], _beta[1:]))
+        print("r-squared", multiple_r_squared(_x, daily_minutes_good, _beta))
         print()

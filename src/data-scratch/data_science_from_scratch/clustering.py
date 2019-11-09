@@ -14,9 +14,9 @@ class KMeans:
         self.k = k  # number of clusters
         self.means = None  # means of clusters
 
-    def classify(self, input):
+    def classify(self, inputs):
         """return the index of the cluster closest to the input"""
-        return min(range(self.k), key=lambda i: squared_distance(input, self.means[i]))
+        return min(range(self.k), key=lambda i: squared_distance(inputs, self.means[i]))
 
     def train(self, inputs):
 
@@ -49,8 +49,8 @@ def squared_clustering_errors(inputs, k):
     assignments = list(map(clusterer.classify, inputs))
 
     return sum(
-        squared_distance(input, means[cluster])
-        for input, cluster in zip(inputs, assignments)
+        squared_distance(inputs, means[cluster_])
+        for inputs, cluster_ in zip(inputs, assignments)
     )
 
 
@@ -64,27 +64,27 @@ def squared_clustering_errors(inputs, k):
 #
 
 
-def is_leaf(cluster):
+def is_leaf(cluster_):
     """a cluster is a leaf if it has length 1"""
-    return len(cluster) == 1
+    return len(cluster_) == 1
 
 
-def get_children(cluster):
+def get_children(cluster_):
     """returns the two children of this cluster if it's a merged cluster;
     raises an exception if this is a leaf cluster"""
-    if is_leaf(cluster):
+    if is_leaf(cluster_):
         raise TypeError("a leaf cluster has no children")
     else:
-        return cluster[1]
+        return cluster_[1]
 
 
-def get_values(cluster):
+def get_values(cluster_):
     """returns the value in this cluster (if it's a leaf cluster)
     or all the values in the leaf clusters below it (if it's not)"""
-    if is_leaf(cluster):
-        return cluster  # is already a 1-tuple containing value
+    if is_leaf(cluster_):
+        return cluster_  # is already a 1-tuple containing value
     else:
-        return [value for child in get_children(cluster) for value in get_values(child)]
+        return [value for child in get_children(cluster_) for value in get_values(child)]
 
 
 def cluster_distance(cluster1, cluster2, distance_agg=min):
@@ -99,16 +99,16 @@ def cluster_distance(cluster1, cluster2, distance_agg=min):
     )
 
 
-def get_merge_order(cluster):
-    if is_leaf(cluster):
+def get_merge_order(cluster_):
+    if is_leaf(cluster_):
         return float("inf")
     else:
-        return cluster[0]  # merge_order is first element of 2-tuple
+        return cluster_[0]  # merge_order is first element of 2-tuple
 
 
 def bottom_up_cluster(inputs, distance_agg=min):
-    # start with every input a leaf cluster / 1-tuple
-    clusters = [(input,) for input in inputs]
+    # start with every in_put a leaf cluster / 1-tuple
+    clusters = [(in_put,) for in_put in inputs]
 
     # as long as we have more than one cluster left...
     while len(clusters) > 1:
@@ -154,7 +154,7 @@ def generate_clusters(base_cluster, num_clusters):
 
 if __name__ == "__main__":
 
-    inputs = [
+    inputs_list = [
         [-14, -5],
         [13, 13],
         [20, 23],
@@ -178,37 +178,37 @@ if __name__ == "__main__":
     ]
 
     random.seed(0)  # so you get the same results as me
-    clusterer = KMeans(3)
-    clusterer.train(inputs)
+    _clusterer = KMeans(3)
+    _clusterer.train(inputs_list)
     print("3-means:")
-    print(clusterer.means)
+    print(_clusterer.means)
     print()
 
     random.seed(0)
-    clusterer = KMeans(2)
-    clusterer.train(inputs)
+    _clusterer = KMeans(2)
+    _clusterer.train(inputs_list)
     print("2-means:")
-    print(clusterer.means)
+    print(_clusterer.means)
     print()
 
     print("errors as a function of k")
 
-    for k in range(1, len(inputs) + 1):
-        print(k, squared_clustering_errors(inputs, k))
+    for _k in range(1, len(inputs_list) + 1):
+        print(_k, squared_clustering_errors(inputs_list, _k))
     print()
 
     print("bottom up hierarchical clustering")
 
-    base_cluster = bottom_up_cluster(inputs)
-    print(base_cluster)
+    _base_cluster = bottom_up_cluster(inputs_list)
+    print(_base_cluster)
 
     print()
     print("three clusters, min:")
-    for cluster in generate_clusters(base_cluster, 3):
+    for cluster in generate_clusters(_base_cluster, 3):
         print(get_values(cluster))
 
     print()
     print("three clusters, max:")
-    base_cluster = bottom_up_cluster(inputs, max)
-    for cluster in generate_clusters(base_cluster, 3):
+    _base_cluster = bottom_up_cluster(inputs_list, max)
+    for cluster in generate_clusters(_base_cluster, 3):
         print(get_values(cluster))

@@ -152,27 +152,27 @@ if __name__ == "__main__":
 
     print("using the gradient")
 
-    v = [random.randint(-10, 10) for i in range(3)]
+    _v = [random.randint(-10, 10) for i in range(3)]
 
-    tolerance = 0.0000001
+    _tolerance = 0.0000001
 
     while True:
         # print v, sum_of_squares(v)
-        gradient = sum_of_squares_gradient(v)  # compute the gradient at v
-        next_v = step(v, gradient, -0.01)  # take a negative gradient step
-        if distance(next_v, v) < tolerance:  # stop if we're converging
+        _gradient = sum_of_squares_gradient(_v)  # compute the gradient at v
+        next_v = step(_v, _gradient, -0.01)  # take a negative gradient step
+        if distance(next_v, _v) < _tolerance:  # stop if we're converging
             break
-        v = next_v  # continue if we're not
+        _v = next_v  # continue if we're not
 
-    print("minimum v", v)
-    print("minimum value", sum_of_squares(v))
+    print("minimum v", _v)
+    print("minimum value", sum_of_squares(_v))
     print()
 
     print("using minimize_batch")
 
-    v = [random.randint(-10, 10) for i in range(3)]
+    _v = [random.randint(-10, 10) for i in range(3)]
 
-    v = minimize_batch(sum_of_squares, sum_of_squares_gradient, v)
+    _v = minimize_batch(sum_of_squares, sum_of_squares_gradient, _v)
 
-    print("minimum v", v)
-    print("minimum value", sum_of_squares(v))
+    print("minimum v", _v)
+    print("minimum value", sum_of_squares(_v))

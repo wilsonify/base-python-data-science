@@ -82,18 +82,18 @@ def generate_using_bigrams(transitions):
             return " ".join(result)  # if "." we're done
 
 
-def generate_using_trigrams(starts, trigram_transitions):
-    current = random.choice(starts)  # choose a random starting word
-    prev = "."  # and precede it with a '.'
-    result = [current]
+def generate_using_trigrams(_starts, _trigram_transitions):
+    _current_ = random.choice(_starts)  # choose a random starting word
+    _prev = "."  # and precede it with a '.'
+    result = [_current_]
     while True:
-        next_word_candidates = trigram_transitions[(prev, current)]
-        next = random.choice(next_word_candidates)
+        next_word_candidates = _trigram_transitions[(_prev, _current_)]
+        next_word = random.choice(next_word_candidates)
 
-        prev, current = current, next
-        result.append(current)
+        _prev, _current_ = _current_, next_word
+        result.append(_current_)
 
-        if current == ".":
+        if _current_ == ".":
             return " ".join(result)
 
 
@@ -101,28 +101,28 @@ def is_terminal(token):
     return token[0] != "_"
 
 
-def expand(grammar, tokens):
-    for i, token in enumerate(tokens):
+def expand(_grammar, tokens):
+    for _i, token in enumerate(tokens):
 
         # ignore terminals
         if is_terminal(token):
             continue
 
         # choose a replacement at random
-        replacement = random.choice(grammar[token])
+        replacement = random.choice(_grammar[token])
 
         if is_terminal(replacement):
-            tokens[i] = replacement
+            tokens[_i] = replacement
         else:
-            tokens = tokens[:i] + replacement.split() + tokens[(i + 1):]
-        return expand(grammar, tokens)
+            tokens = tokens[:_i] + replacement.split() + tokens[(_i + 1):]
+        return expand(_grammar, tokens)
 
     # if we get here we had all terminals and are done
     return tokens
 
 
-def generate_sentence(grammar):
-    return expand(grammar, ["_S"])
+def generate_sentence(_grammar):
+    return expand(_grammar, ["_S"])
 
 
 #
@@ -180,10 +180,10 @@ def compare_distributions(num_samples=1000):
 def sample_from(weights):
     total = sum(weights)
     rnd = total * random.random()  # uniform between 0 and total
-    for i, w in enumerate(weights):
-        rnd -= w  # return the smallest i such that
+    for _i, w in enumerate(weights):
+        rnd -= w  # return the smallest _i such that
         if rnd <= 0:
-            return i  # sum(weights[:(i+1)]) >= rnd
+            return _i  # sum(weights[:(_i+1)]) >= rnd
 
 
 documents = [
@@ -249,19 +249,19 @@ random.seed(0)
 document_topics = [[random.randrange(K) for word in document] for document in documents]
 
 for d in range(D):
-    for word, topic in zip(documents[d], document_topics[d]):
-        document_topic_counts[d][topic] += 1
-        topic_word_counts[topic][word] += 1
-        topic_counts[topic] += 1
+    for word, _topic in zip(documents[d], document_topics[d]):
+        document_topic_counts[d][_topic] += 1
+        topic_word_counts[_topic][word] += 1
+        topic_counts[_topic] += 1
 
-for iter in range(1000):
+for iteration in range(1000):
     for d in range(D):
-        for i, (word, topic) in enumerate(zip(documents[d], document_topics[d])):
+        for i, (word, _topic) in enumerate(zip(documents[d], document_topics[d])):
             # remove this word / topic from the counts
             # so that it doesn't influence the weights
-            document_topic_counts[d][topic] -= 1
-            topic_word_counts[topic][word] -= 1
-            topic_counts[topic] -= 1
+            document_topic_counts[d][_topic] -= 1
+            topic_word_counts[_topic][word] -= 1
+            topic_counts[_topic] -= 1
             document_lengths[d] -= 1
 
             # choose a new topic based on the weights
@@ -279,14 +279,14 @@ if __name__ == "__main__":
     document = get_document()
 
     bigrams = list(zip(document, document[1:]))
-    transitions = defaultdict(list)
-    for prev, current in bigrams:
-        transitions[prev].append(current)
+    _transitions = defaultdict(list)
+    for prev, _current in bigrams:
+        _transitions[prev].append(_current)
 
     random.seed(0)
     print("bigram sentences")
     for i in range(10):
-        print(i, generate_using_bigrams(transitions))
+        print(i, generate_using_bigrams(_transitions))
     print()
 
     # trigrams
@@ -295,12 +295,12 @@ if __name__ == "__main__":
     trigram_transitions = defaultdict(list)
     starts = []
 
-    for prev, current, next in trigrams:
+    for prev, _current, next_gram in trigrams:
 
         if prev == ".":  # if the previous "word" was a period
-            starts.append(current)  # then this is a start word
+            starts.append(_current)  # then this is a start word
 
-        trigram_transitions[(prev, current)].append(next)
+        trigram_transitions[(prev, _current)].append(next_gram)
 
     print("trigram sentences")
     for i in range(10):
@@ -329,10 +329,10 @@ if __name__ == "__main__":
 
     # topic MODELING
 
-    for k, word_counts in enumerate(topic_word_counts):
+    for kth, word_counts in enumerate(topic_word_counts):
         for word, count in word_counts.most_common():
             if count > 0:
-                print(k, word, count)
+                print(kth, word, count)
 
     topic_names = [
         "Big Data and programming languages",
@@ -343,7 +343,7 @@ if __name__ == "__main__":
 
     for document, topic_counts in zip(documents, document_topic_counts):
         print(document)
-        for topic, count in topic_counts.most_common():
+        for _topic, count in topic_counts.most_common():
             if count > 0:
-                print(topic_names[topic], count)
+                print(topic_names[_topic], count)
         print()

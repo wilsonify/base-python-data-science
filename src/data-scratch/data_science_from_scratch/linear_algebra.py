@@ -61,18 +61,18 @@ def distance(v, w):
 #
 
 
-def shape(A):
-    num_rows = len(A)
-    num_cols = len(A[0]) if A else 0
+def shape(a_matrix):
+    num_rows = len(a_matrix)
+    num_cols = len(a_matrix[0]) if a_matrix else 0
     return num_rows, num_cols
 
 
-def get_row(A, i):
-    return A[i]
+def get_row(a_matrix, i):
+    return a_matrix[i]
 
 
-def get_column(A, j):
-    return [A_i[j] for A_i in A]
+def get_column(a_matrix, j):
+    return [A_i[j] for A_i in a_matrix]
 
 
 def make_matrix(num_rows, num_cols, entry_fn):
@@ -109,13 +109,13 @@ friendships = [
 #
 
 
-def matrix_add(A, B):
-    if shape(A) != shape(B):
+def matrix_add(a_matrix, b_matrix):
+    if shape(a_matrix) != shape(b_matrix):
         raise ArithmeticError("cannot add matrices with different shapes")
 
-    num_rows, num_cols = shape(A)
+    num_rows, num_cols = shape(a_matrix)
 
     def entry_fn(i, j):
-        return A[i][j] + B[i][j]
+        return a_matrix[i][j] + b_matrix[i][j]
 
     return make_matrix(num_rows, num_cols, entry_fn)

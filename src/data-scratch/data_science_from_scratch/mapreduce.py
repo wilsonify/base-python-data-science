@@ -43,8 +43,8 @@ def map_reduce(inputs, mapper, reducer):
     """runs MapReduce on the inputs using mapper and reducer"""
     collector = defaultdict(list)
 
-    for input in inputs:
-        for key, value in mapper(input):
+    for in_put in inputs:
+        for key, value in mapper(in_put):
             collector[key].append(value)
 
     return [
@@ -166,10 +166,10 @@ def matrix_multiply_reducer(m, key, indexed_values):
 
 
 if __name__ == "__main__":
-    documents = ["data science", "big data", "science fiction"]
+    _documents = ["data science", "big data", "science fiction"]
 
     wc_mapper_results = [
-        result for document in documents for result in wc_mapper(document)
+        result for document in _documents for result in wc_mapper(document)
     ]
 
     print("wc_mapper results")
@@ -177,11 +177,11 @@ if __name__ == "__main__":
     print()
 
     print("word count results")
-    print(word_count(documents))
+    print(word_count(_documents))
     print()
 
     print("word count using map_reduce function")
-    print(map_reduce(documents, wc_mapper, wc_reducer))
+    print(map_reduce(_documents, wc_mapper, wc_reducer))
     print()
 
     print("data science days")
@@ -205,9 +205,9 @@ if __name__ == "__main__":
         ("B", 0, 1, -1),
         ("B", 1, 0, 10),
     ]
-    mapper = partial(matrix_multiply_mapper, 3)
-    reducer = partial(matrix_multiply_reducer, 3)
+    _mapper = partial(matrix_multiply_mapper, 3)
+    _reducer = partial(matrix_multiply_reducer, 3)
 
     print("map-reduce matrix multiplication")
     print("entries:", entries)
-    print("result:", map_reduce(entries, mapper, reducer))
+    print("result:", map_reduce(entries, _mapper, _reducer))

@@ -64,8 +64,8 @@ def backpropagate(network, input_vector, target):
 
     # adjust weights for hidden layer (network[0])
     for i, hidden_neuron in enumerate(network[0]):
-        for j, input in enumerate(input_vector + [1]):
-            hidden_neuron[j] -= hidden_deltas[i] * input
+        for j, input_j in enumerate(input_vector + [1]):
+            hidden_neuron[j] -= hidden_deltas[i] * input_j
 
 
 if __name__ == "__main__":
@@ -130,7 +130,7 @@ if __name__ == "__main__":
         ]
 
 
-    inputs = list(map(make_digit, raw_digits))
+    inputs_ = list(map(make_digit, raw_digits))
 
     targets = [[1 if i == j else 0 for i in range(10)] for j in range(10)]
 
@@ -150,103 +150,33 @@ if __name__ == "__main__":
     ]
 
     # the network starts out with random weights
-    network = [hidden_layer, output_layer]
+    _network = [hidden_layer, output_layer]
 
     # 10,000 iterations seems enough to converge
     for _ in range(10000):
-        for input_vector, target_vector in zip(inputs, targets):
-            backpropagate(network, input_vector, target_vector)
+        for input_vector_, target_vector in zip(inputs_, targets):
+            backpropagate(_network, input_vector_, target_vector)
 
 
-    def predict(input):
-        return feed_forward(network, input)[-1]
+    def predict(in_put):
+        return feed_forward(_network, in_put)[-1]
 
 
-    for i, input in enumerate(inputs):
-        outputs = predict(input)
-        print(i, [round(p, 2) for p in outputs])
+    for i, input_i in enumerate(inputs_):
+        outputs_ = predict(input_i)
+        print(i, [round(p, 2) for p in outputs_])
 
+    print(""".@@@....@@..@@....@@.@@@.""")
     print(
-        """.@@@.
-...@@
-..@@.
-...@@
-.@@@."""
-    )
-    print(
-        [
-            round(x, 2)
-            for x in predict(
-            [0,
-             1,
-             1,
-             1,
-             0,  # .@@@.
-             0,
-             0,
-             0,
-             1,
-             1,  # ...@@
-             0,
-             0,
-             1,
-             1,
-             0,  # ..@@.
-             0,
-             0,
-             0,
-             1,
-             1,  # ...@@
-             0,
-             1,
-             1,
-             1,
-             0,
-             ]
-        )
-        ]
-    )  # .@@@.
+        [round(x, 2) for x in predict([
+            0, 1, 1, 1, 0, 0, 0, 0, 1, 1, 0, 0, 1, 1, 0, 0, 0, 0, 1, 1, 0, 1, 1, 1, 0,
+        ])])  # .@@@.
     print()
 
     print(
-        """.@@@.
-@..@@
-.@@@.
-@..@@
-.@@@."""
+        """.@@@.@..@@.@@@.@..@@.@@@."""
     )
-    print(
-        [
-            round(x, 2)
-            for x in predict(
-            [
-                0,
-                1,
-                1,
-                1,
-                0,  # .@@@.
-                1,
-                0,
-                0,
-                1,
-                1,  # @..@@
-                0,
-                1,
-                1,
-                1,
-                0,  # .@@@.
-                1,
-                0,
-                0,
-                1,
-                1,  # @..@@
-                0,
-                1,
-                1,
-                1,
-                0,
-            ]
-        )
-        ]
-    )  # .@@@.
+    print([round(x, 2) for x in predict([
+        0, 1, 1, 1, 0, 1, 0, 0, 1, 1, 0, 1, 1, 1, 0, 1, 0, 0, 1, 1, 0, 1, 1, 1, 0
+    ])])
     print()
