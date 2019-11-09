@@ -1,7 +1,9 @@
 import logging
 import math
 from collections import defaultdict, Counter
+from logging.config import dictConfig
 
+from data_science_from_scratch import config
 from data_science_from_scratch.linear_algebra import dot
 
 users_interests = [
@@ -154,6 +156,7 @@ def item_based_suggestions(user_id, include_current_interests=False):
 
 
 if __name__ == "__main__":
+    dictConfig(config.logging_config_dict)
     logging.info("%r", "".format("Popular Interests"))
     logging.info("%r", "".format(popular_interests))
     logging.info("%r", "".format())

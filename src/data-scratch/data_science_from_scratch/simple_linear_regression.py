@@ -1,6 +1,8 @@
 import logging
 import random
+from logging.config import dictConfig
 
+from data_science_from_scratch import config
 from data_science_from_scratch.gradient_descent import minimize_stochastic
 from data_science_from_scratch.stats import (
     mean,
@@ -56,6 +58,7 @@ def squared_error_gradient(x_i, y_i, theta):
 
 
 if __name__ == "__main__":
+    dictConfig(config.logging_config_dict)
     num_friends_good = [
         49,
         41,

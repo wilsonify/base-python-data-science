@@ -4,7 +4,9 @@ import math
 import random
 import re
 from collections import Counter, defaultdict
+from logging.config import dictConfig
 
+from data_science_from_scratch import config
 from data_science_from_scratch.machine_learning import split_data
 
 
@@ -140,5 +142,5 @@ def train_and_test_model(path):
 
 
 if __name__ == "__main__":
-    # train_and_test_model(r"c:\spam\*\*")
+    dictConfig(config.logging_config_dict)  # train_and_test_model(r"c:\spam\*\*")
     train_and_test_model(r"/home/joel/src/spam/*/*")

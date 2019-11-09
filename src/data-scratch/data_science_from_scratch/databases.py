@@ -1,5 +1,8 @@
 import logging
 from collections import defaultdict
+from logging.config import dictConfig
+
+from data_science_from_scratch import config
 
 
 class Table:
@@ -121,6 +124,7 @@ class Table:
 
 
 if __name__ == "__main__":
+    dictConfig(config.logging_config_dict)
     users = Table(["user_id", "name", "num_friends"])
     users.insert([0, "Hero", 0])
     users.insert([1, "Dunn", 2])

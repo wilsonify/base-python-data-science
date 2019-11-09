@@ -1,10 +1,11 @@
 import logging
 import random
-
-
 #
 # data splitting
 #
+from logging.config import dictConfig
+
+from data_science_from_scratch import config
 
 
 def split_data(data, prob):
@@ -58,6 +59,7 @@ def f1_score(tp, fp, fn, tn):
 
 
 if __name__ == "__main__":
+    dictConfig(config.logging_config_dict)
     logging.info(
         "%r",
         "".format(

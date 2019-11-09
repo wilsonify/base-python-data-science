@@ -1,7 +1,9 @@
 import logging
 import math
 import random
+from logging.config import dictConfig
 
+from data_science_from_scratch import config
 from data_science_from_scratch.linear_algebra import dot
 
 
@@ -70,7 +72,7 @@ def backpropagate(network, input_vector, target):
 
 
 if __name__ == "__main__":
-
+    dictConfig(config.logging_config_dict)
     raw_digits = [
         """11111
            1...1

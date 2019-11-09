@@ -2,7 +2,9 @@ import logging
 import math
 import random
 from functools import partial, reduce
+from logging.config import dictConfig
 
+from data_science_from_scratch import config
 from data_science_from_scratch.gradient_descent import (
     maximize_stochastic,
     maximize_batch,
@@ -53,7 +55,7 @@ def logistic_log_gradient(x, y, beta):
 
 
 if __name__ == "__main__":
-
+    dictConfig(config.logging_config_dict)
     data = [
         (0.7, 48000, 1),
         (1.9, 48000, 0),

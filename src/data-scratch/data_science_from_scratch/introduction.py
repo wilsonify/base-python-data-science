@@ -8,6 +8,9 @@
 import logging
 from collections import Counter
 from collections import defaultdict
+from logging.config import dictConfig
+
+from data_science_from_scratch import config
 
 users_list = [
     {"id": 0, "name": "Hero"},
@@ -264,7 +267,7 @@ words_and_counts = Counter(
 )
 
 if __name__ == "__main__":
-
+    dictConfig(config.logging_config_dict)
     logging.info("%r", "".format())
     logging.info("%r", "".format("######################"))
     logging.info("%r", "".format("#"))

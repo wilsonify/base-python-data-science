@@ -1,7 +1,9 @@
 import logging
 import random
 from collections import Counter
+from logging.config import dictConfig
 
+from data_science_from_scratch import config
 from data_science_from_scratch.linear_algebra import distance
 from data_science_from_scratch.stats import mean
 
@@ -135,8 +137,7 @@ def random_distances(dim, num_pairs):
 
 
 if __name__ == "__main__":
-
-    # try several different values for k
+    dictConfig(config.logging_config_dict)  # try several different values for k
     for _k in [1, 3, 5, 7]:
         num_correct = 0
 

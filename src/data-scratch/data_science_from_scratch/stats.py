@@ -1,7 +1,9 @@
 import logging
 import math
 from collections import Counter
+from logging.config import dictConfig
 
+from data_science_from_scratch import config
 from data_science_from_scratch.linear_algebra import sum_of_squares, dot
 
 num_friends = [
@@ -530,6 +532,7 @@ num_friends_good = [x for i, x in enumerate(num_friends) if i != outlier]
 daily_minutes_good = [x for i, x in enumerate(daily_minutes) if i != outlier]
 
 if __name__ == "__main__":
+    dictConfig(config.logging_config_dict)
     logging.info("%r", "".format("num_points", len(num_friends)))
     logging.info("%r", "".format("largest value", max(num_friends)))
     logging.info("%r", "".format("smallest value", min(num_friends)))

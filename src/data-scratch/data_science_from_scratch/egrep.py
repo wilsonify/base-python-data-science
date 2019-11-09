@@ -1,10 +1,12 @@
 # egrep.py
 import re
 import sys
+from logging.config import dictConfig
+
+from data_science_from_scratch import config
 
 if __name__ == "__main__":
-
-    # sys.argv is the list of command-line arguments
+    dictConfig(config.logging_config_dict)  # sys.argv is the list of command-line arguments
     # sys.argv[0] is the name of the program itself
     # sys.argv[1] will be the regex specfied at the command line
     regex = sys.argv[1]

@@ -2,6 +2,9 @@ import logging
 import math
 from collections import Counter, defaultdict
 from functools import partial
+from logging.config import dictConfig
+
+from data_science_from_scratch import config
 
 
 def entropy(class_probabilities):
@@ -112,7 +115,7 @@ def forest_classify(trees, inputs):
 
 
 if __name__ == "__main__":
-
+    dictConfig(config.logging_config_dict)
     inputs_list = [
         ({"level": "Senior", "lang": "Java", "tweets": "no", "phd": "no"}, False),
         ({"level": "Senior", "lang": "Java", "tweets": "no", "phd": "yes"}, False),

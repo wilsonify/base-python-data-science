@@ -2,10 +2,12 @@
 import logging
 import sys
 from collections import Counter
+from logging.config import dictConfig
+
+from data_science_from_scratch import config
 
 if __name__ == "__main__":
-
-    # pass in number of words as first argument
+    dictConfig(config.logging_config_dict)  # pass in number of words as first argument
     try:
         num_words = int(sys.argv[1])
     except IndexError:

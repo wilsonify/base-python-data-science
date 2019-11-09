@@ -2,7 +2,9 @@ import datetime
 import logging
 from collections import defaultdict, Counter
 from functools import partial
+from logging.config import dictConfig
 
+from data_science_from_scratch import config
 from data_science_from_scratch.naive_bayes import tokenize
 
 
@@ -166,6 +168,7 @@ def matrix_multiply_reducer(m, key, indexed_values):
 
 
 if __name__ == "__main__":
+    dictConfig(config.logging_config_dict)
     _documents = ["data science", "big data", "science fiction"]
 
     wc_mapper_results = [

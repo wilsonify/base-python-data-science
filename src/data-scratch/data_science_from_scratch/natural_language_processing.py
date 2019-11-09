@@ -2,9 +2,11 @@ import logging
 import random
 import re
 from collections import defaultdict, Counter
+from logging.config import dictConfig
 
 import requests
 from bs4 import BeautifulSoup
+from data_science_from_scratch import config
 
 
 def plot_resumes(plt):
@@ -276,7 +278,7 @@ for iteration in range(1000):
             document_lengths[d] += 1
 
 if __name__ == "__main__":
-
+    dictConfig(config.logging_config_dict)
     document = get_document()
 
     bigrams = list(zip(document, document[1:]))

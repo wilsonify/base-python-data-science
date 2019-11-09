@@ -1,6 +1,8 @@
 import logging
 import random
+from logging.config import dictConfig
 
+from data_science_from_scratch import config
 from data_science_from_scratch.linear_algebra import (
     squared_distance,
     vector_mean,
@@ -156,6 +158,7 @@ def generate_clusters(base_cluster, num_clusters):
 
 
 if __name__ == "__main__":
+    dictConfig(config.logging_config_dict)
 
     inputs_list = [
         [-14, -5],

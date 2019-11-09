@@ -4,8 +4,10 @@ import math
 import random
 from collections import Counter, defaultdict
 from functools import partial, reduce
+from logging.config import dictConfig
 
 import dateutil.parser
+from data_science_from_scratch import config
 from data_science_from_scratch.gradient_descent import (
     maximize_stochastic,
     maximize_batch,
@@ -383,7 +385,7 @@ def transform(x_vector, components):
 
 # noinspection PyPep8,PyPep8
 if __name__ == "__main__":
-
+    dictConfig(config.logging_config_dict)
     logging.info("%r", "".format("correlation(xs, ys1)", correlation(xs, ys1)))
     logging.info("%r", "".format("correlation(xs, ys2)", correlation(xs, ys2)))
 

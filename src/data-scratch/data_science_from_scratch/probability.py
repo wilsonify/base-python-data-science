@@ -1,6 +1,9 @@
 import logging
 import math
 import random
+from logging.config import dictConfig
+
+from data_science_from_scratch import config
 
 
 def random_kid():
@@ -74,8 +77,7 @@ def binomial(p, n):
 
 
 if __name__ == "__main__":
-
-    #
+    dictConfig(config.logging_config_dict)  #
     # CONDITIONAL PROBABILITY
     #
 

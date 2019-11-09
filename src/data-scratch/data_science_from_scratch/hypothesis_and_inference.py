@@ -1,7 +1,9 @@
 import logging
 import math
 import random
+from logging.config import dictConfig
 
+from data_science_from_scratch import config
 from data_science_from_scratch.probability import normal_cdf, inverse_normal_cdf
 
 
@@ -149,6 +151,7 @@ def beta_pdf(x, alpha, beta):
 
 
 if __name__ == "__main__":
+    dictConfig(config.logging_config_dict)
     mu_0, sigma_0 = normal_approximation_to_binomial(1000, 0.5)
     logging.info("%r", "".format("mu_0", mu_0))
     logging.info("%r", "".format("sigma_0", sigma_0))

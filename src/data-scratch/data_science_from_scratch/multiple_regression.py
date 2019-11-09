@@ -1,7 +1,9 @@
 import logging
 import random
 from functools import partial
+from logging.config import dictConfig
 
+from data_science_from_scratch import config
 from data_science_from_scratch.gradient_descent import minimize_stochastic
 from data_science_from_scratch.linear_algebra import dot, vector_add
 from data_science_from_scratch.probability import normal_cdf
@@ -107,7 +109,7 @@ def lasso_penalty(beta, alpha):
 
 
 if __name__ == "__main__":
-
+    dictConfig(config.logging_config_dict)
     _x = [
         [1, 49, 4, 0],
         [1, 41, 9, 0],
