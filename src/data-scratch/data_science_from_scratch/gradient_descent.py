@@ -1,5 +1,9 @@
 from collections import Counter
-from data_science_from_scratch.linear_algebra import distance, vector_subtract, scalar_multiply
+from data_science_from_scratch.linear_algebra import (
+    distance,
+    vector_subtract,
+    scalar_multiply,
+)
 from functools import reduce
 import math, random
 
@@ -17,21 +21,18 @@ def difference_quotient(f, x, h):
 
 def partial_difference_quotient(f, v, i, h):
     # add h to just the i-th element of v
-    w = [v_j + (h if j == i else 0)
-         for j, v_j in enumerate(v)]
+    w = [v_j + (h if j == i else 0) for j, v_j in enumerate(v)]
 
     return (f(w) - f(v)) / h
 
 
 def estimate_gradient(f, v, h=0.00001):
-    return [partial_difference_quotient(f, v, i, h)
-            for i, _ in enumerate(v)]
+    return [partial_difference_quotient(f, v, i, h) for i, _ in enumerate(v)]
 
 
 def step(v, direction, step_size):
     """move step_size in the direction from v"""
-    return [v_i + step_size * direction_i
-            for v_i, direction_i in zip(v, direction)]
+    return [v_i + step_size * direction_i for v_i, direction_i in zip(v, direction)]
 
 
 def sum_of_squares_gradient(v):
@@ -45,7 +46,7 @@ def safe(f):
         try:
             return f(*args, **kwargs)
         except:
-            return float('inf')  # this means "infinity" in Python
+            return float("inf")  # this means "infinity" in Python
 
     return safe_f
 
@@ -55,6 +56,7 @@ def safe(f):
 # minimize / maximize batch
 #
 #
+
 
 def minimize_batch(target_fn, gradient_fn, theta_0, tolerance=0.000001):
     """use gradient descent to find theta that minimizes target function"""
@@ -67,8 +69,7 @@ def minimize_batch(target_fn, gradient_fn, theta_0, tolerance=0.000001):
 
     while True:
         gradient = gradient_fn(theta)
-        next_thetas = [step(theta, gradient, -step_size)
-                       for step_size in step_sizes]
+        next_thetas = [step(theta, gradient, -step_size) for step_size in step_sizes]
 
         # choose the one that minimizes the error function
         next_theta = min(next_thetas, key=target_fn)
@@ -92,15 +93,15 @@ def negate_all(f):
 
 
 def maximize_batch(target_fn, gradient_fn, theta_0, tolerance=0.000001):
-    return minimize_batch(negate(target_fn),
-                          negate_all(gradient_fn),
-                          theta_0,
-                          tolerance)
+    return minimize_batch(
+        negate(target_fn), negate_all(gradient_fn), theta_0, tolerance
+    )
 
 
 #
 # minimize / maximize stochastic
 #
+
 
 def in_random_order(data):
     """generator that returns the elements of data in random order"""
@@ -141,9 +142,9 @@ def minimize_stochastic(target_fn, gradient_fn, x, y, theta_0, alpha_0=0.01):
 
 
 def maximize_stochastic(target_fn, gradient_fn, x, y, theta_0, alpha_0=0.01):
-    return minimize_stochastic(negate(target_fn),
-                               negate_all(gradient_fn),
-                               x, y, theta_0, alpha_0)
+    return minimize_stochastic(
+        negate(target_fn), negate_all(gradient_fn), x, y, theta_0, alpha_0
+    )
 
 
 if __name__ == "__main__":

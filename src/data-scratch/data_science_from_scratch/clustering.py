@@ -1,17 +1,21 @@
-from data_science_from_scratch.linear_algebra import squared_distance, vector_mean, distance
+from data_science_from_scratch.linear_algebra import (
+    squared_distance,
+    vector_mean,
+    distance,
+)
 import math, random
+
 
 class KMeans:
     """performs k-means clustering"""
 
     def __init__(self, k):
-        self.k = k          # number of clusters
-        self.means = None   # means of clusters
+        self.k = k  # number of clusters
+        self.means = None  # means of clusters
 
     def classify(self, input):
         """return the index of the cluster closest to the input"""
-        return min(range(self.k),
-                   key=lambda i: squared_distance(input, self.means[i]))
+        return min(range(self.k), key=lambda i: squared_distance(input, self.means[i]))
 
     def train(self, inputs):
 
@@ -35,6 +39,7 @@ class KMeans:
                 if i_points:
                     self.means[i] = vector_mean(i_points)
 
+
 def squared_clustering_errors(inputs, k):
     """finds the total squared error from k-means clustering the inputs"""
     clusterer = KMeans(k)
@@ -42,9 +47,10 @@ def squared_clustering_errors(inputs, k):
     means = clusterer.means
     assignments = list(map(clusterer.classify, inputs))
 
-    return sum(squared_distance(input,means[cluster])
-               for input, cluster in zip(inputs, assignments))
-
+    return sum(
+        squared_distance(input, means[cluster])
+        for input, cluster in zip(inputs, assignments)
+    )
 
 
 #
@@ -56,9 +62,11 @@ def squared_clustering_errors(inputs, k):
 # hierarchical clustering
 #
 
+
 def is_leaf(cluster):
     """a cluster is a leaf if it has length 1"""
     return len(cluster) == 1
+
 
 def get_children(cluster):
     """returns the two children of this cluster if it's a merged cluster;
@@ -68,28 +76,34 @@ def get_children(cluster):
     else:
         return cluster[1]
 
+
 def get_values(cluster):
     """returns the value in this cluster (if it's a leaf cluster)
     or all the values in the leaf clusters below it (if it's not)"""
     if is_leaf(cluster):
-        return cluster # is already a 1-tuple containing value
+        return cluster  # is already a 1-tuple containing value
     else:
-        return [value
-                for child in get_children(cluster)
-                for value in get_values(child)]
+        return [value for child in get_children(cluster) for value in get_values(child)]
+
 
 def cluster_distance(cluster1, cluster2, distance_agg=min):
     """finds the aggregate distance between elements of cluster1
     and elements of cluster2"""
-    return distance_agg([distance(input1, input2)
-                        for input1 in get_values(cluster1)
-                        for input2 in get_values(cluster2)])
+    return distance_agg(
+        [
+            distance(input1, input2)
+            for input1 in get_values(cluster1)
+            for input2 in get_values(cluster2)
+        ]
+    )
+
 
 def get_merge_order(cluster):
     if is_leaf(cluster):
-        return float('inf')
+        return float("inf")
     else:
-        return cluster[0] # merge_order is first element of 2-tuple
+        return cluster[0]  # merge_order is first element of 2-tuple
+
 
 def bottom_up_cluster(inputs, distance_agg=min):
     # start with every input a leaf cluster / 1-tuple
@@ -98,10 +112,14 @@ def bottom_up_cluster(inputs, distance_agg=min):
     # as long as we have more than one cluster left...
     while len(clusters) > 1:
         # find the two closest clusters
-        c1, c2 = min([(cluster1, cluster2)
-                     for i, cluster1 in enumerate(clusters)
-                     for cluster2 in clusters[:i]],
-                     key=lambda p: cluster_distance(p[0], p[1], distance_agg))
+        c1, c2 = min(
+            [
+                (cluster1, cluster2)
+                for i, cluster1 in enumerate(clusters)
+                for cluster2 in clusters[:i]
+            ],
+            key=lambda p: cluster_distance(p[0], p[1], distance_agg),
+        )
 
         # remove them from the list of clusters
         clusters = [c for c in clusters if c != c1 and c != c2]
@@ -114,6 +132,7 @@ def bottom_up_cluster(inputs, distance_agg=min):
 
     # when there's only one cluster left, return it
     return clusters[0]
+
 
 def generate_clusters(base_cluster, num_clusters):
     # start with a list with just the base cluster
@@ -131,11 +150,33 @@ def generate_clusters(base_cluster, num_clusters):
     # once we have enough clusters...
     return clusters
 
+
 if __name__ == "__main__":
 
-    inputs = [[-14,-5],[13,13],[20,23],[-19,-11],[-9,-16],[21,27],[-49,15],[26,13],[-46,5],[-34,-1],[11,15],[-49,0],[-22,-16],[19,28],[-12,-8],[-13,-19],[-41,8],[-11,-6],[-25,-9],[-18,-3]]
+    inputs = [
+        [-14, -5],
+        [13, 13],
+        [20, 23],
+        [-19, -11],
+        [-9, -16],
+        [21, 27],
+        [-49, 15],
+        [26, 13],
+        [-46, 5],
+        [-34, -1],
+        [11, 15],
+        [-49, 0],
+        [-22, -16],
+        [19, 28],
+        [-12, -8],
+        [-13, -19],
+        [-41, 8],
+        [-11, -6],
+        [-25, -9],
+        [-18, -3],
+    ]
 
-    random.seed(0) # so you get the same results as me
+    random.seed(0)  # so you get the same results as me
     clusterer = KMeans(3)
     clusterer.train(inputs)
     print("3-means:")
@@ -154,7 +195,6 @@ if __name__ == "__main__":
     for k in range(1, len(inputs) + 1):
         print(k, squared_clustering_errors(inputs, k))
     print()
-
 
     print("bottom up hierarchical clustering")
 

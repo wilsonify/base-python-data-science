@@ -2,10 +2,11 @@ from collections import Counter, defaultdict
 from data_science_from_scratch.machine_learning import split_data
 import math, random, re, glob
 
+
 def tokenize(message):
-    message = message.lower()                       # convert to lowercase
-    all_words = re.findall("[a-z0-9']+", message)   # extract the words
-    return set(all_words)                           # remove duplicates
+    message = message.lower()  # convert to lowercase
+    all_words = re.findall("[a-z0-9']+", message)  # extract the words
+    return set(all_words)  # remove duplicates
 
 
 def count_words(training_set):
@@ -16,13 +17,19 @@ def count_words(training_set):
             counts[word][0 if is_spam else 1] += 1
     return counts
 
+
 def word_probabilities(counts, total_spams, total_non_spams, k=0.5):
     """turn the word_counts into a list of triplets
     w, p(w | spam) and p(w | ~spam)"""
-    return [(w,
-             (spam + k) / (total_spams + 2 * k),
-             (non_spam + k) / (total_non_spams + 2 * k))
-             for w, (spam, non_spam) in counts.items()]
+    return [
+        (
+            w,
+            (spam + k) / (total_spams + 2 * k),
+            (non_spam + k) / (total_non_spams + 2 * k),
+        )
+        for w, (spam, non_spam) in counts.items()
+    ]
+
 
 def spam_probability(word_probs, message):
     message_words = tokenize(message)
@@ -48,7 +55,6 @@ def spam_probability(word_probs, message):
 
 
 class NaiveBayesClassifier:
-
     def __init__(self, k=0.5):
         self.k = k
         self.word_probs = []
@@ -56,17 +62,14 @@ class NaiveBayesClassifier:
     def train(self, training_set):
 
         # count spam and non-spam messages
-        num_spams = len([is_spam
-                         for message, is_spam in training_set
-                         if is_spam])
+        num_spams = len([is_spam for message, is_spam in training_set if is_spam])
         num_non_spams = len(training_set) - num_spams
 
         # run training data through our "pipeline"
         word_counts = count_words(training_set)
-        self.word_probs = word_probabilities(word_counts,
-                                             num_spams,
-                                             num_non_spams,
-                                             self.k)
+        self.word_probs = word_probabilities(
+            word_counts, num_spams, num_non_spams, self.k
+        )
 
     def classify(self, message):
         return spam_probability(self.word_probs, message)
@@ -83,7 +86,7 @@ def get_subject_data(path):
     for fn in glob.glob(path):
         is_spam = "ham" not in fn
 
-        with open(fn,'r',encoding='ISO-8859-1') as file:
+        with open(fn, "r", encoding="ISO-8859-1") as file:
             for line in file:
                 if line.startswith("Subject:"):
                     subject = subject_regex.sub("", line).strip()
@@ -91,24 +94,30 @@ def get_subject_data(path):
 
     return data
 
+
 def p_spam_given_word(word_prob):
     word, prob_if_spam, prob_if_not_spam = word_prob
     return prob_if_spam / (prob_if_spam + prob_if_not_spam)
 
+
 def train_and_test_model(path):
 
     data = get_subject_data(path)
-    random.seed(0)      # just so you get the same answers as me
+    random.seed(0)  # just so you get the same answers as me
     train_data, test_data = split_data(data, 0.75)
 
     classifier = NaiveBayesClassifier()
     classifier.train(train_data)
 
-    classified = [(subject, is_spam, classifier.classify(subject))
-              for subject, is_spam in test_data]
+    classified = [
+        (subject, is_spam, classifier.classify(subject))
+        for subject, is_spam in test_data
+    ]
 
-    counts = Counter((is_spam, spam_probability > 0.5) # (actual, predicted)
-                     for _, is_spam, spam_probability in classified)
+    counts = Counter(
+        (is_spam, spam_probability > 0.5)  # (actual, predicted)
+        for _, is_spam, spam_probability in classified
+    )
 
     print(counts)
 
@@ -129,5 +138,5 @@ def train_and_test_model(path):
 
 
 if __name__ == "__main__":
-    #train_and_test_model(r"c:\spam\*\*")
+    # train_and_test_model(r"c:\spam\*\*")
     train_and_test_model(r"/home/joel/src/spam/*/*")

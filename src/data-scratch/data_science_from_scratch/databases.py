@@ -1,6 +1,7 @@
 import math, random, re
 from collections import defaultdict
 
+
 class Table:
     def __init__(self, columns):
         self.columns = columns
@@ -25,11 +26,11 @@ class Table:
     def delete(self, predicate=lambda row: True):
         """delete all rows matching predicate
         or all rows if no predicate supplied"""
-        self.rows = [row for row in self.rows if not(predicate(row))]
+        self.rows = [row for row in self.rows if not (predicate(row))]
 
     def select(self, keep_columns=None, additional_columns=None):
 
-        if keep_columns is None:         # if no columns specified,
+        if keep_columns is None:  # if no columns specified,
             keep_columns = self.columns  # return all columns
 
         if additional_columns is None:
@@ -55,9 +56,7 @@ class Table:
     def limit(self, num_rows=None):
         """return only the first num_rows rows"""
         limit_table = Table(self.columns)
-        limit_table.rows = (self.rows[:num_rows]
-                            if num_rows is not None
-                            else self.rows)
+        limit_table.rows = self.rows[:num_rows] if num_rows is not None else self.rows
         return limit_table
 
     def group_by(self, group_by_columns, aggregates, having=None):
@@ -81,22 +80,25 @@ class Table:
         return result_table
 
     def order_by(self, order):
-        new_table = self.select()       # make a copy
+        new_table = self.select()  # make a copy
         new_table.rows.sort(key=order)
         return new_table
 
     def join(self, other_table, left_join=False):
 
-        join_on_columns = [c for c in self.columns           # columns in
-                           if c in other_table.columns]      # both tables
+        join_on_columns = [
+            c for c in self.columns if c in other_table.columns  # columns in
+        ]  # both tables
 
-        additional_columns = [c for c in other_table.columns # columns only
-                              if c not in join_on_columns]   # in right table
+        additional_columns = [
+            c for c in other_table.columns if c not in join_on_columns  # columns only
+        ]  # in right table
 
         # all columns from left table + additional_columns from right table
         join_table = Table(self.columns + additional_columns)
 
         for row in self.rows:
+
             def is_join(other_row):
                 return all(other_row[c] == row[c] for c in join_on_columns)
 
@@ -104,15 +106,19 @@ class Table:
 
             # each other row that matches this one produces a result row
             for other_row in other_rows:
-                join_table.insert([row[c] for c in self.columns] +
-                                  [other_row[c] for c in additional_columns])
+                join_table.insert(
+                    [row[c] for c in self.columns]
+                    + [other_row[c] for c in additional_columns]
+                )
 
             # if no rows match and it's a left join, output with Nones
             if left_join and not other_rows:
-                join_table.insert([row[c] for c in self.columns] +
-                                  [None for c in additional_columns])
+                join_table.insert(
+                    [row[c] for c in self.columns] + [None for c in additional_columns]
+                )
 
         return join_table
+
 
 if __name__ == "__main__":
 
@@ -143,31 +149,32 @@ if __name__ == "__main__":
     print(users.limit(2))
     print()
 
-    print("users.select(keep_columns=[\"user_id\"])")
+    print('users.select(keep_columns=["user_id"])')
     print(users.select(keep_columns=["user_id"]))
     print()
 
     print('where(lambda row: row["name"] == "Dunn")')
-    print(users.where(lambda row: row["name"] == "Dunn")
-               .select(keep_columns=["user_id"]))
+    print(
+        users.where(lambda row: row["name"] == "Dunn").select(keep_columns=["user_id"])
+    )
     print()
 
-    def name_len(row): return len(row["name"])
+    def name_len(row):
+        return len(row["name"])
 
-    print('with name_length:')
-    print(users.select(keep_columns=[],
-                       additional_columns = { "name_length" : name_len }))
+    print("with name_length:")
+    print(users.select(keep_columns=[], additional_columns={"name_length": name_len}))
     print()
 
     # GROUP BY
 
-    def min_user_id(rows): return min(row["user_id"] for row in rows)
+    def min_user_id(rows):
+        return min(row["user_id"] for row in rows)
 
-    stats_by_length = users \
-        .select(additional_columns={"name_len" : name_len}) \
-        .group_by(group_by_columns=["name_len"],
-                  aggregates={ "min_user_id" : min_user_id,
-                               "num_users" : len })
+    stats_by_length = users.select(additional_columns={"name_len": name_len}).group_by(
+        group_by_columns=["name_len"],
+        aggregates={"min_user_id": min_user_id, "num_users": len},
+    )
 
     print("stats by length")
     print(stats_by_length)
@@ -182,22 +189,24 @@ if __name__ == "__main__":
     def enough_friends(rows):
         return average_num_friends(rows) > 1
 
-    avg_friends_by_letter = users \
-        .select(additional_columns={'first_letter' : first_letter_of_name}) \
-        .group_by(group_by_columns=['first_letter'],
-                  aggregates={ "avg_num_friends" : average_num_friends },
-                  having=enough_friends)
+    avg_friends_by_letter = users.select(
+        additional_columns={"first_letter": first_letter_of_name}
+    ).group_by(
+        group_by_columns=["first_letter"],
+        aggregates={"avg_num_friends": average_num_friends},
+        having=enough_friends,
+    )
 
     print("avg friends by letter")
     print(avg_friends_by_letter)
     print()
 
-    def sum_user_ids(rows): return sum(row["user_id"] for row in rows)
+    def sum_user_ids(rows):
+        return sum(row["user_id"] for row in rows)
 
-    user_id_sum = users \
-        .where(lambda row: row["user_id"] > 1) \
-        .group_by(group_by_columns=[],
-                  aggregates={ "user_id_sum" : sum_user_ids })
+    user_id_sum = users.where(lambda row: row["user_id"] > 1).group_by(
+        group_by_columns=[], aggregates={"user_id_sum": sum_user_ids}
+    )
 
     print("user id sum")
     print(user_id_sum)
@@ -205,9 +214,9 @@ if __name__ == "__main__":
 
     # ORDER BY
 
-    friendliest_letters = avg_friends_by_letter \
-        .order_by(lambda row: -row["avg_num_friends"]) \
-        .limit(4)
+    friendliest_letters = avg_friends_by_letter.order_by(
+        lambda row: -row["avg_num_friends"]
+    ).limit(4)
 
     print("friendliest letters")
     print(friendliest_letters)
@@ -221,10 +230,11 @@ if __name__ == "__main__":
     user_interests.insert([2, "SQL"])
     user_interests.insert([2, "MySQL"])
 
-    sql_users = users \
-    .join(user_interests) \
-    .where(lambda row: row["interest"] == "SQL") \
-    .select(keep_columns=["name"])
+    sql_users = (
+        users.join(user_interests)
+        .where(lambda row: row["interest"] == "SQL")
+        .select(keep_columns=["name"])
+    )
 
     print("sql users")
     print(sql_users)
@@ -234,22 +244,22 @@ if __name__ == "__main__":
         """counts how many rows have non-None interests"""
         return len([row for row in rows if row["interest"] is not None])
 
-    user_interest_counts = users \
-        .join(user_interests, left_join=True) \
-        .group_by(group_by_columns=["user_id"],
-                  aggregates={"num_interests" : count_interests })
+    user_interest_counts = users.join(user_interests, left_join=True).group_by(
+        group_by_columns=["user_id"], aggregates={"num_interests": count_interests}
+    )
 
     print("user interest counts")
     print(user_interest_counts)
 
     # SUBQUERIES
 
-    likes_sql_user_ids = user_interests \
-        .where(lambda row: row["interest"] == "SQL") \
-        .select(keep_columns=['user_id'])
+    likes_sql_user_ids = user_interests.where(
+        lambda row: row["interest"] == "SQL"
+    ).select(keep_columns=["user_id"])
 
-    likes_sql_user_ids.group_by(group_by_columns=[],
-                                aggregates={ "min_user_id" : min_user_id })
+    likes_sql_user_ids.group_by(
+        group_by_columns=[], aggregates={"min_user_id": min_user_id}
+    )
 
     print("likes sql user ids")
     print(likes_sql_user_ids)

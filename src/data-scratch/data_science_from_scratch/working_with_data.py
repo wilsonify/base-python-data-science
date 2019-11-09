@@ -1,10 +1,23 @@
 from collections import Counter, defaultdict
 from functools import partial, reduce
-from data_science_from_scratch.linear_algebra import shape, get_row, get_column, make_matrix, \
-    vector_mean, vector_sum, dot, magnitude, vector_subtract, scalar_multiply
+from data_science_from_scratch.linear_algebra import (
+    shape,
+    get_row,
+    get_column,
+    make_matrix,
+    vector_mean,
+    vector_sum,
+    dot,
+    magnitude,
+    vector_subtract,
+    scalar_multiply,
+)
 from data_science_from_scratch.stats import correlation, standard_deviation, mean
 from data_science_from_scratch.probability import inverse_normal_cdf
-from data_science_from_scratch.gradient_descent import maximize_stochastic, maximize_batch
+from data_science_from_scratch.gradient_descent import (
+    maximize_stochastic,
+    maximize_batch,
+)
 import math, random, csv
 import dateutil.parser
 
@@ -17,8 +30,6 @@ def bucketize(point, bucket_size):
 def make_histogram(points, bucket_size):
     """buckets the points and counts how many in each bucket"""
     return Counter(bucketize(point, bucket_size) for point in points)
-
-
 
 
 def random_normal():
@@ -43,13 +54,13 @@ def correlation_matrix(data):
     return make_matrix(num_columns, num_columns, matrix_entry)
 
 
-
-
 def parse_row(input_row, parsers):
     """given a list of parsers (some of which may be None)
     apply the appropriate one to each element of the input_row"""
-    return [parser(value) if parser is not None else value
-            for value, parser in zip(input_row, parsers)]
+    return [
+        parser(value) if parser is not None else value
+        for value, parser in zip(input_row, parsers)
+    ]
 
 
 def parse_rows_with(reader, parsers):
@@ -72,8 +83,10 @@ def try_or_none(f):
 
 
 def parse_row(input_row, parsers):
-    return [try_or_none(parser)(value) if parser is not None else value
-            for value, parser in zip(input_row, parsers)]
+    return [
+        try_or_none(parser)(value) if parser is not None else value
+        for value, parser in zip(input_row, parsers)
+    ]
 
 
 def try_parse_field(field_name, value, parser_dict):
@@ -86,8 +99,10 @@ def try_parse_field(field_name, value, parser_dict):
 
 
 def parse_dict(input_dict, parser_dict):
-    return {field_name: try_parse_field(field_name, value, parser_dict)
-            for field_name, value in input_dict.items()}
+    return {
+        field_name: try_parse_field(field_name, value, parser_dict)
+        for field_name, value in input_dict.items()
+    }
 
 
 #
@@ -95,6 +110,7 @@ def parse_dict(input_dict, parser_dict):
 # MANIPULATING DATA
 #
 #
+
 
 def picker(field_name):
     """returns a function that picks a field out of a dict"""
@@ -114,8 +130,7 @@ def group_by(grouper, rows, value_transform=None):
     if value_transform is None:
         return grouped
     else:
-        return {key: value_transform(rows)
-                for key, rows in grouped.items()}
+        return {key: value_transform(rows) for key, rows in grouped.items()}
 
 
 def percent_price_change(yesterday, today):
@@ -126,10 +141,14 @@ def day_over_day_changes(grouped_rows):
     # sort the rows by date
     ordered = sorted(grouped_rows, key=picker("date"))
     # zip with an offset to get pairs of consecutive days
-    return [{"symbol": today["symbol"],
-             "date": today["date"],
-             "change": percent_price_change(yesterday, today)}
-            for yesterday, today in zip(ordered, ordered[1:])]
+    return [
+        {
+            "symbol": today["symbol"],
+            "date": today["date"],
+            "change": percent_price_change(yesterday, today),
+        }
+        for yesterday, today in zip(ordered, ordered[1:])
+    ]
 
 
 #
@@ -138,12 +157,11 @@ def day_over_day_changes(grouped_rows):
 #
 #
 
+
 def scale(data_matrix):
     num_rows, num_cols = shape(data_matrix)
-    means = [mean(get_column(data_matrix, j))
-             for j in range(num_cols)]
-    stdevs = [standard_deviation(get_column(data_matrix, j))
-              for j in range(num_cols)]
+    means = [mean(get_column(data_matrix, j)) for j in range(num_cols)]
+    stdevs = [standard_deviation(get_column(data_matrix, j)) for j in range(num_cols)]
     return means, stdevs
 
 
@@ -266,7 +284,7 @@ X = [
     [34.6327117468934, -9.26182440487384],
     [34.7042513789061, -6.9630753351114],
     [15.6563953929008, -17.2196961218915],
-    [25.2049825789225, -14.1592086208169]
+    [25.2049825789225, -14.1592086208169],
 ]
 
 
@@ -309,7 +327,8 @@ def first_principal_component(X):
     unscaled_maximizer = maximize_batch(
         partial(directional_variance, X),  # is now a function of w
         partial(directional_variance_gradient, X),  # is now a function of w
-        guess)
+        guess,
+    )
     return direction(unscaled_maximizer)
 
 
@@ -318,7 +337,10 @@ def first_principal_component_sgd(X):
     unscaled_maximizer = maximize_stochastic(
         lambda x, _, w: directional_variance_i(x, w),
         lambda x, _, w: directional_variance_gradient_i(x, w),
-        X, [None for _ in X], guess)
+        X,
+        [None for _ in X],
+        guess,
+    )
     return direction(unscaled_maximizer)
 
 
@@ -366,7 +388,9 @@ if __name__ == "__main__":
 
     data = []
 
-    with open("comma_delimited_stock_prices.csv", "r", encoding='utf8', newline='') as f:
+    with open(
+        "comma_delimited_stock_prices.csv", "r", encoding="utf8", newline=""
+    ) as f:
         reader = csv.reader(f)
         for line in parse_rows_with(reader, [dateutil.parser.parse, None, float]):
             data.append(line)
@@ -376,15 +400,16 @@ if __name__ == "__main__":
             print(row)
 
     print("stocks")
-    with open("stocks.txt", "r", encoding='utf8', newline='') as f:
+    with open("stocks.txt", "r", encoding="utf8", newline="") as f:
         reader = csv.DictReader(f, delimiter="\t")
-        data = [parse_dict(row, {'date': dateutil.parser.parse,
-                                 'closing_price': float})
-                for row in reader]
+        data = [
+            parse_dict(row, {"date": dateutil.parser.parse, "closing_price": float})
+            for row in reader
+        ]
 
-    max_aapl_price = max(row["closing_price"]
-                         for row in data
-                         if row["symbol"] == "AAPL")
+    max_aapl_price = max(
+        row["closing_price"] for row in data if row["symbol"] == "AAPL"
+    )
     print("max aapl price", max_aapl_price)
 
     # group rows by symbol
@@ -394,22 +419,22 @@ if __name__ == "__main__":
         by_symbol[row["symbol"]].append(row)
 
     # use a dict comprehension to find the max for each symbol
-    max_price_by_symbol = {symbol: max(row["closing_price"]
-                                       for row in grouped_rows)
-                           for symbol, grouped_rows in by_symbol.items()}
+    max_price_by_symbol = {
+        symbol: max(row["closing_price"] for row in grouped_rows)
+        for symbol, grouped_rows in by_symbol.items()
+    }
     print("max price by symbol")
     print(max_price_by_symbol)
 
     # key is symbol, value is list of "change" dicts
     changes_by_symbol = group_by(picker("symbol"), data, day_over_day_changes)
     # collect all "change" dicts into one big list
-    all_changes = [change
-                   for changes in changes_by_symbol.values()
-                   for change in changes]
+    all_changes = [
+        change for changes in changes_by_symbol.values() for change in changes
+    ]
 
     print("max change", max(all_changes, key=picker("change")))
     print("min change", min(all_changes, key=picker("change")))
-
 
     # to combine percent changes, we add 1 to each, multiply them, and subtract 1
     # for instance, if we combine +10% and -20%, the overall change is
@@ -417,22 +442,18 @@ if __name__ == "__main__":
     def combine_pct_changes(pct_change1, pct_change2):
         return (1 + pct_change1) * (1 + pct_change2) - 1
 
-
     def overall_change(changes):
         return reduce(combine_pct_changes, pluck("change", changes))
 
-
-    overall_change_by_month = group_by(lambda row: row['date'].month,
-                                       all_changes,
-                                       overall_change)
+    overall_change_by_month = group_by(
+        lambda row: row["date"].month, all_changes, overall_change
+    )
     print("overall change by month")
     print(overall_change_by_month)
 
     print("rescaling")
 
-    data = [[1, 20, 2],
-            [1, 30, 3],
-            [1, 40, 4]]
+    data = [[1, 20, 2], [1, 30, 3], [1, 40, 4]]
 
     print("original: ", data)
     print("scale: ", scale(data))
