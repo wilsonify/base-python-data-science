@@ -91,6 +91,7 @@ def shortest_paths_from(from_user):
             min_path_length = float("inf")
 
         # any new paths to here that aren't too long
+        # noinspection PyPep8
         new_paths_to_here = [
             path_via_prev
             for path_via_prev in paths_via_prev

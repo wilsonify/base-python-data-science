@@ -168,6 +168,7 @@ if __name__ == "__main__":
         logging.info("%r", "".format(i, [round(p, 2) for p in outputs_]))
 
     logging.info("%r", "".format(""".@@@....@@..@@....@@.@@@."""))
+    # noinspection PyPep8
     logging.info(
         "%r",
         "".format(
@@ -208,6 +209,7 @@ if __name__ == "__main__":
     logging.info("%r", "".format())
 
     logging.info("%r", "".format(""".@@@.@..@@.@@@.@..@@.@@@."""))
+    # noinspection PyPep8
     logging.info(
         "%r",
         "".format(

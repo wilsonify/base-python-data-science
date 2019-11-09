@@ -247,6 +247,7 @@ if __name__ == "__main__":
     user_interests.insert([2, "SQL"])
     user_interests.insert([2, "MySQL"])
 
+    # noinspection PyPep8
     sql_users = (
         users.join(user_interests)
             .where(lambda row: row["interest"] == "SQL")
