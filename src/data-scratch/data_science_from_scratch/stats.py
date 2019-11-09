@@ -1,3 +1,4 @@
+import logging
 import math
 from collections import Counter
 
@@ -529,31 +530,31 @@ num_friends_good = [x for i, x in enumerate(num_friends) if i != outlier]
 daily_minutes_good = [x for i, x in enumerate(daily_minutes) if i != outlier]
 
 if __name__ == "__main__":
-    print("num_points", len(num_friends))
-    print("largest value", max(num_friends))
-    print("smallest value", min(num_friends))
-    print("second_smallest_value", sorted_values[1])
-    print("second_largest_value", sorted_values[-2])
-    print("mean(num_friends)", mean(num_friends))
-    print("median(num_friends)", median(num_friends))
-    print("quantile(num_friends, 0.10)", quantile(num_friends, 0.10))
-    print("quantile(num_friends, 0.25)", quantile(num_friends, 0.25))
-    print("quantile(num_friends, 0.75)", quantile(num_friends, 0.75))
-    print("quantile(num_friends, 0.90)", quantile(num_friends, 0.90))
-    print("mode(num_friends)", mode(num_friends))
-    print("data_range(num_friends)", data_range(num_friends))
-    print("variance(num_friends)", variance(num_friends))
-    print("standard_deviation(num_friends)", standard_deviation(num_friends))
-    print("interquartile_range(num_friends)", interquartile_range(num_friends))
+    logging.info("%r","".format("num_points", len(num_friends)))
+    logging.info("%r","".format("largest value", max(num_friends)))
+    logging.info("%r","".format("smallest value", min(num_friends)))
+    logging.info("%r","".format("second_smallest_value", sorted_values[1]))
+    logging.info("%r","".format("second_largest_value", sorted_values[-2]))
+    logging.info("%r","".format("mean(num_friends)", mean(num_friends)))
+    logging.info("%r","".format("median(num_friends)", median(num_friends)))
+    logging.info("%r","".format("quantile(num_friends, 0.10)", quantile(num_friends, 0.10)))
+    logging.info("%r","".format("quantile(num_friends, 0.25)", quantile(num_friends, 0.25)))
+    logging.info("%r","".format("quantile(num_friends, 0.75)", quantile(num_friends, 0.75)))
+    logging.info("%r","".format("quantile(num_friends, 0.90)", quantile(num_friends, 0.90)))
+    logging.info("%r","".format("mode(num_friends)", mode(num_friends)))
+    logging.info("%r","".format("data_range(num_friends)", data_range(num_friends)))
+    logging.info("%r","".format("variance(num_friends)", variance(num_friends)))
+    logging.info("%r","".format("standard_deviation(num_friends)", standard_deviation(num_friends)))
+    logging.info("%r","".format("interquartile_range(num_friends)", interquartile_range(num_friends)))
 
-    print(
+    logging.info("%r","".format(
         "covariance(num_friends, daily_minutes)", covariance(num_friends, daily_minutes)
-    )
-    print(
+    ))
+    logging.info("%r","".format(
         "correlation(num_friends, daily_minutes)",
         correlation(num_friends, daily_minutes),
-    )
-    print(
+    ))
+    logging.info("%r","".format(
         "correlation(num_friends_good, daily_minutes_good)",
         correlation(num_friends_good, daily_minutes_good),
-    )
+    ))

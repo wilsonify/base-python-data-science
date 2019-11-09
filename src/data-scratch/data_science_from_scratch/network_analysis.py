@@ -1,3 +1,4 @@
+import logging
 from collections import deque
 from functools import partial
 
@@ -263,21 +264,21 @@ def page_rank(users, damping=0.85, num_iters=100):
 
 if __name__ == "__main__":
 
-    print("Betweenness Centrality")
+    logging.info("%r","".format("Betweenness Centrality"))
     for _user in users_dict:
-        print(_user["id"], _user["betweenness_centrality"])
-    print()
+        logging.info("%r","".format(_user["id"], _user["betweenness_centrality"]))
+    logging.info("%r","".format())
 
-    print("Closeness Centrality")
+    logging.info("%r","".format("Closeness Centrality"))
     for _user in users_dict:
-        print(_user["id"], _user["closeness_centrality"])
-    print()
+        logging.info("%r","".format(_user["id"], _user["closeness_centrality"]))
+    logging.info("%r","".format())
 
-    print("Eigenvector Centrality")
+    logging.info("%r","".format("Eigenvector Centrality"))
     for _user_id, centrality in enumerate(eigenvector_centralities):
-        print(_user_id, centrality)
-    print()
+        logging.info("%r","".format(_user_id, centrality))
+    logging.info("%r","".format())
 
-    print("PageRank")
+    logging.info("%r","".format("PageRank"))
     for _user_id, _pr in page_rank(users_dict).items():
-        print(_user_id, _pr)
+        logging.info("%r","".format(_user_id, _pr))

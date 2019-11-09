@@ -384,8 +384,8 @@ def transform(x_vector, components):
 # noinspection PyPep8,PyPep8
 if __name__ == "__main__":
 
-    print("correlation(xs, ys1)", correlation(xs, ys1))
-    print("correlation(xs, ys2)", correlation(xs, ys2))
+    logging.info("%r","".format("correlation(xs, ys1)", correlation(xs, ys1)))
+    logging.info("%r","".format("correlation(xs, ys2)", correlation(xs, ys2)))
 
     # safe parsing
 
@@ -400,9 +400,9 @@ if __name__ == "__main__":
 
     for row_data in _data:
         if any(x is None for x in row_data):
-            print(row_data)
+            logging.info("%r","".format(row_data))
 
-    print("stocks")
+    logging.info("%r","".format("stocks"))
     with open("stocks.txt", "r", encoding="utf8", newline="") as f:
         reader_dict = csv.DictReader(f, delimiter="\t")
         _data = [
@@ -413,7 +413,7 @@ if __name__ == "__main__":
     max_aapl_price = max(
         row_aapl["closing_price"] for row_aapl in _data if row_aapl["symbol"] == "AAPL"
     )
-    print("max aapl price", max_aapl_price)
+    logging.info("%r","".format("max aapl price", max_aapl_price))
 
     # group rows by symbol
     by_symbol = defaultdict(list)
@@ -426,8 +426,8 @@ if __name__ == "__main__":
         symbol: max(row_of_group["closing_price"] for row_of_group in grouped_rows)
         for symbol, grouped_rows in by_symbol.items()
     }
-    print("max price by symbol")
-    print(max_price_by_symbol)
+    logging.info("%r","".format("max price by symbol"))
+    logging.info("%r","".format(max_price_by_symbol))
 
     # key is symbol, value is list of "change" dicts
     changes_by_symbol = group_by(picker("symbol"), _data, day_over_day_changes)
@@ -436,10 +436,10 @@ if __name__ == "__main__":
         change for changes in changes_by_symbol.values() for change in changes
     ]
 
-    print("max change", max(all_changes, key=picker("change")))
-    print("min change", min(all_changes, key=picker("change")))
+    logging.info("%r","".format("max change", max(all_changes, key=picker("change"))))
+    logging.info("%r","".format("min change", min(all_changes, key=picker("change"))))
 
-    logging.info("""to combine percent changes, we add 1 to each, multiply them, and subtract 1
+    logging.info("""to combine percent changes, we add 1 to each, multiply them, and subtract 1)
     # for instance, if we combine +10% and -20%, the overall change is
     # (1 + 10%) * (1 - 20%) - 1 = 1.1 * .8 - 1 = -12%""")
 
@@ -455,22 +455,22 @@ if __name__ == "__main__":
     overall_change_by_month = group_by(
         lambda row_r: row_r["date"].month, all_changes, overall_change
     )
-    print("overall change by month")
-    print(overall_change_by_month)
+    logging.info("%r","".format("overall change by month"))
+    logging.info("%r","".format(overall_change_by_month))
 
-    print("rescaling")
+    logging.info("%r","".format("rescaling"))
 
     _data = [[1, 20, 2], [1, 30, 3], [1, 40, 4]]
 
-    print("original: ", _data)
-    print("scale: ", scale(_data))
-    print("rescaled: ", rescale(_data))
-    print()
+    logging.info("%r","".format("original: ", _data))
+    logging.info("%r","".format("scale: ", scale(_data)))
+    logging.info("%r","".format("rescaled: ", rescale(_data)))
+    logging.info("%r","".format())
 
-    print("PCA")
+    logging.info("%r","".format("PCA"))
 
     Y = de_mean_matrix(x_matrix_list)
     components_p = principal_component_analysis(Y, 2)
-    print("principal components", components_p)
-    print("first point", Y[0])
-    print("first point transformed", transform_vector(Y[0], components_p))
+    logging.info("%r","".format("principal components", components_p))
+    logging.info("%r","".format("first point", Y[0]))
+    logging.info("%r","".format("first point transformed", transform_vector(Y[0], components_p)))

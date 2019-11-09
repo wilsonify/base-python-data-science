@@ -1,4 +1,5 @@
 # most_common_words.py
+import logging
 import sys
 from collections import Counter
 
@@ -8,7 +9,7 @@ if __name__ == "__main__":
     try:
         num_words = int(sys.argv[1])
     except IndexError:
-        print("usage: most_common_words.py num_words")
+        logging.info("%r","".format("usage: most_common_words.py num_words"))
         sys.exit(1)  # non-zero exit code indicates error
 
     counter = Counter(

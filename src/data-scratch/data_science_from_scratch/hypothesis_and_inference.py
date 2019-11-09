@@ -1,3 +1,4 @@
+import logging
 import math
 import random
 
@@ -149,58 +150,58 @@ def beta_pdf(x, alpha, beta):
 
 if __name__ == "__main__":
     mu_0, sigma_0 = normal_approximation_to_binomial(1000, 0.5)
-    print("mu_0", mu_0)
-    print("sigma_0", sigma_0)
-    print(
+    logging.info("%r","".format("mu_0", mu_0))
+    logging.info("%r","".format("sigma_0", sigma_0))
+    logging.info("%r","".format(
         "normal_two_sided_bounds(0.95, mu_0, sigma_0)",
         normal_two_sided_bounds(0.95, mu_0, sigma_0),
-    )
-    print()
-    print("power of a test")
+    ))
+    logging.info("%r","".format())
+    logging.info("%r","".format("power of a test"))
 
-    print("95% bounds based on assumption p is 0.5")
+    logging.info("%r","".format("95% bounds based on assumption p is 0.5"))
 
     _lo, _hi = normal_two_sided_bounds(0.95, mu_0, sigma_0)
-    print("lo", _lo)
-    print("hi", _hi)
+    logging.info("%r","".format("lo", _lo))
+    logging.info("%r","".format("hi", _hi))
 
-    print("actual mu and sigma based on p = 0.55")
+    logging.info("%r","".format("actual mu and sigma based on p = 0.55"))
     mu_1, sigma_1 = normal_approximation_to_binomial(1000, 0.55)
-    print("mu_1", mu_1)
-    print("sigma_1", sigma_1)
+    logging.info("%r","".format("mu_1", mu_1))
+    logging.info("%r","".format("sigma_1", sigma_1))
 
     # a type 2 error means we fail to reject the null hypothesis
     # which will happen when X is still in our original interval
     type_2_probability = normal_probability_between(_lo, _hi, mu_1, sigma_1)
     power = 1 - type_2_probability  # 0.887
 
-    print("type 2 probability", type_2_probability)
-    print("power", power)
+    logging.info("%r","".format("type 2 probability", type_2_probability))
+    logging.info("%r","".format("power", power))
 
-    print("one-sided test")
+    logging.info("%r","".format("one-sided test"))
     _hi = normal_upper_bound(0.95, mu_0, sigma_0)
-    print("hi", _hi)  # is 526 (< 531, since we need more probability in the upper tail)
+    logging.info("%r","".format("hi", _hi))  # is 526 (< 531, since we need more probability in the upper tail))
     type_2_probability = normal_probability_below(_hi, mu_1, sigma_1)
     power = 1 - type_2_probability  # = 0.936
-    print("type 2 probability", type_2_probability)
-    print("power", power)
-    print()
+    logging.info("%r","".format("type 2 probability", type_2_probability))
+    logging.info("%r","".format("power", power))
+    logging.info("%r","".format())
 
-    print(
+    logging.info("%r","".format(
         "two_sided_p_value(529.5, mu_0, sigma_0)",
         two_sided_p_value(529.5, mu_0, sigma_0),
-    )
+    ))
 
-    print(
+    logging.info("%r","".format(
         "two_sided_p_value(531.5, mu_0, sigma_0)",
         two_sided_p_value(531.5, mu_0, sigma_0),
-    )
+    ))
 
-    print("upper_p_value(525, mu_0, sigma_0)", upper_p_value(525, mu_0, sigma_0))
-    print("upper_p_value(527, mu_0, sigma_0)", upper_p_value(527, mu_0, sigma_0))
-    print()
+    logging.info("%r","".format("upper_p_value(525, mu_0, sigma_0)", upper_p_value(525, mu_0, sigma_0)))
+    logging.info("%r","".format("upper_p_value(527, mu_0, sigma_0)", upper_p_value(527, mu_0, sigma_0)))
+    logging.info("%r","".format())
 
-    print("P-hacking")
+    logging.info("%r","".format("P-hacking"))
 
     random.seed(0)
     experiments = [run_experiment() for _ in range(1000)]
@@ -208,13 +209,13 @@ if __name__ == "__main__":
         [experiment for experiment in experiments if reject_fairness(experiment)]
     )
 
-    print(num_rejections, "rejections out of 1000")
-    print()
+    logging.info("%r","".format(num_rejections, "rejections out of 1000"))
+    logging.info("%r","".format())
 
-    print("A/B testing")
+    logging.info("%r","".format("A/B testing"))
     z = a_b_test_statistic(1000, 200, 1000, 180)
-    print("a_b_test_statistic(1000, 200, 1000, 180)", z)
-    print("p-value", two_sided_p_value(z))
+    logging.info("%r","".format("a_b_test_statistic(1000, 200, 1000, 180)", z))
+    logging.info("%r","".format("p-value", two_sided_p_value(z)))
     z = a_b_test_statistic(1000, 200, 1000, 150)
-    print("a_b_test_statistic(1000, 200, 1000, 150)", z)
-    print("p-value", two_sided_p_value(z))
+    logging.info("%r","".format("a_b_test_statistic(1000, 200, 1000, 150)", z))
+    logging.info("%r","".format("p-value", two_sided_p_value(z)))

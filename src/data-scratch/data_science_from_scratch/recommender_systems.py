@@ -1,3 +1,4 @@
+import logging
 import math
 from collections import defaultdict, Counter
 
@@ -153,38 +154,38 @@ def item_based_suggestions(user_id, include_current_interests=False):
 
 
 if __name__ == "__main__":
-    print("Popular Interests")
-    print(popular_interests)
-    print()
+    logging.info("%r","".format("Popular Interests"))
+    logging.info("%r","".format(popular_interests))
+    logging.info("%r","".format())
 
-    print("Most Popular New Interests")
-    print("already like:", ["NoSQL", "MongoDB", "Cassandra", "HBase", "Postgres"])
-    print(
+    logging.info("%r","".format("Most Popular New Interests"))
+    logging.info("%r","".format("already like:", ["NoSQL", "MongoDB", "Cassandra", "HBase", "Postgres"]))
+    logging.info("%r","".format(
         most_popular_new_interests(
             ["NoSQL", "MongoDB", "Cassandra", "HBase", "Postgres"]
         )
-    )
-    print()
-    print("already like:", ["R", "Python", "statistics", "regression", "probability"])
-    print(
+    ))
+    logging.info("%r","".format())
+    logging.info("%r","".format("already like:", ["R", "Python", "statistics", "regression", "probability"]))
+    logging.info("%r","".format(
         most_popular_new_interests(
             ["R", "Python", "statistics", "regression", "probability"]
         )
-    )
-    print()
+    ))
+    logging.info("%r","".format())
 
-    print("User based similarity")
-    print("most similar to 0")
-    print(most_similar_users_to(0))
+    logging.info("%r","".format("User based similarity"))
+    logging.info("%r","".format("most similar to 0"))
+    logging.info("%r","".format(most_similar_users_to(0)))
 
-    print("Suggestions for 0")
-    print(user_based_suggestions(0))
-    print()
+    logging.info("%r","".format("Suggestions for 0"))
+    logging.info("%r","".format(user_based_suggestions(0)))
+    logging.info("%r","".format())
 
-    print("Item based similarity")
-    print("most similar to 'Big Data'")
-    print(most_similar_interests_to(0))
-    print()
+    logging.info("%r","".format("Item based similarity"))
+    logging.info("%r","".format("most similar to 'Big Data'"))
+    logging.info("%r","".format(most_similar_interests_to(0)))
+    logging.info("%r","".format())
 
-    print("suggestions for user 0")
-    print(item_based_suggestions(0))
+    logging.info("%r","".format("suggestions for user 0"))
+    logging.info("%r","".format(item_based_suggestions(0)))

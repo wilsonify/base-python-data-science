@@ -172,29 +172,29 @@ if __name__ == "__main__":
         result for document in _documents for result in wc_mapper(document)
     ]
 
-    print("wc_mapper results")
-    print(wc_mapper_results)
-    print()
+    logging.info("%r","".format("wc_mapper results"))
+    logging.info("%r","".format(wc_mapper_results))
+    logging.info("%r","".format())
 
-    print("word count results")
-    print(word_count(_documents))
-    print()
+    logging.info("%r","".format("word count results"))
+    logging.info("%r","".format(word_count(_documents)))
+    logging.info("%r","".format())
 
-    print("word count using map_reduce function")
-    print(map_reduce(_documents, wc_mapper, wc_reducer))
-    print()
+    logging.info("%r","".format("word count using map_reduce function"))
+    logging.info("%r","".format(map_reduce(_documents, wc_mapper, wc_reducer)))
+    logging.info("%r","".format())
 
-    print("data science days")
-    print(data_science_days)
-    print()
+    logging.info("%r","".format("data science days"))
+    logging.info("%r","".format(data_science_days))
+    logging.info("%r","".format())
 
-    print("user words")
-    print(user_words)
-    print()
+    logging.info("%r","".format("user words"))
+    logging.info("%r","".format(user_words))
+    logging.info("%r","".format())
 
-    print("distinct likers")
-    print(distinct_likers_per_user)
-    print()
+    logging.info("%r","".format("distinct likers"))
+    logging.info("%r","".format(distinct_likers_per_user))
+    logging.info("%r","".format())
 
     # matrix multiplication
 
@@ -208,6 +208,6 @@ if __name__ == "__main__":
     _mapper = partial(matrix_multiply_mapper, 3)
     _reducer = partial(matrix_multiply_reducer, 3)
 
-    print("map-reduce matrix multiplication")
-    print("entries:", entries)
-    print("result:", map_reduce(entries, _mapper, _reducer))
+    logging.info("%r","".format("map-reduce matrix multiplication"))
+    logging.info("%r","".format("entries:", entries))
+    logging.info("%r","".format("result:", map_reduce(entries, _mapper, _reducer)))

@@ -1,3 +1,4 @@
+import logging
 import math
 import random
 
@@ -164,19 +165,19 @@ if __name__ == "__main__":
 
     for i, input_i in enumerate(inputs_):
         outputs_ = predict(input_i)
-        print(i, [round(p, 2) for p in outputs_])
+        logging.info("%r","".format(i, [round(p, 2) for p in outputs_]))
 
-    print(""".@@@....@@..@@....@@.@@@.""")
-    print(
+    logging.info("%r","".format(""".@@@....@@..@@....@@.@@@."""))
+    logging.info("%r","".format(
         [round(x, 2) for x in predict([
             0, 1, 1, 1, 0, 0, 0, 0, 1, 1, 0, 0, 1, 1, 0, 0, 0, 0, 1, 1, 0, 1, 1, 1, 0,
-        ])])  # .@@@.
-    print()
+        ])]))  # .@@@.
+    logging.info("%r","".format())
 
-    print(
+    logging.info("%r","".format(
         """.@@@.@..@@.@@@.@..@@.@@@."""
-    )
-    print([round(x, 2) for x in predict([
+    ))
+    logging.info("%r","".format([round(x, 2) for x in predict([
         0, 1, 1, 1, 0, 1, 0, 0, 1, 1, 0, 1, 1, 1, 0, 1, 0, 0, 1, 1, 0, 1, 1, 1, 0
-    ])])
-    print()
+    ])]))
+    logging.info("%r","".format())

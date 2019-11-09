@@ -1,3 +1,4 @@
+import logging
 import random
 
 from data_science_from_scratch.linear_algebra import (
@@ -180,35 +181,35 @@ if __name__ == "__main__":
     random.seed(0)  # so you get the same results as me
     _clusterer = KMeans(3)
     _clusterer.train(inputs_list)
-    print("3-means:")
-    print(_clusterer.means)
-    print()
+    logging.info("%r","".format("3-means:"))
+    logging.info("%r","".format(_clusterer.means))
+    logging.info("%r","".format())
 
     random.seed(0)
     _clusterer = KMeans(2)
     _clusterer.train(inputs_list)
-    print("2-means:")
-    print(_clusterer.means)
-    print()
+    logging.info("%r","".format("2-means:"))
+    logging.info("%r","".format(_clusterer.means))
+    logging.info("%r","".format())
 
-    print("errors as a function of k")
+    logging.info("%r","".format("errors as a function of k"))
 
     for _k in range(1, len(inputs_list) + 1):
-        print(_k, squared_clustering_errors(inputs_list, _k))
-    print()
+        logging.info("%r","".format(_k, squared_clustering_errors(inputs_list, _k)))
+    logging.info("%r","".format())
 
-    print("bottom up hierarchical clustering")
+    logging.info("%r","".format("bottom up hierarchical clustering"))
 
     _base_cluster = bottom_up_cluster(inputs_list)
-    print(_base_cluster)
+    logging.info("%r","".format(_base_cluster))
 
-    print()
-    print("three clusters, min:")
+    logging.info("%r","".format())
+    logging.info("%r","".format("three clusters, min:"))
     for cluster in generate_clusters(_base_cluster, 3):
-        print(get_values(cluster))
+        logging.info("%r","".format(get_values(cluster)))
 
-    print()
-    print("three clusters, max:")
+    logging.info("%r","".format())
+    logging.info("%r","".format("three clusters, max:"))
     _base_cluster = bottom_up_cluster(inputs_list, max)
     for cluster in generate_clusters(_base_cluster, 3):
-        print(get_values(cluster))
+        logging.info("%r","".format(get_values(cluster)))

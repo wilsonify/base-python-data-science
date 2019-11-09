@@ -1,3 +1,4 @@
+import logging
 import random
 from collections import Counter
 
@@ -152,7 +153,7 @@ if __name__ == "__main__":
             if predicted_language == actual_language:
                 num_correct += 1
 
-        print(_k, "neighbor[s]:", num_correct, "correct out of", len(cities))
+        logging.info("%r","".format(_k, "neighbor[s]:", num_correct, "correct out of", len(cities)))
 
     dimensions = range(1, 101, 5)
 
@@ -164,4 +165,4 @@ if __name__ == "__main__":
         distances = random_distances(_dim, 10000)  # 10,000 random pairs
         avg_distances.append(mean(distances))  # track the average
         min_distances.append(min(distances))  # track the minimum
-        print(_dim, min(distances), mean(distances), min(distances) / mean(distances))
+        logging.info("%r","".format(_dim, min(distances), mean(distances), min(distances) / mean(distances)))

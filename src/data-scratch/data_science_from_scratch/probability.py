@@ -1,3 +1,4 @@
+import logging
 import math
 import random
 
@@ -93,5 +94,5 @@ if __name__ == "__main__":
         if older == "girl" or younger == "girl":
             either_girl += 1
 
-    print("P(both | older):", both_girls / older_girl)  # 0.514 ~ 1/2
-    print("P(both | either): ", both_girls / either_girl)  # 0.342 ~ 1/3
+    logging.info("%r","".format("P(both | older):", both_girls / older_girl))  # 0.514 ~ 1/2)
+    logging.info("%r","".format("P(both | either): ", both_girls / either_girl))  # 0.342 ~ 1/3)
