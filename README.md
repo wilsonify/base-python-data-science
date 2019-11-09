@@ -12,6 +12,13 @@ cd src/data-scratch
 python setup.py install
 ```
 
+# test
+
+```
+python -m pip install -r test-requirements.txt
+python -m pytest
+```
+
 # usage
 
 ```
