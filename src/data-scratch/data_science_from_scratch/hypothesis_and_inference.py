@@ -22,17 +22,17 @@ normal_probability_below = normal_cdf
 
 
 # it's above the threshold if it's not below the threshold
-def normal_probability_above(lo, mu=0, sigma=1):
+def normal_probability_above(lo, mu=0.0, sigma=1.0):
     return 1 - normal_cdf(lo, mu, sigma)
 
 
 # it's between if it's less than hi, but not less than lo
-def normal_probability_between(lo, hi, mu=0, sigma=1):
+def normal_probability_between(lo, hi, mu=0.0, sigma=1.0):
     return normal_cdf(hi, mu, sigma) - normal_cdf(lo, mu, sigma)
 
 
 # it's outside if it's not between
-def normal_probability_outside(lo, hi, mu=0, sigma=1):
+def normal_probability_outside(lo, hi, mu=0.0, sigma=1.0):
     return 1 - normal_probability_between(lo, hi, mu, sigma)
 
 
@@ -43,17 +43,17 @@ def normal_probability_outside(lo, hi, mu=0, sigma=1):
 ######
 
 
-def normal_upper_bound(probability, mu=0, sigma=1):
+def normal_upper_bound(probability, mu=0.0, sigma=1.0):
     """returns the z for which P(Z <= z) = probability"""
     return inverse_normal_cdf(probability, mu, sigma)
 
 
-def normal_lower_bound(probability, mu=0, sigma=1):
+def normal_lower_bound(probability, mu=0.0, sigma=1.0):
     """returns the z for which P(Z >= z) = probability"""
     return inverse_normal_cdf(1 - probability, mu, sigma)
 
 
-def normal_two_sided_bounds(probability, mu=0, sigma=1):
+def normal_two_sided_bounds(probability, mu=0.0, sigma=1.0):
     """returns the symmetric (about the mean) bounds
     that contain the specified probability"""
     tail_probability = (1 - probability) / 2
@@ -67,7 +67,7 @@ def normal_two_sided_bounds(probability, mu=0, sigma=1):
     return lower_bound, upper_bound
 
 
-def two_sided_p_value(x, mu=0, sigma=1):
+def two_sided_p_value(x, mu=0.0, sigma=1.0):
     if x >= mu:
         # if x is greater than the mean, the tail is above x
         return 2 * normal_probability_above(x, mu, sigma)
@@ -176,7 +176,6 @@ if __name__ == "__main__":
 
     print("type 2 probability", type_2_probability)
     print("power", power)
-    print
 
     print("one-sided test")
     hi = normal_upper_bound(0.95, mu_0, sigma_0)

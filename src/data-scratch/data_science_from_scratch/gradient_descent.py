@@ -41,6 +41,7 @@ def sum_of_squares_gradient(v):
 def safe(f):
     """define a new function that wraps f and return it"""
 
+    # noinspection PyBroadException
     def safe_f(*args, **kwargs):
         try:
             return f(*args, **kwargs)

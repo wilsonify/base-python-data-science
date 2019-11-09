@@ -11,7 +11,7 @@ def uniform_pdf(x):
 
 
 def uniform_cdf(x):
-    "returns the probability that a uniform random variable is less than x"
+    """returns the probability that a uniform random variable is less than x"""
     if x < 0:
         return 0  # uniform random is never less than 0
     elif x < 1:

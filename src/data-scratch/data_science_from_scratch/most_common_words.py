@@ -7,7 +7,7 @@ if __name__ == "__main__":
     # pass in number of words as first argument
     try:
         num_words = int(sys.argv[1])
-    except:
+    except IndexError:
         print("usage: most_common_words.py num_words")
         sys.exit(1)  # non-zero exit code indicates error
 

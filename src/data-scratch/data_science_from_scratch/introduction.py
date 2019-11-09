@@ -38,6 +38,7 @@ friendships = [
 
 # first give each user an empty list
 for user in users:
+    # noinspection PyTypeChecker
     user["friends"] = []
 
 # and then populate the lists with friendships

@@ -229,7 +229,7 @@ largest_value = max(num_friends)  # 100
 smallest_value = min(num_friends)  # 1
 
 sorted_values = sorted(num_friends)
-smallest_value = sorted_values[0]  # 1
+smallest_sorted_value = sorted_values[0]  # 1
 second_smallest_value = sorted_values[1]  # 1
 second_largest_value = sorted_values[-2]  # 49
 

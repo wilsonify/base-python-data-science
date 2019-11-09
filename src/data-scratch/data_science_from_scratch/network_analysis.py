@@ -42,6 +42,7 @@ friendships = [
 
 # give each user a friends list
 for user in users:
+    # noinspection PyTypeChecker
     user["friends"] = []
 
 # and populate it
@@ -105,9 +106,11 @@ def shortest_paths_from(from_user):
 
 
 for user in users:
+    # noinspection PyTypeChecker
     user["shortest_paths"] = shortest_paths_from(user)
 
 for user in users:
+    # noinspection PyTypeChecker
     user["betweenness_centrality"] = 0.0
 
 for source in users:
@@ -134,6 +137,7 @@ def farness(user):
 
 
 for user in users:
+    # noinspection PyTypeChecker
     user["closeness_centrality"] = 1 / farness(user)
 
 
@@ -222,7 +226,9 @@ endorsements = [
 ]
 
 for user in users:
+    # noinspection PyTypeChecker
     user["endorses"] = []  # add one list to track outgoing endorsements
+    # noinspection PyTypeChecker
     user["endorsed_by"] = []  # and another to track endorsements
 
 for source_id, target_id in endorsements:

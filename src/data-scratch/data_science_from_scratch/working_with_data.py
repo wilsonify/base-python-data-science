@@ -55,7 +55,7 @@ def correlation_matrix(data):
     return make_matrix(num_columns, num_columns, matrix_entry)
 
 
-def parse_row(input_row, parsers):
+def parse_row1(input_row, parsers):
     """given a list of parsers (some of which may be None)
     apply the appropriate one to each element of the input_row"""
     return [
@@ -67,7 +67,7 @@ def parse_row(input_row, parsers):
 def parse_rows_with(reader, parsers):
     """wrap a reader to apply the parsers to each of its rows"""
     for row in reader:
-        yield parse_row(row, parsers)
+        yield parse_row1(row, parsers)
 
 
 def try_or_none(f):
@@ -75,6 +75,7 @@ def try_or_none(f):
     assumes f takes only one input"""
 
     def f_or_none(x):
+        # noinspection PyBroadException
         try:
             return f(x)
         except:
@@ -83,7 +84,7 @@ def try_or_none(f):
     return f_or_none
 
 
-def parse_row(input_row, parsers):
+def parse_row2(input_row, parsers):
     return [
         try_or_none(parser)(value) if parser is not None else value
         for value, parser in zip(input_row, parsers)

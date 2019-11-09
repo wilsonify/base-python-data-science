@@ -101,7 +101,7 @@ def build_tree_id3(inputs, split_candidates=None):
 
     subtrees[None] = num_trues > num_falses  # default case
 
-    return (best_attribute, subtrees)
+    return best_attribute, subtrees
 
 
 def forest_classify(trees, input):

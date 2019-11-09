@@ -141,19 +141,19 @@ if __name__ == "__main__":
 
     # each hidden neuron has one weight per input, plus a bias weight
     hidden_layer = [
-        [random.random() for __ in range(input_size + 1)] for __ in range(num_hidden)
+        [random.random() for _ in range(input_size + 1)] for _ in range(num_hidden)
     ]
 
     # each output neuron has one weight per hidden neuron, plus a bias weight
     output_layer = [
-        [random.random() for __ in range(num_hidden + 1)] for __ in range(output_size)
+        [random.random() for _ in range(num_hidden + 1)] for _ in range(output_size)
     ]
 
     # the network starts out with random weights
     network = [hidden_layer, output_layer]
 
     # 10,000 iterations seems enough to converge
-    for __ in range(10000):
+    for _ in range(10000):
         for input_vector, target_vector in zip(inputs, targets):
             backpropagate(network, input_vector, target_vector)
 
