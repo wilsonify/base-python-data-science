@@ -1,11 +1,12 @@
-# at this stage in the book we haven't actually installed matplotlib,
-# comment this out if you need to
-
+"""
 ##########################
 #                        #
 # FINDING KEY CONNECTORS #
 #                        #
 ##########################
+"""
+from collections import Counter
+from collections import defaultdict
 
 users = [
     {"id": 0, "name": "Hero"},
@@ -73,9 +74,6 @@ def friends_of_friend_ids_bad(user):
         for friend in user["friends"]  # for each of user's friends
         for foaf in friend["friends"]
     ]  # get each of _their_ friends
-
-
-from collections import Counter  # not loaded by default
 
 
 def not_the_same(user, other_user):
@@ -160,8 +158,6 @@ def data_scientists_who_like(target_interest):
         if user_interest == target_interest
     ]
 
-
-from collections import defaultdict
 
 # keys are interests, values are lists of user_ids with that interest
 user_ids_by_interest = defaultdict(list)

@@ -363,12 +363,12 @@ def remove_projection(X, w):
     return [remove_projection_from_vector(x_i, w) for x_i in X]
 
 
-def principal_component_analysis(X, num_components):
+def principal_component_analysis(x_vector, num_components):
     components = []
     for _ in range(num_components):
-        component = first_principal_component(X)
+        component = first_principal_component(x_vector)
         components.append(component)
-        X = remove_projection(X, component)
+        x_vector = remove_projection(x_vector, component)
 
     return components
 
@@ -377,8 +377,8 @@ def transform_vector(v, components):
     return [dot(v, w) for w in components]
 
 
-def transform(X, components):
-    return [transform_vector(x_i, components) for x_i in X]
+def transform(x_vector, components):
+    return [transform_vector(x_i, components) for x_i in x_vector]
 
 
 if __name__ == "__main__":

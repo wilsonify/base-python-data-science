@@ -167,8 +167,6 @@ if __name__ == "__main__":
     print()
 
 
-    # GROUP BY
-
     def min_user_id(rows):
         return min(row["user_id"] for row in rows)
 
@@ -239,9 +237,7 @@ if __name__ == "__main__":
     user_interests.insert([2, "MySQL"])
 
     sql_users = (
-        users.join(user_interests)
-            .where(lambda row: row["interest"] == "SQL")
-            .select(keep_columns=["name"])
+        users.join(user_interests).where(lambda row: row["interest"] == "SQL").select(keep_columns=["name"])
     )
 
     print("sql users")

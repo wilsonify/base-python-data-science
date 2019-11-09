@@ -43,6 +43,7 @@ def safe(f):
 
     # noinspection PyBroadException
     def safe_f(*args, **kwargs):
+        # noinspection PyPep8
         try:
             return f(*args, **kwargs)
         except:

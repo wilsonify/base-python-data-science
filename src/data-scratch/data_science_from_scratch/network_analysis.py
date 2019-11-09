@@ -89,8 +89,7 @@ def shortest_paths_from(from_user):
         new_paths_to_here = [
             path_via_prev
             for path_via_prev in paths_via_prev
-            if len(path_via_prev) <= min_path_length
-               and path_via_prev not in old_paths_to_here
+            if len(path_via_prev) <= min_path_length and path_via_prev not in old_paths_to_here
         ]
 
         shortest_paths_to[user_id] = old_paths_to_here + new_paths_to_here

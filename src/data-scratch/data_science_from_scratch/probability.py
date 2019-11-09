@@ -7,7 +7,7 @@ def random_kid():
 
 
 def uniform_pdf(x):
-    return 1 if x >= 0 and x < 1 else 0
+    return 1 if 0 <= x < 1 else 0
 
 
 def uniform_cdf(x):
