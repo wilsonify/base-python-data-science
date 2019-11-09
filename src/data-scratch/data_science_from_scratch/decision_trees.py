@@ -68,7 +68,6 @@ def classify(tree, input):
 
 
 def build_tree_id3(inputs, split_candidates=None):
-
     # if this is our first pass,
     # all keys of the first input are split candidates
     if split_candidates is None:

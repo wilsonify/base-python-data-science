@@ -50,13 +50,13 @@ for i, j in friendships:
     users[i]["friends"].append(users[j])  # add i as a friend of j
     users[j]["friends"].append(users[i])  # add j as a friend of i
 
+
 #
 # Betweenness Centrality
 #
 
 
 def shortest_paths_from(from_user):
-
     # a dictionary from "user_id" to *all* shortest paths to that user
     shortest_paths_to = {from_user["id"]: [[]]}
 
@@ -89,7 +89,7 @@ def shortest_paths_from(from_user):
             path_via_prev
             for path_via_prev in paths_via_prev
             if len(path_via_prev) <= min_path_length
-            and path_via_prev not in old_paths_to_here
+               and path_via_prev not in old_paths_to_here
         ]
 
         shortest_paths_to[user_id] = old_paths_to_here + new_paths_to_here
@@ -120,6 +120,7 @@ for source in users:
                 for id in path:
                     if id not in [source_id, target_id]:
                         users[id]["betweenness_centrality"] += contrib
+
 
 #
 # closeness centrality
@@ -227,14 +228,12 @@ for source_id, target_id in endorsements:
     users[source_id]["endorses"].append(users[target_id])
     users[target_id]["endorsed_by"].append(users[source_id])
 
-
 endorsements_by_id = [(user["id"], len(user["endorsed_by"])) for user in users]
 
 sorted(endorsements_by_id, key=lambda pair: pair[1], reverse=True)
 
 
 def page_rank(users, damping=0.85, num_iters=100):
-
     # initially distribute PageRank evenly
     num_users = len(users)
     pr = {user["id"]: 1 / num_users for user in users}

@@ -152,7 +152,6 @@ def item_based_suggestions(user_id, include_current_interests=False):
 
 
 if __name__ == "__main__":
-
     print("Popular Interests")
     print(popular_interests)
     print()

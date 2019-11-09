@@ -4,6 +4,7 @@ import re, math, random  # regexes, math functions, random numbers
 from collections import defaultdict, Counter
 from functools import partial, reduce
 
+
 #
 # functions for working with vectors
 #
@@ -102,6 +103,7 @@ friendships = [
     [0, 0, 0, 0, 0, 0, 1, 1, 0, 1],  # user 8
     [0, 0, 0, 0, 0, 0, 0, 0, 1, 0],
 ]  # user 9
+
 
 #####
 # DELETE DOWN

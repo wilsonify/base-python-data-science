@@ -53,7 +53,6 @@ def fix_unicode(text):
 
 
 def get_document():
-
     url = "http://radar.oreilly.com/2010/06/what-is-data-science.html"
     html = requests.get(url).text
     soup = BeautifulSoup(html, "html5lib")
@@ -113,7 +112,7 @@ def expand(grammar, tokens):
         if is_terminal(replacement):
             tokens[i] = replacement
         else:
-            tokens = tokens[:i] + replacement.split() + tokens[(i + 1) :]
+            tokens = tokens[:i] + replacement.split() + tokens[(i + 1):]
         return expand(grammar, tokens)
 
     # if we get here we had all terminals and are done
@@ -256,7 +255,6 @@ for d in range(D):
 for iter in range(1000):
     for d in range(D):
         for i, (word, topic) in enumerate(zip(documents[d], document_topics[d])):
-
             # remove this word / topic from the counts
             # so that it doesn't influence the weights
             document_topic_counts[d][topic] -= 1

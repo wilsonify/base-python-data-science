@@ -123,10 +123,12 @@ if __name__ == "__main__":
            11111""",
     ]
 
+
     def make_digit(raw_digit):
         return [
             1 if c == "1" else 0 for row in raw_digit.split("\n") for c in row.strip()
         ]
+
 
     inputs = list(map(make_digit, raw_digits))
 
@@ -155,8 +157,10 @@ if __name__ == "__main__":
         for input_vector, target_vector in zip(inputs, targets):
             backpropagate(network, input_vector, target_vector)
 
+
     def predict(input):
         return feed_forward(network, input)[-1]
+
 
     for i, input in enumerate(inputs):
         outputs = predict(input)
@@ -173,34 +177,34 @@ if __name__ == "__main__":
         [
             round(x, 2)
             for x in predict(
-                [
-                    0,
-                    1,
-                    1,
-                    1,
-                    0,  # .@@@.
-                    0,
-                    0,
-                    0,
-                    1,
-                    1,  # ...@@
-                    0,
-                    0,
-                    1,
-                    1,
-                    0,  # ..@@.
-                    0,
-                    0,
-                    0,
-                    1,
-                    1,  # ...@@
-                    0,
-                    1,
-                    1,
-                    1,
-                    0,
-                ]
-            )
+            [
+                0,
+                1,
+                1,
+                1,
+                0,  # .@@@.
+                0,
+                0,
+                0,
+                1,
+                1,  # ...@@
+                0,
+                0,
+                1,
+                1,
+                0,  # ..@@.
+                0,
+                0,
+                0,
+                1,
+                1,  # ...@@
+                0,
+                1,
+                1,
+                1,
+                0,
+            ]
+        )
         ]
     )  # .@@@.
     print()
@@ -216,34 +220,34 @@ if __name__ == "__main__":
         [
             round(x, 2)
             for x in predict(
-                [
-                    0,
-                    1,
-                    1,
-                    1,
-                    0,  # .@@@.
-                    1,
-                    0,
-                    0,
-                    1,
-                    1,  # @..@@
-                    0,
-                    1,
-                    1,
-                    1,
-                    0,  # .@@@.
-                    1,
-                    0,
-                    0,
-                    1,
-                    1,  # @..@@
-                    0,
-                    1,
-                    1,
-                    1,
-                    0,
-                ]
-            )
+            [
+                0,
+                1,
+                1,
+                1,
+                0,  # .@@@.
+                1,
+                0,
+                0,
+                1,
+                1,  # @..@@
+                0,
+                1,
+                1,
+                1,
+                0,  # .@@@.
+                1,
+                0,
+                0,
+                1,
+                1,  # @..@@
+                0,
+                1,
+                1,
+                1,
+                0,
+            ]
+        )
         ]
     )  # .@@@.
     print()

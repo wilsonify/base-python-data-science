@@ -18,6 +18,7 @@ def normal_approximation_to_binomial(n, p):
 # the normal cdf _is_ the probability the variable is below a threshold
 normal_probability_below = normal_cdf
 
+
 # it's above the threshold if it's not below the threshold
 def normal_probability_above(lo, mu=0, sigma=1):
     return 1 - normal_cdf(lo, mu, sigma)
@@ -88,6 +89,7 @@ def count_extreme_values():
 upper_p_value = normal_probability_above
 lower_p_value = normal_probability_below
 
+
 ##
 #
 # P-hacking
@@ -144,7 +146,6 @@ def beta_pdf(x, alpha, beta):
 
 
 if __name__ == "__main__":
-
     mu_0, sigma_0 = normal_approximation_to_binomial(1000, 0.5)
     print("mu_0", mu_0)
     print("sigma_0", sigma_0)

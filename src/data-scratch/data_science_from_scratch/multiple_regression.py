@@ -530,9 +530,9 @@ if __name__ == "__main__":
 
     # 101 points, 50 of them near 0, 50 of them near 200
     far_from_100 = (
-        [99.5 + random.random()]
-        + [random.random() for _ in range(50)]
-        + [200 + random.random() for _ in range(50)]
+            [99.5 + random.random()]
+            + [random.random() for _ in range(50)]
+            + [200 + random.random() for _ in range(50)]
     )
 
     print("bootstrap_statistic(close_to_100, median, 100):")

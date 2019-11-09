@@ -232,6 +232,7 @@ smallest_value = sorted_values[0]  # 1
 second_smallest_value = sorted_values[1]  # 1
 second_largest_value = sorted_values[-2]  # 49
 
+
 # this isn't right if you don't from __future__ import division
 def mean(x):
     return sum(x) / len(x)
@@ -526,9 +527,7 @@ num_friends_good = [x for i, x in enumerate(num_friends) if i != outlier]
 
 daily_minutes_good = [x for i, x in enumerate(daily_minutes) if i != outlier]
 
-
 if __name__ == "__main__":
-
     print("num_points", len(num_friends))
     print("largest value", max(num_friends))
     print("smallest value", min(num_friends))

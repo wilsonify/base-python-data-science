@@ -389,7 +389,7 @@ if __name__ == "__main__":
     data = []
 
     with open(
-        "comma_delimited_stock_prices.csv", "r", encoding="utf8", newline=""
+            "comma_delimited_stock_prices.csv", "r", encoding="utf8", newline=""
     ) as f:
         reader = csv.reader(f)
         for line in parse_rows_with(reader, [dateutil.parser.parse, None, float]):
@@ -436,14 +436,17 @@ if __name__ == "__main__":
     print("max change", max(all_changes, key=picker("change")))
     print("min change", min(all_changes, key=picker("change")))
 
+
     # to combine percent changes, we add 1 to each, multiply them, and subtract 1
     # for instance, if we combine +10% and -20%, the overall change is
     # (1 + 10%) * (1 - 20%) - 1 = 1.1 * .8 - 1 = -12%
     def combine_pct_changes(pct_change1, pct_change2):
         return (1 + pct_change1) * (1 + pct_change2) - 1
 
+
     def overall_change(changes):
         return reduce(combine_pct_changes, pluck("change", changes))
+
 
     overall_change_by_month = group_by(
         lambda row: row["date"].month, all_changes, overall_change

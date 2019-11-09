@@ -121,7 +121,6 @@ class Table:
 
 
 if __name__ == "__main__":
-
     users = Table(["user_id", "name", "num_friends"])
     users.insert([0, "Hero", 0])
     users.insert([1, "Dunn", 2])
@@ -159,17 +158,21 @@ if __name__ == "__main__":
     )
     print()
 
+
     def name_len(row):
         return len(row["name"])
+
 
     print("with name_length:")
     print(users.select(keep_columns=[], additional_columns={"name_length": name_len}))
     print()
 
+
     # GROUP BY
 
     def min_user_id(rows):
         return min(row["user_id"] for row in rows)
+
 
     stats_by_length = users.select(additional_columns={"name_len": name_len}).group_by(
         group_by_columns=["name_len"],
@@ -180,14 +183,18 @@ if __name__ == "__main__":
     print(stats_by_length)
     print()
 
+
     def first_letter_of_name(row):
         return row["name"][0] if row["name"] else ""
+
 
     def average_num_friends(rows):
         return sum(row["num_friends"] for row in rows) / len(rows)
 
+
     def enough_friends(rows):
         return average_num_friends(rows) > 1
+
 
     avg_friends_by_letter = users.select(
         additional_columns={"first_letter": first_letter_of_name}
@@ -201,8 +208,10 @@ if __name__ == "__main__":
     print(avg_friends_by_letter)
     print()
 
+
     def sum_user_ids(rows):
         return sum(row["user_id"] for row in rows)
+
 
     user_id_sum = users.where(lambda row: row["user_id"] > 1).group_by(
         group_by_columns=[], aggregates={"user_id_sum": sum_user_ids}
@@ -232,17 +241,19 @@ if __name__ == "__main__":
 
     sql_users = (
         users.join(user_interests)
-        .where(lambda row: row["interest"] == "SQL")
-        .select(keep_columns=["name"])
+            .where(lambda row: row["interest"] == "SQL")
+            .select(keep_columns=["name"])
     )
 
     print("sql users")
     print(sql_users)
     print()
 
+
     def count_interests(rows):
         """counts how many rows have non-None interests"""
         return len([row for row in rows if row["interest"] is not None])
+
 
     user_interest_counts = users.join(user_interests, left_join=True).group_by(
         group_by_columns=["user_id"], aggregates={"num_interests": count_interests}

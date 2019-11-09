@@ -60,7 +60,6 @@ class NaiveBayesClassifier:
         self.word_probs = []
 
     def train(self, training_set):
-
         # count spam and non-spam messages
         num_spams = len([is_spam for message, is_spam in training_set if is_spam])
         num_non_spams = len(training_set) - num_spams
@@ -76,7 +75,6 @@ class NaiveBayesClassifier:
 
 
 def get_subject_data(path):
-
     data = []
 
     # regex for stripping out the leading "Subject:" and any spaces after it
@@ -101,7 +99,6 @@ def p_spam_given_word(word_prob):
 
 
 def train_and_test_model(path):
-
     data = get_subject_data(path)
     random.seed(0)  # just so you get the same answers as me
     train_data, test_data = split_data(data, 0.75)

@@ -36,7 +36,6 @@ friendships = [
     (8, 9),
 ]
 
-
 # first give each user an empty list
 for user in users:
     user["friends"] = []
@@ -57,6 +56,7 @@ total_connections = sum(number_of_friends(user) for user in users)  # 24
 
 num_users = len(users)
 avg_connections = total_connections / num_users  # 2.4
+
 
 ################################
 #                              #
@@ -203,7 +203,6 @@ salaries_and_tenures = [
     (63000, 4.2),
 ]
 
-
 # keys are years
 # values are the salaries for each tenure
 salary_by_tenure = defaultdict(list)
@@ -263,7 +262,6 @@ def predict_paid_or_unpaid(years_experience):
 words_and_counts = Counter(
     word for user, interest in interests for word in interest.lower().split()
 )
-
 
 if __name__ == "__main__":
 

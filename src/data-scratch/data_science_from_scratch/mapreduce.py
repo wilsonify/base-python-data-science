@@ -163,7 +163,6 @@ def matrix_multiply_reducer(m, key, indexed_values):
 
 
 if __name__ == "__main__":
-
     documents = ["data science", "big data", "science fiction"]
 
     wc_mapper_results = [
