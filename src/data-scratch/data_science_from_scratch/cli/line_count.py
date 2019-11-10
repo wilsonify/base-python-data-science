@@ -1,3 +1,4 @@
+#!/usr/bin/env python
 """
 count lines from stdin, write count to stdout
 """

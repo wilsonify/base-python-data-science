@@ -1,3 +1,4 @@
+#!/usr/bin/env python
 """
 counts the words in stdin and writes the most common ones to stdout
 
