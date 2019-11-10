@@ -1,19 +1,31 @@
-# most_common_words.py
-import logging
+"""
+counts the words in stdin and writes the most common ones to stdout
+
+example:
+
+```sh
+cat the_bible.txt | python most_common_words.py 10
+```
+outputs:
+64193   the
+51380   and
+34753   of
+13643   to
+12799   that
+12560   in
+10263   he
+9840    shall
+8987    unto
+8836    for
+"""
+
 import sys
 from collections import Counter
-from logging.config import dictConfig
 
 from data_science_from_scratch import config
 
-if __name__ == "__main__":
-    dictConfig(config.LOGGING_CONFIG_DICT)  # pass in number of words as first argument
-    try:
-        num_words = int(sys.argv[1])
-    except IndexError:
-        logging.info("%r", "".format("usage: most_common_words.py num_words"))
-        sys.exit(1)  # non-zero exit code indicates error
 
+def main(num_words):
     counter = Counter(
         word.lower() for line in sys.stdin for word in line.strip().split() if word
     )
@@ -23,3 +35,8 @@ if __name__ == "__main__":
         sys.stdout.write("\t")
         sys.stdout.write(word)
         sys.stdout.write("\n")
+
+
+if __name__ == "__main__":
+    num_words = int(sys.argv[1]) if len(sys.argv) > 1 else 0
+    main()
