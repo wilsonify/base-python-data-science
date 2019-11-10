@@ -383,11 +383,9 @@ def transform(x_vector, components):
     return [transform_vector(x_i, components) for x_i in x_vector]
 
 
-# noinspection PyPep8,PyPep8
-if __name__ == "__main__":
-    dictConfig(config.LOGGING_CONFIG_DICT)
-    logging.info("%r", "".format("correlation(xs, ys1)", correlation(xs, ys1)))
-    logging.info("%r", "".format("correlation(xs, ys2)", correlation(xs, ys2)))
+def main():
+    logging.info("%r", "correlation(xs, ys1) {}".format(correlation(xs, ys1)))
+    logging.info("%r", "correlation(xs, ys2) {}".format(correlation(xs, ys2)))
 
     # safe parsing
 
@@ -402,9 +400,9 @@ if __name__ == "__main__":
 
     for row_data in _data:
         if any(x is None for x in row_data):
-            logging.info("%r", "".format(row_data))
+            logging.info("%r", "row_data = {}".format(row_data))
 
-    logging.info("%r", "".format("stocks"))
+    logging.info("stocks")
     with open("stocks.txt", "r", encoding="utf8", newline="") as f:
         reader_dict = csv.DictReader(f, delimiter="\t")
         _data = [
@@ -417,7 +415,7 @@ if __name__ == "__main__":
     max_aapl_price = max(
         row_aapl["closing_price"] for row_aapl in _data if row_aapl["symbol"] == "AAPL"
     )
-    logging.info("%r", "".format("max aapl price", max_aapl_price))
+    logging.info("%r", "max aapl price {}".format(max_aapl_price))
 
     # group rows by symbol
     by_symbol = defaultdict(list)
@@ -430,8 +428,7 @@ if __name__ == "__main__":
         symbol: max(row_of_group["closing_price"] for row_of_group in grouped_rows)
         for symbol, grouped_rows in by_symbol.items()
     }
-    logging.info("%r", "".format("max price by symbol"))
-    logging.info("%r", "".format(max_price_by_symbol))
+    logging.info("%r", "max price by symbol {}".format(max_price_by_symbol))
 
     # key is symbol, value is list of "change" dicts
     changes_by_symbol = group_by(picker("symbol"), _data, day_over_day_changes)
@@ -440,8 +437,8 @@ if __name__ == "__main__":
         change for changes in changes_by_symbol.values() for change in changes
     ]
 
-    logging.info("%r", "".format("max change", max(all_changes, key=picker("change"))))
-    logging.info("%r", "".format("min change", min(all_changes, key=picker("change"))))
+    logging.info("%r", "max change {}".format(max(all_changes, key=picker("change"))))
+    logging.info("%r", "min change {}".format(min(all_changes, key=picker("change"))))
 
     logging.info(
         """to combine percent changes, we add 1 to each, multiply them, and subtract 1)
@@ -449,35 +446,36 @@ if __name__ == "__main__":
     # (1 + 10%) * (1 - 20%) - 1 = 1.1 * .8 - 1 = -12%"""
     )
 
-
     def combine_pct_changes(pct_change1, pct_change2):
         return (1 + pct_change1) * (1 + pct_change2) - 1
-
 
     def overall_change(changes):
         return reduce(combine_pct_changes, pluck("change", changes))
 
-
     overall_change_by_month = group_by(
         lambda row_r: row_r["date"].month, all_changes, overall_change
     )
-    logging.info("%r", "".format("overall change by month"))
-    logging.info("%r", "".format(overall_change_by_month))
+    logging.info("%r", "overall change by month {}".format(overall_change_by_month))
 
-    logging.info("%r", "".format("rescaling"))
+    logging.info("rescaling")
 
     _data = [[1, 20, 2], [1, 30, 3], [1, 40, 4]]
 
-    logging.info("%r", "".format("original: ", _data))
-    logging.info("%r", "".format("scale: ", scale(_data)))
-    logging.info("%r", "".format("rescaled: ", rescale(_data)))
+    logging.info("%r", "original: {}".format(_data))
+    logging.info("%r", "scale: {}".format(scale(_data)))
+    logging.info("%r", "rescaled: {}".format(rescale(_data)))
 
-    logging.info("%r", "".format("PCA"))
+    logging.info("PCA")
 
     Y = de_mean_matrix(x_matrix_list)
     components_p = principal_component_analysis(Y, 2)
-    logging.info("%r", "".format("principal components", components_p))
-    logging.info("%r", "".format("first point", Y[0]))
+    logging.info("%r", "principal components {}".format(components_p))
+    logging.info("%r", "first point {}".format(Y[0]))
     logging.info(
-        "%r", "".format("first point transformed", transform_vector(Y[0], components_p))
+        "%r", "first point transformed {}".format(transform_vector(Y[0], components_p))
     )
+
+
+if __name__ == "__main__":
+    dictConfig(config.LOGGING_CONFIG_DICT)
+    main()

@@ -189,7 +189,7 @@ def main():
     random.seed(0)
     _clusterer = KMeans(2)
     _clusterer.train(inputs_list)
-    logging.info("%r", "2-means:".format(_clusterer.means))
+    logging.info("%r", "2-means: {}".format(_clusterer.means))
 
     logging.info("compute errors as a function of k")
     for _k in range(1, len(inputs_list) + 1):
@@ -201,7 +201,7 @@ def main():
     _base_cluster = bottom_up_cluster(inputs_list)
     logging.info("%r", "base_cluster = {}".format(_base_cluster))
 
-    logging.info("%r", "".format("three clusters, min:"))
+    logging.info("three clusters, min")
     for cluster in generate_clusters(_base_cluster, 3):
         logging.debug("%r", "cluster = {}".format(cluster))
         logging.info("%r", "get_values(cluster) = {}".format(get_values(cluster)))

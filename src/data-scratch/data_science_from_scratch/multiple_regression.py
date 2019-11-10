@@ -523,12 +523,12 @@ if __name__ == "__main__":
 
     random.seed(0)
     _beta = estimate_beta(_x, daily_minutes_good)  # [30.63, 0.972, -1.868, 0.911]
-    logging.info("%r", "".format("beta", _beta))
+    logging.info("%r", "beta {}".format(_beta))
     logging.info(
-        "%r", "".format("r-squared", multiple_r_squared(_x, daily_minutes_good, _beta))
+        "%r", "r-squared {}".format(multiple_r_squared(_x, daily_minutes_good, _beta))
     )
 
-    logging.info("%r", "".format("digression: the bootstrap"))
+    logging.info("digression: the bootstrap")
     # 101 points all very close to 100
     close_to_100 = [99.5 + random.random() for _ in range(101)]
 
@@ -539,10 +539,10 @@ if __name__ == "__main__":
             + [200 + random.random() for _ in range(50)]
     )
 
-    logging.info("%r", "".format("bootstrap_statistic(close_to_100, median, 100):"))
-    logging.info("%r", "".format(bootstrap_statistic(close_to_100, median, 100)))
-    logging.info("%r", "".format("bootstrap_statistic(far_from_100, median, 100):"))
-    logging.info("%r", "".format(bootstrap_statistic(far_from_100, median, 100)))
+    logging.info("%r", "bootstrap_statistic(close_to_100, median, 100): {}".format(
+        bootstrap_statistic(close_to_100, median, 100)))
+    logging.info("%r", "bootstrap_statistic(far_from_100, median, 100): {}".format(
+        bootstrap_statistic(far_from_100, median, 100)))
 
     random.seed(0)  # so that you get the same results as me
 
@@ -555,25 +555,25 @@ if __name__ == "__main__":
     ]
 
     logging.info(
-        "%r", "".format("bootstrap standard errors", bootstrap_standard_errors)
+        "%r", "bootstrap standard errors {}".format(bootstrap_standard_errors)
     )
 
-    logging.info("%r", "".format("p_value(30.63, 1.174)", p_value(30.63, 1.174)))
-    logging.info("%r", "".format("p_value(0.972, 0.079)", p_value(0.972, 0.079)))
-    logging.info("%r", "".format("p_value(-1.868, 0.131)", p_value(-1.868, 0.131)))
-    logging.info("%r", "".format("p_value(0.911, 0.990)", p_value(0.911, 0.990)))
+    logging.info("%r", "p_value(30.63, 1.174) {}".format(p_value(30.63, 1.174)))
+    logging.info("%r", "p_value(0.972, 0.079) {}".format(p_value(0.972, 0.079)))
+    logging.info("%r", "p_value(-1.868, 0.131) {}".format(p_value(-1.868, 0.131)))
+    logging.info("%r", "p_value(0.911, 0.990) {}".format(p_value(0.911, 0.990)))
 
-    logging.info("%r", "".format("regularization"))
+    logging.info("regularization")
 
     random.seed(0)
     for _alpha in [0.0, 0.01, 0.1, 1, 10]:
         _beta = estimate_beta_ridge(_x, daily_minutes_good, alpha=_alpha)
-        logging.info("%r", "".format("alpha", _alpha))
-        logging.info("%r", "".format("beta", _beta))
+        logging.info("%r", "alpha {}".format(_alpha))
+        logging.info("%r", "beta {}".format(_beta))
         logging.info(
-            "%r", "".format("dot(beta[1:],beta[1:])", dot(_beta[1:], _beta[1:]))
+            "%r", "dot(beta[1:],beta[1:]) {}".format(dot(_beta[1:], _beta[1:]))
         )
         logging.info(
             "%r",
-            "".format("r-squared", multiple_r_squared(_x, daily_minutes_good, _beta)),
+            "r-squared {}".format(multiple_r_squared(_x, daily_minutes_good, _beta)),
         )

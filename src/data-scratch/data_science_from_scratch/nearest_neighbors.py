@@ -156,7 +156,7 @@ if __name__ == "__main__":
 
         logging.info(
             "%r",
-            "".format(_k, "neighbor[s]:", num_correct, "correct out of", len(cities)),
+            "{} neighbor[s]: {} correct out of {}".format(_k, num_correct, len(cities)),
         )
 
     dimensions = range(1, 101, 5)
@@ -171,7 +171,7 @@ if __name__ == "__main__":
         min_distances.append(min(distances))  # track the minimum
         logging.info(
             "%r",
-            "".format(
+            "_dim {}, min(distances) {}, mean(distances) {}, min(distances) / mean(distances) {}".format(
                 _dim, min(distances), mean(distances), min(distances) / mean(distances)
             ),
         )

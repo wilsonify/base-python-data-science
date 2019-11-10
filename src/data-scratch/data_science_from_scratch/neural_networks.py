@@ -71,8 +71,7 @@ def backpropagate(network, input_vector, target):
             hidden_neuron[j] -= hidden_deltas[i] * input_j
 
 
-if __name__ == "__main__":
-    dictConfig(config.LOGGING_CONFIG_DICT)
+def main():
     raw_digits = [
         """11111
            1...1
@@ -126,12 +125,10 @@ if __name__ == "__main__":
            11111""",
     ]
 
-
     def make_digit(raw_digit):
         return [
             1 if c == "1" else 0 for row in raw_digit.split("\n") for c in row.strip()
         ]
-
 
     inputs_ = list(map(make_digit, raw_digits))
 
@@ -160,20 +157,19 @@ if __name__ == "__main__":
         for input_vector_, target_vector in zip(inputs_, targets):
             backpropagate(_network, input_vector_, target_vector)
 
-
     def predict(in_put):
         return feed_forward(_network, in_put)[-1]
 
-
     for i, input_i in enumerate(inputs_):
         outputs_ = predict(input_i)
-        logging.info("%r", "".format(i, [round(p, 2) for p in outputs_]))
+        logging.debug("i = {}".format(i))
+        logging.info("%r", "[round(p, 2) for p in outputs_] ={}".format([round(p, 2) for p in outputs_]))
 
-    logging.info("%r", "".format(""".@@@....@@..@@....@@.@@@."""))
+    logging.info(""".@@@....@@..@@....@@.@@@.""")
     # noinspection PyPep8
     logging.info(
         "%r",
-        "".format(
+        "rounded predictions {}".format(
             [
                 round(x, 2)
                 for x in predict(
@@ -209,11 +205,11 @@ if __name__ == "__main__":
         ),
     )  # .@@@.
 
-    logging.info("%r", "".format(""".@@@.@..@@.@@@.@..@@.@@@."""))
+    logging.info(""".@@@.@..@@.@@@.@..@@.@@@.""")
     # noinspection PyPep8
     logging.info(
         "%r",
-        "".format(
+        "rounded predictions {}".format(
             [
                 round(x, 2)
                 for x in predict(
@@ -248,3 +244,8 @@ if __name__ == "__main__":
             ]
         ),
     )
+
+
+if __name__ == "__main__":
+    dictConfig(config.LOGGING_CONFIG_DICT)
+    main()
