@@ -51,7 +51,7 @@ def test_mapreduce():
     mapreduce.main()
 
 
-@pytest.mark.skip(reason="long running test")
+@pytest.mark.skip(reason="takes ~2min")
 def test_multiple_regression():
     multiple_regression.main()
 
