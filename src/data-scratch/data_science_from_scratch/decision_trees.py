@@ -1,3 +1,8 @@
+"""
+A decision tree uses a tree structure to represent a number of possible decision paths and an outcome for each path.
+
+"""
+
 import logging
 import math
 from collections import Counter, defaultdict
@@ -114,8 +119,7 @@ def forest_classify(trees, inputs):
     return vote_counts.most_common(1)[0][0]
 
 
-if __name__ == "__main__":
-    dictConfig(config.logging_config_dict)
+def main():
     inputs_list = [
         ({"level": "Senior", "lang": "Java", "tweets": "no", "phd": "no"}, False),
         ({"level": "Senior", "lang": "Java", "tweets": "no", "phd": "yes"}, False),
@@ -134,25 +138,26 @@ if __name__ == "__main__":
     ]
 
     for _key in ["level", "lang", "tweets", "phd"]:
-        logging.info("%r", "".format(_key, partition_entropy_by(inputs_list, _key)))
-    logging.info("%r", "".format())
+        logging.info("%r", "key = {}".format(_key))
+        partition_entropy_key = partition_entropy_by(inputs_list, _key)
+        logging.info("%r", "partition_entropy = {}".format(partition_entropy_key))
 
     senior_inputs = [
         (in_put, label) for in_put, label in inputs_list if in_put["level"] == "Senior"
     ]
 
     for _key in ["lang", "tweets", "phd"]:
-        logging.info("%r", "".format(_key, partition_entropy_by(senior_inputs, _key)))
-    logging.info("%r", "".format())
+        logging.info("%r", "_key = {}".format(_key))
+        partition_entropy2 = partition_entropy_by(senior_inputs, _key)
+        logging.info("%r", "partition_entropy = {}".format(partition_entropy2))
 
-    logging.info("%r", "".format("building the tree"))
+    logging.info("building the tree")
     _tree = build_tree_id3(inputs_list)
-    logging.info("%r", "".format(_tree))
+    logging.info("%r", "tree = {}".format(_tree))
 
     logging.info(
         "%r",
-        "".format(
-            "Junior / Java / tweets / no phd",
+        "Junior / Java / tweets / no phd {}".format(
             classify(
                 _tree, {"level": "Junior", "lang": "Java", "tweets": "yes", "phd": "no"}
             ),
@@ -161,8 +166,7 @@ if __name__ == "__main__":
 
     logging.info(
         "%r",
-        "".format(
-            "Junior / Java / tweets / phd",
+        "Junior / Java / tweets / phd {}".format(
             classify(
                 _tree,
                 {"level": "Junior", "lang": "Java", "tweets": "yes", "phd": "yes"},
@@ -170,5 +174,10 @@ if __name__ == "__main__":
         ),
     )
 
-    logging.info("%r", "".format("Intern", classify(_tree, {"level": "Intern"})))
-    logging.info("%r", "".format("Senior", classify(_tree, {"level": "Senior"})))
+    logging.info("%r", "Intern {}".format(classify(_tree, {"level": "Intern"})))
+    logging.info("%r", "Senior {}".format(classify(_tree, {"level": "Senior"})))
+
+
+if __name__ == "__main__":
+    dictConfig(config.LOGGING_CONFIG_DICT)
+    main()
