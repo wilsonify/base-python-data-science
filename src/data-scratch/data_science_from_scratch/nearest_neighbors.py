@@ -136,8 +136,7 @@ def random_distances(dim, num_pairs):
     return [distance(random_point(dim), random_point(dim)) for _ in range(num_pairs)]
 
 
-if __name__ == "__main__":
-    dictConfig(config.LOGGING_CONFIG_DICT)  # try several different values for k
+def main():
     for _k in [1, 3, 5, 7]:
         num_correct = 0
 
@@ -175,3 +174,8 @@ if __name__ == "__main__":
                 _dim, min(distances), mean(distances), min(distances) / mean(distances)
             ),
         )
+
+
+if __name__ == "__main__":
+    dictConfig(config.LOGGING_CONFIG_DICT)  # try several different values for k
+    main()
