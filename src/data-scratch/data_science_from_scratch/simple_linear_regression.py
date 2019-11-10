@@ -57,8 +57,7 @@ def squared_error_gradient(x_i, y_i, theta):
     ]  # beta partial derivative
 
 
-if __name__ == "__main__":
-    dictConfig(config.LOGGING_CONFIG_DICT)
+def main():
     num_friends_good = [
         49,
         41,
@@ -495,3 +494,8 @@ if __name__ == "__main__":
     )
     logging.info("%r", "alpha {}".format(alpha_))
     logging.info("%r", "beta {}".format(beta_))
+
+
+if __name__ == "__main__":
+    dictConfig(config.LOGGING_CONFIG_DICT)
+    main()
