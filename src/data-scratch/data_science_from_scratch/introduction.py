@@ -265,9 +265,8 @@ words_and_counts = Counter(
     word for user, _interest in interests_list for word in _interest.lower().split()
 )
 
-if __name__ == "__main__":
-    dictConfig(config.LOGGING_CONFIG_DICT)
 
+def main():
     logging.info("# FINDING KEY CONNECTORS")
 
     logging.info("%r", "total connections {}".format(total_connections))
@@ -315,3 +314,8 @@ if __name__ == "__main__":
     for word, count in words_and_counts.most_common():
         if count > 1:
             logging.info("%r", "word {}, count {}".format(word, count))
+
+
+if __name__ == "__main__":
+    dictConfig(config.LOGGING_CONFIG_DICT)
+    main()
