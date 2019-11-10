@@ -150,96 +150,94 @@ def beta_pdf(x, alpha, beta):
     return x ** (alpha - 1) * (1 - x) ** (beta - 1) / normalizer(alpha, beta)
 
 
-if __name__ == "__main__":
-    dictConfig(config.LOGGING_CONFIG_DICT)
+def main():
     mu_0, sigma_0 = normal_approximation_to_binomial(1000, 0.5)
-    logging.info("%r", "".format("mu_0", mu_0))
-    logging.info("%r", "".format("sigma_0", sigma_0))
+    logging.info("%r", "mu_0 {}".format(mu_0))
+    logging.info("%r", "sigma_0 {}".format(sigma_0))
     logging.info(
         "%r",
-        "".format(
-            "normal_two_sided_bounds(0.95, mu_0, sigma_0)",
+        "normal_two_sided_bounds(0.95, mu_0, sigma_0) {}".format(
             normal_two_sided_bounds(0.95, mu_0, sigma_0),
         ),
     )
-    logging.info("%r", "".format())
-    logging.info("%r", "".format("power of a test"))
+    logging.info("power of a test")
 
-    logging.info("%r", "".format("95% bounds based on assumption p is 0.5"))
+    logging.info("95% bounds based on assumption p is 0.5")
 
     _lo, _hi = normal_two_sided_bounds(0.95, mu_0, sigma_0)
-    logging.info("%r", "".format("lo", _lo))
-    logging.info("%r", "".format("hi", _hi))
+    logging.info("%r", "lo {}".format(_lo))
+    logging.info("%r", "hi {}".format(_hi))
 
-    logging.info("%r", "".format("actual mu and sigma based on p = 0.55"))
+    logging.info("actual mu and sigma based on p = 0.55")
     mu_1, sigma_1 = normal_approximation_to_binomial(1000, 0.55)
-    logging.info("%r", "".format("mu_1", mu_1))
-    logging.info("%r", "".format("sigma_1", sigma_1))
+    logging.info("%r", "mu_1 {}".format(mu_1))
+    logging.info("%r", "sigma_1 {}".format(sigma_1))
 
     # a type 2 error means we fail to reject the null hypothesis
     # which will happen when X is still in our original interval
     type_2_probability = normal_probability_between(_lo, _hi, mu_1, sigma_1)
     power = 1 - type_2_probability  # 0.887
 
-    logging.info("%r", "".format("type 2 probability", type_2_probability))
-    logging.info("%r", "".format("power", power))
+    logging.info("%r", "type 2 probability {}".format(type_2_probability))
+    logging.info("%r", "power {}".format(power))
 
-    logging.info("%r", "".format("one-sided test"))
+    logging.info("one-sided test")
     _hi = normal_upper_bound(0.95, mu_0, sigma_0)
-    logging.info(
-        "%r", "".format("hi", _hi)
-    )  # is 526 (< 531, since we need more probability in the upper tail))
+    logging.info("%r", "hi {}".format(_hi))  # is 526 (< 531, since we need more probability in the upper tail))
     type_2_probability = normal_probability_below(_hi, mu_1, sigma_1)
     power = 1 - type_2_probability  # = 0.936
-    logging.info("%r", "".format("type 2 probability", type_2_probability))
-    logging.info("%r", "".format("power", power))
-    logging.info("%r", "".format())
+    logging.info("%r", "type 2 probability {}".format(type_2_probability))
+    logging.info("%r", "power {}".format(power))
 
     logging.info(
         "%r",
-        "".format(
-            "two_sided_p_value(529.5, mu_0, sigma_0)",
+        "two_sided_p_value(529.5, mu_0, sigma_0) {}".format(
             two_sided_p_value(529.5, mu_0, sigma_0),
         ),
     )
 
     logging.info(
         "%r",
-        "".format(
-            "two_sided_p_value(531.5, mu_0, sigma_0)",
+        "two_sided_p_value(531.5, mu_0, sigma_0) {}".format(
             two_sided_p_value(531.5, mu_0, sigma_0),
         ),
     )
 
     logging.info(
         "%r",
-        "".format(
-            "upper_p_value(525, mu_0, sigma_0)", upper_p_value(525, mu_0, sigma_0)
+        "upper_p_value(525, mu_0, sigma_0) {}".format(
+            upper_p_value(525, mu_0, sigma_0)
         ),
     )
     logging.info(
         "%r",
-        "".format(
-            "upper_p_value(527, mu_0, sigma_0)", upper_p_value(527, mu_0, sigma_0)
+        "upper_p_value(527, mu_0, sigma_0) {}".format(
+            upper_p_value(527, mu_0, sigma_0)
         ),
     )
-    logging.info("%r", "".format())
 
-    logging.info("%r", "".format("P-hacking"))
+    logging.info("P-hacking")
 
     random.seed(0)
-    experiments = [run_experiment() for _ in range(1000)]
+    n_experiments = 1000
+    experiments = [run_experiment() for _ in range(n_experiments)]
     num_rejections = len(
         [experiment for experiment in experiments if reject_fairness(experiment)]
     )
 
-    logging.info("%r", "".format(num_rejections, "rejections out of 1000"))
+    logging.info("%r", "rejections: {} out of {}".format(num_rejections, n_experiments))
     logging.info("%r", "".format())
 
-    logging.info("%r", "".format("A/B testing"))
+    logging.info("A/B testing")
     z = a_b_test_statistic(1000, 200, 1000, 180)
-    logging.info("%r", "".format("a_b_test_statistic(1000, 200, 1000, 180)", z))
-    logging.info("%r", "".format("p-value", two_sided_p_value(z)))
+    logging.info("%r", "a_b_test_statistic(1000, 200, 1000, 180) {}".format(z))
+    logging.info("%r", "p-value {}".format(two_sided_p_value(z)))
+
     z = a_b_test_statistic(1000, 200, 1000, 150)
-    logging.info("%r", "".format("a_b_test_statistic(1000, 200, 1000, 150)", z))
-    logging.info("%r", "".format("p-value", two_sided_p_value(z)))
+    logging.info("%r", "a_b_test_statistic(1000, 200, 1000, 150) {}".format(z))
+    logging.info("%r", "p-value {}".format(two_sided_p_value(z)))
+
+
+if __name__ == "__main__":
+    dictConfig(config.LOGGING_CONFIG_DICT)
+    main()
