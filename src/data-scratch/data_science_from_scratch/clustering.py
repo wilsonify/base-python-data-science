@@ -157,9 +157,7 @@ def generate_clusters(base_cluster, num_clusters):
     return clusters
 
 
-if __name__ == "__main__":
-    dictConfig(config.logging_config_dict)
-
+def main():
     inputs_list = [
         [-14, -5],
         [13, 13],
@@ -186,35 +184,36 @@ if __name__ == "__main__":
     random.seed(0)  # so you get the same results as me
     _clusterer = KMeans(3)
     _clusterer.train(inputs_list)
-    logging.info("%r", "".format("3-means:"))
-    logging.info("%r", "".format(_clusterer.means))
-    logging.info("%r", "".format())
+    logging.info("%r", "3-means: {}".format(_clusterer.means))
 
     random.seed(0)
     _clusterer = KMeans(2)
     _clusterer.train(inputs_list)
-    logging.info("%r", "".format("2-means:"))
-    logging.info("%r", "".format(_clusterer.means))
-    logging.info("%r", "".format())
+    logging.info("%r", "2-means:".format(_clusterer.means))
 
-    logging.info("%r", "".format("errors as a function of k"))
-
+    logging.info("compute errors as a function of k")
     for _k in range(1, len(inputs_list) + 1):
-        logging.info("%r", "".format(_k, squared_clustering_errors(inputs_list, _k)))
-    logging.info("%r", "".format())
+        logging.info("%r", "k = {}".format(_k))
+        logging.info("%r", "squared_clustering_errors = {}".format(squared_clustering_errors(inputs_list, _k)))
+    logging.info("done with errors as a function of k")
 
-    logging.info("%r", "".format("bottom up hierarchical clustering"))
-
+    logging.info("start bottom up hierarchical clustering")
     _base_cluster = bottom_up_cluster(inputs_list)
-    logging.info("%r", "".format(_base_cluster))
+    logging.info("%r", "base_cluster = {}".format(_base_cluster))
 
-    logging.info("%r", "".format())
     logging.info("%r", "".format("three clusters, min:"))
     for cluster in generate_clusters(_base_cluster, 3):
-        logging.info("%r", "".format(get_values(cluster)))
+        logging.debug("%r", "cluster = {}".format(cluster))
+        logging.info("%r", "get_values(cluster) = {}".format(get_values(cluster)))
 
-    logging.info("%r", "".format())
-    logging.info("%r", "".format("three clusters, max:"))
+    logging.info("three clusters, max:")
     _base_cluster = bottom_up_cluster(inputs_list, max)
     for cluster in generate_clusters(_base_cluster, 3):
-        logging.info("%r", "".format(get_values(cluster)))
+        logging.debug("%r", "cluster = {}".format(cluster))
+        logging.info("%r", "get_values(cluster) = {}".format(get_values(cluster)))
+    logging.info("done with bottom up hierarchical clustering")
+
+
+if __name__ == "__main__":
+    dictConfig(config.LOGGING_CONFIG_DICT)
+    main()
