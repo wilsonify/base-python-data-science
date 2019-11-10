@@ -97,8 +97,8 @@ if __name__ == "__main__":
             either_girl += 1
 
     logging.info(
-        "%r", "".format("P(both | older):", both_girls / older_girl)
+        "%r", "P(both | older): {}".format(both_girls / older_girl)
     )  # 0.514 ~ 1/2)
     logging.info(
-        "%r", "".format("P(both | either): ", both_girls / either_girl)
+        "%r", "P(both | either): {}".format(both_girls / either_girl)
     )  # 0.342 ~ 1/3)
