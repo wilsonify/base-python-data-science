@@ -177,27 +177,27 @@ if __name__ == "__main__":
 
     logging.info("%r", "".format("wc_mapper results"))
     logging.info("%r", "".format(wc_mapper_results))
-    logging.info("%r", "".format())
+    
 
     logging.info("%r", "".format("word count results"))
     logging.info("%r", "".format(word_count(_documents)))
-    logging.info("%r", "".format())
+    
 
     logging.info("%r", "".format("word count using map_reduce function"))
     logging.info("%r", "".format(map_reduce(_documents, wc_mapper, wc_reducer)))
-    logging.info("%r", "".format())
+    
 
     logging.info("%r", "".format("data science days"))
     logging.info("%r", "".format(data_science_days))
-    logging.info("%r", "".format())
+    
 
     logging.info("%r", "".format("user words"))
     logging.info("%r", "".format(user_words))
-    logging.info("%r", "".format())
+    
 
     logging.info("%r", "".format("distinct likers"))
     logging.info("%r", "".format(distinct_likers_per_user))
-    logging.info("%r", "".format())
+    
 
     # matrix multiplication
 

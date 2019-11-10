@@ -527,7 +527,7 @@ if __name__ == "__main__":
     logging.info(
         "%r", "".format("r-squared", multiple_r_squared(_x, daily_minutes_good, _beta))
     )
-    logging.info("%r", "".format())
+    
 
     logging.info("%r", "".format("digression: the bootstrap"))
     # 101 points all very close to 100
@@ -544,7 +544,7 @@ if __name__ == "__main__":
     logging.info("%r", "".format(bootstrap_statistic(close_to_100, median, 100)))
     logging.info("%r", "".format("bootstrap_statistic(far_from_100, median, 100):"))
     logging.info("%r", "".format(bootstrap_statistic(far_from_100, median, 100)))
-    logging.info("%r", "".format())
+    
 
     random.seed(0)  # so that you get the same results as me
 
@@ -559,13 +559,13 @@ if __name__ == "__main__":
     logging.info(
         "%r", "".format("bootstrap standard errors", bootstrap_standard_errors)
     )
-    logging.info("%r", "".format())
+    
 
     logging.info("%r", "".format("p_value(30.63, 1.174)", p_value(30.63, 1.174)))
     logging.info("%r", "".format("p_value(0.972, 0.079)", p_value(0.972, 0.079)))
     logging.info("%r", "".format("p_value(-1.868, 0.131)", p_value(-1.868, 0.131)))
     logging.info("%r", "".format("p_value(0.911, 0.990)", p_value(0.911, 0.990)))
-    logging.info("%r", "".format())
+    
 
     logging.info("%r", "".format("regularization"))
 
@@ -581,4 +581,4 @@ if __name__ == "__main__":
             "%r",
             "".format("r-squared", multiple_r_squared(_x, daily_minutes_good, _beta)),
         )
-        logging.info("%r", "".format())
+        

@@ -268,18 +268,18 @@ words_and_counts = Counter(
 
 if __name__ == "__main__":
     dictConfig(config.LOGGING_CONFIG_DICT)
-    logging.info("%r", "".format())
+    
     logging.info("%r", "".format("######################"))
     logging.info("%r", "".format("#"))
     logging.info("%r", "".format("# FINDING KEY CONNECTORS"))
     logging.info("%r", "".format("#"))
     logging.info("%r", "".format("######################"))
-    logging.info("%r", "".format())
+    
 
     logging.info("%r", "".format("total connections", total_connections))
     logging.info("%r", "".format("number of users", num_users))
     logging.info("%r", "".format("average connections", total_connections / num_users))
-    logging.info("%r", "".format())
+    
 
     # create a list (user_id, number_of_friends)
     num_friends_by_id = [(user["id"], number_of_friends(user)) for user in users_list]
@@ -301,7 +301,7 @@ if __name__ == "__main__":
     logging.info("%r", "".format("# DATA SCIENTISTS YOU MAY KNOW"))
     logging.info("%r", "".format("#"))
     logging.info("%r", "".format("######################"))
-    logging.info("%r", "".format())
+    
 
     logging.info(
         "%r",
@@ -317,27 +317,27 @@ if __name__ == "__main__":
         ),
     )
 
-    logging.info("%r", "".format())
+    
     logging.info("%r", "".format("######################"))
     logging.info("%r", "".format("#"))
     logging.info("%r", "".format("# SALARIES AND TENURES"))
     logging.info("%r", "".format("#"))
     logging.info("%r", "".format("######################"))
-    logging.info("%r", "".format())
+    
 
     logging.info("%r", "".format("average salary by tenure", average_salary_by_tenure))
     logging.info(
         "%r", "".format("average salary by tenure bucket", average_salary_by_bucket)
     )
 
-    logging.info("%r", "".format())
+    
     logging.info("%r", "".format("######################"))
     logging.info("%r", "".format("#"))
     logging.info("%r", "".format("# MOST COMMON WORDS"))
     logging.info("%r", "".format("#"))
     logging.info("%r", "".format("######################"))
-    logging.info("%r", "".format())
+    
 
     for word, count in words_and_counts.most_common():
         if count > 1:
-            logging.info("%r", "".format(word, count))
+            logging.info("%r", "word {}, count {}".format(word, count))

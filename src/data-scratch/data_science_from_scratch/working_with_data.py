@@ -471,7 +471,7 @@ if __name__ == "__main__":
     logging.info("%r", "".format("original: ", _data))
     logging.info("%r", "".format("scale: ", scale(_data)))
     logging.info("%r", "".format("rescaled: ", rescale(_data)))
-    logging.info("%r", "".format())
+    
 
     logging.info("%r", "".format("PCA"))
 
