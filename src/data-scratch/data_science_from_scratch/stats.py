@@ -531,57 +531,51 @@ num_friends_good = [x for i, x in enumerate(num_friends) if i != outlier]
 
 daily_minutes_good = [x for i, x in enumerate(daily_minutes) if i != outlier]
 
-if __name__ == "__main__":
-    dictConfig(config.LOGGING_CONFIG_DICT)
-    logging.info("%r", "".format("num_points", len(num_friends)))
-    logging.info("%r", "".format("largest value", max(num_friends)))
-    logging.info("%r", "".format("smallest value", min(num_friends)))
-    logging.info("%r", "".format("second_smallest_value", sorted_values[1]))
-    logging.info("%r", "".format("second_largest_value", sorted_values[-2]))
-    logging.info("%r", "".format("mean(num_friends)", mean(num_friends)))
-    logging.info("%r", "".format("median(num_friends)", median(num_friends)))
-    logging.info(
-        "%r", "".format("quantile(num_friends, 0.10)", quantile(num_friends, 0.10))
-    )
-    logging.info(
-        "%r", "".format("quantile(num_friends, 0.25)", quantile(num_friends, 0.25))
-    )
-    logging.info(
-        "%r", "".format("quantile(num_friends, 0.75)", quantile(num_friends, 0.75))
-    )
-    logging.info(
-        "%r", "".format("quantile(num_friends, 0.90)", quantile(num_friends, 0.90))
-    )
-    logging.info("%r", "".format("mode(num_friends)", mode(num_friends)))
-    logging.info("%r", "".format("data_range(num_friends)", data_range(num_friends)))
-    logging.info("%r", "".format("variance(num_friends)", variance(num_friends)))
+
+def main():
+    logging.info("%r", "{} num_points".format(len(num_friends)))
+    logging.info("%r", "{} largest value".format(max(num_friends)))
+    logging.info("%r", "{} smallest value".format(min(num_friends)))
+    logging.info("%r", "{} second_smallest_value".format(sorted_values[1]))
+    logging.info("%r", "{} second_largest_value".format(sorted_values[-2]))
+    logging.info("%r", "{} mean(num_friends)".format(mean(num_friends)))
+    logging.info("%r", "{} median(num_friends)".format(median(num_friends)))
+    logging.info("%r", "{} quantile(num_friends, 0.10)".format(quantile(num_friends, 0.10)))
+    logging.info("%r", "{} quantile(num_friends, 0.25)".format(quantile(num_friends, 0.25)))
+    logging.info("%r", "{} quantile(num_friends, 0.75)".format(quantile(num_friends, 0.75)))
+    logging.info("%r", "{} quantile(num_friends, 0.90)".format(quantile(num_friends, 0.90)))
+    logging.info("%r", "{} mode(num_friends)".format(mode(num_friends)))
+    logging.info("%r", "{} data_range(num_friends)".format(data_range(num_friends)))
+    logging.info("%r", "{} variance(num_friends)".format(variance(num_friends)))
     logging.info(
         "%r",
-        "".format("standard_deviation(num_friends)", standard_deviation(num_friends)),
+        "standard_deviation(num_friends) {}".format(standard_deviation(num_friends)),
     )
     logging.info(
         "%r",
-        "".format("interquartile_range(num_friends)", interquartile_range(num_friends)),
+        "interquartile_range(num_friends) {}".format(interquartile_range(num_friends)),
     )
 
     logging.info(
         "%r",
-        "".format(
-            "covariance(num_friends, daily_minutes)",
+        "covariance(num_friends, daily_minutes) {}".format(
             covariance(num_friends, daily_minutes),
         ),
     )
     logging.info(
         "%r",
-        "".format(
-            "correlation(num_friends, daily_minutes)",
+        "correlation(num_friends, daily_minutes) {}".format(
             correlation(num_friends, daily_minutes),
         ),
     )
     logging.info(
         "%r",
-        "".format(
-            "correlation(num_friends_good, daily_minutes_good)",
+        "correlation(num_friends_good, daily_minutes_good) {}".format(
             correlation(num_friends_good, daily_minutes_good),
         ),
     )
+
+
+if __name__ == "__main__":
+    dictConfig(config.LOGGING_CONFIG_DICT)
+    main()
