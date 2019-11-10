@@ -1,15 +1,17 @@
-# line_count.py
-import logging
-import sys
-from logging.config import dictConfig
+"""
+count lines from stdin, write count to stdout
+"""
 
+import sys
 from data_science_from_scratch import config
 
-if __name__ == "__main__":
-    dictConfig(config.LOGGING_CONFIG_DICT)
+
+def main():
     count = 0
     for line in sys.stdin:
         count += 1
+    print(count)  # print goes to sys.stdout
 
-    # print goes to sys.stdout
-    logging.info("%r", "".format(count))
+
+if __name__ == "__main__":
+    main()
