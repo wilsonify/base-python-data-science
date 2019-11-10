@@ -208,7 +208,6 @@ if __name__ == "__main__":
             ]
         ),
     )  # .@@@.
-    
 
     logging.info("%r", "".format(""".@@@.@..@@.@@@.@..@@.@@@."""))
     # noinspection PyPep8
@@ -249,4 +248,3 @@ if __name__ == "__main__":
             ]
         ),
     )
-    

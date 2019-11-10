@@ -159,7 +159,6 @@ if __name__ == "__main__":
     dictConfig(config.LOGGING_CONFIG_DICT)
     logging.info("%r", "".format("Popular Interests"))
     logging.info("%r", "".format(popular_interests))
-    
 
     logging.info("%r", "".format("Most Popular New Interests"))
     logging.info(
@@ -176,7 +175,7 @@ if __name__ == "__main__":
             )
         ),
     )
-    
+
     logging.info(
         "%r",
         "".format(
@@ -191,7 +190,6 @@ if __name__ == "__main__":
             )
         ),
     )
-    
 
     logging.info("%r", "".format("User based similarity"))
     logging.info("%r", "".format("most similar to 0"))
@@ -199,12 +197,10 @@ if __name__ == "__main__":
 
     logging.info("%r", "".format("Suggestions for 0"))
     logging.info("%r", "".format(user_based_suggestions(0)))
-    
 
     logging.info("%r", "".format("Item based similarity"))
     logging.info("%r", "".format("most similar to 'Big Data'"))
     logging.info("%r", "".format(most_similar_interests_to(0)))
-    
 
     logging.info("%r", "".format("suggestions for user 0"))
     logging.info("%r", "".format(item_based_suggestions(0)))

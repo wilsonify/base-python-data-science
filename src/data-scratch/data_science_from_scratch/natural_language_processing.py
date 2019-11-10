@@ -290,7 +290,6 @@ if __name__ == "__main__":
     logging.info("%r", "".format("bigram sentences"))
     for i in range(10):
         logging.info("%r", "".format(i, generate_using_bigrams(_transitions)))
-    
 
     # trigrams
 
@@ -310,7 +309,6 @@ if __name__ == "__main__":
         logging.info(
             "%r", "".format(i, generate_using_trigrams(starts, trigram_transitions))
         )
-    
 
     grammar = {
         "_S": ["_NP _VP"],
@@ -325,7 +323,6 @@ if __name__ == "__main__":
     logging.info("%r", "".format("grammar sentences"))
     for i in range(10):
         logging.info("%r", "".format(i, " ".join(generate_sentence(grammar))))
-    
 
     logging.info("%r", "".format("gibbs sampling"))
     comparison = compare_distributions()
@@ -351,4 +348,3 @@ if __name__ == "__main__":
         for _topic, count in topic_counts.most_common():
             if count > 0:
                 logging.info("%r", "".format(topic_names[_topic], count))
-        

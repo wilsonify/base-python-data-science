@@ -226,7 +226,6 @@ def main():
     )
 
     logging.info("%r", "rejections: {} out of {}".format(num_rejections, n_experiments))
-    
 
     logging.info("A/B testing")
     z = a_b_test_statistic(1000, 200, 1000, 180)

@@ -481,8 +481,6 @@ if __name__ == "__main__":
         ),
     )
 
-    
-
     logging.info("%r", "".format("gradient descent:"))
     # choose random value to start
     random.seed(0)

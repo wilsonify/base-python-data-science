@@ -275,17 +275,14 @@ if __name__ == "__main__":
     logging.info("%r", "".format("Betweenness Centrality"))
     for _user in users_dict:
         logging.info("%r", "".format(_user["id"], _user["betweenness_centrality"]))
-    
 
     logging.info("%r", "".format("Closeness Centrality"))
     for _user in users_dict:
         logging.info("%r", "".format(_user["id"], _user["closeness_centrality"]))
-    
 
     logging.info("%r", "".format("Eigenvector Centrality"))
     for _user_id, centrality in enumerate(eigenvector_centralities):
         logging.info("%r", "".format(_user_id, centrality))
-    
 
     logging.info("%r", "".format("PageRank"))
     for _user_id, _pr in page_rank(users_dict).items():

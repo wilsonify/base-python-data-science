@@ -269,11 +269,7 @@ words_and_counts = Counter(
 if __name__ == "__main__":
     dictConfig(config.LOGGING_CONFIG_DICT)
 
-
-
     logging.info("%r", "".format("# FINDING KEY CONNECTORS"))
-
-
 
     logging.info("%r", "".format("total connections", total_connections))
     logging.info("%r", "".format("number of users", num_users))
@@ -294,11 +290,7 @@ if __name__ == "__main__":
         ),
     )  # largest to smallest
 
-
-
     logging.info("%r", "".format("# DATA SCIENTISTS YOU MAY KNOW"))
-
-
 
     logging.info(
         "%r",
@@ -314,11 +306,7 @@ if __name__ == "__main__":
         ),
     )
 
-
-
     logging.info("%r", "".format("# SALARIES AND TENURES"))
-
-
 
     logging.info("%r", "".format("average salary by tenure", average_salary_by_tenure))
     logging.info(

@@ -23,8 +23,6 @@ outputs:
 import sys
 from collections import Counter
 
-from data_science_from_scratch import config
-
 
 def main(num_words):
     counter = Counter(
