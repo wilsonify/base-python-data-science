@@ -123,8 +123,7 @@ class Table:
         return join_table
 
 
-if __name__ == "__main__":
-    dictConfig(config.logging_config_dict)
+def main():
     users = Table(["user_id", "name", "num_friends"])
     users.insert([0, "Hero", 0])
     users.insert([1, "Dunn", 2])
@@ -138,75 +137,46 @@ if __name__ == "__main__":
     users.insert([9, "Klein", 3])
     users.insert([10, "Jen", 1])
 
-    logging.info("%r", "".format("users table"))
-    logging.info("%r", "".format(users))
-    logging.info("%r", "".format())
+    logging.info("%r", "users = {}".format(users))
 
     # SELECT
 
-    logging.info("%r", "".format("users.select()"))
-    logging.info("%r", "".format(users.select()))
-    logging.info("%r", "".format())
+    logging.info("%r", "users.select() = {}".format(users.select()))
 
-    logging.info("%r", "".format("users.limit(2)"))
-    logging.info("%r", "".format(users.limit(2)))
-    logging.info("%r", "".format())
+    limited_users = users.limit(2)
+    logging.info("%r", "limited_users = {}".format(limited_users))
 
-    logging.info("%r", "".format('users.select(keep_columns=["user_id"])'))
-    logging.info("%r", "".format(users.select(keep_columns=["user_id"])))
-    logging.info("%r", "".format())
+    selected_users = users.select(keep_columns=["user_id"])
+    logging.info("%r", "selected_users = {}".format(selected_users))
 
-    logging.info("%r", "".format('where(lambda row: row["name"] == "Dunn")'))
-    logging.info(
-        "%r",
-        "".format(
-            users.where(lambda row: row["name"] == "Dunn").select(
-                keep_columns=["user_id"]
-            )
-        ),
-    )
-    logging.info("%r", "".format())
-
+    users_named_dunn = users.where(lambda row: row["name"] == "Dunn").select(keep_columns=["user_id"])
+    logging.info("%r", "users_named_dunn = {}".format(users_named_dunn))
 
     def name_len(row):
         return len(row["name"])
 
-
-    logging.info("%r", "".format("with name_length:"))
-    logging.info(
-        "%r",
-        "".format(
-            users.select(keep_columns=[], additional_columns={"name_length": name_len})
-        ),
-    )
-    logging.info("%r", "".format())
-
+    user_with_name_length = users.select(keep_columns=[], additional_columns={"name_length": name_len})
+    logging.debug("name_len = {}".format(name_len))
+    logging.info("%r", "user_with_name_length = {}".format(user_with_name_length))
 
     def min_user_id(rows):
         return min(row["user_id"] for row in rows)
-
 
     stats_by_length = users.select(additional_columns={"name_len": name_len}).group_by(
         group_by_columns=["name_len"],
         aggregates={"min_user_id": min_user_id, "num_users": len},
     )
 
-    logging.info("%r", "".format("stats by length"))
-    logging.info("%r", "".format(stats_by_length))
-    logging.info("%r", "".format())
-
+    logging.info("%r", "stats_by_length = {}".format(stats_by_length))
 
     def first_letter_of_name(row):
         return row["name"][0] if row["name"] else ""
 
-
     def average_num_friends(rows):
         return sum(row["num_friends"] for row in rows) / len(rows)
 
-
     def enough_friends(rows):
         return average_num_friends(rows) > 1
-
 
     avg_friends_by_letter = users.select(
         additional_columns={"first_letter": first_letter_of_name}
@@ -216,22 +186,16 @@ if __name__ == "__main__":
         having=enough_friends,
     )
 
-    logging.info("%r", "".format("avg friends by letter"))
-    logging.info("%r", "".format(avg_friends_by_letter))
-    logging.info("%r", "".format())
-
+    logging.info("%r", "avg_friends_by_letter = {}".format(avg_friends_by_letter))
 
     def sum_user_ids(rows):
         return sum(row["user_id"] for row in rows)
-
 
     user_id_sum = users.where(lambda row: row["user_id"] > 1).group_by(
         group_by_columns=[], aggregates={"user_id_sum": sum_user_ids}
     )
 
-    logging.info("%r", "".format("user id sum"))
-    logging.info("%r", "".format(user_id_sum))
-    logging.info("%r", "".format())
+    logging.info("%r", "user_id_sum = {}".format(user_id_sum))
 
     # ORDER BY
 
@@ -239,9 +203,7 @@ if __name__ == "__main__":
         lambda row: -row["avg_num_friends"]
     ).limit(4)
 
-    logging.info("%r", "".format("friendliest letters"))
-    logging.info("%r", "".format(friendliest_letters))
-    logging.info("%r", "".format())
+    logging.info("%r", "friendliest_letters = {}".format(friendliest_letters))
 
     # JOINs
 
@@ -258,22 +220,17 @@ if __name__ == "__main__":
             .select(keep_columns=["name"])
     )
 
-    logging.info("%r", "".format("sql users"))
-    logging.info("%r", "".format(sql_users))
-    logging.info("%r", "".format())
-
+    logging.info("%r", "sql_users = {}".format(sql_users))
 
     def count_interests(rows):
         """counts how many rows have non-None interests"""
         return len([row for row in rows if row["interest"] is not None])
 
-
     user_interest_counts = users.join(user_interests, left_join=True).group_by(
         group_by_columns=["user_id"], aggregates={"num_interests": count_interests}
     )
 
-    logging.info("%r", "".format("user interest counts"))
-    logging.info("%r", "".format(user_interest_counts))
+    logging.info("%r", "user interest counts = {}".format(user_interest_counts))
 
     # SUBQUERIES
 
@@ -285,5 +242,9 @@ if __name__ == "__main__":
         group_by_columns=[], aggregates={"min_user_id": min_user_id}
     )
 
-    logging.info("%r", "".format("likes sql user ids"))
-    logging.info("%r", "".format(likes_sql_user_ids))
+    logging.info("%r", "likes sql user ids = {}".format(likes_sql_user_ids))
+
+
+if __name__ == "__main__":
+    dictConfig(config.LOGGING_CONFIG_DICT)
+    main()
