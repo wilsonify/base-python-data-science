@@ -7,8 +7,8 @@ from data_science_from_scratch import config
 from data_science_from_scratch.library.gradient_descent import minimize_stochastic
 from data_science_from_scratch.library.linear_algebra import dot, vector_add
 from data_science_from_scratch.library.probability import normal_cdf
-from data_science_from_scratch.simple_linear_regression import total_sum_of_squares
 from data_science_from_scratch.library.stats import median, standard_deviation
+from data_science_from_scratch.simple_linear_regression import total_sum_of_squares
 
 
 def predict(x_i, beta):
@@ -66,9 +66,10 @@ def p_value(beta_hat_j, sigma_hat_j):
 # REGULARIZED REGRESSION
 #
 
-# alpha is a *hyperparameter* controlling how harsh the penalty is
-# sometimes it's called "lambda" but that already means something in Python
 def ridge_penalty(beta, alpha):
+    # alpha is a *hyperparameter* controlling how harsh the penalty is
+    # sometimes it's called "lambda" but that already means something in Python
+
     return alpha * dot(beta[1:], beta[1:])
 
 
@@ -108,8 +109,7 @@ def lasso_penalty(beta, alpha):
     return alpha * sum(abs(beta_i) for beta_i in beta[1:])
 
 
-if __name__ == "__main__":
-    dictConfig(config.LOGGING_CONFIG_DICT)
+def main():
     _x = [
         [1, 49, 4, 0],
         [1, 41, 9, 0],
@@ -577,3 +577,8 @@ if __name__ == "__main__":
             "%r",
             "r-squared {}".format(multiple_r_squared(_x, daily_minutes_good, _beta)),
         )
+
+
+if __name__ == "__main__":
+    dictConfig(config.LOGGING_CONFIG_DICT)
+    main()
