@@ -54,8 +54,7 @@ def logistic_log_gradient(x, y, beta):
     )
 
 
-if __name__ == "__main__":
-    dictConfig(config.LOGGING_CONFIG_DICT)
+def main():
     data = [
         (0.7, 48000, 1),
         (1.9, 48000, 0),
@@ -312,3 +311,8 @@ if __name__ == "__main__":
 
     logging.info("%r", "precision {}".format(precision))
     logging.info("%r", "recall {}".format(recall))
+
+
+if __name__ == "__main__":
+    dictConfig(config.LOGGING_CONFIG_DICT)
+    main()
