@@ -4,7 +4,7 @@ from functools import partial
 from logging.config import dictConfig
 
 from data_science_from_scratch import config
-from data_science_from_scratch.linear_algebra import (
+from data_science_from_scratch.library.linear_algebra import (
     dot,
     get_row,
     get_column,

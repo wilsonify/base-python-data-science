@@ -4,7 +4,7 @@ import random
 from logging.config import dictConfig
 
 from data_science_from_scratch import config
-from data_science_from_scratch.probability import normal_cdf, inverse_normal_cdf
+from data_science_from_scratch.library.probability import normal_cdf, inverse_normal_cdf
 
 
 def normal_approximation_to_binomial(n, p):

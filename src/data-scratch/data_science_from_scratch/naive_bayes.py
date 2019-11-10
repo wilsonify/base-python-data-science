@@ -7,7 +7,7 @@ from collections import Counter, defaultdict
 from logging.config import dictConfig
 
 from data_science_from_scratch import config
-from data_science_from_scratch.machine_learning import split_data
+from data_science_from_scratch.library.machine_learning import split_data
 
 
 def tokenize(message):

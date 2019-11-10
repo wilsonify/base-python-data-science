@@ -4,11 +4,11 @@ from functools import partial
 from logging.config import dictConfig
 
 from data_science_from_scratch import config
-from data_science_from_scratch.gradient_descent import minimize_stochastic
-from data_science_from_scratch.linear_algebra import dot, vector_add
-from data_science_from_scratch.probability import normal_cdf
+from data_science_from_scratch.library.gradient_descent import minimize_stochastic
+from data_science_from_scratch.library.linear_algebra import dot, vector_add
+from data_science_from_scratch.library.probability import normal_cdf
 from data_science_from_scratch.simple_linear_regression import total_sum_of_squares
-from data_science_from_scratch.stats import median, standard_deviation
+from data_science_from_scratch.library.stats import median, standard_deviation
 
 
 def predict(x_i, beta):

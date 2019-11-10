@@ -6,9 +6,9 @@ import matplotlib.image as mpimg
 import matplotlib.pyplot as plt
 from data_plots_from_scratch.plot_state_borders import plot_state_borders
 from data_science_from_scratch.clustering import KMeans, squared_clustering_errors
-from data_science_from_scratch.gradient_descent import difference_quotient
+from data_science_from_scratch.library.gradient_descent import difference_quotient
 from data_science_from_scratch.introduction import salaries_and_tenures
-from data_science_from_scratch.linear_algebra import (
+from data_science_from_scratch.library.linear_algebra import (
     get_column,
     shape,
     dot,
@@ -17,7 +17,7 @@ from data_science_from_scratch.linear_algebra import (
 from data_science_from_scratch.nearest_neighbors import cities
 from data_science_from_scratch.nearest_neighbors import knn_classify
 from data_science_from_scratch.neural_networks import _network
-from data_science_from_scratch.probability import (
+from data_science_from_scratch.library.probability import (
     normal_pdf,
     normal_cdf,
     inverse_normal_cdf,

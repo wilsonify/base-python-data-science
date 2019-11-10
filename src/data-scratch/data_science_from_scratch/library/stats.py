@@ -4,7 +4,7 @@ from collections import Counter
 from logging.config import dictConfig
 
 from data_science_from_scratch import config
-from data_science_from_scratch.linear_algebra import sum_of_squares, dot
+from data_science_from_scratch.library.linear_algebra import sum_of_squares, dot
 
 num_friends = [
     100,

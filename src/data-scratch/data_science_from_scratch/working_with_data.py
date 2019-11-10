@@ -8,11 +8,11 @@ from logging.config import dictConfig
 
 import dateutil.parser
 from data_science_from_scratch import config
-from data_science_from_scratch.gradient_descent import (
+from data_science_from_scratch.library.gradient_descent import (
     maximize_stochastic,
     maximize_batch,
 )
-from data_science_from_scratch.linear_algebra import (
+from data_science_from_scratch.library.linear_algebra import (
     shape,
     get_column,
     make_matrix,
@@ -22,8 +22,8 @@ from data_science_from_scratch.linear_algebra import (
     vector_subtract,
     scalar_multiply,
 )
-from data_science_from_scratch.probability import inverse_normal_cdf
-from data_science_from_scratch.stats import correlation, standard_deviation, mean
+from data_science_from_scratch.library.probability import inverse_normal_cdf
+from data_science_from_scratch.library.stats import correlation, standard_deviation, mean
 
 
 def bucketize(point, bucket_size):

@@ -4,7 +4,7 @@ import random
 from logging.config import dictConfig
 
 from data_science_from_scratch import config
-from data_science_from_scratch.linear_algebra import dot
+from data_science_from_scratch.library.linear_algebra import dot
 
 
 def step_function(x):

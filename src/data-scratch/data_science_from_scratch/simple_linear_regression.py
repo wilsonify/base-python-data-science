@@ -3,8 +3,8 @@ import random
 from logging.config import dictConfig
 
 from data_science_from_scratch import config
-from data_science_from_scratch.gradient_descent import minimize_stochastic
-from data_science_from_scratch.stats import (
+from data_science_from_scratch.library.gradient_descent import minimize_stochastic
+from data_science_from_scratch.library.stats import (
     mean,
     correlation,
     standard_deviation,

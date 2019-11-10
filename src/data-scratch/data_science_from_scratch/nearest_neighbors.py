@@ -4,8 +4,8 @@ from collections import Counter
 from logging.config import dictConfig
 
 from data_science_from_scratch import config
-from data_science_from_scratch.linear_algebra import distance
-from data_science_from_scratch.stats import mean
+from data_science_from_scratch.library.linear_algebra import distance
+from data_science_from_scratch.library.stats import mean
 
 
 def raw_majority_vote(labels):
