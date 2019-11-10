@@ -100,9 +100,8 @@ def friends_of_friend_ids(user_):
     )  # and aren't my friends
 
 
-logging.info(
-    "%r", "".format(friends_of_friend_ids(users_list[3]))
-)  # Counter({0: 2, 5: 1})
+friends_of_friend_ids_3 = friends_of_friend_ids(users_list[3])
+logging.info("%r", "friends_of_friend_ids_3 = {}".format(friends_of_friend_ids_3))  # Counter({0: 2, 5: 1})
 
 interests_list = [
     (0, "Hadoop"),
@@ -269,19 +268,18 @@ words_and_counts = Counter(
 if __name__ == "__main__":
     dictConfig(config.LOGGING_CONFIG_DICT)
 
-    logging.info("%r", "".format("# FINDING KEY CONNECTORS"))
+    logging.info("# FINDING KEY CONNECTORS")
 
-    logging.info("%r", "".format("total connections", total_connections))
-    logging.info("%r", "".format("number of users", num_users))
-    logging.info("%r", "".format("average connections", total_connections / num_users))
+    logging.info("%r", "total connections {}".format(total_connections))
+    logging.info("%r", "number of users {}".format(num_users))
+    logging.info("%r", "average connections {}".format(total_connections / num_users))
 
     # create a list (user_id, number_of_friends)
     num_friends_by_id = [(user["id"], number_of_friends(user)) for user in users_list]
 
-    logging.info("%r", "".format("users sorted by number of friends:"))
     logging.info(
         "%r",
-        "".format(
+        "users sorted by number of friends: {}".format(
             sorted(
                 num_friends_by_id,
                 key=lambda pair: pair[1],  # by number of friends
@@ -290,27 +288,26 @@ if __name__ == "__main__":
         ),
     )  # largest to smallest
 
-    logging.info("%r", "".format("# DATA SCIENTISTS YOU MAY KNOW"))
+    logging.info("DATA SCIENTISTS YOU MAY KNOW")
 
     logging.info(
         "%r",
-        "".format(
-            "friends of friends bad for user 0:",
+        "friends of friends bad for user 0: {}".format(
             friends_of_friend_ids_bad(users_list[0]),
         ),
     )
     logging.info(
         "%r",
-        "".format(
-            "friends of friends for user 3:", friends_of_friend_ids(users_list[3])
+        "friends of friends for user 3: {}".format(
+            friends_of_friend_ids(users_list[3])
         ),
     )
 
-    logging.info("%r", "".format("# SALARIES AND TENURES"))
+    logging.info("# SALARIES AND TENURES")
 
-    logging.info("%r", "".format("average salary by tenure", average_salary_by_tenure))
+    logging.info("%r", "average salary by tenure {}".format(average_salary_by_tenure))
     logging.info(
-        "%r", "".format("average salary by tenure bucket", average_salary_by_bucket)
+        "%r", "average salary by tenure bucket {}".format(average_salary_by_bucket)
     )
 
     logging.info("MOST COMMON WORDS")
