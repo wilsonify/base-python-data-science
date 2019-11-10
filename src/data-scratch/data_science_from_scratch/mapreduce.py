@@ -168,7 +168,7 @@ def matrix_multiply_reducer(m, key, indexed_values):
 
 
 if __name__ == "__main__":
-    dictConfig(config.logging_config_dict)
+    dictConfig(config.LOGGING_CONFIG_DICT)
     _documents = ["data science", "big data", "science fiction"]
 
     wc_mapper_results = [

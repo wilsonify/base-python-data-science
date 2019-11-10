@@ -278,7 +278,7 @@ for iteration in range(1000):
             document_lengths[d] += 1
 
 if __name__ == "__main__":
-    dictConfig(config.logging_config_dict)
+    dictConfig(config.LOGGING_CONFIG_DICT)
     document = get_document()
 
     bigrams = list(zip(document, document[1:]))

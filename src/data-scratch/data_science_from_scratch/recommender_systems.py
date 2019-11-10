@@ -156,7 +156,7 @@ def item_based_suggestions(user_id, include_current_interests=False):
 
 
 if __name__ == "__main__":
-    dictConfig(config.logging_config_dict)
+    dictConfig(config.LOGGING_CONFIG_DICT)
     logging.info("%r", "".format("Popular Interests"))
     logging.info("%r", "".format(popular_interests))
     logging.info("%r", "".format())

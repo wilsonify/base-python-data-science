@@ -6,7 +6,7 @@ from logging.config import dictConfig
 from data_science_from_scratch import config
 
 if __name__ == "__main__":
-    dictConfig(config.logging_config_dict)
+    dictConfig(config.LOGGING_CONFIG_DICT)
     count = 0
     for line in sys.stdin:
         count += 1

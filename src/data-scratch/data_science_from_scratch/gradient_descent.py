@@ -152,7 +152,7 @@ def maximize_stochastic(target_fn, gradient_fn, x, y, theta_0, alpha_0=0.01):
 
 
 if __name__ == "__main__":
-    dictConfig(config.logging_config_dict)
+    dictConfig(config.LOGGING_CONFIG_DICT)
     logging.info("%r", "".format("using the gradient"))
 
     _v = [random.randint(-10, 10) for i in range(3)]

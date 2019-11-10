@@ -385,7 +385,7 @@ def transform(x_vector, components):
 
 # noinspection PyPep8,PyPep8
 if __name__ == "__main__":
-    dictConfig(config.logging_config_dict)
+    dictConfig(config.LOGGING_CONFIG_DICT)
     logging.info("%r", "".format("correlation(xs, ys1)", correlation(xs, ys1)))
     logging.info("%r", "".format("correlation(xs, ys2)", correlation(xs, ys2)))
 

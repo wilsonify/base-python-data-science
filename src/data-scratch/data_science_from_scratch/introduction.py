@@ -267,7 +267,7 @@ words_and_counts = Counter(
 )
 
 if __name__ == "__main__":
-    dictConfig(config.logging_config_dict)
+    dictConfig(config.LOGGING_CONFIG_DICT)
     logging.info("%r", "".format())
     logging.info("%r", "".format("######################"))
     logging.info("%r", "".format("#"))

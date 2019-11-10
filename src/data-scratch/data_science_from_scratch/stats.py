@@ -532,7 +532,7 @@ num_friends_good = [x for i, x in enumerate(num_friends) if i != outlier]
 daily_minutes_good = [x for i, x in enumerate(daily_minutes) if i != outlier]
 
 if __name__ == "__main__":
-    dictConfig(config.logging_config_dict)
+    dictConfig(config.LOGGING_CONFIG_DICT)
     logging.info("%r", "".format("num_points", len(num_friends)))
     logging.info("%r", "".format("largest value", max(num_friends)))
     logging.info("%r", "".format("smallest value", min(num_friends)))

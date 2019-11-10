@@ -72,7 +72,7 @@ def backpropagate(network, input_vector, target):
 
 
 if __name__ == "__main__":
-    dictConfig(config.logging_config_dict)
+    dictConfig(config.LOGGING_CONFIG_DICT)
     raw_digits = [
         """11111
            1...1

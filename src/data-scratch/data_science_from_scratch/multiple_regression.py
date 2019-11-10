@@ -109,7 +109,7 @@ def lasso_penalty(beta, alpha):
 
 
 if __name__ == "__main__":
-    dictConfig(config.logging_config_dict)
+    dictConfig(config.LOGGING_CONFIG_DICT)
     _x = [
         [1, 49, 4, 0],
         [1, 41, 9, 0],

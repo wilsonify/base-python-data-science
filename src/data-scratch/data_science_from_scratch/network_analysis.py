@@ -271,7 +271,7 @@ def page_rank(users, damping=0.85, num_iters=100):
 
 
 if __name__ == "__main__":
-    dictConfig(config.logging_config_dict)
+    dictConfig(config.LOGGING_CONFIG_DICT)
     logging.info("%r", "".format("Betweenness Centrality"))
     for _user in users_dict:
         logging.info("%r", "".format(_user["id"], _user["betweenness_centrality"]))

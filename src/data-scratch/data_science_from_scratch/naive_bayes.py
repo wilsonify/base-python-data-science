@@ -142,5 +142,5 @@ def train_and_test_model(path):
 
 
 if __name__ == "__main__":
-    dictConfig(config.logging_config_dict)  # train_and_test_model(r"c:\spam\*\*")
+    dictConfig(config.LOGGING_CONFIG_DICT)  # train_and_test_model(r"c:\spam\*\*")
     train_and_test_model(r"/home/joel/src/spam/*/*")

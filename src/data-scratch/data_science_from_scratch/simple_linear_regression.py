@@ -58,7 +58,7 @@ def squared_error_gradient(x_i, y_i, theta):
 
 
 if __name__ == "__main__":
-    dictConfig(config.logging_config_dict)
+    dictConfig(config.LOGGING_CONFIG_DICT)
     num_friends_good = [
         49,
         41,

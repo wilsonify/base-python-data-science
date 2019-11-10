@@ -59,7 +59,7 @@ def f1_score(tp, fp, fn, tn):
 
 
 if __name__ == "__main__":
-    dictConfig(config.logging_config_dict)
+    dictConfig(config.LOGGING_CONFIG_DICT)
     logging.info(
         "%r",
         "".format(

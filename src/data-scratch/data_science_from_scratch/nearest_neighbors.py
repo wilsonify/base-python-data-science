@@ -137,7 +137,7 @@ def random_distances(dim, num_pairs):
 
 
 if __name__ == "__main__":
-    dictConfig(config.logging_config_dict)  # try several different values for k
+    dictConfig(config.LOGGING_CONFIG_DICT)  # try several different values for k
     for _k in [1, 3, 5, 7]:
         num_correct = 0
 

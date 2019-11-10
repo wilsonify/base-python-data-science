@@ -151,7 +151,7 @@ def beta_pdf(x, alpha, beta):
 
 
 if __name__ == "__main__":
-    dictConfig(config.logging_config_dict)
+    dictConfig(config.LOGGING_CONFIG_DICT)
     mu_0, sigma_0 = normal_approximation_to_binomial(1000, 0.5)
     logging.info("%r", "".format("mu_0", mu_0))
     logging.info("%r", "".format("sigma_0", sigma_0))
