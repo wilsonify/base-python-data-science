@@ -9,6 +9,7 @@ base python, few dependencies
 ```
 git clone https://github.com/wilsonify/base-python-data-science.git
 cd src/data-scratch
+python -m pip install -r requirements.txt
 python setup.py install
 ```
 
