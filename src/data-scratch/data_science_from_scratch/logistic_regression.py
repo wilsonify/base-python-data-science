@@ -12,7 +12,7 @@ from data_science_from_scratch.library.gradient_descent import (
 from data_science_from_scratch.library.linear_algebra import dot, vector_add
 from data_science_from_scratch.library.machine_learning import train_test_split
 from data_science_from_scratch.multiple_regression import estimate_beta
-from data_science_from_scratch.working_with_data import rescale
+from data_science_from_scratch.library.manipulation import rescale
 
 
 def logistic(x):
