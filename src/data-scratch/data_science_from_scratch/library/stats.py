@@ -4,7 +4,29 @@ from collections import Counter
 from logging.config import dictConfig
 
 from data_science_from_scratch import config
-from data_science_from_scratch.library.linear_algebra import sum_of_squares, dot
+from data_science_from_scratch.library.linear_algebra import sum_of_squares, dot, shape, get_column, make_matrix
+
+
+def bucketize(point, bucket_size):
+    """floor the point to the next lower multiple of bucket_size"""
+    return bucket_size * math.floor(point / bucket_size)
+
+
+def make_histogram(points, bucket_size):
+    """buckets the points and counts how many in each bucket"""
+    return Counter(bucketize(point, bucket_size) for point in points)
+
+def correlation_matrix(data):
+    """returns the num_columns x num_columns matrix whose (i, j)th entry
+    is the correlation between columns i and j of data"""
+
+    _, num_columns = shape(data)
+
+    def matrix_entry(i, j):
+        return correlation(get_column(data, i), get_column(data, j))
+
+    return make_matrix(num_columns, num_columns, matrix_entry)
+
 
 num_friends = [
     100,
@@ -235,6 +257,7 @@ sorted_values = sorted(num_friends)
 smallest_sorted_value = sorted_values[0]  # 1
 second_smallest_value = sorted_values[1]  # 1
 second_largest_value = sorted_values[-2]  # 49
+
 
 
 # this isn't right if you don't from __future__ import division
@@ -532,6 +555,7 @@ num_friends_good = [x for i, x in enumerate(num_friends) if i != outlier]
 daily_minutes_good = [x for i, x in enumerate(daily_minutes) if i != outlier]
 
 
+
 def main():
     logging.info("%r", "{} num_points".format(len(num_friends)))
     logging.info("%r", "{} largest value".format(max(num_friends)))
@@ -574,6 +598,7 @@ def main():
             correlation(num_friends_good, daily_minutes_good),
         ),
     )
+
 
 
 if __name__ == "__main__":
