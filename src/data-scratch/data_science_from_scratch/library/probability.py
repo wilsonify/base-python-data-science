@@ -5,6 +5,9 @@ from logging.config import dictConfig
 
 from data_science_from_scratch import config
 
+def random_normal():
+    """returns a random draw from a standard normal distribution"""
+    return inverse_normal_cdf(random.random())
 
 def random_kid():
     return random.choice(["boy", "girl"])
