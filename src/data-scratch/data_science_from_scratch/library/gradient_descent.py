@@ -1,4 +1,5 @@
 import logging
+import operator
 import random
 from logging.config import dictConfig
 
@@ -16,7 +17,11 @@ def sum_of_squares(v):
 
 
 def difference_quotient(f, x, h):
-    return (f(x + h) - f(x)) / h
+    try:
+        return (f(x + h) - f(x)) / h
+    except TypeError:
+        diff = map(operator.sub, f(x + h), f(x))
+        return [_ / h for _ in diff]
 
     # purple *, hopefully
 
@@ -24,8 +29,11 @@ def difference_quotient(f, x, h):
 def partial_difference_quotient(f, v, i, h):
     # add h to just the i-th element of v
     w = [v_j + (h if j == i else 0) for j, v_j in enumerate(v)]
-
-    return (f(w) - f(v)) / h
+    try:
+        return (f(w) - f(v)) / h
+    except TypeError:
+        diff = map(operator.sub, f(w), f(v))
+        return [_ / h for _ in diff]
 
 
 def estimate_gradient(f, v, h=0.00001):
@@ -154,7 +162,7 @@ def maximize_stochastic(target_fn, gradient_fn, x, y, theta_0, alpha_0=0.01):
 def main():
     logging.info("using the gradient")
 
-    _v = [random.randint(-10, 10) for i in range(3)]
+    _v = [random.randint(-10, 10) for _ in range(3)]
 
     _tolerance = 0.0000001
 
@@ -171,7 +179,7 @@ def main():
 
     logging.info("using minimize_batch")
 
-    _v = [random.randint(-10, 10) for i in range(3)]
+    _v = [random.randint(-10, 10) for _ in range(3)]
 
     _v = minimize_batch(sum_of_squares, sum_of_squares_gradient, _v)
 
