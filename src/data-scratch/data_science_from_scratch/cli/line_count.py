@@ -8,7 +8,7 @@ import sys
 
 def main():
     count = 0
-    for line in sys.stdin:
+    for _ in sys.stdin:
         count += 1
     print(count)  # print goes to sys.stdout
 
