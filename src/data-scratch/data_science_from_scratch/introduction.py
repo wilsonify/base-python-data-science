@@ -1,74 +1,33 @@
 """
-##########################
-#                        #
-# FINDING KEY CONNECTORS #
-#                        #
-##########################
 """
 import logging
-from collections import Counter
-from collections import defaultdict
+from collections import Counter, defaultdict
 from logging.config import dictConfig
 
 from data_science_from_scratch import config
 
-users_list = [
-    {"id": 0, "name": "Hero"},
-    {"id": 1, "name": "Dunn"},
-    {"id": 2, "name": "Sue"},
-    {"id": 3, "name": "Chi"},
-    {"id": 4, "name": "Thor"},
-    {"id": 5, "name": "Clive"},
-    {"id": 6, "name": "Hicks"},
-    {"id": 7, "name": "Devin"},
-    {"id": 8, "name": "Kate"},
-    {"id": 9, "name": "Klein"},
-    {"id": 10, "name": "Jen"},
-]
 
-friendships = [
-    (0, 1),
-    (0, 2),
-    (1, 2),
-    (1, 3),
-    (2, 3),
-    (3, 4),
-    (4, 5),
-    (5, 6),
-    (5, 7),
-    (6, 8),
-    (7, 8),
-    (8, 9),
-]
+def tenure_bucket(tenure):
+    if tenure < 2:
+        return "less than two"
+    elif tenure < 5:
+        return "between two and five"
+    else:
+        return "more than five"
 
-# first give each user an empty list
-for user in users_list:
-    # noinspection PyTypeChecker
-    user["friends"] = []
 
-# and then populate the lists with friendships
-for i, j in friendships:
-    # this works because users[i] is the user whose id is i
-    users_list[i]["friends"].append(users_list[j])  # add i as a friend of j
-    users_list[j]["friends"].append(users_list[i])  # add j as a friend of i
+def predict_paid_or_unpaid(years_experience):
+    if years_experience < 3.0:
+        return "paid"
+    elif years_experience < 8.5:
+        return "unpaid"
+    else:
+        return "paid"
 
 
 def number_of_friends(_user):
     """how many friends does _user_ have?"""
     return len(_user["friends"])  # length of friend_ids list
-
-
-total_connections = sum(number_of_friends(user) for user in users_list)  # 24
-
-num_users = len(users_list)
-avg_connections = total_connections / num_users  # 2.4
-
-
-################################
-#                              #
-# DATA SCIENTISTS YOU MAY KNOW #
-#                              #
-################################
 
 
 def friends_of_friend_ids_bad(user_):
@@ -100,63 +59,7 @@ def friends_of_friend_ids(user_):
     )  # and aren't my friends
 
 
-friends_of_friend_ids_3 = friends_of_friend_ids(users_list[3])
-logging.info("%r", "friends_of_friend_ids_3 = {}".format(friends_of_friend_ids_3))  # Counter({0: 2, 5: 1})
-
-interests_list = [
-    (0, "Hadoop"),
-    (0, "Big Data"),
-    (0, "HBase"),
-    (0, "Java"),
-    (0, "Spark"),
-    (0, "Storm"),
-    (0, "Cassandra"),
-    (1, "NoSQL"),
-    (1, "MongoDB"),
-    (1, "Cassandra"),
-    (1, "HBase"),
-    (1, "Postgres"),
-    (2, "Python"),
-    (2, "scikit-learn"),
-    (2, "scipy"),
-    (2, "numpy"),
-    (2, "statsmodels"),
-    (2, "pandas"),
-    (3, "R"),
-    (3, "Python"),
-    (3, "statistics"),
-    (3, "regression"),
-    (3, "probability"),
-    (4, "machine learning"),
-    (4, "regression"),
-    (4, "decision trees"),
-    (4, "libsvm"),
-    (5, "Python"),
-    (5, "R"),
-    (5, "Java"),
-    (5, "C++"),
-    (5, "Haskell"),
-    (5, "programming languages"),
-    (6, "statistics"),
-    (6, "probability"),
-    (6, "mathematics"),
-    (6, "theory"),
-    (7, "machine learning"),
-    (7, "scikit-learn"),
-    (7, "Mahout"),
-    (7, "neural networks"),
-    (8, "neural networks"),
-    (8, "deep learning"),
-    (8, "Big Data"),
-    (8, "artificial intelligence"),
-    (9, "Hadoop"),
-    (9, "Java"),
-    (9, "MapReduce"),
-    (9, "Big Data"),
-]
-
-
-def data_scientists_who_like(target_interest):
+def data_scientists_who_like(target_interest,interests_list):
     return [
         user_id_
         for user_id_, user_interest in interests_list
@@ -164,20 +67,7 @@ def data_scientists_who_like(target_interest):
     ]
 
 
-# keys are interests, values are lists of user_ids with that interest
-user_ids_by_interest = defaultdict(list)
-
-for _user_id, interest in interests_list:
-    user_ids_by_interest[interest].append(_user_id)
-
-# keys are user_ids, values are lists of interests for that user_id
-interests_by_user_id = defaultdict(list)
-
-for _user_id, interest in interests_list:
-    interests_by_user_id[_user_id].append(interest)
-
-
-def most_common_interests_with(user_id):
+def most_common_interests_with(user_id,interests_by_user_id,user_ids_by_interest):
     return Counter(
         interested_user_id
         for interest_ in interests_by_user_id["user_id"]
@@ -186,87 +76,166 @@ def most_common_interests_with(user_id):
     )
 
 
-###########################
-#                         #
-# SALARIES AND EXPERIENCE #
-#                         #
-###########################
-
-salaries_and_tenures = [
-    (83000, 8.7),
-    (88000, 8.1),
-    (48000, 0.7),
-    (76000, 6),
-    (69000, 6.5),
-    (76000, 7.5),
-    (60000, 2.5),
-    (83000, 10),
-    (48000, 1.9),
-    (63000, 4.2),
-]
-
-# keys are years
-# values are the salaries for each tenure
-salary_by_tenure = defaultdict(list)
-
-for salary, _tenure in salaries_and_tenures:
-    salary_by_tenure[_tenure].append(salary)
-
-average_salary_by_tenure = {
-    tenure: sum(salaries) / len(salaries)
-    for tenure, salaries in salary_by_tenure.items()
-}
-
-
-def tenure_bucket(tenure):
-    if tenure < 2:
-        return "less than two"
-    elif tenure < 5:
-        return "between two and five"
-    else:
-        return "more than five"
-
-
-salary_by_tenure_bucket = defaultdict(list)
-
-for salary, _tenure in salaries_and_tenures:
-    bucket = tenure_bucket(_tenure)
-    salary_by_tenure_bucket[bucket].append(salary)
-
-average_salary_by_bucket = {
-    tenure_bucket: sum(salaries) / len(salaries)
-    for tenure_bucket, salaries in salary_by_tenure_bucket.items()
-}
-
-
-#################
-#               #
-# PAID_ACCOUNTS #
-#               #
-#################
-
-
-def predict_paid_or_unpaid(years_experience):
-    if years_experience < 3.0:
-        return "paid"
-    elif years_experience < 8.5:
-        return "unpaid"
-    else:
-        return "paid"
-
-
-######################
-#                    #
-# TOPICS OF INTEREST #
-#                    #
-######################
-
-words_and_counts = Counter(
-    word for user, _interest in interests_list for word in _interest.lower().split()
-)
-
-
 def main():
+    logging.info("setup data")
+    users_list = [
+        {"id": 0, "name": "Hero"},
+        {"id": 1, "name": "Dunn"},
+        {"id": 2, "name": "Sue"},
+        {"id": 3, "name": "Chi"},
+        {"id": 4, "name": "Thor"},
+        {"id": 5, "name": "Clive"},
+        {"id": 6, "name": "Hicks"},
+        {"id": 7, "name": "Devin"},
+        {"id": 8, "name": "Kate"},
+        {"id": 9, "name": "Klein"},
+        {"id": 10, "name": "Jen"},
+    ]
+
+    friendships = [
+        (0, 1),
+        (0, 2),
+        (1, 2),
+        (1, 3),
+        (2, 3),
+        (3, 4),
+        (4, 5),
+        (5, 6),
+        (5, 7),
+        (6, 8),
+        (7, 8),
+        (8, 9),
+    ]
+
+    # first give each user an empty list
+    for user in users_list:
+        # noinspection PyTypeChecker
+        user["friends"] = []
+
+    # and then populate the lists with friendships
+    for i, j in friendships:
+        # this works because users[i] is the user whose id is i
+        users_list[i]["friends"].append(users_list[j])  # add i as a friend of j
+        users_list[j]["friends"].append(users_list[i])  # add j as a friend of i
+
+    total_connections = sum(number_of_friends(user) for user in users_list)  # 24
+
+    num_users = len(users_list)
+    avg_connections = total_connections / num_users  # 2.4
+
+    friends_of_friend_ids_3 = friends_of_friend_ids(users_list[3])
+    logging.info("%r", "friends_of_friend_ids_3 = {}".format(friends_of_friend_ids_3))  # Counter({0: 2, 5: 1})
+
+    interests_list = [
+        (0, "Hadoop"),
+        (0, "Big Data"),
+        (0, "HBase"),
+        (0, "Java"),
+        (0, "Spark"),
+        (0, "Storm"),
+        (0, "Cassandra"),
+        (1, "NoSQL"),
+        (1, "MongoDB"),
+        (1, "Cassandra"),
+        (1, "HBase"),
+        (1, "Postgres"),
+        (2, "Python"),
+        (2, "scikit-learn"),
+        (2, "scipy"),
+        (2, "numpy"),
+        (2, "statsmodels"),
+        (2, "pandas"),
+        (3, "R"),
+        (3, "Python"),
+        (3, "statistics"),
+        (3, "regression"),
+        (3, "probability"),
+        (4, "machine learning"),
+        (4, "regression"),
+        (4, "decision trees"),
+        (4, "libsvm"),
+        (5, "Python"),
+        (5, "R"),
+        (5, "Java"),
+        (5, "C++"),
+        (5, "Haskell"),
+        (5, "programming languages"),
+        (6, "statistics"),
+        (6, "probability"),
+        (6, "mathematics"),
+        (6, "theory"),
+        (7, "machine learning"),
+        (7, "scikit-learn"),
+        (7, "Mahout"),
+        (7, "neural networks"),
+        (8, "neural networks"),
+        (8, "deep learning"),
+        (8, "Big Data"),
+        (8, "artificial intelligence"),
+        (9, "Hadoop"),
+        (9, "Java"),
+        (9, "MapReduce"),
+        (9, "Big Data"),
+    ]
+
+    # keys are interests, values are lists of user_ids with that interest
+    user_ids_by_interest = defaultdict(list)
+
+    for _user_id, interest in interests_list:
+        user_ids_by_interest[interest].append(_user_id)
+
+    # keys are user_ids, values are lists of interests for that user_id
+    interests_by_user_id = defaultdict(list)
+
+    for _user_id, interest in interests_list:
+        interests_by_user_id[_user_id].append(interest)
+
+    ###########################
+    #                         #
+    # SALARIES AND EXPERIENCE #
+    #                         #
+    ###########################
+
+    salaries_and_tenures = [
+        (83000, 8.7),
+        (88000, 8.1),
+        (48000, 0.7),
+        (76000, 6),
+        (69000, 6.5),
+        (76000, 7.5),
+        (60000, 2.5),
+        (83000, 10),
+        (48000, 1.9),
+        (63000, 4.2),
+    ]
+
+    # keys are years
+    # values are the salaries for each tenure
+    salary_by_tenure = defaultdict(list)
+
+    for salary, _tenure in salaries_and_tenures:
+        salary_by_tenure[_tenure].append(salary)
+
+    average_salary_by_tenure = {
+        tenure: sum(salaries) / len(salaries)
+        for tenure, salaries in salary_by_tenure.items()
+    }
+
+    salary_by_tenure_bucket = defaultdict(list)
+
+    for salary, _tenure in salaries_and_tenures:
+        bucket = tenure_bucket(_tenure)
+        salary_by_tenure_bucket[bucket].append(salary)
+
+    average_salary_by_bucket = {
+        tenure_bucket_: sum(salaries) / len(salaries)
+        for tenure_bucket_, salaries in salary_by_tenure_bucket.items()
+    }
+
+    words_and_counts = Counter(
+        word for user, _interest in interests_list for word in _interest.lower().split()
+    )
+
     logging.info("# FINDING KEY CONNECTORS")
 
     logging.info("%r", "total connections {}".format(total_connections))
