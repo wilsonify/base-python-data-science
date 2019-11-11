@@ -37,5 +37,4 @@ def main(num_words):
 
 
 if __name__ == "__main__":
-    num_words = int(sys.argv[1]) if len(sys.argv) > 1 else 0
-    main()
+    main(num_words=int(sys.argv[1]) if len(sys.argv) > 1 else 0)
