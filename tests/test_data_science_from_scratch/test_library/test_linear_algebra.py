@@ -1,4 +1,5 @@
 import logging
+import math
 import os
 
 from data_science_from_scratch.library import linear_algebra
@@ -11,8 +12,17 @@ def test_smoke():
     logging.info("is anything on fire")
 
 
-def test_distance():
-    linear_algebra.distance()
+import pytest
+
+
+@pytest.mark.parametrize(
+    ("vec1", "vec2", "expected"), (
+            ([0, 0, 0], [10, 10, 10], math.sqrt(300)),
+            ([0, 0, 0], [-10, -10, -10], math.sqrt(300)))
+)
+def test_distance(vec1, vec2, expected):
+    result = linear_algebra.distance(vec1, vec2)
+    assert result == expected
 
 
 def test_dot():
