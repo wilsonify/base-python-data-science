@@ -7,8 +7,18 @@ from logging.config import dictConfig
 
 import dateutil.parser
 from data_science_from_scratch import config
-from data_science_from_scratch.library.manipulation import parse_rows_with, parse_dict, picker, pluck, group_by, scale, \
-    rescale, de_mean_matrix, principal_component_analysis, transform_vector
+from data_science_from_scratch.library.manipulation import (
+    parse_rows_with,
+    parse_dict,
+    picker,
+    pluck,
+    group_by,
+    scale,
+    rescale,
+    de_mean_matrix,
+    principal_component_analysis,
+    transform_vector
+)
 from data_science_from_scratch.library.probability import random_normal
 from data_science_from_scratch.library.stats import correlation
 
@@ -29,7 +39,6 @@ def day_over_day_changes(grouped_rows):
         }
         for yesterday, today in zip(ordered, ordered[1:])
     ]
-
 
 
 def main(path_to_csv_data, path_to_stocks):
