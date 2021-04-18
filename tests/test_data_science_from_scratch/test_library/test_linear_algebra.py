@@ -25,8 +25,14 @@ def test_distance(vec1, vec2, expected):
     assert result == expected
 
 
-def test_dot():
-    linear_algebra.dot()
+@pytest.mark.parametrize(
+    ("vec1", "vec2", "expected"), (
+            ([1, 1, 1], [10, 10, 10], 30),
+            ([1, 1, 1], [-10, -10, -10], -30))
+)
+def test_dot(vec1, vec2, expected):
+    result = linear_algebra.dot(vec1, vec2)
+    assert result == expected
 
 
 def test_get_column():
