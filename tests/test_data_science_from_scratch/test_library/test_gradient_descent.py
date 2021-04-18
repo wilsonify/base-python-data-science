@@ -5,6 +5,9 @@ from functools import partial
 
 import pytest
 from data_science_from_scratch.library import gradient_descent
+from data_science_from_scratch import multiple_regression
+from data_science_from_scratch.library.gradient_descent import negate, negate_all
+from data_science_from_scratch.library.manipulation import directional_variance, directional_variance_gradient
 
 current_dir = os.path.dirname(__file__)
 parent_dir = os.path.join(current_dir, os.pardir)
@@ -64,17 +67,34 @@ def test_in_random_order():
 
 
 def test_maximize_batch():
-    X = [[1, 2, 3], [2, 3, 4], [5, 6, 7]]
+    x = [[1, 2, 3], [2, 3, 4], [5, 6, 7]]
     gradient_descent.maximize_batch(
-        target_fn=partial(gradient_descent.directional_variance, X),
-        gradient_fn=partial(gradient_descent.directional_variance_gradient, X),
-        theta_0=[1 for _ in X[0]],
+        target_fn=partial(directional_variance, x),
+        gradient_fn=partial(directional_variance_gradient, x),
+        theta_0=[1 for _ in x[0]],
         tolerance=0.000001
     )
 
 
 def test_maximize_stochastic():
-    gradient_descent.maximize_stochastic()
+    x = [
+        [1, 49, 4, 0], [1, 41, 9, 0], [1, 40, 8, 0],
+        [1, 25, 6, 0], [1, 21, 1, 0], [1, 21, 0, 0],
+        [1, 19, 3, 0], [1, 19, 0, 0], [1, 18, 9, 0], [1, 18, 8, 0]
+    ]
+    y = [
+        68.77, 51.25, 52.08,
+        38.36, 44.54, 57.13,
+        51.4, 41.42, 31.22, 34.76,
+    ]
+    gradient_descent.maximize_stochastic(
+        target_fn=negate(multiple_regression.squared_error),
+        gradient_fn=negate_all(multiple_regression.squared_error_gradient),
+        x=x,
+        y=y,
+        theta_0=[random.random() for _ in x[0]],
+        alpha_0=0.01
+    )
 
 
 def test_minimize_batch():
