@@ -35,40 +35,64 @@ def test_dot(vec1, vec2, expected):
     assert result == expected
 
 
-def test_get_column():
-    linear_algebra.get_column()
+@pytest.mark.parametrize(
+    ("mat1", "col", "expected"), (
+            ([[1, 2, 3]], 0, [1]),
+            ([[1, 2, 3]], 2, [3]))
+)
+def test_get_column(mat1, col, expected):
+    result = linear_algebra.get_column(mat1, col)
+    assert result == expected
 
 
-def test_get_row():
-    linear_algebra.get_row()
+@pytest.mark.parametrize(
+    ("mat1", "row", "expected"), (
+            ([[1], [2], [3]], 0, [1]),
+            ([[1], [2], [3]], 2, [3]))
+)
+def test_get_row(mat1, row, expected):
+    result = linear_algebra.get_row(mat1, row)
+    assert result == expected
 
 
-def test_identity_matrix():
-    linear_algebra.identity_matrix()
+@pytest.mark.parametrize(
+    ("i", "j", "expected"), (
+            (1, 1, True),
+            (1, 2, False))
+)
+def test_is_diagonal(i, j, expected):
+    result = linear_algebra.is_diagonal(i, j)
+    assert result == expected
 
 
-def test_is_diagonal():
-    linear_algebra.is_diagonal()
+@pytest.mark.parametrize(
+    ("vec1", "expected"), (
+            ([10, 10, 10], math.sqrt(300)),
+            ([-10, -10, -10], math.sqrt(300)))
+)
+def test_magnitude(vec1, expected):
+    result = linear_algebra.magnitude(vec1)
+    assert result == expected
 
 
-def test_magnitude():
-    linear_algebra.magnitude()
+@pytest.mark.parametrize(
+    ("n", "m", "expected"), (
+            (1, 1, [[1]]),
+            (3, 3, [[1, 0, 0], [0, 1, 0], [0, 0, 1]])
+    ))
+def test_make_matrix(n, m, expected):
+    result = linear_algebra.make_matrix(n, m, linear_algebra.is_diagonal)
+    assert result == expected
 
 
-def test_make_matrix():
-    linear_algebra.make_matrix()
-
-
-def test_math():
-    linear_algebra.math()
-
-
-def test_matrix_add():
-    linear_algebra.matrix_add()
-
-
-def test_reduce():
-    linear_algebra.reduce()
+@pytest.mark.parametrize(
+    ("mat1", "mat2", "expected"), (
+            ([[1]], [[1]], [[2]]),
+            ([[1, 0], [0, 1]], [[1, 2], [3, 4]], [[2, 2], [3, 5]])
+    ))
+def test_matrix_add(mat1, mat2, expected):
+    result = linear_algebra.matrix_add(mat1, mat2)
+    assert result == expected
 
 
 def test_scalar_multiply():
