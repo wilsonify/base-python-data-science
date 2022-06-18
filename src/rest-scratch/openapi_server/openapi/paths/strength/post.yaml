@@ -1,0 +1,16 @@
+      tags: [ math ]
+      operationId: mystrength
+      x-openapi-router-controller: openapi_server.controllers.math_controller
+      description: 'Description of the endpoint'
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: 'file:///mnt/SSD1/repos/pistache-example/src/python-flask-example/openapi_server/openapi/components/schemas/strength-input.yaml'
+      responses:
+        '200':
+          description: 'Description of this response.'
+          content:
+            application/json:
+              schema:
+                $ref: 'file:///mnt/SSD1/repos/pistache-example/src/python-flask-example/openapi_server/openapi/components/schemas/strength-output.yaml'

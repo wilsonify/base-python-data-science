@@ -1,0 +1,38 @@
+      operationId: upload_file
+      parameters:
+      - description: ID of pet to update
+        explode: false
+        in: path
+        name: petId
+        required: true
+        schema:
+          format: int64
+          type: integer
+        style: simple
+      requestBody:
+        content:
+          multipart/form-data:
+            schema:
+              properties:
+                additionalMetadata:
+                  description: Additional data to pass to server
+                  type: string
+                file:
+                  description: file to upload
+                  format: binary
+                  type: string
+      responses:
+        200:
+          content:
+            application/json:
+              schema:
+                $ref: 'file:///mnt/SSD1/repos/pistache-example/src/python-flask-example/openapi_server/openapi/components/schemas/ApiResponse.yaml'
+          description: successful operation
+      security:
+      - petstore_auth:
+        - write:pets
+        - read:pets
+      summary: uploads an image
+      tags:
+      - pet
+      x-openapi-router-controller: openapi_server.controllers.pet_controller

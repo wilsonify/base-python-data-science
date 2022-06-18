@@ -1,0 +1,9 @@
+flows:
+  implicit:
+    authorizationUrl: http://petstore.swagger.io/oauth/dialog
+    scopes:
+      write:pets: modify pets in your account
+      read:pets: read your pets
+type: oauth2
+x-tokenInfoFunc: openapi_server.controllers.security_controller_.info_from_petstore_auth
+x-scopeValidateFunc: openapi_server.controllers.security_controller_.validate_scope_petstore_auth

@@ -1,0 +1,24 @@
+      operationId: add_pet
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: 'file:///mnt/SSD1/repos/pistache-example/src/python-flask-example/openapi_server/openapi/components/schemas/Pet.yaml'
+          application/xml:
+            schema:
+              $ref: 'file:///mnt/SSD1/repos/pistache-example/src/python-flask-example/openapi_server/openapi/components/schemas/Pet.yaml'
+        description: Pet object that needs to be added to the store
+        required: true
+      responses:
+        405:
+          content: {}
+          description: Invalid input
+      security:
+      - petstore_auth:
+        - write:pets
+        - read:pets
+      summary: Add a new pet to the store
+      tags:
+      - pet
+      x-codegen-request-body-name: body
+      x-openapi-router-controller: openapi_server.controllers.pet_controller

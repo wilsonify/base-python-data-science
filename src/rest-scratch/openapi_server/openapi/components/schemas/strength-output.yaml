@@ -1,0 +1,8 @@
+type: object
+properties:
+  actual:
+    type: integer
+  expected:
+    type: integer
+  strength:
+    type: number

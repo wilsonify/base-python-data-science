@@ -1,0 +1,9 @@
+      operationId: logout_user
+      responses:
+        default:
+          content: {}
+          description: successful operation
+      summary: Logs out current logged in user session
+      tags:
+      - user
+      x-openapi-router-controller: openapi_server.controllers.user_controller
