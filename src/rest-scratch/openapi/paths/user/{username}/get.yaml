@@ -1,0 +1,30 @@
+operationId: get_user_by_name
+parameters:
+  - description: "The name that needs to be fetched. Use user1 for testing. "
+    explode: false
+    in: path
+    name: username
+    required: true
+    schema:
+      type: string
+    style: simple
+responses:
+  200:
+    content:
+      application/xml:
+        schema:
+          $ref: "../../../components/schemas/User.yaml"
+      application/json:
+        schema:
+          $ref: "../../../components/schemas/User.yaml"
+    description: successful operation
+  400:
+    content: {}
+    description: Invalid username supplied
+  404:
+    content: {}
+    description: User not found
+summary: Get user by user name
+tags:
+  - user
+x-openapi-router-controller: openapi_server.controllers.user_controller

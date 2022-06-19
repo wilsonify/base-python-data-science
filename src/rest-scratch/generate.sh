@@ -1,8 +1,7 @@
 docker run --rm \
+  -u $(id -u):$(id -g) \
   -v "${PWD}:/local" \
-  openapitools/openapi-generator-cli:v4.1.2 generate \
-  -i /local/openapi_server/openapi/openapi.yaml \
+  openapitools/openapi-generator-cli:latest generate \
+  -i /local/openapi/openapi.yaml \
   -g python-flask \
   -o /local/python
-
-sudo chown -R $USER .

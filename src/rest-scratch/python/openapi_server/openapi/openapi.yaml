@@ -1,0 +1,208 @@
+openapi: 3.0.1
+info:
+  contact:
+    email: apiteam@swagger.io
+  description: "This is a sample server Petstore server.  You can find out more about\
+    \     Swagger at [http://swagger.io](http://swagger.io) or on [irc.freenode.net,\
+    \ #swagger](http://swagger.io/irc/).      For this sample, you can use the api\
+    \ key `special-key` to test the authorization     filters."
+  license:
+    name: Apache 2.0
+    url: http://www.apache.org/licenses/LICENSE-2.0.html
+  termsOfService: http://swagger.io/terms/
+  title: Swagger Petstore
+  version: 1.0.0
+externalDocs:
+  description: Find out more about Swagger
+  url: http://swagger.io
+servers:
+- url: https://petstore.swagger.io/v2
+- url: http://petstore.swagger.io/v2
+tags:
+- description: Everything about your Pets
+  name: pet
+- description: Access to Petstore orders
+  name: store
+- description: Operations about user
+  name: user
+- description: Operations about user
+  name: math
+paths:
+  /pet:
+    post:
+      operationId: pet_post
+      x-openapi-router-controller: openapi_server.controllers.default_controller
+    put:
+      operationId: pet_put
+      x-openapi-router-controller: openapi_server.controllers.default_controller
+  /pet/findByStatus:
+    get:
+      operationId: pet_find_by_status_get
+      x-openapi-router-controller: openapi_server.controllers.default_controller
+  /pet/findByTags:
+    get:
+      operationId: pet_find_by_tags_get
+      x-openapi-router-controller: openapi_server.controllers.default_controller
+  /pet/{petId}:
+    delete:
+      operationId: pet_pet_id_delete
+      x-openapi-router-controller: openapi_server.controllers.default_controller
+    get:
+      operationId: pet_pet_id_get
+      x-openapi-router-controller: openapi_server.controllers.default_controller
+    post:
+      operationId: pet_pet_id_post
+      x-openapi-router-controller: openapi_server.controllers.default_controller
+  /pet/{petId}/uploadImage:
+    post:
+      operationId: pet_pet_id_upload_image_post
+      x-openapi-router-controller: openapi_server.controllers.default_controller
+  /sqrt:
+    post:
+      description: Description of the endpoint
+      operationId: mysqrt
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/sqrt-input'
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/sqrt-output'
+          description: Description of this response.
+      tags:
+      - math
+      x-openapi-router-controller: openapi_server.controllers.math_controller
+  /store/inventory:
+    get:
+      operationId: store_inventory_get
+      x-openapi-router-controller: openapi_server.controllers.default_controller
+  /store/order:
+    post:
+      operationId: store_order_post
+      x-openapi-router-controller: openapi_server.controllers.default_controller
+  /store/order/{orderId}:
+    delete:
+      operationId: store_order_order_id_delete
+      x-openapi-router-controller: openapi_server.controllers.default_controller
+    get:
+      operationId: store_order_order_id_get
+      x-openapi-router-controller: openapi_server.controllers.default_controller
+  /strength:
+    post:
+      description: Description of the endpoint
+      operationId: mystrength
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/strength-input'
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/strength-output'
+          description: Description of this response.
+      tags:
+      - math
+      x-openapi-router-controller: openapi_server.controllers.math_controller
+  /user:
+    post:
+      operationId: user_post
+      x-openapi-router-controller: openapi_server.controllers.default_controller
+  /user/createWithArray:
+    post:
+      operationId: user_create_with_array_post
+      x-openapi-router-controller: openapi_server.controllers.default_controller
+  /user/createWithList:
+    post:
+      operationId: user_create_with_list_post
+      x-openapi-router-controller: openapi_server.controllers.default_controller
+  /user/login:
+    get:
+      operationId: user_login_get
+      x-openapi-router-controller: openapi_server.controllers.default_controller
+  /user/logout:
+    get:
+      operationId: user_logout_get
+      x-openapi-router-controller: openapi_server.controllers.default_controller
+  /user/{username}:
+    delete:
+      operationId: user_username_delete
+      x-openapi-router-controller: openapi_server.controllers.default_controller
+    get:
+      operationId: user_username_get
+      x-openapi-router-controller: openapi_server.controllers.default_controller
+    put:
+      operationId: user_username_put
+      x-openapi-router-controller: openapi_server.controllers.default_controller
+components:
+  schemas:
+    sqrt-input:
+      properties:
+        x:
+          title: x
+          type: integer
+      title: sqrt-input
+      type: object
+    sqrt-output:
+      example:
+        result: 6
+        x: 0
+      properties:
+        x:
+          title: x
+          type: integer
+        result:
+          title: result
+          type: integer
+      title: sqrt-output
+      type: object
+    strength-input:
+      example:
+        actual: 60
+        expected: 100
+      properties:
+        actual:
+          type: integer
+        expected:
+          type: integer
+      title: strength-input
+      type: object
+    strength-output:
+      example:
+        actual: 0
+        strength: 1.4658129805029452
+        expected: 6
+      properties:
+        actual:
+          title: actual
+          type: integer
+        expected:
+          title: expected
+          type: integer
+        strength:
+          title: strength
+          type: number
+      title: strength-output
+      type: object
+  securitySchemes:
+    petstore_auth:
+      flows:
+        implicit:
+          authorizationUrl: http://petstore.swagger.io/oauth/dialog
+          scopes:
+            write:pets: modify pets in your account
+            read:pets: read your pets
+      type: oauth2
+      x-tokenInfoFunc: openapi_server.controllers.security_controller_.info_from_petstore_auth
+      x-scopeValidateFunc: openapi_server.controllers.security_controller_.validate_scope_petstore_auth
+    api_key:
+      in: header
+      name: api_key
+      type: apiKey
+      x-apikeyInfoFunc: openapi_server.controllers.security_controller_.info_from_api_key
