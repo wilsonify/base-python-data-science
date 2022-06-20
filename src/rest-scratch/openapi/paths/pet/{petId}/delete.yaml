@@ -1,33 +1,33 @@
-      operationId: delete_pet
-      parameters:
-      - explode: false
-        in: header
-        name: api_key
-        required: false
-        schema:
-          type: string
-        style: simple
-      - description: Pet id to delete
-        explode: false
-        in: path
-        name: petId
-        required: true
-        schema:
-          format: int64
-          type: integer
-        style: simple
-      responses:
-        400:
-          content: {}
-          description: Invalid ID supplied
-        404:
-          content: {}
-          description: Pet not found
-      security:
-      - petstore_auth:
-        - write:pets
-        - read:pets
-      summary: Deletes a pet
-      tags:
-      - pet
-      x-openapi-router-controller: openapi_server.controllers.pet_controller
+operationId: delete_pet
+parameters:
+  - explode: false
+    in: header
+    name: api_key
+    required: false
+    schema:
+      type: string
+    style: simple
+  - description: Pet id to delete
+    explode: false
+    in: path
+    name: petId
+    required: true
+    schema:
+      format: int64
+      type: integer
+    style: simple
+responses:
+  400:
+    content: {}
+    description: Invalid ID supplied
+  404:
+    content: {}
+    description: Pet not found
+security:
+  - petstore_auth:
+      - write:pets
+      - read:pets
+summary: Deletes a pet
+tags:
+  - pet
+x-openapi-router-controller: openapi_server.controllers.pet_controller

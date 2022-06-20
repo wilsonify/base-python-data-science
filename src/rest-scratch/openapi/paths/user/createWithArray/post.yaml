@@ -1,19 +1,19 @@
-      operationId: create_users_with_array_input
-      requestBody:
-        content:
-          '*/*':
-            schema:
-              items:
-                $ref: '../../../components/schemas/User.yaml'
-              type: array
-        description: List of user object
-        required: true
-      responses:
-        default:
-          content: {}
-          description: successful operation
-      summary: Creates list of users with given input array
-      tags:
-      - user
-      x-codegen-request-body-name: body
-      x-openapi-router-controller: openapi_server.controllers.user_controller
+operationId: create_users_with_array_input
+requestBody:
+  content:
+    "*/*":
+      schema:
+        items:
+          $ref: "../../../components/schemas/User.yaml"
+        type: array
+  description: List of user object
+  required: true
+responses:
+  default:
+    content: {}
+    description: successful operation
+summary: Creates list of users with given input array
+tags:
+  - user
+x-codegen-request-body-name: body
+x-openapi-router-controller: openapi_server.controllers.user_controller

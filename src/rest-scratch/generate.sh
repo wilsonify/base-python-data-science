@@ -4,4 +4,4 @@ docker run --rm \
   openapitools/openapi-generator-cli:latest generate \
   -i /local/openapi/openapi.yaml \
   -g python-flask \
-  -o /local/python
+  -o /local/rest_scratch
