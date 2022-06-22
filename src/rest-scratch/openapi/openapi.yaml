@@ -52,15 +52,15 @@ paths:
   /user:
     $ref: "paths/user/user.yaml"
   /user/createWithArray:
-    $ref: "paths/user/createWithArray/createWithArray.yaml"
+    $ref: "paths/user/createWithArray.yaml"
   /user/createWithList:
-    $ref: "paths/user/createWithList/createWithList.yaml"
+    $ref: "paths/user/createWithList.yaml"
   /user/login:
-    $ref: "paths/user/login/login.yaml"
+    $ref: "paths/user/login.yaml"
   /user/logout:
-    $ref: "paths/user/logout/logout.yaml"
+    $ref: "paths/user/logout.yaml"
   /user/{username}:
-    $ref: "paths/user/{username}/{username}.yaml"
+    $ref: "paths/user/{username}.yaml"
 components:
   securitySchemes:
     petstore_auth:

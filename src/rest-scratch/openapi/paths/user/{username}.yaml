@@ -1,0 +1,87 @@
+delete:
+  description: This can only be done by the logged in user.
+  operationId: delete_user
+  parameters:
+    - description: The name that needs to be deleted
+      explode: false
+      in: path
+      name: username
+      required: true
+      schema:
+        type: string
+      style: simple
+  responses:
+    400:
+      content: {}
+      description: Invalid username supplied
+    404:
+      content: {}
+      description: User not found
+  summary: Delete user
+  tags:
+    - user
+  x-openapi-router-controller: openapi_server.controllers.user_controller
+
+get:
+  operationId: get_user_by_name
+  parameters:
+    - description: "The name that needs to be fetched. Use user1 for testing. "
+      explode: false
+      in: path
+      name: username
+      required: true
+      schema:
+        type: string
+      style: simple
+  responses:
+    200:
+      content:
+        application/xml:
+          schema:
+            $ref: "../../components/schemas/User.yaml"
+        application/json:
+          schema:
+            $ref: "../../components/schemas/User.yaml"
+      description: successful operation
+    400:
+      content: {}
+      description: Invalid username supplied
+    404:
+      content: {}
+      description: User not found
+  summary: Get user by user name
+  tags:
+    - user
+  x-openapi-router-controller: openapi_server.controllers.user_controller
+
+put:
+  description: This can only be done by the logged in user.
+  operationId: update_user
+  parameters:
+    - description: name that need to be updated
+      explode: false
+      in: path
+      name: username
+      required: true
+      schema:
+        type: string
+      style: simple
+  requestBody:
+    content:
+      "*/*":
+        schema:
+          $ref: "../../components/schemas/User.yaml"
+    description: Updated user object
+    required: true
+  responses:
+    400:
+      content: {}
+      description: Invalid user supplied
+    404:
+      content: {}
+      description: User not found
+  summary: Updated user
+  tags:
+    - user
+  x-codegen-request-body-name: body
+  x-openapi-router-controller: openapi_server.controllers.user_controller

@@ -1,18 +1,19 @@
 post:
-  description: This can only be done by the logged in user.
-  operationId: create_user
+  operationId: create_users_with_array_input
   requestBody:
     content:
       "*/*":
         schema:
-          $ref: "../../components/schemas/User.yaml"
-    description: Created user object
+          items:
+            $ref: "../../components/schemas/User.yaml"
+          type: array
+    description: List of user object
     required: true
   responses:
     default:
       content: {}
       description: successful operation
-  summary: Create user
+  summary: Creates list of users with given input array
   tags:
     - user
   x-codegen-request-body-name: body
