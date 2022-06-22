@@ -30,25 +30,25 @@ tags:
 
 paths:
   /sqrt:
-    $ref: "paths/sqrt/post.yaml"
+    $ref: "paths/sqrt/sqrt.yaml"
   /strength:
-    $ref: "paths/strength/post.yaml"
+    $ref: "paths/strength/strength.yaml"
   /pet:
     $ref: "paths/pet/pet.yaml"
   /pet/findByStatus:
-    $ref: "paths/pet/findByStatus/findByStatus.yaml"
+    $ref: "paths/pet/findByStatus.yaml"
   /pet/findByTags:
-    $ref: "paths/pet/findByTags/findByTags.yaml"
+    $ref: "paths/pet/findByTags.yaml"
   /pet/{petId}:
-    $ref: "paths/pet/{petId}/{petId}.yaml"
+    $ref: "paths/pet/{petId}.yaml"
   /pet/{petId}/uploadImage:
-    $ref: "paths/pet/{petId}/uploadImage/uploadImage.yaml"
+    $ref: "paths/pet/uploadImage.yaml"
   /store/inventory:
-    $ref: "paths/store/inventory/inventory.yaml"
+    $ref: "paths/store/inventory.yaml"
   /store/order:
-    $ref: "paths/store/order/order.yaml"
+    $ref: "paths/store/order.yaml"
   /store/order/{orderId}:
-    $ref: "paths/store/order/{orderId}/{orderId}.yaml"
+    $ref: "paths/store/{orderId}.yaml"
   /user:
     $ref: "paths/user/user.yaml"
   /user/createWithArray:

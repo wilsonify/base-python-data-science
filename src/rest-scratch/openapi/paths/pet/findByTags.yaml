@@ -21,12 +21,12 @@ get:
         application/xml:
           schema:
             items:
-              $ref: "../../../components/schemas/Pet.yaml"
+              $ref: "../../components/schemas/Pet.yaml"
             type: array
         application/json:
           schema:
             items:
-              $ref: "../../../components/schemas/Pet.yaml"
+              $ref: "../../components/schemas/Pet.yaml"
             type: array
       description: successful operation
     400:
