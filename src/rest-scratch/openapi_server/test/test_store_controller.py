@@ -7,6 +7,7 @@ from flask import json
 from six import BytesIO
 
 from openapi_server.models.order import Order  # noqa: E501
+from openapi_server.models.order_id import OrderId  # noqa: E501
 from openapi_server.test import BaseTestCase
 
 
@@ -21,7 +22,7 @@ class TestStoreController(BaseTestCase):
         headers = { 
         }
         response = self.client.open(
-            '/v2/store/order/{order_id}'.format(order_id=2),
+            '/v2/store/order/{order_id}'.format(order_id=56),
             method='DELETE',
             headers=headers)
         self.assert200(response,
@@ -52,7 +53,7 @@ class TestStoreController(BaseTestCase):
             'Accept': 'application/json',
         }
         response = self.client.open(
-            '/v2/store/order/{order_id}'.format(order_id=10),
+            '/v2/store/order/{order_id}'.format(order_id=56),
             method='GET',
             headers=headers)
         self.assert200(response,
@@ -64,7 +65,7 @@ class TestStoreController(BaseTestCase):
 
         Place an order for a pet
         """
-        body = {}
+        body = openapi_server.Order()
         headers = { 
             'Accept': 'application/json',
             'Content-Type': 'application/json',
