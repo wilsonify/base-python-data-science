@@ -15,10 +15,10 @@ delete:
         type: integer
       style: simple
   responses:
-    400:
+    "400":
       content: {}
       description: Invalid ID supplied
-    404:
+    "404":
       content: {}
       description: Order not found
   summary: Delete purchase order by ID
@@ -44,7 +44,7 @@ get:
         type: integer
       style: simple
   responses:
-    200:
+    "200":
       content:
         application/xml:
           schema:
@@ -53,10 +53,10 @@ get:
           schema:
             $ref: "../../components/schemas/Order.yaml"
       description: successful operation
-    400:
+    "400":
       content: {}
       description: Invalid ID supplied
-    404:
+    "404":
       content: {}
       description: Order not found
   summary: Find purchase order by ID

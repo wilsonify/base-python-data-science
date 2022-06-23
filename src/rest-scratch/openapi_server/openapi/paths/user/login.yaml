@@ -18,7 +18,7 @@ get:
         type: string
       style: form
   responses:
-    200:
+    "200":
       content:
         application/xml:
           schema:
@@ -42,7 +42,7 @@ get:
             format: date-time
             type: string
           style: simple
-    400:
+    "400":
       content: {}
       description: Invalid username/password supplied
   summary: Logs user into the system

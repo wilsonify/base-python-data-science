@@ -70,3 +70,9 @@ clean:
 test: clean all
 	LD_LIBRARY_PATH=$(LIBDIR1):$$LD_LIBRARY_PATH ./$(MODULE) > test.output
 	$(PYTHON) assert_equal.py MODULE.output test.output
+
+docker-build:
+	docker build -t rest-scratch .
+
+docker-run:
+	docker run -it rest-scratch

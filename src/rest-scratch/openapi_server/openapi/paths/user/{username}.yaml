@@ -11,10 +11,10 @@ delete:
         type: string
       style: simple
   responses:
-    400:
+    "400":
       content: {}
       description: Invalid username supplied
-    404:
+    "404":
       content: {}
       description: User not found
   summary: Delete user
@@ -34,7 +34,7 @@ get:
         type: string
       style: simple
   responses:
-    200:
+    "200":
       content:
         application/xml:
           schema:
@@ -43,10 +43,10 @@ get:
           schema:
             $ref: "../../components/schemas/User.yaml"
       description: successful operation
-    400:
+    "400":
       content: {}
       description: Invalid username supplied
-    404:
+    "404":
       content: {}
       description: User not found
   summary: Get user by user name
@@ -74,10 +74,10 @@ put:
     description: Updated user object
     required: true
   responses:
-    400:
+    "400":
       content: {}
       description: Invalid user supplied
-    404:
+    "404":
       content: {}
       description: User not found
   summary: Updated user

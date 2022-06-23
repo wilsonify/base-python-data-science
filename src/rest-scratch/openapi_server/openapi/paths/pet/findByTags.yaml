@@ -16,7 +16,7 @@ get:
         type: array
       style: form
   responses:
-    200:
+    "200":
       content:
         application/xml:
           schema:
@@ -29,7 +29,7 @@ get:
               $ref: "../../components/schemas/Pet.yaml"
             type: array
       description: successful operation
-    400:
+    "400":
       content: {}
       description: Invalid tag value
   security:

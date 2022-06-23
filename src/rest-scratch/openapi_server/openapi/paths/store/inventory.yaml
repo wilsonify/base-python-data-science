@@ -2,7 +2,7 @@ get:
   description: Returns a map of status codes to quantities
   operationId: get_inventory
   responses:
-    200:
+    "200":
       content:
         application/json:
           schema:

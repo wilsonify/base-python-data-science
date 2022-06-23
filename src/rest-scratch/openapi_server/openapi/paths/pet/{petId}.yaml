@@ -18,10 +18,10 @@ delete:
         type: integer
       style: simple
   responses:
-    400:
+    "400":
       content: {}
       description: Invalid ID supplied
-    404:
+    "404":
       content: {}
       description: Pet not found
   security:
@@ -47,7 +47,7 @@ get:
         type: integer
       style: simple
   responses:
-    200:
+    "200":
       content:
         application/xml:
           schema:
@@ -56,10 +56,10 @@ get:
           schema:
             $ref: "../../components/schemas/Pet.yaml"
       description: successful operation
-    400:
+    "400":
       content: {}
       description: Invalid ID supplied
-    404:
+    "404":
       content: {}
       description: Pet not found
   security:
@@ -93,7 +93,7 @@ post:
               description: Updated status of the pet
               type: string
   responses:
-    405:
+    "405":
       content: {}
       description: Invalid input
   security:

@@ -4,7 +4,6 @@ import connexion
 import six
 from openapi_server import util
 from openapi_server.models.user import User  # noqa: E501
-from openapi_server.models.username import Username  # noqa: E501
 
 
 def create_user(body):  # noqa: E501

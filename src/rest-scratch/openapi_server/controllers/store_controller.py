@@ -5,7 +5,7 @@ from typing import Tuple
 from typing import Union
 
 from openapi_server.models.order import Order  # noqa: E501
-from openapi_server.models.order_id import OrderId  # noqa: E501
+
 from openapi_server import util
 
 

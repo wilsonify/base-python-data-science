@@ -35,18 +35,26 @@ class build_ext(build_ext_orig):
 
     def run(self):
         build_ext_orig.run(self)
-
         build_dir = Path(self.build_lib)
         root_dir = Path(__file__).parent
-
         target_dir = build_dir if not self.inplace else root_dir
         logging.warning(f'moving openapi_server/__init__.py from {root_dir} to {target_dir}')
-        self.copy_file(Path('openapi_server/__init__.py'), root_dir, target_dir)
-        logging.warning(f'moving openapi_server/__main__.py from {root_dir} to {target_dir}')
-        self.copy_file(Path('openapi_server/__main__.py'), root_dir, target_dir)
-        logging.warning(f'moving openapi_server/openapi/openapi.yaml from {root_dir} to {target_dir}')
+        try:
+            self.copy_file(Path('openapi_server/__init__.py'), root_dir, target_dir)
+        except:
+            logging.warning(f'could not move openapi_server/__init__.py from {root_dir} to {target_dir}')
 
-        self.copy_file(Path(f'{root_dir}/openapi_server/openapi/openapi.yaml'), root_dir, target_dir)
+        logging.warning(f'moving openapi_server/__main__.py from {root_dir} to {target_dir}')
+        try:
+            self.copy_file(Path('openapi_server/__main__.py'), root_dir, target_dir)
+        except:
+            logging.warning(f'could not move openapi_server/__main__.py from {root_dir} to {target_dir}')
+
+        logging.warning(f'moving openapi_server/openapi/openapi.yaml from {root_dir} to {target_dir}')
+        try:
+            self.copy_file(Path(f'{root_dir}/openapi_server/openapi/openapi.yaml'), root_dir, target_dir)
+        except:
+            logging.warning(f'could not move openapi_server/openapi/openapi.yaml from {root_dir} to {target_dir}')
 
     def copy_file(self, path, source_dir, destination_dir):
         if not (source_dir / path).exists():

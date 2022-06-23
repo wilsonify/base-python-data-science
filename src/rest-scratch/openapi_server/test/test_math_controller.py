@@ -21,7 +21,7 @@ class TestMathController(BaseTestCase):
 
         
         """
-        sqrt_input = openapi_server.SqrtInput()
+        sqrt_input = SqrtInput()
         headers = { 
             'Accept': 'application/json',
             'Content-Type': 'application/json',
@@ -40,7 +40,7 @@ class TestMathController(BaseTestCase):
 
         
         """
-        strength_input = openapi_server.StrengthInput()
+        strength_input = StrengthInput()
         headers = { 
             'Accept': 'application/json',
             'Content-Type': 'application/json',

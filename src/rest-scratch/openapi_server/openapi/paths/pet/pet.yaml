@@ -11,7 +11,7 @@ post:
     description: Pet object that needs to be added to the store
     required: true
   responses:
-    405:
+    "405":
       content: {}
       description: Invalid input
   security:
@@ -37,13 +37,13 @@ put:
     description: Pet object that needs to be added to the store
     required: true
   responses:
-    400:
+    "400":
       content: {}
       description: Invalid ID supplied
-    404:
+    "404":
       content: {}
       description: Pet not found
-    405:
+    "405":
       content: {}
       description: Validation exception
   security:

@@ -8,7 +8,7 @@ post:
     description: order placed for purchasing the pet
     required: true
   responses:
-    200:
+    "200":
       content:
         application/xml:
           schema:
@@ -17,7 +17,7 @@ post:
           schema:
             $ref: "../../components/schemas/Order.yaml"
       description: successful operation
-    400:
+    "400":
       content: {}
       description: Invalid Order
   summary: Place an order for a pet

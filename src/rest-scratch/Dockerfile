@@ -11,7 +11,7 @@ COPY . /usr/src/app
 
 EXPOSE 8080
 
-ENTRYPOINT ["/bin/sh"]
+#ENTRYPOINT ["/bin/sh"]
 
-#ENTRYPOINT ["python3"]
-#CMD ["-m", "openapi_server"]
+ENTRYPOINT ["python3"]
+CMD ["-m", "openapi_server"]

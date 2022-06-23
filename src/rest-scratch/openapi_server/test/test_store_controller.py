@@ -65,7 +65,7 @@ class TestStoreController(BaseTestCase):
 
         Place an order for a pet
         """
-        body = openapi_server.Order()
+        body = Order()
         headers = { 
             'Accept': 'application/json',
             'Content-Type': 'application/json',
