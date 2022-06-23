@@ -76,3 +76,9 @@ docker-build:
 
 docker-run:
 	docker run --rm -p 49153:8080 --name rest-scratch rest-scratch
+
+__main__.spec:
+	pyinstaller --noconfirm --onedir --console --distpath dist --workpath build --specpath . --add-data openapi_server/openapi:openapi --collect-all "connexion" openapi_server/__main__.py
+
+dist/__main__:
+	pyinstaller --noconfirm --onedir --console --distpath dist --workpath build --specpath . --add-data openapi_server/openapi:openapi openapi_server/__main__.spec
