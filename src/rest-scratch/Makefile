@@ -75,4 +75,4 @@ docker-build:
 	docker build -t rest-scratch .
 
 docker-run:
-	docker run -it rest-scratch
+	docker run --rm -p 49153:8080 --name rest-scratch rest-scratch
