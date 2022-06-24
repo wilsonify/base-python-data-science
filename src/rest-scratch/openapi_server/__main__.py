@@ -4,6 +4,23 @@ import os
 import connexion
 from json_ref_dict import RefDict, materialize
 from openapi_server import encoder
+from openapi_server import controllers
+from openapi_server.controllers import (
+    math_controller,
+    pet_controller,
+    security_controller_,
+    store_controller,
+    user_controller
+) 
+from openapi_server import models
+
+assert dir(controllers)
+assert dir(math_controller)
+assert dir(pet_controller)
+assert dir(security_controller_)
+assert dir(store_controller)
+assert dir(user_controller)
+assert dir(models)
 
 path_to_here = os.path.abspath(os.path.dirname(__file__))
 
