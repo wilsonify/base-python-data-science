@@ -14,6 +14,7 @@ from openapi_server.controllers import (
 ) 
 from openapi_server import models
 
+# hidden imports
 assert dir(controllers)
 assert dir(math_controller)
 assert dir(pet_controller)
