@@ -1,2 +1,4 @@
 from data_science_from_scratch.strategies_library.abstract import Strategy
 from data_science_from_scratch.strategies_library.echo import echo
+from data_science_from_scratch.strategies_library.mysqrt import mysqrt_strategy
+from data_science_from_scratch.strategies_library.mystrength import mystrength_strategy

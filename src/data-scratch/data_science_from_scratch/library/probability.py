@@ -5,9 +5,11 @@ from logging.config import dictConfig
 
 from data_science_from_scratch import config
 
+
 def random_normal():
     """returns a random draw from a standard normal distribution"""
     return inverse_normal_cdf(random.random())
+
 
 def random_kid():
     return random.choice(["boy", "girl"])
@@ -77,6 +79,18 @@ def bernoulli_trial(p):
 
 def binomial(p, n):
     return sum(bernoulli_trial(p) for _ in range(n))
+
+
+def mysqrt(x: float) -> float:  # noqa: E501
+    """ square root """
+    return math.sqrt(x)
+
+
+def mystrength(actual: float, expected: float) -> float:  # noqa: E501
+    """ signal strength """
+    eps = 0.001
+    strength = actual / (expected + eps)
+    return strength
 
 
 if __name__ == "__main__":

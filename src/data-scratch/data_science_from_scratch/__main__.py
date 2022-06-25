@@ -8,6 +8,7 @@ from logging.config import dictConfig
 
 import pika
 
+from data_science_from_scratch.library.probability import mysqrt, mystrength
 from data_science_from_scratch.strategies_library import Strategy, echo
 
 logging_config_dict = dict(
@@ -55,12 +56,16 @@ def route_callback(ch, method, properties, body):
     logging.debug("%r", "payload = {}".format(payload))
     logging.debug("%r", "payload has type {}".format(type(payload)))
     strategy = payload['strategy']
-    strat = Strategy(echo, channel=ch, method=method, props=properties)
+    current_strategy = Strategy(echo, channel=ch, method=method, props=properties)
     if strategy == 'echo':
-        strat = Strategy(echo, channel=ch, method=method, props=properties)
+        current_strategy = Strategy(echo, channel=ch, method=method, props=properties)
+    if strategy == 'sqrt':
+        current_strategy = Strategy(mysqrt, channel=ch, method=method, props=properties)
+    if strategy == 'strength':
+        current_strategy = Strategy(mystrength, channel=ch, method=method, props=properties)
     # noinspection PyBroadException
     try:
-        strat.execute(payload)  # pylint:disable=not-callable
+        current_strategy.execute(payload)  # pylint:disable=not-callable
         logging.info("done")
         ch.basic_publish(
             exchange=done_exchange,
