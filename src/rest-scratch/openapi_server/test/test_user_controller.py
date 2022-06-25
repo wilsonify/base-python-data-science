@@ -1,10 +1,10 @@
 # coding: utf-8
 
 from __future__ import absolute_import
+
 import unittest
 
 from flask import json
-from six import BytesIO
 
 from openapi_server.models.user import User  # noqa: E501
 from openapi_server.test import BaseTestCase
@@ -137,7 +137,7 @@ class TestUserController(BaseTestCase):
 
         Updated user
         """
-        body = Username()
+        body = User()
         headers = { 
             'Content-Type': 'application/json',
         }

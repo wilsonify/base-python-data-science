@@ -1,12 +1,11 @@
 # coding: utf-8
 
 from __future__ import absolute_import
+
 import unittest
 
 from flask import json
-from six import BytesIO
 
-from openapi_server.models.pet import Pet  # noqa: E501
 from openapi_server.test import BaseTestCase
 
 
