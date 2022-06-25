@@ -75,10 +75,10 @@ docker-build:
 	docker build -t rest-scratch .
 
 docker-run:
-	docker run --rm -p 49153:8080 --name rest-scratch rest-scratch
+	docker run --rm -p 49153:8080 --name rest-scratch --env AMQP_HOST=thinkpad rest-scratch
 
 __main__.spec:
 	pyinstaller --noconfirm --onedir --console --distpath dist --workpath build --specpath . --add-data openapi_server/openapi:openapi --collect-all "connexion" openapi_server/__main__.py
 
-dist/__main__:
+dist/__main__: __main__.spec
 	pyinstaller --noconfirm --onedir --console --distpath dist --workpath build --specpath . --add-data openapi_server/openapi:openapi openapi_server/__main__.spec

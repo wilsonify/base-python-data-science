@@ -25,4 +25,11 @@ COPY --from=builder /usr/src/app/dist/__main__ /app
 #/lib/libz.so.1
 WORKDIR /app
 EXPOSE 8080
+ENV AMQP_HOST=localhost
+ENV AMQP_PORT=5672
+ENV DSFS_AMQP_ROUTING_KEY="dsfs"
+ENV AMQP_HEARTBEAT=10000
+ENV AMQP_TIMEOUT=10001
+ENV AMQP_USER="guest"
+ENV AMQP_PASS="guest"
 ENTRYPOINT ["/app/__main__"]
