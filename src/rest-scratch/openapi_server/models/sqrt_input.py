@@ -19,10 +19,10 @@ class SqrtInput(Model):
         """SqrtInput - a model defined in OpenAPI
 
         :param x: The x of this SqrtInput.  # noqa: E501
-        :type x: int
+        :type x: float
         """
         self.openapi_types = {
-            'x': int
+            'x': float
         }
 
         self.attribute_map = {
@@ -48,7 +48,7 @@ class SqrtInput(Model):
 
 
         :return: The x of this SqrtInput.
-        :rtype: int
+        :rtype: float
         """
         return self._x
 
@@ -58,7 +58,7 @@ class SqrtInput(Model):
 
 
         :param x: The x of this SqrtInput.
-        :type x: int
+        :type x: float
         """
 
         self._x = x

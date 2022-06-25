@@ -19,13 +19,13 @@ class SqrtOutput(Model):
         """SqrtOutput - a model defined in OpenAPI
 
         :param x: The x of this SqrtOutput.  # noqa: E501
-        :type x: int
+        :type x: float
         :param result: The result of this SqrtOutput.  # noqa: E501
-        :type result: int
+        :type result: float
         """
         self.openapi_types = {
-            'x': int,
-            'result': int
+            'x': float,
+            'result': float
         }
 
         self.attribute_map = {
@@ -53,7 +53,7 @@ class SqrtOutput(Model):
 
 
         :return: The x of this SqrtOutput.
-        :rtype: int
+        :rtype: float
         """
         return self._x
 
@@ -63,7 +63,7 @@ class SqrtOutput(Model):
 
 
         :param x: The x of this SqrtOutput.
-        :type x: int
+        :type x: float
         """
 
         self._x = x
@@ -74,7 +74,7 @@ class SqrtOutput(Model):
 
 
         :return: The result of this SqrtOutput.
-        :rtype: int
+        :rtype: float
         """
         return self._result
 
@@ -84,7 +84,7 @@ class SqrtOutput(Model):
 
 
         :param result: The result of this SqrtOutput.
-        :type result: int
+        :type result: float
         """
 
         self._result = result

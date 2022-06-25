@@ -1,33 +1,34 @@
+import logging
 import math
+from typing import Tuple
 
-import connexion
-import six
-from openapi_server import util
-from openapi_server.models.api_response import ApiResponse  # noqa: E501
-from openapi_server.models.sqrt_input import SqrtInput
-from openapi_server.models.strength_input import StrengthInput
+from openapi_server.models import SqrtInput, SqrtOutput, StrengthInput, StrengthOutput
 
 
-def mysqrt(body):  # noqa: E501
+def mysqrt(body: dict) -> Tuple[dict, int]:  # noqa: E501
     """ square root """
-    if connexion.request.is_json:
-        body = SqrtInput.from_dict(connexion.request.get_json())  # noqa: E501
-
-    return dict(
-        x=body['x'],
-        result=math.sqrt()
+    logging.debug(f"body = {body}")
+    logging.debug(f"type(body) = {type(body)}")
+    body_in = SqrtInput().from_dict(body)
+    x = body_in.x
+    sqrt_output = SqrtOutput(
+        x=x,
+        result=math.sqrt(x)
     )
+    body_out = sqrt_output.to_dict()
+    return body_out, 200
 
 
-def mystrength(body):  # noqa: E501
+def mystrength(body: dict) -> Tuple[dict, int]:  # noqa: E501
     """ signal strength """
-    if connexion.request.is_json:
-        body = StrengthInput.from_dict(connexion.request.get_json())  # noqa: E501
-    actual = body['actual']
-    expected = body['expected']
-    result = actual / expected
-    return dict(
+    body_in = StrengthInput().from_dict(body)
+    actual = body_in.actual
+    expected = body_in.expected
+    strength = actual / expected
+    out_so = StrengthOutput(
         actual=actual,
         expected=expected,
-        result=result
+        strength=strength
     )
+    out_dict = out_so.to_dict()
+    return out_dict, 200
