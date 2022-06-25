@@ -17,12 +17,12 @@ RUN pyinstaller \
 --collect-all "connexion" \
 --collect-all "swagger_ui_bundle" \
 openapi_server/__main__.py
-ENTRYPOINT ["/usr/src/app/dist/__main__/__main__"]
 
-#FROM python:3-alpine
-#RUN mkdir -p /usr/src/app
-#COPY --from=builder dist /usr/src/app
-#WORKDIR /usr/src/app/__main__
-#RUN pip3 install --no-cache-dir -r requirements.txt
-#EXPOSE 8080
-#ENTRYPOINT ["/usr/src/app/__main__/__main__"]
+FROM alpine:3.16.0
+RUN mkdir -p /app
+COPY --from=builder /usr/src/app/dist/__main__ /app
+#/lib/ld-musl-x86_64.so.1
+#/lib/libz.so.1
+WORKDIR /app
+EXPOSE 8080
+ENTRYPOINT ["/app/__main__"]
