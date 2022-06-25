@@ -6,3 +6,4 @@ json-ref-dict>=0.7.1
 PyYAML>=6.0
 Werkzeug~=0.16.0
 MarkupSafe~=2.0.1
+pika

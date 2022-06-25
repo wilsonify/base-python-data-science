@@ -29,8 +29,8 @@ class build_py(build_py_orig):
 
 class build_ext(build_ext_orig):
     """
-    python modules need a __init__.py
-    and a __main__.py even if they are empty
+    python modules need a __init__.py and a __main__.py 
+    even if they are empty
     """
 
     def run(self):
@@ -38,6 +38,9 @@ class build_ext(build_ext_orig):
         build_dir = Path(self.build_lib)
         root_dir = Path(__file__).parent
         target_dir = build_dir if not self.inplace else root_dir
+        logging.debug(f"build_dir = {build_dir}")
+        logging.debug(f"root_dir = {root_dir}")
+        logging.debug(f"target_dir = {target_dir}")
         logging.warning(f'moving openapi_server/__init__.py from {root_dir} to {target_dir}')
         try:
             self.copy_file(Path('openapi_server/__init__.py'), root_dir, target_dir)
@@ -80,12 +83,16 @@ setup(
     keywords=["OpenAPI", "Swagger Petstore"],
     install_requires=REQUIRES,
     packages=find_packages(),
-    package_data={'': ['openapi/openapi.yaml']},
+    package_data={'': ['openapi']},
     include_package_data=True,
     entry_points={
         'console_scripts': ['openapi_server=openapi_server.__main__:main']},
-    long_description="""\
-    This is a sample server Petstore server.  You can find out more about     Swagger at [http://swagger.io](http://swagger.io) or on [irc.freenode.net, #swagger](http://swagger.io/irc/).      For this sample, you can use the api key &#x60;special-key&#x60; to test the authorization     filters.
+    long_description="""
+    This is a sample server Petstore server.  
+    You can find out more about     
+    Swagger at [http://swagger.io](http://swagger.io) or on [irc.freenode.net, #swagger](http://swagger.io/irc/).      
+    For this sample, you can use the api key &#x60;special-key&#x60; 
+    to test the authorization filters.
     """,
     ext_modules=cythonize(extensions, compiler_directives={'language_level': 3}),
     cmdclass={'build_py': build_py, 'build_ext': build_ext},

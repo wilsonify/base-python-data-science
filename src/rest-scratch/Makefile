@@ -74,7 +74,7 @@ test: clean all
 docker-build:
 	docker build -t rest-scratch .
 
-docker-run:
+docker-run: docker-build
 	docker run --rm -p 49153:8080 --name rest-scratch --env AMQP_HOST=thinkpad rest-scratch
 
 __main__.spec:
