@@ -54,11 +54,15 @@ class RemoteProcedure:
         """
         route = "python"
         self.channel.exchange_declare(exchange=f"try_{route}", exchange_type="topic")
-        self.channel.queue_declare(f"try_{route}", durable=True, exclusive=False, auto_delete=False)
+        self.channel.queue_declare(queue=f"try_{route}", durable=True, exclusive=False, auto_delete=False)
+        self.channel.queue_bind(queue=f"try_{route}", exchange=f"try_{route}", routing_key=route)
+        route = "dsfs"
+        self.channel.exchange_declare(exchange=f"try_{route}", exchange_type="topic")
+        self.channel.queue_declare(queue=f"try_{route}", durable=True, exclusive=False, auto_delete=False)
         self.channel.queue_bind(queue=f"try_{route}", exchange=f"try_{route}", routing_key=route)
         route = "tensorflow"
         self.channel.exchange_declare(exchange=f"try_{route}", exchange_type="topic")
-        self.channel.queue_declare(f"try_{route}", durable=True, exclusive=False, auto_delete=False)
+        self.channel.queue_declare(queue=f"try_{route}", durable=True, exclusive=False, auto_delete=False)
         self.channel.queue_bind(queue=f"try_{route}", exchange=f"try_{route}", routing_key=route)
 
     def on_response(self, channel, method, props, body):

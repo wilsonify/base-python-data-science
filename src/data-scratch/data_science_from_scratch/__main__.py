@@ -120,9 +120,9 @@ def main():
     logging.info("done declaring queues")
 
     logging.info("start binding queues")
-    channel.queue_bind(queue=try_exchange, exchange=try_exchange, routing_key="green")
-    channel.queue_bind(queue=done_exchange, exchange=done_exchange, routing_key="green")
-    channel.queue_bind(queue=fail_exchange, exchange=fail_exchange, routing_key="green")
+    channel.queue_bind(queue=try_exchange, exchange=try_exchange, routing_key=routing_key)
+    channel.queue_bind(queue=done_exchange, exchange=done_exchange, routing_key=routing_key)
+    channel.queue_bind(queue=fail_exchange, exchange=fail_exchange, routing_key=routing_key)
     logging.info("done binding queues")
 
     logging.info("start setting callback")
