@@ -1,6 +1,7 @@
 #!/usr/bin/env python3
-
+import logging
 import os
+from logging.config import dictConfig
 
 import connexion
 from json_ref_dict import RefDict, materialize
@@ -27,6 +28,17 @@ assert dir(models)
 
 path_to_here = os.path.abspath(os.path.dirname(__file__))
 
+logging_config_dict = dict(
+    version=1,
+    formatters={
+        "simple": {
+            "format": """%(asctime)s | %(filename)s | %(lineno)d | %(levelname)s | %(message)s"""
+        }
+    },
+    handlers={"console": {"class": "logging.StreamHandler", "formatter": "simple"}},
+    root={"handlers": ["console"], "level": logging.DEBUG},
+)
+
 
 def main():
     openapi_refdict = RefDict(f"{path_to_here}/openapi/openapi.yaml")
@@ -43,4 +55,5 @@ def main():
 
 
 if __name__ == "__main__":
+    dictConfig(logging_config_dict)
     main()

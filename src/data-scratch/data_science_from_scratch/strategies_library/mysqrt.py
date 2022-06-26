@@ -3,6 +3,7 @@ import logging
 
 import pika
 
+from data_science_from_scratch import routing_key
 from data_science_from_scratch.library.probability import mysqrt
 
 
@@ -13,13 +14,14 @@ def mysqrt_strategy(self, body: dict):  # noqa: E501
     x = body["x"]
     sqrt_output = dict(
         x=x,
-        result=mysqrt(x)
+        result=mysqrt(x),
+        status_code="200"
     )
+    logging.debug(f"sqrt_output = {sqrt_output}")
+    logging.debug(f"exchange= reply_{self.props.correlation_id}")
     self.channel.basic_publish(
-        exchange='',
-        routing_key=str(self.props.reply_to),
+        exchange=self.props.reply_to,
+        routing_key=routing_key,
         properties=pika.BasicProperties(correlation_id=self.props.correlation_id),
         body=json.dumps(sqrt_output).encode("utf-8")
     )
-
-

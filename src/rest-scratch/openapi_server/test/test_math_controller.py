@@ -23,7 +23,8 @@ def test_mysqrt():
 def test_mystrength():
     body = dict(expected=10, actual=6)
     result = mystrength(body)
-    assert result == ({'actual': 6, 'expected': 10, 'strength': 0.6}, 200)
+    assert result[1] == 200
+    assert result[0] == {'actual': 6, 'expected': 10, 'strength': pytest.approx(0.6, abs=0.1)}
 
 
 class TestMathController(BaseTestCase):

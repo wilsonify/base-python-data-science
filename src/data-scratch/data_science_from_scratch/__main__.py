@@ -3,45 +3,36 @@ amqp consumer
 """
 import json
 import logging
-import os
 from logging.config import dictConfig
 
 import pika
 
-from data_science_from_scratch.library.probability import mysqrt, mystrength
-from data_science_from_scratch.strategies_library import Strategy, echo
+import data_science_from_scratch
+from data_science_from_scratch import routing_key, try_exchange, done_exchange, fail_exchange, connection_parameters
+
+from data_science_from_scratch.strategies_library import (
+    Strategy,
+    echo_strategy,
+    mysqrt_strategy,
+    mystrength_strategy
+)
 
 logging_config_dict = dict(
     version=1,
     formatters={
         "simple": {
-            "format": """%(asctime)s | %(name)-12s | %(levelname)-8s | %(message)s"""
+            "format": """%(asctime)s | %(filename)s | %(lineno)d | %(levelname)s | %(message)s"""
         }
     },
     handlers={"console": {"class": "logging.StreamHandler", "formatter": "simple"}},
     root={"handlers": ["console"], "level": logging.DEBUG},
 )
 
-amqp_host = os.getenv("AMQP_HOST", "localhost")
-amqp_port = os.getenv("AMQP_PORT", "5672")
-routing_key = os.getenv("AMQP_ROUTING_KEY", "dsfs")
-heartbeat = os.getenv("AMQP_HEARTBEAT", "10000")
-timeout = os.getenv("AMQP_TIMEOUT", "10001")
-cred = pika.PlainCredentials(
-    os.getenv("AMQP_USER", "guest"),
-    os.getenv("AMQP_PASS", "guest")
-)
+available_strategies = dict(
+    echo=echo_strategy,
+    sqrt=mysqrt_strategy,
+    strength=mystrength_strategy
 
-try_exchange = f"try_{routing_key}"
-done_exchange = f"done_{routing_key}"
-fail_exchange = f"fail_{routing_key}"
-
-connection_parameters = pika.ConnectionParameters(
-    host=amqp_host,
-    port=int(amqp_port),
-    heartbeat=int(heartbeat),
-    blocked_connection_timeout=int(timeout),
-    credentials=cred,
 )
 
 
@@ -49,20 +40,19 @@ def route_callback(ch, method, properties, body):
     logging.info("route_callback")
     logging.debug("%r", "ch={}".format(ch))
     logging.debug("%r", "properties={}".format(properties))
-    logging.debug("%r", "key={}".format(method.routing_key))
+    logging.debug("%r", "key={}".format(data_science_from_scratch.routing_key))
     logging.debug("%r", "body={}".format(body))
     logging.debug("%r", "body has type {}".format(type(body)))
     payload = json.loads(body.decode("utf-8"))
     logging.debug("%r", "payload = {}".format(payload))
     logging.debug("%r", "payload has type {}".format(type(payload)))
-    strategy = payload['strategy']
-    current_strategy = Strategy(echo, channel=ch, method=method, props=properties)
-    if strategy == 'echo':
-        current_strategy = Strategy(echo, channel=ch, method=method, props=properties)
-    if strategy == 'sqrt':
-        current_strategy = Strategy(mysqrt, channel=ch, method=method, props=properties)
-    if strategy == 'strength':
-        current_strategy = Strategy(mystrength, channel=ch, method=method, props=properties)
+    if properties.reply_to is not None:
+        logging.debug("%r", f"properties.correlation_id = {properties.correlation_id}")
+        logging.debug("%r", f"properties.reply_to = {properties.reply_to}")
+
+    strategy_str = payload.get('strategy', 'echo')
+    selected_strategy = available_strategies.get(strategy_str, echo_strategy)
+    current_strategy = Strategy(selected_strategy, channel=ch, method=method, props=properties)
     # noinspection PyBroadException
     try:
         current_strategy.execute(payload)  # pylint:disable=not-callable
@@ -73,7 +63,7 @@ def route_callback(ch, method, properties, body):
             properties=properties,
             body=body
         )
-    except:  # pylint:disable=bare-except
+    except:  # pylint:disable=bare-except # noqa
 
         payload['status_code'] = 400
         logging.exception("failed to consume message")

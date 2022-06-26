@@ -2,6 +2,7 @@ import json
 
 import pika
 
+from data_science_from_scratch import routing_key
 from data_science_from_scratch.library.probability import mystrength
 
 
@@ -13,11 +14,12 @@ def mystrength_strategy(self, body: dict):  # noqa: E501
     out_dict = dict(
         actual=actual,
         expected=expected,
-        strength=strength
+        strength=strength,
+        status_code="200"
     )
     self.channel.basic_publish(
-        exchange='',
-        routing_key=str(self.props.reply_to),
+        exchange=self.props.reply_to,
+        routing_key=routing_key,
         properties=pika.BasicProperties(correlation_id=self.props.correlation_id),
         body=json.dumps(out_dict).encode("utf-8")
     )
