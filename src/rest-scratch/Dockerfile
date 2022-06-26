@@ -6,8 +6,6 @@ gcc \
 musl-dev \
 python3-dev \
 git
-#gpgme-dev \
-#libc-dev \
 
 RUN mkdir -p /usr/src/app
 COPY . /usr/src/app

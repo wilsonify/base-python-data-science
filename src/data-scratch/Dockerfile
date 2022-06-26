@@ -1,10 +1,16 @@
 FROM python:3-alpine as builder
+RUN apk update && apk upgrade && apk add \
+binutils \
+gcc \
+musl-dev \
+python3-dev \
+git
 RUN mkdir -p /usr/src/app
 COPY . /usr/src/app
 WORKDIR /usr/src/app
 RUN pip3 install -r build-requirements.txt
 RUN pip3 install -r requirements.txt
-RUN python3 setup.py develop
+RUN python3 setup-maximal.py install
 RUN apk add binutils
 RUN pyinstaller \
 --noconfirm \
