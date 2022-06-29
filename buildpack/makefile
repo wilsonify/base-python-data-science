@@ -8,7 +8,7 @@ run.txt: base.txt
 	docker build . -t sample-stack-run:bionic --target run
 	echo $(date) > run.txt
 
-build.txt: run.txt
+build.txt: base.txt
 	docker build . -t sample-stack-build:bionic --target build
 	echo $(date) > build.txt
 

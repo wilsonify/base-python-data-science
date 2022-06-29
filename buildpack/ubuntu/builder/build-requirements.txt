@@ -1,0 +1,3 @@
+auto-py-to-exe
+pyinstaller
+cython
