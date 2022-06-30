@@ -15,7 +15,7 @@ LINKFORSHARED := $(shell $(PYTHON) -c "import distutils.sysconfig; print(distuti
 LIBS := $(shell $(PYTHON) -c "import distutils.sysconfig; print(distutils.sysconfig.get_config_var('LIBS'))")
 SYSLIBS :=  $(shell $(PYTHON) -c "import distutils.sysconfig; print(distutils.sysconfig.get_config_var('SYSLIBS'))")
 
-.PHONY: paths all clean test
+.PHONY: paths all clean test pack-build
 
 paths:
 	@echo "PYTHON=$(PYTHON)"
@@ -82,3 +82,6 @@ __main__.spec:
 
 dist/__main__: __main__.spec
 	pyinstaller --noconfirm --onedir --console --distpath dist --workpath build --specpath . --add-data openapi_server/openapi:openapi openapi_server/__main__.spec
+
+pack-build:
+	pack build rest-scratch --builder io.wilsonfiy.stacks.alpine
