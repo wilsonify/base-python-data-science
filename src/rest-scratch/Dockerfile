@@ -1,20 +1,9 @@
-FROM python:3-alpine as builder
-RUN apk update && apk upgrade
-RUN apk add \
-binutils \
-gcc \
-musl-dev \
-python3-dev \
-git
-
+FROM bpds/alpine-build:alpine as builder
 RUN mkdir -p /usr/src/app
 COPY . /usr/src/app
 WORKDIR /usr/src/app
-RUN ls
-RUN pip3 install -r build-requirements.txt
 RUN pip3 install -r requirements.txt
 RUN python3 setup.py install
-
 RUN pyinstaller \
 --noconfirm \
 --onedir \
@@ -28,7 +17,7 @@ RUN pyinstaller \
 --collect-all "openapi_spec_validator" \
 openapi_server/__main__.py
 
-FROM alpine:3.16.0
+FROM bpds/alpine-run:alpine
 RUN mkdir -p /app
 COPY --from=builder /usr/src/app/dist/__main__ /app
 WORKDIR /app
