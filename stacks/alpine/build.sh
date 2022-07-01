@@ -23,11 +23,21 @@ docker build --platform=${PLATFORM} --tag "${BASE_IMAGE}" "${IMAGE_DIR}/base"
 echo "done BUILDING ${BASE_IMAGE}"
 
 echo "start BUILDING ${BUILD_IMAGE}..."
-docker build --platform=${PLATFORM} --build-arg "base_image=${BASE_IMAGE}" --build-arg "stack_id=${STACK_ID}" --tag "${BUILD_IMAGE}" "${IMAGE_DIR}/builder"
+docker build \
+--platform=${PLATFORM} \
+--build-arg "base_image=${BASE_IMAGE}" \
+--build-arg "stack_id=${STACK_ID}" \
+--tag "${BUILD_IMAGE}" \
+"${IMAGE_DIR}/builder"
 echo "done BUILDING ${BUILD_IMAGE}"
 
 echo "start BUILDING ${RUN_IMAGE}..."
-docker build --platform=${PLATFORM} --build-arg "base_image=${BASE_IMAGE}" --build-arg "stack_id=${STACK_ID}" --tag "${RUN_IMAGE}" "${IMAGE_DIR}/run"
+docker build \
+--platform=${PLATFORM} \
+--build-arg "base_image=${BASE_IMAGE}" \
+--build-arg "stack_id=${STACK_ID}" \
+--tag "${RUN_IMAGE}" \
+"${IMAGE_DIR}/run"
 echo "done BUILDING ${RUN_IMAGE}"
 
 echo "done Stack ID: ${STACK_ID}"
