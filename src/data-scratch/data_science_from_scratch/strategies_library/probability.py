@@ -21,22 +21,22 @@ def bernoulli_trial():
 
 def binomial(p, n, expected):
     result = probability.binomial(p, n)
-    assert result == expected
+    self.publish(payload)
 
 
 def inverse_normal_cdf(p, mu, sigma, expected):
     result = probability.inverse_normal_cdf(p, mu, sigma)
-    assert result == expected
+    self.publish(payload)
 
 
 def normal_cdf(x, mu, sigma, expected):
     result = probability.normal_cdf(x, mu, sigma)
-    assert result == expected
+    self.publish(payload)
 
 
 def normal_pdf(x, mu, sigma, expected):
     result = probability.normal_pdf(x, mu, sigma)
-    assert result == expected
+    self.publish(payload)
 
 
 def random_kid():
@@ -47,9 +47,9 @@ def random_kid():
 
 def uniform_cdf(x, expected):
     result = probability.uniform_cdf(x)
-    assert result == expected
+    self.publish(payload)
 
 
 def uniform_pdf(x, expected):
     result = probability.uniform_pdf(x)
-    assert result == expected
+    self.publish(payload)

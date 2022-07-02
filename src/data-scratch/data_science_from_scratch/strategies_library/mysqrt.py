@@ -19,9 +19,4 @@ def mysqrt_strategy(self, body: dict):  # noqa: E501
     )
     logging.debug(f"sqrt_output = {sqrt_output}")
     logging.debug(f"exchange= reply_{self.props.correlation_id}")
-    self.channel.basic_publish(
-        exchange=self.props.reply_to,
-        routing_key=routing_key,
-        properties=pika.BasicProperties(correlation_id=self.props.correlation_id),
-        body=json.dumps(sqrt_output).encode("utf-8")
-    )
+    self.publish(sqrt_output)
