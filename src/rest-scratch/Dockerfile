@@ -1,4 +1,5 @@
 FROM bpds/alpine-build:alpine as builder
+user root
 RUN mkdir -p /usr/src/app
 COPY . /usr/src/app
 WORKDIR /usr/src/app
@@ -21,6 +22,7 @@ FROM bpds/alpine-run:alpine
 RUN mkdir -p /app
 COPY --from=builder /usr/src/app/dist/__main__ /app
 WORKDIR /app
+RUN chmod -R a+rx /app
 EXPOSE 8080
 ENV AMQP_HOST=localhost
 ENV AMQP_PORT=5672
@@ -29,4 +31,5 @@ ENV AMQP_HEARTBEAT=10000
 ENV AMQP_TIMEOUT=10001
 ENV AMQP_USER="guest"
 ENV AMQP_PASS="guest"
+user cnb
 ENTRYPOINT ["/app/__main__"]

@@ -1,6 +1,8 @@
 ARG base_image
 FROM ${base_image}
 
+USER root
+
 # ensure local python is preferred over distribution python
 ENV PATH /usr/local/bin:$PATH
 # http://bugs.python.org/issue19846
@@ -116,4 +118,4 @@ COPY build-requirements.txt .
 RUN pip3 install -r build-requirements.txt
 
 # Set user and group (as declared in base image)
-# USER ${CNB_USER_ID}:${CNB_GROUP_ID}
+USER ${CNB_USER_ID}:${CNB_GROUP_ID}
