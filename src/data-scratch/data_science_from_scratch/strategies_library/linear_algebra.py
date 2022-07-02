@@ -6,82 +6,94 @@ current_dir = os.path.dirname(__file__)
 parent_dir = os.path.join(current_dir, os.pardir)
 
 
-def distance(self, payload):
-    result = linear_algebra.distance(vec1, vec2)
-    self.publish(payload)
+def distance(self, body):
+    v = body["v"]
+    w = body["w"]
+    result = linear_algebra.distance(v, w)
+    self.publish(result)
 
 
-def dot(self, payload):
-    result = linear_algebra.dot(vec1, vec2)
-    self.publish(payload)
+def dot(self, body):
+    v = body["v"]
+    w = body["w"]
+    result = linear_algebra.dot(v, w)
+    self.publish(result)
 
 
-def get_column(self, payload):
-    result = linear_algebra.get_column(mat1, col)
-    self.publish(payload)
+def get_column(self, body):
+    mat = body["mat"]
+    col = body["col"]
+    result = linear_algebra.get_column(mat, col)
+    self.publish(result)
 
 
-def get_row(mat1, row, expected):
-    result = linear_algebra.get_row(mat1, row)
-    self.publish(payload)
+def get_row(self, body):
+    mat = body["mat"]
+    row = body["col"]
+    result = linear_algebra.get_row(mat, row)
+    self.publish(result)
 
 
-def is_diagonal(i, j, expected):
-    result = linear_algebra.is_diagonal(i, j)
-    self.publish(payload)
+def magnitude(self, body):
+    v = body["v"]
+    result = linear_algebra.magnitude(v)
+    self.publish(result)
 
 
-def magnitude(vec1, expected):
-    result = linear_algebra.magnitude(vec1)
-    self.publish(payload)
-
-
-def make_matrix(n, m, expected):
-    result = linear_algebra.make_matrix(n, m, linear_algebra.is_diagonal)
-    self.publish(payload)
-
-
-def matrix_add(mat1, mat2, expected):
+def matrix_add(self, body):
+    mat1 = body["mat1"]
+    mat2 = body["mat2"]
     result = linear_algebra.matrix_add(mat1, mat2)
-    self.publish(payload)
+    self.publish(result)
 
 
-def scalar_multiply(v, c, expected):
+def scalar_multiply(self, body):
+    c = body["c"]
+    v = body["v"]
     result = linear_algebra.scalar_multiply(c, v)
-    self.publish(payload)
+    self.publish(result)
 
 
-def shape(random_matrix):
-    num_rows, num_columns = linear_algebra.shape(random_matrix)
-    assert num_rows == 100
-    assert num_columns == 4
+def shape(self, body):
+    mat = body["mat"]
+    result = linear_algebra.shape(mat)
+    self.publish(result)
 
 
-def squared_distance(v1, v2, expected):
-    result = linear_algebra.squared_distance(v1, v2)
-    self.publish(payload)
+def squared_distance(self, body):
+    v = body["v"]
+    w = body["w"]
+    result = linear_algebra.squared_distance(v, w)
+    self.publish(result)
 
 
-def sum_of_squares(v1, expected):
-    result = linear_algebra.sum_of_squares(v1)
-    self.publish(payload)
+def sum_of_squares(self, body):
+    v = body["v"]
+    result = linear_algebra.sum_of_squares(v)
+    self.publish(result)
 
 
-def vector_add(v1, v2, expected):
-    result = linear_algebra.vector_add(v1, v2)
-    self.publish(payload)
+def vector_add(self, body):
+    v = body["v"]
+    w = body["w"]
+    result = linear_algebra.vector_add(v, w)
+    self.publish(result)
 
 
-def vector_mean(v1, v2, expected):
-    result = linear_algebra.vector_mean([v1, v2])
-    self.publish(payload)
+def vector_mean(self, body):
+    vectors = body["vectors"]
+    result = linear_algebra.vector_mean(vectors)
+    self.publish(result)
 
 
-def vector_subtract(v1, v2, expected):
-    result = linear_algebra.vector_subtract(v1, v2)
-    self.publish(payload)
+def vector_subtract(self, body):
+    v = body["v"]
+    w = body["w"]
+    result = linear_algebra.vector_subtract(v, w)
+    self.publish(result)
 
 
-def vector_sum(v1, v2, expected):
-    result = linear_algebra.vector_sum([v1, v2])
-    self.publish(payload)
+def vector_sum(self, body):
+    vectors = body["vectors"]
+    result = linear_algebra.vector_sum(vectors)
+    self.publish(result)
