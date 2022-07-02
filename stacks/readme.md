@@ -18,8 +18,7 @@ Let’s see how we can do so!
 
 Let’s start by creating a base image containing layers that will be required by both the build and run images. 
 
-In order to do this, 
-switch to a clean workspace and create a Dockerfile as specified below:
+In order to do this, switch to a clean workspace and create a Dockerfile as specified below:
 
 # Defining the base
 
@@ -244,54 +243,3 @@ docker build . -t cnbs/sample-stack-build:bionic --target build
 ```
 
 Congratulations! You’ve got a custom stack!
-
-# Additional information
-
-## Mixins
-
-Mixins provide a way to document OS-level dependencies that a stack provides to buildpacks. Mixins can be provided at build-time (name prefixed with build:), run-time (name prefixed with run:), or both (name unprefixed).
-
-## Declaring provided mixins
-
-When declaring provided mixins, both the build and run image of a stack must contain the following label:
-
-Name | Description | Format
------|-------------|--------
-io.buildpacks.stack.mixins 	| List of provided mixins 	| JSON string array
-
-
-The following rules apply for mixin declarations:
-
-    build:-prefixed mixins may not be declared on a run image
-
-    run:-prefixed mixins may not be declared on a build image
-
-    Unprefixed mixins must be declared on both stack images
-
-Example
-
-Build image:
-
-io.buildpacks.stack.mixins: ["build:git", "wget"]
-
-Run image:
-
-io.buildpacks.stack.mixins: ["run:imagemagick", "wget"]
-
-# Declaring required mixins
-
-A buildpack must list any required mixins in the stacks section of its buildpack.toml file.
-
-When validating whether the buildpack’s mixins are satisfied by a stack, the following rules apply:
-
-    build:-prefixed mixins must be provided by stack’s build image
-    run:-prefixed mixins must be provided by stack’s run image
-    Unprefixed mixins must be provided by both stack images
-
-Example
-
-```
-[[stacks]]
-id = "io.buildpacks.stacks.bionic"
-mixins = ["build:git", "run:imagemagick", "wget"]
-```
