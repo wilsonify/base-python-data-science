@@ -1,32 +1,31 @@
 import math
 import random
 
-import matplotlib
 import matplotlib.image as mpimg
-import matplotlib.pyplot as plt
+from matplotlib import pyplot as plt
+
 from data_plots_from_scratch.plot_state_borders import plot_state_borders
 from data_science_from_scratch.clustering import KMeans, squared_clustering_errors
 from data_science_from_scratch.library.gradient_descent import difference_quotient
-from data_science_from_scratch.introduction import salaries_and_tenures
 from data_science_from_scratch.library.linear_algebra import (
     get_column,
     shape,
     dot,
     scalar_multiply,
 )
-from data_science_from_scratch.nearest_neighbors import cities
-from data_science_from_scratch.nearest_neighbors import knn_classify
-from data_science_from_scratch.neural_networks import _network
 from data_science_from_scratch.library.probability import (
     normal_pdf,
     normal_cdf,
     inverse_normal_cdf,
     binomial,
 )
-from data_science_from_scratch.working_with_data import random_normal, make_histogram
+from data_science_from_scratch.library.stats import make_histogram
+from data_science_from_scratch.nearest_neighbors import cities
+from data_science_from_scratch.nearest_neighbors import knn_classify
+from data_science_from_scratch.working_with_data import random_normal
 
 
-def plot_normal_pdfs(plt):
+def plot_normal_pdfs():
     xs = [x / 10.0 for x in range(-50, 50)]
     plt.plot(xs, [normal_pdf(x, sigma=1.0) for x in xs], "-", label="mu=0,sigma=1")
     plt.plot(xs, [normal_pdf(x, sigma=2.0) for x in xs], "--", label="mu=0,sigma=2")
@@ -74,7 +73,6 @@ def plot_estimated_derivative():
     derivative_estimate = lambda x: difference_quotient(square, x, h=0.00001)
 
     # plot to show they're basically the same
-    import matplotlib.pyplot as plt
 
     x = range(-10, 10)
     plt.plot(x, map(derivative, x), "rx")  # red  x
@@ -83,6 +81,18 @@ def plot_estimated_derivative():
 
 
 def make_chart_salaries_by_tenure():
+    salaries_and_tenures = [
+        (83000, 8.7),
+        (88000, 8.1),
+        (48000, 0.7),
+        (76000, 6),
+        (69000, 6.5),
+        (76000, 7.5),
+        (60000, 2.5),
+        (83000, 10),
+        (48000, 1.9),
+        (63000, 4.2),
+    ]
     tenures = [tenure for salary, tenure in salaries_and_tenures]
     salaries = [salary for salary, tenure in salaries_and_tenures]
     plt.scatter(tenures, salaries)
@@ -91,7 +101,7 @@ def make_chart_salaries_by_tenure():
     plt.show()
 
 
-def make_graph_dot_product_as_vector_projection(plt):
+def make_graph_dot_product_as_vector_projection():
     v = [2, 1]
     w = [math.sqrt(0.25), math.sqrt(0.75)]
     c = dot(v, w)
@@ -215,7 +225,7 @@ def show_weights(neuron_idx):
     abs_weights = [abs(weight) for weight in weights]
 
     grid = [
-        abs_weights[row : (row + 5)]  # turn the weights into a 5x5 grid
+        abs_weights[row: (row + 5)]  # turn the weights into a 5x5 grid
         for row in range(0, 25, 5)
     ]  # [weights[0:5], ..., weights[20:25]]
 
@@ -459,6 +469,18 @@ def make_chart_pie_chart():
 
     # make sure pie is a circle and not an oval
     plt.axis("equal")
+    plt.show()
+
+
+def make_friend_counts_histogram(num_friends):
+    friend_counts = Counter(num_friends)
+    xs = range(101)
+    ys = [friend_counts[x] for x in xs]
+    plt.bar(xs, ys)
+    plt.axis([0, 101, 0, 25])
+    plt.title("Histogram of Friend Counts")
+    plt.xlabel("# of friends")
+    plt.ylabel("# of people")
     plt.show()
 
 

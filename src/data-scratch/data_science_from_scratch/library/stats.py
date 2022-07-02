@@ -29,39 +29,6 @@ def correlation_matrix(data):
     return make_matrix(num_columns, num_columns, matrix_entry)
 
 
-num_friends = [
-    100, 49, 41, 40, 25, 21, 21, 19, 19, 18, 18, 16, 15, 15, 15, 15, 14, 14, 13, 13, 13, 13, 12, 12, 11, 10, 10, 10, 10,
-    10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 8, 8, 8, 8, 8, 8,
-    8, 8, 8, 8, 8, 8, 8, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6,
-    6, 6, 6, 6, 6, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4,
-    4, 4, 4, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2,
-    2, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1,
-]
-
-
-def make_friend_counts_histogram(plt):
-    friend_counts = Counter(num_friends)
-    xs = range(101)
-    ys = [friend_counts[x] for x in xs]
-    plt.bar(xs, ys)
-    plt.axis([0, 101, 0, 25])
-    plt.title("Histogram of Friend Counts")
-    plt.xlabel("# of friends")
-    plt.ylabel("# of people")
-    plt.show()
-
-
-num_points = len(num_friends)  # 204
-
-largest_value = max(num_friends)  # 100
-smallest_value = min(num_friends)  # 1
-
-sorted_values = sorted(num_friends)
-smallest_sorted_value = sorted_values[0]  # 1
-second_smallest_value = sorted_values[1]  # 1
-second_largest_value = sorted_values[-2]  # 49
-
-
 # this isn't right if you don't from __future__ import division
 def mean(x):
     return sum(x) / len(x)
@@ -159,6 +126,30 @@ def main():
         30.7, 31.22, 34.65, 13.13, 27.51, 33.2, 31.57, 14.1, 33.42, 17.44, 10.12, 24.42, 9.82, 23.39, 30.93, 15.03,
         21.67, 31.09, 33.29, 22.61, 26.89, 23.48, 8.38, 27.81, 32.35, 23.84,
     ]
+    num_friends = [
+        100, 49, 41, 40, 25, 21, 21, 19, 19, 18, 18, 16, 15, 15, 15, 15, 14, 14, 13, 13, 13, 13, 12, 12, 11, 10, 10, 10,
+        10,
+        10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 8, 8, 8, 8, 8,
+        8,
+        8, 8, 8, 8, 8, 8, 8, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6,
+        6, 6,
+        6, 6, 6, 6, 6, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4,
+        4, 4,
+        4, 4, 4, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2,
+        2, 2,
+        2, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1,
+    ]
+
+    num_points = len(num_friends)  # 204
+
+    largest_value = max(num_friends)  # 100
+    smallest_value = min(num_friends)  # 1
+
+    sorted_values = sorted(num_friends)
+    smallest_sorted_value = sorted_values[0]  # 1
+    second_smallest_value = sorted_values[1]  # 1
+    second_largest_value = sorted_values[-2]  # 49
+
     logging.info("%r", "{} num_points".format(len(num_friends)))
     logging.info("%r", "{} largest value".format(max(num_friends)))
     logging.info("%r", "{} smallest value".format(min(num_friends)))
