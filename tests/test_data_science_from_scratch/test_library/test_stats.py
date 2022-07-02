@@ -1,6 +1,8 @@
 import logging
 import os
 
+import pytest
+
 from data_science_from_scratch.library import stats
 
 current_dir = os.path.dirname(__file__)
@@ -11,20 +13,28 @@ def test_smoke():
     logging.info("is anything on fire")
 
 
-def test_correlation():
-    stats.correlation()
+@pytest.mark.parametrize(
+    ("v1", "v2", "expected"), (
+            ([1, 2], [2, 1], pytest.approx(-1, abs=0.01)),
+            ([1, 2], [1, 2], pytest.approx(1, abs=0.01)),
+            ([1, 2, 3, 4, 5], [1, 1.5, 2, 2.5], pytest.approx(0.6, abs=0.1)),
+            ([1, 0, 0, 1], [1, 2, 3, 4], pytest.approx(0, abs=0.01))
+    ))
+def test_correlation(v1, v2, expected):
+    result = stats.correlation(v1, v2)
+    assert result == expected
 
 
-def test_covariance():
-    stats.covariance()
-
-
-def test_daily_minutes():
-    stats.daily_minutes()
-
-
-def test_daily_minutes_good():
-    stats.daily_minutes_good()
+@pytest.mark.parametrize(
+    ("v1", "v2", "expected"), (
+            ([1, 2], [2, 1], pytest.approx(-0.5, abs=0.01)),
+            ([1, 2], [1, 2], pytest.approx(0.5, abs=0.01)),
+            ([1, 2, 3, 4, 5], [1, 1.5, 2, 2.5], pytest.approx(0.6, abs=0.1)),
+            ([1, 0, 0, 1], [1, 2, 3, 4], pytest.approx(0, abs=0.01))
+    ))
+def test_covariance(v1, v2, expected):
+    result = stats.covariance(v1, v2)
+    assert result == expected
 
 
 def test_data_range():
@@ -51,20 +61,12 @@ def test_largest_value():
     stats.largest_value()
 
 
-def test_logging():
-    stats.logging()
-
-
 def test_main():
     stats.main()
 
 
 def test_make_friend_counts_histogram():
     stats.make_friend_counts_histogram()
-
-
-def test_math():
-    stats.math()
 
 
 def test_mean():
@@ -83,16 +85,8 @@ def test_num_friends():
     stats.num_friends()
 
 
-def test_num_friends_good():
-    stats.num_friends_good()
-
-
 def test_num_points():
     stats.num_points()
-
-
-def test_outlier():
-    stats.outlier()
 
 
 def test_quantile():

@@ -15,18 +15,19 @@ def random_kid():
     return random.choice(["boy", "girl"])
 
 
-def uniform_pdf(x):
-    return 1 if 0 <= x < 1 else 0
+def uniform_pdf(x, a=0, b=1):
+    assert b > a, "maximum,b, must be greater than minimum,a"
+    return 1 / (b - a) if a <= x < b else 0
 
 
-def uniform_cdf(x):
+def uniform_cdf(x, a=0, b=1):
     """returns the probability that a uniform random variable is less than x"""
-    if x < 0:
-        return 0  # uniform random is never less than 0
-    elif x < 1:
-        return x  # e.g. P(X < 0.4) = 0.4
-    else:
-        return 1  # uniform random is always less than 1
+    if x < a:
+        return 0
+    if a < x < b:
+        return (x - a) / (b - a)  # e.g. P(X < 0.4) = 0.4
+    if b <= x:
+        return 1
 
 
 def normal_pdf(x, mu=0, sigma=1):

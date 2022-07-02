@@ -2,6 +2,8 @@ import logging
 import math
 import os
 
+import pytest
+
 from data_science_from_scratch.library import linear_algebra
 
 current_dir = os.path.dirname(__file__)
@@ -10,9 +12,6 @@ parent_dir = os.path.join(current_dir, os.pardir)
 
 def test_smoke():
     logging.info("is anything on fire")
-
-
-import pytest
 
 
 @pytest.mark.parametrize(
@@ -95,33 +94,78 @@ def test_matrix_add(mat1, mat2, expected):
     assert result == expected
 
 
-def test_scalar_multiply():
-    linear_algebra.scalar_multiply()
+@pytest.mark.parametrize(
+    ("v", "c", "expected"), (
+            ([2, 1], 1.87, [3.74, 1.87]),
+            ([1, 2, 3, 4], 5, [5, 10, 15, 20])
+    ))
+def test_scalar_multiply(v, c, expected):
+    result = linear_algebra.scalar_multiply(c, v)
+    assert result == expected
 
 
-def test_shape():
-    linear_algebra.shape()
+def test_shape(random_matrix):
+    num_rows, num_columns = linear_algebra.shape(random_matrix)
+    assert num_rows == 100
+    assert num_columns == 4
 
 
-def test_squared_distance():
-    linear_algebra.squared_distance()
+@pytest.mark.parametrize(
+    ("v1", "v2", "expected"), (
+            ([1], [1], 0),
+            ([1, 0, 0, 1], [1, 2, 3, 4], 22)
+    ))
+def test_squared_distance(v1, v2, expected):
+    result = linear_algebra.squared_distance(v1, v2)
+    assert result == expected
 
 
-def test_sum_of_squares():
-    linear_algebra.sum_of_squares()
+@pytest.mark.parametrize(
+    ("v1", "expected"), (
+            ([1], 1),
+            ([1, 0, 0, 1], 2),
+            ([1, 2, 3, 4], 30)
+    ))
+def test_sum_of_squares(v1, expected):
+    result = linear_algebra.sum_of_squares(v1)
+    assert result == expected
 
 
-def test_vector_add():
-    linear_algebra.vector_add()
+@pytest.mark.parametrize(
+    ("v1", "v2", "expected"), (
+            ([1], [1], [2]),
+            ([1, 0, 0, 1], [1, 2, 3, 4], [2, 2, 3, 5])
+    ))
+def test_vector_add(v1, v2, expected):
+    result = linear_algebra.vector_add(v1, v2)
+    assert result == expected
 
 
-def test_vector_mean():
-    linear_algebra.vector_mean()
+@pytest.mark.parametrize(
+    ("v1", "v2", "expected"), (
+            ([1], [1], [1]),
+            ([1, 0, 0, 1], [1, 2, 3, 4], [1, 1, 1.5, 2.5])
+    ))
+def test_vector_mean(v1, v2, expected):
+    result = linear_algebra.vector_mean([v1, v2])
+    assert result == expected
 
 
-def test_vector_subtract():
-    linear_algebra.vector_subtract()
+@pytest.mark.parametrize(
+    ("v1", "v2", "expected"), (
+            ([1], [1], [0]),
+            ([1, 0, 0, 1], [1, 2, 3, 4], [0, -2, -3, -3])
+    ))
+def test_vector_subtract(v1, v2, expected):
+    result = linear_algebra.vector_subtract(v1, v2)
+    assert result == expected
 
 
-def test_vector_sum():
-    linear_algebra.vector_sum()
+@pytest.mark.parametrize(
+    ("v1", "v2", "expected"), (
+            ([1], [1], [2]),
+            ([1, 0, 0, 1], [1, 2, 3, 4], [2, 2, 3, 5])
+    ))
+def test_vector_sum(v1, v2, expected):
+    result = linear_algebra.vector_sum([v1, v2])
+    assert result == expected
