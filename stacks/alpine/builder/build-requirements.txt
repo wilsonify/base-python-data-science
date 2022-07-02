@@ -2,3 +2,12 @@ auto-py-to-exe
 pyinstaller
 cython
 wheel
+connexion >= 2.0.2
+swagger-ui-bundle >= 0.0.2
+setuptools >= 21.0.0
+json-ref-dict>=0.7.1
+PyYAML>=6.0
+Werkzeug~=0.16.0
+MarkupSafe~=2.0.1
+python-dateutil~=2.8.2
+pika~=1.2.1
