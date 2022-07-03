@@ -1,5 +1,6 @@
 import logging
 import os
+from inspect import getmembers, isfunction
 
 import pytest
 
@@ -11,6 +12,14 @@ parent_dir = os.path.join(current_dir, os.pardir)
 
 def test_smoke():
     logging.info("is anything on fire")
+    for member in getmembers(probability):
+        if isfunction(member[1]):
+            print(member[0])
+
+
+def test_random_normal():
+    result = probability.random_normal()
+    assert len([result]) == 1
 
 
 def test_bernoulli_trial():

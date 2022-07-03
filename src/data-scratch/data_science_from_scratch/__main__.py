@@ -9,13 +9,7 @@ import pika
 
 import data_science_from_scratch
 from data_science_from_scratch import routing_key, try_exchange, done_exchange, fail_exchange, connection_parameters
-
-from data_science_from_scratch.strategies_library import (
-    Strategy,
-    echo_strategy,
-    mysqrt_strategy,
-    mystrength_strategy
-)
+from data_science_from_scratch.strategies_library import *
 
 logging_config_dict = dict(
     version=1,
@@ -31,7 +25,48 @@ logging_config_dict = dict(
 available_strategies = dict(
     echo=echo_strategy,
     sqrt=mysqrt_strategy,
-    strength=mystrength_strategy
+    strength=mystrength_strategy,
+    difference_quotient=difference_quotient,
+    estimate_gradient=estimate_gradient,
+    in_random_order=in_random_order,
+    maximize_batch=maximize_batch,
+    maximize_stochastic=maximize_stochastic,
+    minimize_batch=minimize_batch,
+    minimize_stochastic=minimize_stochastic,
+    partial_difference_quotient=partial_difference_quotient,
+    distance=distance,
+    dot=dot,
+    get_column=get_column,
+    get_row=get_row,
+    magnitude=magnitude,
+    matrix_add=matrix_add,
+    scalar_multiply=scalar_multiply,
+    shape=shape,
+    squared_distance=squared_distance,
+    sum_of_squares=sum_of_squares,
+    vector_add=vector_add,
+    vector_mean=vector_mean,
+    vector_subtract=vector_subtract,
+    vector_sum=vector_sum,
+    accuracy=accuracy,
+    precision=precision,
+    recall=recall,
+    f1_score=f1_score,
+    split_data=split_data,
+    train_test_split=train_test_split,
+    bucketize=bucketize,
+    correlation=correlation,
+    correlation_matrix=correlation_matrix,
+    covariance=covariance,
+    data_range=data_range,
+    de_mean=de_mean,
+    interquartile_range=interquartile_range,
+    mean=mean,
+    median=median,
+    mode=mode,
+    quantile=quantile,
+    standard_deviation=standard_deviation,
+    variance=variance,
 
 )
 

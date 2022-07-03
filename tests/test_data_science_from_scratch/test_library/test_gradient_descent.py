@@ -2,6 +2,7 @@ import logging
 import os
 import random
 from functools import partial
+from inspect import getmembers, isfunction
 
 import pytest
 from data_science_from_scratch.library import gradient_descent
@@ -15,6 +16,10 @@ parent_dir = os.path.join(current_dir, os.pardir)
 
 def test_smoke():
     logging.info("is anything on fire")
+    for member in getmembers(gradient_descent):
+        if isfunction(member[1]):
+            print(member[0])
+            
 
 
 def test_difference_quotient(naive_square):

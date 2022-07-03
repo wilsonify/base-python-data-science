@@ -33,6 +33,90 @@ paths:
     $ref: "paths/sqrt/sqrt.yaml"
   /strength:
     $ref: "paths/strength/strength.yaml"
+  /accuracy:
+    $ref: "paths/accuracy/accuracy.yaml"
+  /bucketize:
+    $ref: "paths/bucketize/bucketize.yaml"
+  /correlation:
+    $ref: "paths/correlation/correlation.yaml"
+  /correlation_matrix:
+    $ref: "paths/correlation_matrix/correlation_matrix.yaml"
+  /covariance:
+    $ref: "paths/covariance/covariance.yaml"
+  /data_range:
+    $ref: "paths/data_range/data_range.yaml"
+  /de_mean:
+    $ref: "paths/de_mean/de_mean.yaml"
+  /difference_quotient:
+    $ref: "paths/difference_quotient/difference_quotient.yaml"
+  /distance:
+    $ref: "paths/distance/distance.yaml"
+  /dot:
+    $ref: "paths/dot/dot.yaml"
+  /echo:
+    $ref: "paths/echo/echo.yaml"
+  /estimate_gradient:
+    $ref: "paths/estimate_gradient/estimate_gradient.yaml"
+  /f1_score:
+    $ref: "paths/f1_score/f1_score.yaml"
+  /get_column:
+    $ref: "paths/get_column/get_column.yaml"
+  /get_row:
+    $ref: "paths/get_row/get_row.yaml"
+  /in_random_order:
+    $ref: "paths/in_random_order/in_random_order.yaml"
+  /interquartile_range:
+    $ref: "paths/interquartile_range/interquartile_range.yaml"
+  /magnitude:
+    $ref: "paths/magnitude/magnitude.yaml"
+  /matrix_add:
+    $ref: "paths/matrix_add/matrix_add.yaml"
+  /maximize_batch:
+    $ref: "paths/maximize_batch/maximize_batch.yaml"
+  /maximize_stochastic:
+    $ref: "paths/maximize_stochastic/maximize_stochastic.yaml"
+  /mean:
+    $ref: "paths/mean/mean.yaml"
+  /median:
+    $ref: "paths/median/median.yaml"
+  /minimize_batch:
+    $ref: "paths/minimize_batch/minimize_batch.yaml"
+  /minimize_stochastic:
+    $ref: "paths/minimize_stochastic/minimize_stochastic.yaml"
+  /mode:
+    $ref: "paths/mode/mode.yaml"
+  /partial_difference_quotient:
+    $ref: "paths/partial_difference_quotient/partial_difference_quotient.yaml"
+  /precision:
+    $ref: "paths/precision/precision.yaml"
+  /quantile:
+    $ref: "paths/quantile/quantile.yaml"
+  /recall:
+    $ref: "paths/recall/recall.yaml"
+  /scalar_multiply:
+    $ref: "paths/scalar_multiply/scalar_multiply.yaml"
+  /shape:
+    $ref: "paths/shape/shape.yaml"
+  /split_data:
+    $ref: "paths/split_data/split_data.yaml"
+  /squared_distance:
+    $ref: "paths/squared_distance/squared_distance.yaml"
+  /standard_deviation:
+    $ref: "paths/standard_deviation/standard_deviation.yaml"
+  /sum_of_squares:
+    $ref: "paths/sum_of_squares/sum_of_squares.yaml"
+  /train_test_split:
+    $ref: "paths/train_test_split/train_test_split.yaml"
+  /variance:
+    $ref: "paths/variance/variance.yaml"
+  /vector_add:
+    $ref: "paths/vector_add/vector_add.yaml"
+  /vector_mean:
+    $ref: "paths/vector_mean/vector_mean.yaml"
+  /vector_subtract:
+    $ref: "paths/vector_subtract/vector_subtract.yaml"
+  /vector_sum:
+    $ref: "paths/vector_sum/vector_sum.yaml"
   /pet:
     $ref: "paths/pet/pet.yaml"
   /pet/findByStatus:

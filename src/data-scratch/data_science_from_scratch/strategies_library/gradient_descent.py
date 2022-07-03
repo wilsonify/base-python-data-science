@@ -82,3 +82,28 @@ def maximize_stochastic(self, body: dict):
         alpha_0=0.01
     )
     self.publish(result)
+
+
+def minimize_batch(self, body: dict):
+    x = body["x"]
+    result = gradient_descent.minimize_batch(
+        target_fn=partial(directional_variance, x),
+        gradient_fn=partial(directional_variance_gradient, x),
+        theta_0=[1 for _ in x[0]],
+        tolerance=0.000001
+    )
+    self.publish(result)
+
+
+def minimize_stochastic(self, body: dict):
+    x = body["x"]
+    y = body["y"]
+    result = gradient_descent.minimize_stochastic(
+        target_fn=negate(multiple_regression.squared_error),
+        gradient_fn=negate_all(multiple_regression.squared_error_gradient),
+        x=x,
+        y=y,
+        theta_0=[random.random() for _ in x[0]],
+        alpha_0=0.01
+    )
+    self.publish(result)

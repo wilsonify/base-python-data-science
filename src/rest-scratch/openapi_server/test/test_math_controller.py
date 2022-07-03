@@ -2,15 +2,47 @@
 
 from __future__ import absolute_import
 
+import os
 import unittest
 
 import pytest
 from flask import json
 
+
 from openapi_server.controllers.math_controller import mysqrt, mystrength
 from openapi_server.models.sqrt_input import SqrtInput  # noqa: E501
 from openapi_server.models.strength_input import StrengthInput  # noqa: E501
 from openapi_server.test import BaseTestCase
+
+
+def test_smoke():
+    import shutil
+    from data_science_from_scratch.__main__ import available_strategies
+    for k in available_strategies:
+        if k=="sqrt":
+            continue
+        if k=="strength":
+            continue
+        os.makedirs(
+            f"/home/thom/repos/base-python-data-science/src/rest-scratch/openapi_server/openapi/paths/{k}",
+            exist_ok=True
+        )
+        shutil.copy2(
+            src=f"/home/thom/repos/base-python-data-science/src/rest-scratch/openapi_server/openapi/paths/sqrt/sqrt.yaml",
+            dst=f"/home/thom/repos/base-python-data-science/src/rest-scratch/openapi_server/openapi/paths/{k}/{k}.yaml"
+        )
+        shutil.copy2(
+            src=f"/home/thom/repos/base-python-data-science/src/rest-scratch/openapi_server/openapi/paths/sqrt/sqrt-input.yaml",
+            dst=f"/home/thom/repos/base-python-data-science/src/rest-scratch/openapi_server/openapi/paths/{k}/{k}-input.yaml"
+        )
+        shutil.copy2(
+            src=f"/home/thom/repos/base-python-data-science/src/rest-scratch/openapi_server/openapi/paths/sqrt/sqrt-output.yaml",
+            dst=f"/home/thom/repos/base-python-data-science/src/rest-scratch/openapi_server/openapi/paths/{k}/{k}-output.yaml"
+        )
+
+
+
+
 
 
 def test_mysqrt():

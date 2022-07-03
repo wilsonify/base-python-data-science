@@ -1,7 +1,4 @@
-import logging
 import os
-
-import pytest
 
 from data_science_from_scratch.library import probability
 
@@ -9,47 +6,55 @@ current_dir = os.path.dirname(__file__)
 parent_dir = os.path.join(current_dir, os.pardir)
 
 
-def smoke():
-    logging.info("is anything on fire")
+def bernoulli_trial(self, body):
+    p = body["p"]
+    result = probability.bernoulli_trial(p)
+    self.publish(result)
 
 
-def bernoulli_trial():
-    result = probability.bernoulli_trial(0.5)
-    expected = [0, 1]
-    assert result in expected
-
-
-def binomial(p, n, expected):
+def binomial(self, body):
+    p = body["p"]
+    n = body["n"]
     result = probability.binomial(p, n)
-    self.publish(payload)
+    self.publish(result)
 
 
-def inverse_normal_cdf(p, mu, sigma, expected):
+def inverse_normal_cdf(self, body):
+    p = body["p"]
+    mu = body["mu"]
+    sigma = body["sigma"]
     result = probability.inverse_normal_cdf(p, mu, sigma)
-    self.publish(payload)
+    self.publish(result)
 
 
-def normal_cdf(x, mu, sigma, expected):
+def normal_cdf(self, body):
+    x = body["x"]
+    mu = body["mu"]
+    sigma = body["sigma"]
     result = probability.normal_cdf(x, mu, sigma)
-    self.publish(payload)
+    self.publish(result)
 
 
-def normal_pdf(x, mu, sigma, expected):
+def normal_pdf(self, body):
+    x = body["x"]
+    mu = body["mu"]
+    sigma = body["sigma"]
     result = probability.normal_pdf(x, mu, sigma)
-    self.publish(payload)
+    self.publish(result)
 
 
-def random_kid():
+def random_kid(self, body):
     result = probability.random_kid()
-    expected = ["boy", "girl"]
-    assert result in expected
+    self.publish(result)
 
 
-def uniform_cdf(x, expected):
+def uniform_cdf(self, body):
+    x = body["x"]
     result = probability.uniform_cdf(x)
-    self.publish(payload)
+    self.publish(result)
 
 
-def uniform_pdf(x, expected):
+def uniform_pdf(self, body):
+    x = body["x"]
     result = probability.uniform_pdf(x)
-    self.publish(payload)
+    self.publish(result)

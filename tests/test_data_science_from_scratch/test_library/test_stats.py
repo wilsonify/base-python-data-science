@@ -1,5 +1,6 @@
 import logging
 import os
+from inspect import getmembers, isfunction
 
 import pytest
 
@@ -11,6 +12,20 @@ parent_dir = os.path.join(current_dir, os.pardir)
 
 def test_smoke():
     logging.info("is anything on fire")
+    for member in getmembers(stats):
+        if isfunction(member[1]):
+            print(member[0])
+
+
+@pytest.mark.parametrize(
+    ("point", "bucket_size", "expected"), (
+            (25.4958, 5, 25),
+            (250.303, 5, 250),
+            (25.9, 25, 25),
+    ))
+def test_bucketize(point, bucket_size, expected):
+    result = stats.bucketize(point, bucket_size)
+    assert result == expected
 
 
 @pytest.mark.parametrize(
