@@ -1,6 +1,6 @@
 type: object
 properties:
-  x:
+  nrows:
     type: number
-  result:
+  ncols:
     type: number

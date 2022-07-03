@@ -23,8 +23,6 @@ def difference_quotient(f, x, h):
         diff = map(operator.sub, f(x + h), f(x))
         return [_ / h for _ in diff]
 
-    # purple *, hopefully
-
 
 def partial_difference_quotient(f, v, i, h):
     # add h to just the i-th element of v

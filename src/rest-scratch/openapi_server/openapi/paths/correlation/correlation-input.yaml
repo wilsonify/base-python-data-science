@@ -1,4 +1,8 @@
 type: object
 properties:
-  x:
-    type: number
+  data:
+    type: array
+    items:
+      type: array
+      items:
+        type: number

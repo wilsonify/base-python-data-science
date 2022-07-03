@@ -1,4 +1,10 @@
 type: object
 properties:
-  x:
+  v:
+    type: array
+    items:
+      type: number
+    example: [10.0, 2.0]
+  h:
     type: number
+    example: 1

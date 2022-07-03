@@ -1,4 +1,14 @@
 type: object
 properties:
   x:
-    type: number
+    type: array
+    items:
+      type: array
+      items:
+        type: number
+    example: [ [1, 49, 4, 0], [1, 41, 9, 0], [1, 40, 8, 0], [1, 25, 6, 0], [1, 21, 1, 0], [1, 21, 0, 0], [1, 19, 3, 0], [1, 19, 0, 0], [1, 18, 9, 0], [1, 18, 8, 0] ]
+  y:
+    type: array
+    items:
+      type: number
+    example: [ 68.77, 51.25, 52.08, 38.36, 44.54, 57.13, 51.4, 41.42, 31.22, 34.76, ]

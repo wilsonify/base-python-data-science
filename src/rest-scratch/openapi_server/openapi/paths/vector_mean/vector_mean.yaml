@@ -2,7 +2,7 @@ post:
   tags: [math]
   operationId: vector_mean
   x-openapi-router-controller: openapi_server.controllers.math_controller
-  description: "Description of the endpoint"
+  description: "compute the vector whose i-th element is the mean of the i-th elements of the input vectors"
   requestBody:
     content:
       application/json:
@@ -10,7 +10,7 @@ post:
           $ref: "vector_mean-input.yaml"
   responses:
     "200":
-      description: "Description of this response."
+      description: "success"
       content:
         application/json:
           schema:

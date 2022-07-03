@@ -1,6 +1,5 @@
-type: object
-properties:
-  x:
-    type: number
-  result:
+type: array
+items:
+  type: array
+  items:
     type: number

@@ -2,3 +2,5 @@ type: object
 properties:
   x:
     type: number
+    items:
+      type: number

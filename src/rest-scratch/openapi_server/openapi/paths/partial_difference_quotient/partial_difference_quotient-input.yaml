@@ -1,4 +1,12 @@
 type: object
 properties:
-  x:
-    type: number
+  v:
+    type: array
+    items:
+      type: number
+    description: vector
+    example: [10.0, 2.0]
+  i:
+    example: 0
+  h:
+    example: 1

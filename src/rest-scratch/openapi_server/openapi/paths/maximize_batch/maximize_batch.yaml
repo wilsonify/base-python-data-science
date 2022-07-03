@@ -2,7 +2,7 @@ post:
   tags: [math]
   operationId: maximize_batch
   x-openapi-router-controller: openapi_server.controllers.math_controller
-  description: "Description of the endpoint"
+  description: "use gradient descent to find theta that minimizes target function"
   requestBody:
     content:
       application/json:

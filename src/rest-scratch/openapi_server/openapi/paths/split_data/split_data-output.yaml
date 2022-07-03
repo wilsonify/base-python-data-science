@@ -1,6 +1,14 @@
 type: object
 properties:
-  x:
-    type: number
-  result:
-    type: number
+  train:
+    type: array
+    items:
+      type: array
+      items:
+        type: number
+  test:
+    type: array
+    items:
+      type: array
+      items:
+        type: number

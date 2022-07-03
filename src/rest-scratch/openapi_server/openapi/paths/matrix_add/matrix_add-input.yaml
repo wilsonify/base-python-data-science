@@ -1,4 +1,14 @@
 type: object
 properties:
-  x:
-    type: number
+  mat1:
+    type: array
+    items:
+      type: array
+      items:
+        type: number
+  mat2:
+    type: array
+    items:
+      type: array
+      items:
+        type: number

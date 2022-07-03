@@ -35,13 +35,6 @@ def partial_difference_quotient(self, body: dict):
     self.publish(output)
 
 
-def distance(self, body: dict):
-    v = body["v"]
-    w = body["w"]
-    result = gradient_descent.distance(v=v, w=w)
-    self.publish(result)
-
-
 def estimate_gradient(self, body: dict):
     v = body["v"]
     h = body["h"]
@@ -55,7 +48,7 @@ def estimate_gradient(self, body: dict):
 
 def in_random_order(self, body: dict):
     data = body["data"]
-    output = gradient_descent.in_random_order(data)
+    output = [_ for _ in gradient_descent.in_random_order(data)]
     self.publish(output)
 
 

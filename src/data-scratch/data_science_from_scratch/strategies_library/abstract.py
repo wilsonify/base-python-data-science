@@ -1,5 +1,10 @@
+import json
 import logging
 from types import MethodType
+
+import pika
+
+from data_science_from_scratch import routing_key
 
 
 class Strategy:

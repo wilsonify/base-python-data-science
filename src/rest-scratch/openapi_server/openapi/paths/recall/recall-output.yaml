@@ -1,6 +1,1 @@
-type: object
-properties:
-  x:
-    type: number
-  result:
-    type: number
+type: number

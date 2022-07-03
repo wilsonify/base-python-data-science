@@ -38,6 +38,7 @@ class RemoteProcedure:
         self.reply_to_queue = f'reply_{self.corr_id}'
         logging.debug(f"self.reply_to_queue = {self.reply_to_queue}")
         self.response = None
+        self.status_code = "200"
 
         self.channel.exchange_declare(
             exchange=f"try_{self.routing_key}",
@@ -85,7 +86,7 @@ class RemoteProcedure:
 
     def on_response(self, channel, method, props, body):
         """
-        what to do when you get a repsponse
+        what to do when you get a response
         """
         logging.debug("%r", f"ch={channel}")
         logging.debug("%r", f"ch={method}")
@@ -93,6 +94,12 @@ class RemoteProcedure:
         logging.debug("%r", f"props.correlation_id={props.correlation_id}")
         if self.corr_id == props.correlation_id:
             self.response = json.loads(body.decode("utf-8"))
+            logging.debug("%r", f"self.response={self.response}")
+            if isinstance(self.response, dict):
+                logging.debug("self.response is a dict")
+                if 'status_code' in self.response:
+                    self.status_code = self.response.pop('status_code')
+                    logging.debug("%r", f"self.response={self.response}")
 
     def call(self, body_new):
         """
@@ -117,4 +124,4 @@ class RemoteProcedure:
         logging.debug("waiting for response")
         while self.response is None:
             self.connection.process_data_events()
-        return self.response
+        return self.response, self.status_code

@@ -1,4 +1,6 @@
 type: object
 properties:
-  x:
+  point:
+    type: number
+  bucket_size:
     type: number

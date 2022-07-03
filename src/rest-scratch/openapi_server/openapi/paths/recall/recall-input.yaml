@@ -1,4 +1,14 @@
 type: object
 properties:
-  x:
+  tp:
     type: number
+    description: number of True Positives
+  fp:
+    type: number
+    description: number of False Positives
+  fn:
+    type: number
+    description: number of False Negatives
+  tn:
+    type: number
+    description: number of True Negatives

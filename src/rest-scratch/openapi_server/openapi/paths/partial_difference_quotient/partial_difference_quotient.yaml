@@ -2,7 +2,7 @@ post:
   tags: [math]
   operationId: partial_difference_quotient
   x-openapi-router-controller: openapi_server.controllers.math_controller
-  description: "Description of the endpoint"
+  description: "add h to just the i-th element of v"
   requestBody:
     content:
       application/json:
@@ -10,7 +10,7 @@ post:
           $ref: "partial_difference_quotient-input.yaml"
   responses:
     "200":
-      description: "Description of this response."
+      description: "v with h added to just the i-th element"
       content:
         application/json:
           schema:
