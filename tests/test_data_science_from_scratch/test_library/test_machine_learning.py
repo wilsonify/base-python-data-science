@@ -69,6 +69,7 @@ def test_split_data(random_matrix):
 
 
 def test_train_test_split(random_matrix):
+    print(random_matrix)
     x_train, x_test, y_train, y_test = machine_learning.train_test_split(random_matrix, random_matrix, 0.5)
     assert len(x_train) == pytest.approx(50, abs=10)
     assert len(x_test) == pytest.approx(50, abs=10)
