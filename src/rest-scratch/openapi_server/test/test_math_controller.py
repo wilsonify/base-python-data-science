@@ -29,7 +29,7 @@ from openapi_server.controllers.math_controller import (
     maximize_stochastic, minimize_batch, partial_difference_quotient, get_column, dot, get_row,
     magnitude, matrix_add, scalar_multiply, shape, squared_distance, sum_of_squares, vector_mean, vector_add,
     vector_subtract, vector_sum, f1_score, accuracy, precision, recall, split_data, train_test_split,
-    bernoulli_trial, binomial, inverse_normal_cdf, normal_cdf, normal_pdf
+    bernoulli_trial, binomial, inverse_normal_cdf, normal_cdf, normal_pdf, strength
 )
 from openapi_server.models.sqrt_input import SqrtInput
 from openapi_server.models.strength_input import StrengthInput
@@ -49,9 +49,9 @@ def test_sqrt():
 
 def test_strength():
     body = dict(expected=10, actual=6)
-    result = mystrength(body)
-    assert result[1] == "200"
-    assert result[0] == []
+    result = strength(body)
+    assert result[1] == 200
+    assert result[0] == {'actual': 6, 'expected': 10, 'strength': pytest.approx(0.6, abs=0.01)}
 
 
 def test_echo():
@@ -124,10 +124,14 @@ def test_minimize_batch():
 
 
 def test_partial_difference_quotient():
-    body = dict(expected=10, actual=6)
+    body = dict(
+        v=[10.0, 2.0],
+        i=0,
+        h=1
+    )
     result = partial_difference_quotient(body)
     assert result[1] == "200"
-    assert result[0] == expected
+    assert result[0] == [pytest.approx(21.0), pytest.approx(0.0)]
 
 
 @pytest.mark.parametrize(
@@ -166,57 +170,94 @@ def test_get_row(mat1, row, expected):
     assert result[0] == expected
 
 
-def test_magnitude():
-    body = dict(expected=10, actual=6)
+@pytest.mark.parametrize(
+    ("vec1", "expected"), (
+            ([10, 10, 10], math.sqrt(300)),
+            ([-10, -10, -10], math.sqrt(300)))
+)
+def test_magnitude(vec1, expected):
+    body = dict(v=vec1)
     result = magnitude(body)
     assert result[1] == "200"
-    assert result[0] == []
+    assert result[0] == expected
 
 
-def test_matrix_add():
-    body = dict(expected=10, actual=6)
+@pytest.mark.parametrize(
+    ("mat1", "mat2", "expected"), (
+            ([[1]], [[1]], [[2]]),
+            ([[1, 0], [0, 1]], [[1, 2], [3, 4]], [[2, 2], [3, 5]])
+    ))
+def test_matrix_add(mat1, mat2, expected):
+    body = dict(mat1=mat1, mat2=mat2)
     result = matrix_add(body)
     assert result[1] == "200"
     assert result[0] == expected
 
 
-def test_scalar_multiply():
-    body = dict(expected=10, actual=6)
+@pytest.mark.parametrize(
+    ("v", "c", "expected"), (
+            ([2, 1], 1.87, [3.74, 1.87]),
+            ([1, 2, 3, 4], 5, [5, 10, 15, 20])
+    ))
+def test_scalar_multiply(v, c, expected):
+    body = dict(v=v, c=c)
     result = scalar_multiply(body)
     assert result[1] == "200"
     assert result[0] == expected
 
 
 def test_shape():
-    body = dict(expected=10, actual=6)
+    body = dict(mat=[[1, 2, 3], [3, 4, 5], [6, 7, 8]])
     result = shape(body)
     assert result[1] == "200"
-    assert result[0] == expected
+    assert result[0] == [3, 3]
 
 
-def test_squared_distance():
-    body = dict(expected=10, actual=6)
+@pytest.mark.parametrize(
+    ("v1", "v2", "expected"), (
+            ([1], [1], 0),
+            ([1, 0, 0, 1], [1, 2, 3, 4], 22)
+    ))
+def test_squared_distance(v1, v2, expected):
+    body = dict(v=v1, w=v2)
     result = squared_distance(body)
     assert result[1] == "200"
     assert result[0] == expected
 
 
-def test_sum_of_squares():
-    body = dict(expected=10, actual=6)
+@pytest.mark.parametrize(
+    ("x", "expected"), (
+            ([1, 2, 3, 4, 5, 6, 7, 8, 9, 10], 385),
+            ([1, 2, 3, 4, 5, 100, 123], 25184),
+            ([1, 4, 6, 5, 4, 3, 15, 4, 3, 6, 7], 438),
+            ([1, 0, 0, 1], 2)
+    ))
+def test_sum_of_squares(x, expected):
+    body = dict(v=x)
     result = sum_of_squares(body)
     assert result[1] == "200"
-    assert result[0] == []
+    assert result[0] == expected
 
 
-def test_vector_add():
-    body = dict(expected=10, actual=6)
+@pytest.mark.parametrize(
+    ("v1", "v2", "expected"), (
+            ([1], [1], [2]),
+            ([1, 0, 0, 1], [1, 2, 3, 4], [2, 2, 3, 5])
+    ))
+def test_vector_add(v1, v2, expected):
+    body = dict(v=v1, w=v2)
     result = vector_add(body)
     assert result[1] == "200"
     assert result[0] == expected
 
 
-def test_vector_mean():
-    body = dict(expected=10, actual=6)
+@pytest.mark.parametrize(
+    ("v1", "v2", "expected"), (
+            ([1], [1], [1]),
+            ([1, 0, 0, 1], [1, 2, 3, 4], [1, 1, 1.5, 2.5])
+    ))
+def test_vector_mean(v1, v2, expected):
+    body = dict(vectors=[v1, v2])
     result = vector_mean(body)
     assert result[1] == "200"
     assert result[0] == expected
@@ -228,7 +269,7 @@ def test_vector_mean():
             ([1, 0, 0, 1], [1, 2, 3, 4], [0, -2, -3, -3])
     ))
 def test_vector_subtract(v1, v2, expected):
-    body = dict(expected=10, actual=6)
+    body = dict(v=v1, w=v2)
     result = vector_subtract(body)
     assert result[1] == "200"
     assert result[0] == expected
@@ -253,38 +294,56 @@ def test_vector_sum(v1, v2, expected):
             (0, 120, 200, 303, pytest.approx(0.48, abs=0.01))
     ))
 def test_accuracy(tp, fp, fn, tn, expected):
-    body = dict(expected=10, actual=6)
+    body = dict(tp=tp, fp=fp, fn=fn, tn=tn)
     result = accuracy(body)
     assert result[1] == "200"
     assert result[0] == expected
 
 
-def test_f1_score():
-    body = dict(expected=10, actual=6)
+@pytest.mark.parametrize(
+    ("tp", "fp", "fn", "tn", "expected"), (
+            (100, 120, 200, 303, pytest.approx(0.38, abs=0.01)),
+            (100, 1, 200, 303, pytest.approx(0.49, abs=0.01)),
+            (1, 120, 200, 303, pytest.approx(0.01, abs=0.01))
+    ))
+def test_f1_score(tp, fp, fn, tn, expected):
+    body = dict(tp=tp, fp=fp, fn=fn, tn=tn)
     result = f1_score(body)
     assert result[1] == "200"
     assert result[0] == expected
 
 
-def test_precision():
-    body = dict(expected=10, actual=6)
+@pytest.mark.parametrize(
+    ("tp", "fp", "fn", "tn", "expected"), (
+            (100, 120, 200, 303, pytest.approx(0.45, abs=0.01)),
+            (100, 1, 200, 303, pytest.approx(0.99, abs=0.01)),
+            (1, 120, 200, 303, pytest.approx(0.01, abs=0.01))
+    ))
+def test_precision(tp, fp, fn, tn, expected):
+    body = dict(tp=tp, fp=fp, fn=fn, tn=tn)
     result = precision(body)
     assert result[1] == "200"
     assert result[0] == expected
 
 
-def test_recall():
-    body = dict(expected=10, actual=6)
+@pytest.mark.parametrize(
+    ("tp", "fp", "fn", "tn", "expected"), (
+            (100, 120, 200, 303, pytest.approx(0.33, abs=0.01)),
+            (100, 1, 200, 303, pytest.approx(0.33, abs=0.01)),
+            (1, 120, 200, 303, pytest.approx(0.01, abs=0.01))
+    ))
+def test_recall(tp, fp, fn, tn, expected):
+    body = dict(tp=tp, fp=fp, fn=fn, tn=tn)
     result = recall(body)
     assert result[1] == "200"
     assert result[0] == expected
 
 
 def test_split_data():
-    body = dict(expected=10, actual=6)
+    body = dict(mat=[[1, 2, 3, 4], [3, 4, 5, 6], [4, 5, 6, 7], [5, 6, 7, 8]], p=0.5)
     result = split_data(body)
     assert result[1] == "200"
-    assert result[0] == expected
+    assert len(result[0][0]) + len(result[0][1]) == len(body["mat"])
 
 
 def test_train_test_split():
@@ -497,17 +556,17 @@ def test_train_test_split():
 
 
 def test_bernoulli_trial():
-    body = dict(expected=10, actual=6)
+    body = dict(p=0.5)
     result = bernoulli_trial(body)
     assert result[1] == "200"
-    assert result[0] == expected
+    assert result[0] in [0, 1]
 
 
 def test_binomial():
-    body = dict(expected=10, actual=6)
+    body = dict(n=10, p=0.6)
     result = binomial(body)
     assert result[1] == "200"
-    assert result[0] == expected
+    assert result[0] < 10
 
 
 @pytest.mark.parametrize(
@@ -538,8 +597,15 @@ def test_normal_cdf(x, mu, sigma, expected):
     assert result[0] == expected
 
 
-def test_normal_pdf():
-    body = dict(expected=10, actual=6)
+@pytest.mark.parametrize(
+    ("x", "mu", "sigma", "expected"), (
+            (0.1, 100, 5, pytest.approx(0, abs=0.01)),
+            (95, 100, 5, pytest.approx(0.05, abs=0.01)),
+            (100, 100, 5, pytest.approx(0.08, abs=0.01)),
+            (105, 100, 5, pytest.approx(0.84, abs=1))
+    ))
+def test_normal_pdf(x, mu, sigma, expected):
+    body = dict(x=x, mu=mu, sigma=sigma)
     result = normal_pdf(body)
     assert result[1] == "200"
     assert result[0] == expected
@@ -549,7 +615,7 @@ def test_random_kid():
     body = dict()
     result = random_kid(body)
     assert result[1] == "200"
-    assert result[0] in ["Boy", "Girl"]
+    assert result[0] in ["boy", "girl"]
 
 
 @pytest.mark.parametrize(
@@ -580,29 +646,56 @@ def test_uniform_pdf(x, expected):
     assert result[0] == expected
 
 
-def test_bucketize():
-    body = dict(expected=10, actual=6)
+@pytest.mark.parametrize(
+    ("point", "bucket_size", "expected"), (
+            (25.4958, 5, 25),
+            (250.303, 5, 250),
+            (25.9, 25, 25),
+    ))
+def test_bucketize(point, bucket_size, expected):
+    body = dict(point=point, bucket_size=bucket_size)
     result = bucketize(body)
     assert result[1] == "200"
     assert result[0] == expected
 
 
-def test_correlation():
-    body = dict(expected=10, actual=6)
+@pytest.mark.parametrize(
+    ("v1", "v2", "expected"), (
+            ([1, 2], [2, 1], pytest.approx(-1, abs=0.01)),
+            ([1, 2], [1, 2], pytest.approx(1, abs=0.01)),
+            ([1, 2, 3, 4, 5], [1, 1.5, 2, 2.5], pytest.approx(0.6, abs=0.1)),
+            ([1, 0, 0, 1], [1, 2, 3, 4], pytest.approx(0, abs=0.01))
+    ))
+def test_correlation(v1, v2, expected):
+    body = dict(x=v1, y=v2)
     result = correlation(body)
-    assert result[1] == "200"
-    assert result[0] == []
-
-
-def test_correlation_matrix():
-    body = dict(expected=10, actual=6)
-    result = correlation_matrix(body)
     assert result[1] == "200"
     assert result[0] == expected
 
 
-def test_covariance():
-    body = dict(expected=10, actual=6)
+@pytest.mark.parametrize(
+    ("v1", "v2", "expected"), (
+            ([1, 2], [2, 1], pytest.approx(-1, abs=0.01)),
+            ([1, 2], [1, 2], pytest.approx(1, abs=0.01)),
+            ([1, 2, 3, 4, 5], [1, 1.5, 2, 2.5], pytest.approx(0.6, abs=0.1)),
+            ([1, 0, 0, 1], [1, 2, 3, 4], pytest.approx(0, abs=0.01))
+    ))
+def test_correlation(v1, v2, expected):
+    body = dict(x=v1, y=v2)
+    result = correlation(body)
+    assert result[1] == "200"
+    assert result[0] == expected
+
+
+@pytest.mark.parametrize(
+    ("v1", "v2", "expected"), (
+            ([1, 2], [2, 1], pytest.approx(-0.5, abs=0.01)),
+            ([1, 2], [1, 2], pytest.approx(0.5, abs=0.01)),
+            ([1, 2, 3, 4, 5], [1, 1.5, 2, 2.5], pytest.approx(0.6, abs=0.1)),
+            ([1, 0, 0, 1], [1, 2, 3, 4], pytest.approx(0, abs=0.01))
+    ))
+def test_covariance(v1, v2, expected):
+    body = dict(x=v1, y=v2)
     result = covariance(body)
     assert result[1] == "200"
     assert result[0] == expected
@@ -644,14 +737,21 @@ def test_de_mean(x, expected):
             ([1, 0, 0, 1], pytest.approx(1, abs=0.01))
     ))
 def test_interquartile_range(x, expected):
-    body = dict(expected=10, actual=6)
+    body = dict(x=x)
     result = interquartile_range(body)
     assert result[1] == "200"
     assert result[0] == expected
 
 
-def test_mean():
-    body = dict(expected=10, actual=6)
+@pytest.mark.parametrize(
+    ("x", "expected"), (
+            ([1, 2, 3, 4, 5, 6, 7, 8, 9, 10], 5.5),
+            ([1, 2, 3, 4, 5, 100, 123], 34),
+            ([1, 4, 6, 5, 4, 3, 15, 4, 3, 6, 7], pytest.approx(5.27, abs=0.01)),
+            ([1, 0, 0, 1], pytest.approx(0.5, abs=0.01))
+    ))
+def test_mean(x, expected):
+    body = dict(x=x)
     result = mean(body)
     assert result[1] == "200"
     assert result[0] == expected
@@ -724,7 +824,7 @@ class TestMathController(BaseTestCase):
     """MathController integration test stubs"""
 
     def test_mysqrt(self):
-        """Test case for mysqrt"""
+        """Test case for sqrt"""
         sqrt_input = SqrtInput(x=10)
         headers = {
             'Accept': 'application/json',
@@ -742,7 +842,7 @@ class TestMathController(BaseTestCase):
         )
 
     def test_mystrength(self):
-        """Test case for mystrength"""
+        """Test case for strength"""
         strength_input = StrengthInput(expected=10, actual=6)
         headers = {
             'Accept': 'application/json',

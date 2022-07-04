@@ -29,7 +29,7 @@ def get_column(self, body):
 
 def get_row(self, body):
     mat = body["mat"]
-    row = body["col"]
+    row = body["row"]
     result = linear_algebra.get_row(mat, row)
     self.publish(result)
 

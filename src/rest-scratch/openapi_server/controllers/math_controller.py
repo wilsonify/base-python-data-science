@@ -321,7 +321,6 @@ def binomial(body: dict) -> Tuple[dict, int]:  # noqa: E501
     body['strategy'] = "binomial"
     rpc = RemoteProcedure(routing_key='dsfs')
     response_body, status_code = rpc.call(body)
-
     out_dict = response_body
     return out_dict, status_code
 
@@ -330,9 +329,7 @@ def inverse_normal_cdf(body: dict) -> Tuple[dict, int]:  # noqa: E501
     body['strategy'] = "inverse_normal_cdf"
     rpc = RemoteProcedure(routing_key='dsfs')
     response_body, status_code = rpc.call(body)
-
-    out_dict = response_body
-    return out_dict, status_code
+    return response_body, status_code
 
 
 def normal_cdf(body: dict) -> Tuple[dict, int]:  # noqa: E501
@@ -374,9 +371,7 @@ def uniform_pdf(body: dict) -> Tuple[dict, int]:  # noqa: E501
     body['strategy'] = "uniform_pdf"
     rpc = RemoteProcedure(routing_key='dsfs')
     response_body, status_code = rpc.call(body)
-
-    out_dict = response_body
-    return out_dict, status_code
+    return response_body, status_code
 
 
 def bucketize(body: dict) -> Tuple[dict, int]:  # noqa: E501

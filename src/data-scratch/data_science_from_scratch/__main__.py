@@ -67,6 +67,14 @@ available_strategies = dict(
     quantile=quantile,
     standard_deviation=standard_deviation,
     variance=variance,
+    bernoulli_trial=bernoulli_trial,
+    binomial=binomial,
+    inverse_normal_cdf=inverse_normal_cdf,
+    normal_cdf=normal_cdf,
+    normal_pdf=normal_pdf,
+    random_kid=random_kid,
+    uniform_cdf=uniform_cdf,
+    uniform_pdf=uniform_pdf,
 
 )
 

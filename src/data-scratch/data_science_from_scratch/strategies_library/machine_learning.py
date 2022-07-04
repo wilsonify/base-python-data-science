@@ -44,7 +44,8 @@ def recall(self, body):
 
 def split_data(self, body):
     mat = body["mat"]
-    result = machine_learning.split_data(mat, 0.5)
+    p = body['p']
+    result = machine_learning.split_data(mat, p)
     self.publish(result)
 
 

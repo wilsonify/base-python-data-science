@@ -1,6 +1,6 @@
 post:
   tags: [math]
-  operationId: mystrength
+  operationId: strength
   x-openapi-router-controller: openapi_server.controllers.math_controller
   description: "Description of the endpoint"
   requestBody:
