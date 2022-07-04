@@ -1,5 +1,6 @@
 import math
 import random
+from collections import Counter
 
 import matplotlib.image as mpimg
 from matplotlib import pyplot as plt
@@ -357,9 +358,6 @@ def make_chart_simple_bar_chart():
     plt.xticks([i + 0.5 for i, _ in enumerate(movies)], movies)
 
     plt.show()
-
-
-from collections import Counter
 
 
 def make_chart_histogram():
