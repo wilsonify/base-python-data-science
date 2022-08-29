@@ -1,0 +1,17 @@
+post:
+  tags: [math]
+  operationId: magnitude
+  x-openapi-router-controller: openapi_server.controllers.math_controller
+  description: "Description of the endpoint"
+  requestBody:
+    content:
+      application/json:
+        schema:
+          $ref: "magnitude-input.yaml"
+  responses:
+    "200":
+      description: "Description of this response."
+      content:
+        application/json:
+          schema:
+            $ref: "magnitude-output.yaml"

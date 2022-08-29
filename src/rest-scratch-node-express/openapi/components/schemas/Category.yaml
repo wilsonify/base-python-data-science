@@ -1,0 +1,12 @@
+example:
+  name: name
+  id: 6
+properties:
+  id:
+    format: int64
+    type: integer
+  name:
+    type: string
+type: object
+xml:
+  name: Category

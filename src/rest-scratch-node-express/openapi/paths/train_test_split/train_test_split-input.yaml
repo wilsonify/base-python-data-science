@@ -1,0 +1,16 @@
+type: object
+properties:
+  x:
+    type: array
+    items:
+      type: array
+      items:
+        type: number
+  y:
+    type: array
+    items:
+      type: array
+      items:
+        type: number
+  p:
+    type: number

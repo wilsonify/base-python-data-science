@@ -1,0 +1,2605 @@
+openapi: 3.0.1
+info:
+  contact:
+    email: apiteam@swagger.io
+  description: "This is a sample server Petstore server.  You can find out more about\
+    \     Swagger at [http://swagger.io](http://swagger.io) or on [irc.freenode.net,\
+    \ #swagger](http://swagger.io/irc/).      For this sample, you can use the api\
+    \ key `special-key` to test the authorization     filters."
+  license:
+    name: Apache 2.0
+    url: http://www.apache.org/licenses/LICENSE-2.0.html
+  termsOfService: http://swagger.io/terms/
+  title: Swagger Petstore
+  version: 1.0.0
+externalDocs:
+  description: Find out more about Swagger
+  url: http://swagger.io
+servers:
+- url: https://petstore.swagger.io/v2
+- url: http://petstore.swagger.io/v2
+tags:
+- description: Everything about your Pets
+  name: pet
+- description: Access to Petstore orders
+  name: store
+- description: Operations about user
+  name: user
+- description: Operations about user
+  name: math
+paths:
+  /sqrt:
+    post:
+      description: Description of the endpoint
+      operationId: sqrt
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/sqrt-input'
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/sqrt-output'
+          description: Description of this response.
+      tags:
+      - math
+      x-openapi-router-controller: openapi_server.controllers.math_controller
+      x-eov-operation-handler: controllers/MathController
+  /strength:
+    post:
+      description: Description of the endpoint
+      operationId: strength
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/strength-input'
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/strength-output'
+          description: Description of this response.
+      tags:
+      - math
+      x-openapi-router-controller: openapi_server.controllers.math_controller
+      x-eov-operation-handler: controllers/MathController
+  /accuracy:
+    post:
+      description: Description of the endpoint
+      operationId: accuracy
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/accuracy-input'
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/accuracy-output'
+          description: Description of this response.
+      tags:
+      - math
+      x-openapi-router-controller: openapi_server.controllers.math_controller
+      x-eov-operation-handler: controllers/MathController
+  /bucketize:
+    post:
+      description: Description of the endpoint
+      operationId: bucketize
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/bucketize-input'
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/bucketize-output'
+          description: Description of this response.
+      tags:
+      - math
+      x-openapi-router-controller: openapi_server.controllers.math_controller
+      x-eov-operation-handler: controllers/MathController
+  /correlation:
+    post:
+      description: Description of the endpoint
+      operationId: correlation
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/correlation-input'
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/correlation-output'
+          description: Description of this response.
+      tags:
+      - math
+      x-openapi-router-controller: openapi_server.controllers.math_controller
+      x-eov-operation-handler: controllers/MathController
+  /correlation_matrix:
+    post:
+      description: Description of the endpoint
+      operationId: correlation_matrix
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/correlation_matrix-input'
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/correlation_matrix-output'
+          description: Description of this response.
+      tags:
+      - math
+      x-openapi-router-controller: openapi_server.controllers.math_controller
+      x-eov-operation-handler: controllers/MathController
+  /covariance:
+    post:
+      description: Description of the endpoint
+      operationId: covariance
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/covariance-input'
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/covariance-output'
+          description: Description of this response.
+      tags:
+      - math
+      x-openapi-router-controller: openapi_server.controllers.math_controller
+      x-eov-operation-handler: controllers/MathController
+  /data_range:
+    post:
+      description: Description of the endpoint
+      operationId: data_range
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/data_range-input'
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/data_range-output'
+          description: Description of this response.
+      tags:
+      - math
+      x-openapi-router-controller: openapi_server.controllers.math_controller
+      x-eov-operation-handler: controllers/MathController
+  /de_mean:
+    post:
+      description: Description of the endpoint
+      operationId: de_mean
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/de_mean-input'
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/de_mean-output'
+          description: Description of this response.
+      tags:
+      - math
+      x-openapi-router-controller: openapi_server.controllers.math_controller
+      x-eov-operation-handler: controllers/MathController
+  /difference_quotient:
+    post:
+      description: Description of the endpoint
+      operationId: difference_quotient
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/difference_quotient-input'
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/difference_quotient-output'
+          description: Description of this response.
+      tags:
+      - math
+      x-openapi-router-controller: openapi_server.controllers.math_controller
+      x-eov-operation-handler: controllers/MathController
+  /distance:
+    post:
+      description: Description of the endpoint
+      operationId: distance
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/distance-input'
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/distance-output'
+          description: Description of this response.
+      tags:
+      - math
+      x-openapi-router-controller: openapi_server.controllers.math_controller
+      x-eov-operation-handler: controllers/MathController
+  /dot:
+    post:
+      description: Description of the endpoint
+      operationId: dot
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/dot-input'
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/dot-output'
+          description: Description of this response.
+      tags:
+      - math
+      x-openapi-router-controller: openapi_server.controllers.math_controller
+      x-eov-operation-handler: controllers/MathController
+  /echo:
+    post:
+      description: Description of the endpoint
+      operationId: echo
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/echo-input'
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/echo-output'
+          description: Description of this response.
+      tags:
+      - math
+      x-openapi-router-controller: openapi_server.controllers.math_controller
+      x-eov-operation-handler: controllers/MathController
+  /estimate_gradient:
+    post:
+      description: Description of the endpoint
+      operationId: estimate_gradient
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/estimate_gradient-input'
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/estimate_gradient-output'
+          description: Description of this response.
+      tags:
+      - math
+      x-openapi-router-controller: openapi_server.controllers.math_controller
+      x-eov-operation-handler: controllers/MathController
+  /f1_score:
+    post:
+      description: Description of the endpoint
+      operationId: f1_score
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/f1_score-input'
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/f1_score-output'
+          description: Description of this response.
+      tags:
+      - math
+      x-openapi-router-controller: openapi_server.controllers.math_controller
+      x-eov-operation-handler: controllers/MathController
+  /get_column:
+    post:
+      description: Description of the endpoint
+      operationId: get_column
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/get_column-input'
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/get_column-output'
+          description: Description of this response.
+      tags:
+      - math
+      x-openapi-router-controller: openapi_server.controllers.math_controller
+      x-eov-operation-handler: controllers/MathController
+  /get_row:
+    post:
+      description: Description of the endpoint
+      operationId: get_row
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/get_row-input'
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/get_row-output'
+          description: Description of this response.
+      tags:
+      - math
+      x-openapi-router-controller: openapi_server.controllers.math_controller
+      x-eov-operation-handler: controllers/MathController
+  /in_random_order:
+    post:
+      description: Description of the endpoint
+      operationId: in_random_order
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/in_random_order-input'
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/in_random_order-output'
+          description: Description of this response.
+      tags:
+      - math
+      x-openapi-router-controller: openapi_server.controllers.math_controller
+      x-eov-operation-handler: controllers/MathController
+  /interquartile_range:
+    post:
+      description: Description of the endpoint
+      operationId: interquartile_range
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/interquartile_range-input'
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/interquartile_range-output'
+          description: Description of this response.
+      tags:
+      - math
+      x-openapi-router-controller: openapi_server.controllers.math_controller
+      x-eov-operation-handler: controllers/MathController
+  /magnitude:
+    post:
+      description: Description of the endpoint
+      operationId: magnitude
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/magnitude-input'
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/magnitude-output'
+          description: Description of this response.
+      tags:
+      - math
+      x-openapi-router-controller: openapi_server.controllers.math_controller
+      x-eov-operation-handler: controllers/MathController
+  /matrix_add:
+    post:
+      description: Description of the endpoint
+      operationId: matrix_add
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/matrix_add-input'
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/matrix_add-output'
+          description: Description of this response.
+      tags:
+      - math
+      x-openapi-router-controller: openapi_server.controllers.math_controller
+      x-eov-operation-handler: controllers/MathController
+  /maximize_batch:
+    post:
+      description: use gradient descent to find theta that minimizes target function
+      operationId: maximize_batch
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/maximize_batch-input'
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/maximize_batch-output'
+          description: Description of this response.
+      tags:
+      - math
+      x-openapi-router-controller: openapi_server.controllers.math_controller
+      x-eov-operation-handler: controllers/MathController
+  /maximize_stochastic:
+    post:
+      description: Description of the endpoint
+      operationId: maximize_stochastic
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/maximize_stochastic-input'
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/maximize_stochastic-output'
+          description: Description of this response.
+      tags:
+      - math
+      x-openapi-router-controller: openapi_server.controllers.math_controller
+      x-eov-operation-handler: controllers/MathController
+  /mean:
+    post:
+      description: Description of the endpoint
+      operationId: mean
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/mean-input'
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/mean-output'
+          description: Description of this response.
+      tags:
+      - math
+      x-openapi-router-controller: openapi_server.controllers.math_controller
+      x-eov-operation-handler: controllers/MathController
+  /median:
+    post:
+      description: Description of the endpoint
+      operationId: median
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/median-input'
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/median-output'
+          description: Description of this response.
+      tags:
+      - math
+      x-openapi-router-controller: openapi_server.controllers.math_controller
+      x-eov-operation-handler: controllers/MathController
+  /minimize_batch:
+    post:
+      description: Description of the endpoint
+      operationId: minimize_batch
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/minimize_batch-input'
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/minimize_batch-output'
+          description: Description of this response.
+      tags:
+      - math
+      x-openapi-router-controller: openapi_server.controllers.math_controller
+      x-eov-operation-handler: controllers/MathController
+  /minimize_stochastic:
+    post:
+      description: Description of the endpoint
+      operationId: minimize_stochastic
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/minimize_stochastic-input'
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/minimize_stochastic-output'
+          description: Description of this response.
+      tags:
+      - math
+      x-openapi-router-controller: openapi_server.controllers.math_controller
+      x-eov-operation-handler: controllers/MathController
+  /mode:
+    post:
+      description: Description of the endpoint
+      operationId: mode
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/mode-input'
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/mode-output'
+          description: Description of this response.
+      tags:
+      - math
+      x-openapi-router-controller: openapi_server.controllers.math_controller
+      x-eov-operation-handler: controllers/MathController
+  /partial_difference_quotient:
+    post:
+      description: add h to just the i-th element of v
+      operationId: partial_difference_quotient
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/partial_difference_quotient-input'
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/partial_difference_quotient-output'
+          description: v with h added to just the i-th element
+      tags:
+      - math
+      x-openapi-router-controller: openapi_server.controllers.math_controller
+      x-eov-operation-handler: controllers/MathController
+  /precision:
+    post:
+      description: Description of the endpoint
+      operationId: precision
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/precision-input'
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/precision-output'
+          description: Description of this response.
+      tags:
+      - math
+      x-openapi-router-controller: openapi_server.controllers.math_controller
+      x-eov-operation-handler: controllers/MathController
+  /quantile:
+    post:
+      description: Description of the endpoint
+      operationId: quantile
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/quantile-input'
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/quantile-output'
+          description: Description of this response.
+      tags:
+      - math
+      x-openapi-router-controller: openapi_server.controllers.math_controller
+      x-eov-operation-handler: controllers/MathController
+  /recall:
+    post:
+      description: Description of the endpoint
+      operationId: recall
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/recall-input'
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/recall-output'
+          description: Description of this response.
+      tags:
+      - math
+      x-openapi-router-controller: openapi_server.controllers.math_controller
+      x-eov-operation-handler: controllers/MathController
+  /scalar_multiply:
+    post:
+      description: Description of the endpoint
+      operationId: scalar_multiply
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/scalar_multiply-input'
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/scalar_multiply-output'
+          description: Description of this response.
+      tags:
+      - math
+      x-openapi-router-controller: openapi_server.controllers.math_controller
+      x-eov-operation-handler: controllers/MathController
+  /shape:
+    post:
+      description: Description of the endpoint
+      operationId: shape
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/shape-input'
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/shape-output'
+          description: Description of this response.
+      tags:
+      - math
+      x-openapi-router-controller: openapi_server.controllers.math_controller
+      x-eov-operation-handler: controllers/MathController
+  /split_data:
+    post:
+      description: Description of the endpoint
+      operationId: split_data
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/split_data-input'
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/split_data-output'
+          description: Description of this response.
+      tags:
+      - math
+      x-openapi-router-controller: openapi_server.controllers.math_controller
+      x-eov-operation-handler: controllers/MathController
+  /squared_distance:
+    post:
+      description: Description of the endpoint
+      operationId: squared_distance
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/squared_distance-input'
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/squared_distance-output'
+          description: Description of this response.
+      tags:
+      - math
+      x-openapi-router-controller: openapi_server.controllers.math_controller
+      x-eov-operation-handler: controllers/MathController
+  /standard_deviation:
+    post:
+      description: Description of the endpoint
+      operationId: standard_deviation
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/standard_deviation-input'
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/standard_deviation-output'
+          description: Description of this response.
+      tags:
+      - math
+      x-openapi-router-controller: openapi_server.controllers.math_controller
+      x-eov-operation-handler: controllers/MathController
+  /sum_of_squares:
+    post:
+      description: Description of the endpoint
+      operationId: sum_of_squares
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/sum_of_squares-input'
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/sum_of_squares-output'
+          description: Description of this response.
+      tags:
+      - math
+      x-openapi-router-controller: openapi_server.controllers.math_controller
+      x-eov-operation-handler: controllers/MathController
+  /train_test_split:
+    post:
+      description: Description of the endpoint
+      operationId: train_test_split
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/train_test_split-input'
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/train_test_split-output'
+          description: Description of this response.
+      tags:
+      - math
+      x-openapi-router-controller: openapi_server.controllers.math_controller
+      x-eov-operation-handler: controllers/MathController
+  /variance:
+    post:
+      description: Description of the endpoint
+      operationId: variance
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/variance-input'
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/variance-output'
+          description: Description of this response.
+      tags:
+      - math
+      x-openapi-router-controller: openapi_server.controllers.math_controller
+      x-eov-operation-handler: controllers/MathController
+  /vector_add:
+    post:
+      description: Description of the endpoint
+      operationId: vector_add
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/vector_add-input'
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/vector_add-output'
+          description: Description of this response.
+      tags:
+      - math
+      x-openapi-router-controller: openapi_server.controllers.math_controller
+      x-eov-operation-handler: controllers/MathController
+  /vector_mean:
+    post:
+      description: compute the vector whose i-th element is the mean of the i-th elements
+        of the input vectors
+      operationId: vector_mean
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/vector_mean-input'
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/vector_mean-output'
+          description: success
+      tags:
+      - math
+      x-openapi-router-controller: openapi_server.controllers.math_controller
+      x-eov-operation-handler: controllers/MathController
+  /vector_subtract:
+    post:
+      description: Description of the endpoint
+      operationId: vector_subtract
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/vector_subtract-input'
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/vector_subtract-output'
+          description: Description of this response.
+      tags:
+      - math
+      x-openapi-router-controller: openapi_server.controllers.math_controller
+      x-eov-operation-handler: controllers/MathController
+  /vector_sum:
+    post:
+      description: Description of the endpoint
+      operationId: vector_sum
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/vector_sum-input'
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/vector_sum-output'
+          description: Description of this response.
+      tags:
+      - math
+      x-openapi-router-controller: openapi_server.controllers.math_controller
+      x-eov-operation-handler: controllers/MathController
+  /pet:
+    post:
+      operationId: add_pet
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Pet'
+          application/xml:
+            schema:
+              $ref: '#/components/schemas/Pet'
+        description: Pet object that needs to be added to the store
+        required: true
+      responses:
+        "405":
+          content: {}
+          description: Invalid input
+      security:
+      - petstore_auth:
+        - write:pets
+        - read:pets
+      summary: Add a new pet to the store
+      tags:
+      - pet
+      x-codegen-request-body-name: body
+      x-openapi-router-controller: openapi_server.controllers.pet_controller
+      x-eov-operation-handler: controllers/PetController
+    put:
+      operationId: update_pet
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Pet'
+          application/xml:
+            schema:
+              $ref: '#/components/schemas/Pet'
+        description: Pet object that needs to be added to the store
+        required: true
+      responses:
+        "400":
+          content: {}
+          description: Invalid ID supplied
+        "404":
+          content: {}
+          description: Pet not found
+        "405":
+          content: {}
+          description: Validation exception
+      security:
+      - petstore_auth:
+        - write:pets
+        - read:pets
+      summary: Update an existing pet
+      tags:
+      - pet
+      x-codegen-request-body-name: body
+      x-openapi-router-controller: openapi_server.controllers.pet_controller
+      x-eov-operation-handler: controllers/PetController
+  /pet/findByStatus:
+    get:
+      description: Multiple status values can be provided with comma separated strings
+      operationId: find_pets_by_status
+      parameters:
+      - description: Status values that need to be considered for filter
+        explode: true
+        in: query
+        name: status
+        required: true
+        schema:
+          items:
+            default: available
+            enum:
+            - available
+            - pending
+            - sold
+            type: string
+          type: array
+        style: form
+      responses:
+        "200":
+          content:
+            application/xml:
+              schema:
+                items:
+                  $ref: '#/components/schemas/Pet'
+                type: array
+            application/json:
+              schema:
+                items:
+                  $ref: '#/components/schemas/Pet'
+                type: array
+          description: successful operation
+        "400":
+          content: {}
+          description: Invalid status value
+      security:
+      - petstore_auth:
+        - write:pets
+        - read:pets
+      summary: Finds Pets by status
+      tags:
+      - pet
+      x-openapi-router-controller: openapi_server.controllers.pet_controller
+      x-eov-operation-handler: controllers/PetController
+  /pet/findByTags:
+    get:
+      deprecated: true
+      description: "Muliple tags can be provided with comma separated strings. Use\
+        \         tag1, tag2, tag3 for testing."
+      operationId: find_pets_by_tags
+      parameters:
+      - description: Tags to filter by
+        explode: true
+        in: query
+        name: tags
+        required: true
+        schema:
+          items:
+            type: string
+          type: array
+        style: form
+      responses:
+        "200":
+          content:
+            application/xml:
+              schema:
+                items:
+                  $ref: '#/components/schemas/Pet'
+                type: array
+            application/json:
+              schema:
+                items:
+                  $ref: '#/components/schemas/Pet'
+                type: array
+          description: successful operation
+        "400":
+          content: {}
+          description: Invalid tag value
+      security:
+      - petstore_auth:
+        - write:pets
+        - read:pets
+      summary: Finds Pets by tags
+      tags:
+      - pet
+      x-openapi-router-controller: openapi_server.controllers.pet_controller
+      x-eov-operation-handler: controllers/PetController
+  /pet/{petId}:
+    delete:
+      operationId: delete_pet
+      parameters:
+      - explode: false
+        in: header
+        name: api_key
+        required: false
+        schema:
+          type: string
+        style: simple
+      - description: Pet id to delete
+        explode: false
+        in: path
+        name: petId
+        required: true
+        schema:
+          format: int64
+          type: integer
+        style: simple
+      responses:
+        "400":
+          content: {}
+          description: Invalid ID supplied
+        "404":
+          content: {}
+          description: Pet not found
+      security:
+      - petstore_auth:
+        - write:pets
+        - read:pets
+      summary: Deletes a pet
+      tags:
+      - pet
+      x-openapi-router-controller: openapi_server.controllers.pet_controller
+      x-eov-operation-handler: controllers/PetController
+    get:
+      description: Returns a single pet
+      operationId: get_pet_by_id
+      parameters:
+      - description: ID of pet to return
+        explode: false
+        in: path
+        name: petId
+        required: true
+        schema:
+          format: int64
+          type: integer
+        style: simple
+      responses:
+        "200":
+          content:
+            application/xml:
+              schema:
+                $ref: "#/components/schemas/{petId}"
+            application/json:
+              schema:
+                $ref: "#/components/schemas/{petId}"
+          description: successful operation
+        "400":
+          content: {}
+          description: Invalid ID supplied
+        "404":
+          content: {}
+          description: Pet not found
+      security:
+      - api_key: []
+      summary: Find pet by ID
+      tags:
+      - pet
+      x-openapi-router-controller: openapi_server.controllers.pet_controller
+      x-eov-operation-handler: controllers/PetController
+    post:
+      operationId: update_pet_with_form
+      parameters:
+      - description: ID of pet that needs to be updated
+        explode: false
+        in: path
+        name: petId
+        required: true
+        schema:
+          format: int64
+          type: integer
+        style: simple
+      requestBody:
+        content:
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/update_pet_with_form_request'
+      responses:
+        "405":
+          content: {}
+          description: Invalid input
+      security:
+      - petstore_auth:
+        - write:pets
+        - read:pets
+      summary: Updates a pet in the store with form data
+      tags:
+      - pet
+      x-openapi-router-controller: openapi_server.controllers.pet_controller
+      x-eov-operation-handler: controllers/PetController
+  /pet/{petId}/uploadImage:
+    post:
+      operationId: upload_file
+      parameters:
+      - description: ID of pet to update
+        explode: false
+        in: path
+        name: petId
+        required: true
+        schema:
+          format: int64
+          type: integer
+        style: simple
+      requestBody:
+        content:
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/upload_file_request'
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiResponse'
+          description: successful operation
+      security:
+      - petstore_auth:
+        - write:pets
+        - read:pets
+      summary: uploads an image
+      tags:
+      - pet
+      x-openapi-router-controller: openapi_server.controllers.pet_controller
+      x-eov-operation-handler: controllers/PetController
+  /store/inventory:
+    get:
+      description: Returns a map of status codes to quantities
+      operationId: get_inventory
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                additionalProperties:
+                  format: int32
+                  type: integer
+                type: object
+          description: successful operation
+      security:
+      - api_key: []
+      summary: Returns pet inventories by status
+      tags:
+      - store
+      x-openapi-router-controller: openapi_server.controllers.store_controller
+      x-eov-operation-handler: controllers/StoreController
+  /store/order:
+    post:
+      operationId: place_order
+      requestBody:
+        content:
+          '*/*':
+            schema:
+              $ref: '#/components/schemas/Order'
+        description: order placed for purchasing the pet
+        required: true
+      responses:
+        "200":
+          content:
+            application/xml:
+              schema:
+                $ref: '#/components/schemas/Order'
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Order'
+          description: successful operation
+        "400":
+          content: {}
+          description: Invalid Order
+      summary: Place an order for a pet
+      tags:
+      - store
+      x-codegen-request-body-name: body
+      x-openapi-router-controller: openapi_server.controllers.store_controller
+      x-eov-operation-handler: controllers/StoreController
+  /store/order/{orderId}:
+    delete:
+      description: For valid response try integer IDs with positive integer value.         Negative
+        or non-integer values will generate API errors
+      operationId: delete_order
+      parameters:
+      - description: ID of the order that needs to be deleted
+        explode: false
+        in: path
+        name: orderId
+        required: true
+        schema:
+          format: int64
+          minimum: 1.0
+          type: integer
+        style: simple
+      responses:
+        "400":
+          content: {}
+          description: Invalid ID supplied
+        "404":
+          content: {}
+          description: Order not found
+      summary: Delete purchase order by ID
+      tags:
+      - store
+      x-openapi-router-controller: openapi_server.controllers.store_controller
+      x-eov-operation-handler: controllers/StoreController
+    get:
+      description: For valid response try integer IDs with value >= 1 and <= 10.         Other
+        values will generated exceptions
+      operationId: get_order_by_id
+      parameters:
+      - description: ID of pet that needs to be fetched
+        explode: false
+        in: path
+        name: orderId
+        required: true
+        schema:
+          format: int64
+          maximum: 10.0
+          minimum: 1.0
+          type: integer
+        style: simple
+      responses:
+        "200":
+          content:
+            application/xml:
+              schema:
+                $ref: "#/components/schemas/{orderId}"
+            application/json:
+              schema:
+                $ref: "#/components/schemas/{orderId}"
+          description: successful operation
+        "400":
+          content: {}
+          description: Invalid ID supplied
+        "404":
+          content: {}
+          description: Order not found
+      summary: Find purchase order by ID
+      tags:
+      - store
+      x-openapi-router-controller: openapi_server.controllers.store_controller
+      x-eov-operation-handler: controllers/StoreController
+  /user:
+    post:
+      description: This can only be done by the logged in user.
+      operationId: create_user
+      requestBody:
+        content:
+          '*/*':
+            schema:
+              $ref: '#/components/schemas/User'
+        description: Created user object
+        required: true
+      responses:
+        default:
+          content: {}
+          description: successful operation
+      summary: Create user
+      tags:
+      - user
+      x-codegen-request-body-name: body
+      x-openapi-router-controller: openapi_server.controllers.user_controller
+      x-eov-operation-handler: controllers/UserController
+  /user/createWithArray:
+    post:
+      operationId: create_users_with_array_input
+      requestBody:
+        content:
+          '*/*':
+            schema:
+              items:
+                $ref: '#/components/schemas/User'
+              type: array
+        description: List of user object
+        required: true
+      responses:
+        default:
+          content: {}
+          description: successful operation
+      summary: Creates list of users with given input array
+      tags:
+      - user
+      x-codegen-request-body-name: body
+      x-openapi-router-controller: openapi_server.controllers.user_controller
+      x-eov-operation-handler: controllers/UserController
+  /user/createWithList:
+    post:
+      operationId: create_users_with_list_input
+      requestBody:
+        content:
+          '*/*':
+            schema:
+              items:
+                $ref: '#/components/schemas/User'
+              type: array
+        description: List of user object
+        required: true
+      responses:
+        default:
+          content: {}
+          description: successful operation
+      summary: Creates list of users with given input array
+      tags:
+      - user
+      x-codegen-request-body-name: body
+      x-openapi-router-controller: openapi_server.controllers.user_controller
+      x-eov-operation-handler: controllers/UserController
+  /user/login:
+    get:
+      operationId: login_user
+      parameters:
+      - description: The user name for login
+        explode: true
+        in: query
+        name: username
+        required: true
+        schema:
+          type: string
+        style: form
+      - description: The password for login in clear text
+        explode: true
+        in: query
+        name: password
+        required: true
+        schema:
+          type: string
+        style: form
+      responses:
+        "200":
+          content:
+            application/xml:
+              schema:
+                type: string
+            application/json:
+              schema:
+                type: string
+          description: successful operation
+          headers:
+            X-Rate-Limit:
+              description: calls per hour allowed by the user
+              explode: false
+              schema:
+                format: int32
+                type: integer
+              style: simple
+            X-Expires-After:
+              description: date in UTC when token expires
+              explode: false
+              schema:
+                format: date-time
+                type: string
+              style: simple
+        "400":
+          content: {}
+          description: Invalid username/password supplied
+      summary: Logs user into the system
+      tags:
+      - user
+      x-openapi-router-controller: openapi_server.controllers.user_controller
+      x-eov-operation-handler: controllers/UserController
+  /user/logout:
+    get:
+      operationId: logout_user
+      responses:
+        default:
+          content: {}
+          description: successful operation
+      summary: Logs out current logged in user session
+      tags:
+      - user
+      x-openapi-router-controller: openapi_server.controllers.user_controller
+      x-eov-operation-handler: controllers/UserController
+  /user/{username}:
+    delete:
+      description: This can only be done by the logged in user.
+      operationId: delete_user
+      parameters:
+      - description: The name that needs to be deleted
+        explode: false
+        in: path
+        name: username
+        required: true
+        schema:
+          type: string
+        style: simple
+      responses:
+        "400":
+          content: {}
+          description: Invalid username supplied
+        "404":
+          content: {}
+          description: User not found
+      summary: Delete user
+      tags:
+      - user
+      x-openapi-router-controller: openapi_server.controllers.user_controller
+      x-eov-operation-handler: controllers/UserController
+    get:
+      operationId: get_user_by_name
+      parameters:
+      - description: 'The name that needs to be fetched. Use user1 for testing. '
+        explode: false
+        in: path
+        name: username
+        required: true
+        schema:
+          type: string
+        style: simple
+      responses:
+        "200":
+          content:
+            application/xml:
+              schema:
+                $ref: "#/components/schemas/{username}"
+            application/json:
+              schema:
+                $ref: "#/components/schemas/{username}"
+          description: successful operation
+        "400":
+          content: {}
+          description: Invalid username supplied
+        "404":
+          content: {}
+          description: User not found
+      summary: Get user by user name
+      tags:
+      - user
+      x-openapi-router-controller: openapi_server.controllers.user_controller
+      x-eov-operation-handler: controllers/UserController
+    put:
+      description: This can only be done by the logged in user.
+      operationId: update_user
+      parameters:
+      - description: name that need to be updated
+        explode: false
+        in: path
+        name: username
+        required: true
+        schema:
+          type: string
+        style: simple
+      requestBody:
+        content:
+          '*/*':
+            schema:
+              $ref: "#/components/schemas/{username}"
+        description: Updated user object
+        required: true
+      responses:
+        "400":
+          content: {}
+          description: Invalid user supplied
+        "404":
+          content: {}
+          description: User not found
+      summary: Updated user
+      tags:
+      - user
+      x-codegen-request-body-name: body
+      x-openapi-router-controller: openapi_server.controllers.user_controller
+      x-eov-operation-handler: controllers/UserController
+components:
+  schemas:
+    sqrt-input:
+      properties:
+        x:
+          type: number
+      type: object
+    sqrt-output:
+      example:
+        result: 6.027456183070403
+        x: 0.8008281904610115
+      properties:
+        x:
+          type: number
+        result:
+          type: number
+      type: object
+    strength-input:
+      example:
+        actual: 60
+        expected: 100
+      properties:
+        actual:
+          type: integer
+        expected:
+          type: integer
+      type: object
+    strength-output:
+      example:
+        actual: 0
+        strength: 1.4658129805029452
+        expected: 6
+      properties:
+        actual:
+          type: integer
+        expected:
+          type: integer
+        strength:
+          type: number
+      type: object
+    accuracy-input:
+      properties:
+        tp:
+          description: number of True Positives
+          type: number
+        fp:
+          description: number of False Positives
+          type: number
+        fn:
+          description: number of False Negatives
+          type: number
+        tn:
+          description: number of True Negatives
+          type: number
+      type: object
+    accuracy-output:
+      type: number
+    bucketize-input:
+      properties:
+        point:
+          type: number
+        bucket_size:
+          type: number
+      type: object
+    bucketize-output:
+      example:
+        result: 6.027456183070403
+        x: 0.8008281904610115
+      properties:
+        x:
+          type: number
+        result:
+          type: number
+      type: object
+    correlation-input:
+      properties:
+        data:
+          items:
+            items:
+              type: number
+            type: array
+          type: array
+      type: object
+    correlation-output:
+      example:
+        result: 6.027456183070403
+        x: 0.8008281904610115
+      properties:
+        x:
+          type: number
+        result:
+          type: number
+      type: object
+    correlation_matrix-input:
+      properties:
+        x:
+          items:
+            type: number
+          type: array
+        "y":
+          items:
+            type: number
+          type: array
+      type: object
+    correlation_matrix-output:
+      example:
+        result: 6.027456183070403
+        x: 0.8008281904610115
+      properties:
+        x:
+          type: number
+        result:
+          type: number
+      type: object
+    covariance-input:
+      properties:
+        x:
+          items:
+            type: number
+          type: array
+        "y":
+          items:
+            type: number
+          type: array
+      type: object
+    covariance-output:
+      example:
+        result: 6.027456183070403
+        x: 0.8008281904610115
+      properties:
+        x:
+          type: number
+        result:
+          type: number
+      type: object
+    data_range-input:
+      properties:
+        x:
+          items:
+            type: number
+          type: array
+      type: object
+    data_range-output:
+      example:
+        result: 6.027456183070403
+        x: 0.8008281904610115
+      properties:
+        x:
+          type: number
+        result:
+          type: number
+      type: object
+    de_mean-input:
+      properties:
+        x:
+          type: number
+      type: object
+    de_mean-output:
+      example:
+        result: 6.027456183070403
+        x: 0.8008281904610115
+      properties:
+        x:
+          type: number
+        result:
+          type: number
+      type: object
+    difference_quotient-input:
+      properties:
+        x:
+          type: number
+        h:
+          type: number
+      type: object
+    difference_quotient-output:
+      example:
+        result: 6.027456183070403
+        x: 0.8008281904610115
+      properties:
+        x:
+          type: number
+        result:
+          type: number
+      type: object
+    distance-input:
+      properties:
+        v:
+          items:
+            type: number
+          type: array
+        w:
+          items:
+            type: number
+          type: array
+      type: object
+    distance-output:
+      example:
+        result: 6.027456183070403
+        x: 0.8008281904610115
+      properties:
+        x:
+          type: number
+        result:
+          type: number
+      type: object
+    dot-input:
+      properties:
+        v:
+          items:
+            type: number
+          type: array
+        w:
+          items:
+            type: number
+          type: array
+      type: object
+    dot-output:
+      example:
+        result: 6.027456183070403
+        x: 0.8008281904610115
+      properties:
+        x:
+          type: number
+        result:
+          type: number
+      type: object
+    echo-input:
+      type: object
+    echo-output:
+      type: object
+    estimate_gradient-input:
+      properties:
+        v:
+          example:
+          - 10.0
+          - 2.0
+          items:
+            type: number
+          type: array
+        h:
+          example: 1
+          type: number
+      type: object
+    estimate_gradient-output:
+      example:
+        result: 6.027456183070403
+        x: 0.8008281904610115
+      properties:
+        x:
+          type: number
+        result:
+          type: number
+      type: object
+    f1_score-input:
+      properties:
+        tp:
+          description: number of True Positives
+          type: number
+        fp:
+          description: number of False Positives
+          type: number
+        fn:
+          description: number of False Negatives
+          type: number
+        tn:
+          description: number of True Negatives
+          type: number
+      type: object
+    f1_score-output:
+      type: number
+    get_column-input:
+      properties:
+        mat:
+          items:
+            items:
+              type: number
+            type: array
+          type: array
+        col:
+          type: number
+      type: object
+    get_column-output:
+      example:
+        result: 6.027456183070403
+        x: 0.8008281904610115
+      properties:
+        x:
+          type: number
+        result:
+          type: number
+      type: object
+    get_row-input:
+      properties:
+        mat:
+          items:
+            items:
+              type: number
+            type: array
+          type: array
+        row:
+          type: number
+      type: object
+    get_row-output:
+      example:
+        result: 6.027456183070403
+        x: 0.8008281904610115
+      properties:
+        x:
+          type: number
+        result:
+          type: number
+      type: object
+    in_random_order-input:
+      properties:
+        data:
+          items:
+            type: number
+          type: array
+      type: object
+    in_random_order-output:
+      items:
+        type: number
+      type: array
+    interquartile_range-input:
+      properties:
+        x:
+          items:
+            type: number
+          type: array
+      type: object
+    interquartile_range-output:
+      type: number
+    magnitude-input:
+      properties:
+        v:
+          items:
+            type: number
+          type: array
+      type: object
+    magnitude-output:
+      type: number
+    matrix_add-input:
+      properties:
+        mat1:
+          items:
+            items:
+              type: number
+            type: array
+          type: array
+        mat2:
+          items:
+            items:
+              type: number
+            type: array
+          type: array
+      type: object
+    matrix_add-output:
+      items:
+        items:
+          type: number
+        type: array
+      type: array
+    maximize_batch-input:
+      properties:
+        x:
+          example:
+          - - 1
+            - 2
+            - 3
+          - - 2
+            - 3
+            - 4
+          - - 5
+            - 6
+            - 7
+          items:
+            items:
+              type: number
+            type: array
+          type: array
+      type: object
+    maximize_batch-output:
+      example:
+        result: 6.027456183070403
+        x: 0.8008281904610115
+      properties:
+        x:
+          type: number
+        result:
+          type: number
+      type: object
+    maximize_stochastic-input:
+      properties:
+        x:
+          example:
+          - - 1
+            - 49
+            - 4
+            - 0
+          - - 1
+            - 41
+            - 9
+            - 0
+          - - 1
+            - 40
+            - 8
+            - 0
+          - - 1
+            - 25
+            - 6
+            - 0
+          - - 1
+            - 21
+            - 1
+            - 0
+          - - 1
+            - 21
+            - 0
+            - 0
+          - - 1
+            - 19
+            - 3
+            - 0
+          - - 1
+            - 19
+            - 0
+            - 0
+          - - 1
+            - 18
+            - 9
+            - 0
+          - - 1
+            - 18
+            - 8
+            - 0
+          items:
+            items:
+              type: number
+            type: array
+          type: array
+        "y":
+          example:
+          - 68.77
+          - 51.25
+          - 52.08
+          - 38.36
+          - 44.54
+          - 57.13
+          - 51.4
+          - 41.42
+          - 31.22
+          - 34.76
+          items:
+            type: number
+          type: array
+      type: object
+    maximize_stochastic-output:
+      example:
+        result: 6.027456183070403
+        x: 0.8008281904610115
+      properties:
+        x:
+          type: number
+        result:
+          type: number
+      type: object
+    mean-input:
+      properties:
+        x:
+          items:
+            type: number
+          type: array
+      type: object
+    mean-output:
+      type: number
+    median-input:
+      properties:
+        x:
+          items:
+            type: number
+          type: array
+      type: object
+    median-output:
+      type: number
+    minimize_batch-input:
+      properties:
+        x:
+          type: number
+      type: object
+    minimize_batch-output:
+      example:
+        result: 6.027456183070403
+        x: 0.8008281904610115
+      properties:
+        x:
+          type: number
+        result:
+          type: number
+      type: object
+    minimize_stochastic-input:
+      properties:
+        x:
+          example:
+          - - 1
+            - 49
+            - 4
+            - 0
+          - - 1
+            - 41
+            - 9
+            - 0
+          - - 1
+            - 40
+            - 8
+            - 0
+          - - 1
+            - 25
+            - 6
+            - 0
+          - - 1
+            - 21
+            - 1
+            - 0
+          - - 1
+            - 21
+            - 0
+            - 0
+          - - 1
+            - 19
+            - 3
+            - 0
+          - - 1
+            - 19
+            - 0
+            - 0
+          - - 1
+            - 18
+            - 9
+            - 0
+          - - 1
+            - 18
+            - 8
+            - 0
+          items:
+            items:
+              type: number
+            type: array
+          type: array
+        "y":
+          example:
+          - 68.77
+          - 51.25
+          - 52.08
+          - 38.36
+          - 44.54
+          - 57.13
+          - 51.4
+          - 41.42
+          - 31.22
+          - 34.76
+          items:
+            type: number
+          type: array
+      type: object
+    minimize_stochastic-output:
+      example:
+        result: 6.027456183070403
+        x: 0.8008281904610115
+      properties:
+        x:
+          type: number
+        result:
+          type: number
+      type: object
+    mode-input:
+      properties:
+        x:
+          items:
+            type: number
+          type: array
+      type: object
+    mode-output:
+      items:
+        type: number
+      type: array
+    partial_difference_quotient-input:
+      properties:
+        v:
+          description: vector
+          example:
+          - 10.0
+          - 2.0
+          items:
+            type: number
+          type: array
+        i:
+          example: 0
+          type: object
+        h:
+          example: 1
+          type: object
+      type: object
+    partial_difference_quotient-output:
+      example:
+        result: 6.027456183070403
+        x: 0.8008281904610115
+      properties:
+        x:
+          type: number
+        result:
+          type: number
+      type: object
+    precision-input:
+      properties:
+        tp:
+          description: number of True Positives
+          type: number
+        fp:
+          description: number of False Positives
+          type: number
+        fn:
+          description: number of False Negatives
+          type: number
+        tn:
+          description: number of True Negatives
+          type: number
+      type: object
+    precision-output:
+      type: number
+    quantile-input:
+      properties:
+        x:
+          items:
+            type: number
+          type: array
+      type: object
+    quantile-output:
+      type: number
+    recall-input:
+      properties:
+        tp:
+          description: number of True Positives
+          type: number
+        fp:
+          description: number of False Positives
+          type: number
+        fn:
+          description: number of False Negatives
+          type: number
+        tn:
+          description: number of True Negatives
+          type: number
+      type: object
+    recall-output:
+      type: number
+    scalar_multiply-input:
+      properties:
+        c:
+          type: number
+        mat:
+          items:
+            items:
+              type: number
+            type: array
+          type: array
+      type: object
+    scalar_multiply-output:
+      items:
+        items:
+          type: number
+        type: array
+      type: array
+    shape-input:
+      properties:
+        mat:
+          items:
+            items:
+              type: number
+            type: array
+          type: array
+      type: object
+    shape-output:
+      example:
+        nrows: 0.8008281904610115
+        ncols: 6.027456183070403
+      properties:
+        nrows:
+          type: number
+        ncols:
+          type: number
+      type: object
+    split_data-input:
+      properties:
+        data:
+          items:
+            items:
+              type: number
+            type: array
+          type: array
+      type: object
+    split_data-output:
+      example:
+        test:
+        - - 6.027456183070403
+          - 6.027456183070403
+        - - 6.027456183070403
+          - 6.027456183070403
+        train:
+        - - 0.8008281904610115
+          - 0.8008281904610115
+        - - 0.8008281904610115
+          - 0.8008281904610115
+      properties:
+        train:
+          items:
+            items:
+              type: number
+            type: array
+          type: array
+        test:
+          items:
+            items:
+              type: number
+            type: array
+          type: array
+      type: object
+    squared_distance-input:
+      properties:
+        v:
+          items:
+            type: number
+          type: array
+        w:
+          items:
+            type: number
+          type: array
+      type: object
+    squared_distance-output:
+      items:
+        type: number
+      type: array
+    standard_deviation-input:
+      properties:
+        x:
+          items:
+            type: number
+          type: array
+      type: object
+    standard_deviation-output:
+      type: number
+    sum_of_squares-input:
+      properties:
+        x:
+          items:
+            type: number
+          type: array
+      type: object
+    sum_of_squares-output:
+      type: number
+    train_test_split-input:
+      properties:
+        x:
+          items:
+            items:
+              type: number
+            type: array
+          type: array
+        "y":
+          items:
+            items:
+              type: number
+            type: array
+          type: array
+        p:
+          type: number
+      type: object
+    train_test_split-output:
+      example:
+        x_train:
+        - - 0.8008281904610115
+          - 0.8008281904610115
+        - - 0.8008281904610115
+          - 0.8008281904610115
+        y_test:
+        - 5.962133916683182
+        - 5.962133916683182
+        y_train:
+        - 1.4658129805029452
+        - 1.4658129805029452
+        x_test:
+        - - 6.027456183070403
+          - 6.027456183070403
+        - - 6.027456183070403
+          - 6.027456183070403
+      properties:
+        x_train:
+          items:
+            items:
+              type: number
+            type: array
+          type: array
+        x_test:
+          items:
+            items:
+              type: number
+            type: array
+          type: array
+        y_train:
+          items:
+            type: number
+          type: array
+        y_test:
+          items:
+            type: number
+          type: array
+      type: object
+    variance-input:
+      properties:
+        x:
+          items:
+            type: number
+          type: array
+      type: object
+    variance-output:
+      type: number
+    vector_add-input:
+      properties:
+        v:
+          items:
+            type: number
+          type: array
+        w:
+          items:
+            type: number
+          type: array
+      type: object
+    vector_add-output:
+      items:
+        type: number
+      type: array
+    vector_mean-input:
+      properties:
+        v:
+          items:
+            type: number
+          type: array
+        w:
+          items:
+            type: number
+          type: array
+      type: object
+    vector_mean-output:
+      items:
+        type: number
+      type: array
+    vector_subtract-input:
+      properties:
+        v:
+          items:
+            type: number
+          type: array
+        w:
+          items:
+            type: number
+          type: array
+      type: object
+    vector_subtract-output:
+      items:
+        type: number
+      type: array
+    vector_sum-input:
+      properties:
+        v:
+          items:
+            type: number
+          type: array
+        w:
+          items:
+            type: number
+          type: array
+      type: object
+    vector_sum-output:
+      items:
+        type: number
+      type: array
+    Pet:
+      example:
+        photoUrls:
+        - photoUrls
+        - photoUrls
+        name: doggie
+        id: 0
+        category:
+          name: name
+          id: 6
+        tags:
+        - name: name
+          id: 1
+        - name: name
+          id: 1
+        status: available
+      properties:
+        id:
+          format: int64
+          type: integer
+        category:
+          $ref: '#/components/schemas/Category'
+        name:
+          example: doggie
+          type: string
+        photoUrls:
+          items:
+            type: string
+          type: array
+          xml:
+            name: photoUrl
+            wrapped: true
+        tags:
+          items:
+            $ref: '#/components/schemas/Tag'
+          type: array
+          xml:
+            name: tag
+            wrapped: true
+        status:
+          description: pet status in the store
+          enum:
+          - available
+          - pending
+          - sold
+          type: string
+      required:
+      - name
+      - photoUrls
+      type: object
+      xml:
+        name: Pet
+    ApiResponse:
+      example:
+        code: 0
+        type: type
+        message: message
+      properties:
+        code:
+          format: int32
+          type: integer
+        type:
+          type: string
+        message:
+          type: string
+      type: object
+    Order:
+      example:
+        petId: 6
+        quantity: 1
+        id: 0
+        shipDate: 2000-01-23T04:56:07.000+00:00
+        complete: false
+        status: placed
+      properties:
+        id:
+          format: int64
+          type: integer
+        petId:
+          format: int64
+          type: integer
+        quantity:
+          format: int32
+          type: integer
+        shipDate:
+          format: date-time
+          type: string
+        status:
+          description: Order Status
+          enum:
+          - placed
+          - approved
+          - delivered
+          type: string
+        complete:
+          default: false
+          type: boolean
+      type: object
+      xml:
+        name: Order
+    User:
+      example:
+        firstName: firstName
+        lastName: lastName
+        password: password
+        userStatus: 6
+        phone: phone
+        id: 0
+        email: email
+        username: username
+      properties:
+        id:
+          format: int64
+          type: integer
+        username:
+          type: string
+        firstName:
+          type: string
+        lastName:
+          type: string
+        email:
+          type: string
+        password:
+          type: string
+        phone:
+          type: string
+        userStatus:
+          description: User Status
+          format: int32
+          type: integer
+      type: object
+      xml:
+        name: User
+    Category:
+      example:
+        name: name
+        id: 6
+      properties:
+        id:
+          format: int64
+          type: integer
+        name:
+          type: string
+      type: object
+      xml:
+        name: Category
+    Tag:
+      example:
+        name: name
+        id: 1
+      properties:
+        id:
+          format: int64
+          type: integer
+        name:
+          type: string
+      type: object
+      xml:
+        name: Tag
+    update_pet_with_form_request:
+      properties:
+        name:
+          description: Updated name of the pet
+          type: string
+        status:
+          description: Updated status of the pet
+          type: string
+      type: object
+    upload_file_request:
+      properties:
+        additionalMetadata:
+          description: Additional data to pass to server
+          type: string
+        file:
+          description: file to upload
+          format: binary
+          type: string
+      type: object
+  securitySchemes:
+    petstore_auth:
+      flows:
+        implicit:
+          authorizationUrl: http://petstore.swagger.io/oauth/dialog
+          scopes:
+            write:pets: modify pets in your account
+            read:pets: read your pets
+      type: oauth2
+    api_key:
+      in: header
+      name: api_key
+      type: apiKey

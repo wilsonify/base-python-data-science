@@ -1,0 +1,17 @@
+post:
+  tags: [math]
+  operationId: difference_quotient
+  x-openapi-router-controller: openapi_server.controllers.math_controller
+  description: "Description of the endpoint"
+  requestBody:
+    content:
+      application/json:
+        schema:
+          $ref: "difference_quotient-input.yaml"
+  responses:
+    "200":
+      description: "Description of this response."
+      content:
+        application/json:
+          schema:
+            $ref: "difference_quotient-output.yaml"

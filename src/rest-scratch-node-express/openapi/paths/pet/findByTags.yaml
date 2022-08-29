@@ -1,0 +1,42 @@
+get:
+  deprecated: true
+  description:
+    Muliple tags can be provided with comma separated strings. Use         tag1,
+    tag2, tag3 for testing.
+  operationId: find_pets_by_tags
+  parameters:
+    - description: Tags to filter by
+      explode: true
+      in: query
+      name: tags
+      required: true
+      schema:
+        items:
+          type: string
+        type: array
+      style: form
+  responses:
+    "200":
+      content:
+        application/xml:
+          schema:
+            items:
+              $ref: "../../components/schemas/Pet.yaml"
+            type: array
+        application/json:
+          schema:
+            items:
+              $ref: "../../components/schemas/Pet.yaml"
+            type: array
+      description: successful operation
+    "400":
+      content: {}
+      description: Invalid tag value
+  security:
+    - petstore_auth:
+        - write:pets
+        - read:pets
+  summary: Finds Pets by tags
+  tags:
+    - pet
+  x-openapi-router-controller: openapi_server.controllers.pet_controller
