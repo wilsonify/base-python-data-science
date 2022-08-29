@@ -1,0 +1,14 @@
+type: object
+properties:
+  train:
+    type: array
+    items:
+      type: array
+      items:
+        type: number
+  test:
+    type: array
+    items:
+      type: array
+      items:
+        type: number

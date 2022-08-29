@@ -1,0 +1,51 @@
+example:
+  photoUrls:
+  - photoUrls
+  - photoUrls
+  name: doggie
+  id: 0
+  category:
+    name: name
+    id: 6
+  tags:
+  - name: name
+    id: 1
+  - name: name
+    id: 1
+  status: available
+properties:
+  id:
+    format: int64
+    type: integer
+  category:
+    $ref: 'Category.yaml'
+  name:
+    example: doggie
+    type: string
+  photoUrls:
+    items:
+      type: string
+    type: array
+    xml:
+      name: photoUrl
+      wrapped: true
+  tags:
+    items:
+      $ref: 'Tag.yaml'
+    type: array
+    xml:
+      name: tag
+      wrapped: true
+  status:
+    description: pet status in the store
+    enum:
+    - available
+    - pending
+    - sold
+    type: string
+required:
+- name
+- photoUrls
+type: object
+xml:
+  name: Pet

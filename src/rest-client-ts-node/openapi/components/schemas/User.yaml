@@ -1,0 +1,32 @@
+example:
+  firstName: firstName
+  lastName: lastName
+  password: password
+  userStatus: 6
+  phone: phone
+  id: 0
+  email: email
+  username: username
+properties:
+  id:
+    format: int64
+    type: integer
+  username:
+    type: string
+  firstName:
+    type: string
+  lastName:
+    type: string
+  email:
+    type: string
+  password:
+    type: string
+  phone:
+    type: string
+  userStatus:
+    description: User Status
+    format: int32
+    type: integer
+type: object
+xml:
+  name: User

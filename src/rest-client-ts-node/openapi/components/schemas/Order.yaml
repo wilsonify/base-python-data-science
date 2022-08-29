@@ -1,0 +1,33 @@
+example:
+  petId: 6
+  quantity: 1
+  id: 0
+  shipDate: 2000-01-23T04:56:07.000+00:00
+  complete: false
+  status: placed
+properties:
+  id:
+    format: int64
+    type: integer
+  petId:
+    format: int64
+    type: integer
+  quantity:
+    format: int32
+    type: integer
+  shipDate:
+    format: date-time
+    type: string
+  status:
+    description: Order Status
+    enum:
+    - placed
+    - approved
+    - delivered
+    type: string
+  complete:
+    default: false
+    type: boolean
+type: object
+xml:
+  name: Order

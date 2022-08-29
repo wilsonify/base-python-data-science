@@ -1,0 +1,18 @@
+type: object
+properties:
+  tp:
+    description: number of True Positives
+    title: tp
+    type: number
+  fp:
+    description: number of False Positives
+    title: fp
+    type: number
+  fn:
+    description: number of False Negatives
+    title: fn
+    type: number
+  tn:
+    description: number of True Negatives
+    title: tn
+    type: number
