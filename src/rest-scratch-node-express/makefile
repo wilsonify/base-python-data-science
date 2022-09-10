@@ -1,12 +1,16 @@
 
+# function for creating version files with version string and date
 ver_file = echo "1.0.0" > $(1) && date +%Y-%m-%d >> $(1)
+
+.PHONY: all clean
 
 all: clean dist/image-latest.zip
 
 clean:
 	rm -rf build
 	rm -rf dist
-	rm make-dag.png
+	rm -rf generated/node_modules
+	rm -f make-dag.png
 
 build/VERSION.txt:
 	mkdir -p build && $(call ver_file, $@)
