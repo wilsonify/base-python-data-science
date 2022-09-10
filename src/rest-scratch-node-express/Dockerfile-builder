@@ -1,0 +1,4 @@
+FROM rsne-base-image:latest
+COPY generated/package.json /usr/src/app/generated/package.json
+WORKDIR /usr/src/app/generated
+RUN npm install

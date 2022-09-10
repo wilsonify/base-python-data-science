@@ -154,6 +154,7 @@ const standard_deviation = async (request, response) => {
 
 const strength = async (request, response) => {
   await Controller.handleRequest(request, response, service.strength);
+
 };
 
 const sum_of_squares = async (request, response) => {
