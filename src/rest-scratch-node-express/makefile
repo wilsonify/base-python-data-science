@@ -39,5 +39,5 @@ dist/image-latest.zip: dist/VERSION.txt build/docker-build-image.txt
 make-dag.png:
 	make -bnd | ~/repos/makefile2graph/make2graph | dot -Tpng -o $@
 
-run:
-	docker run --rm --name rsne -P rsne-image:latest
+run: build/docker-build-image.txt
+	docker run --rm --name rsne -p 49154:8080 rsne-image:latest
