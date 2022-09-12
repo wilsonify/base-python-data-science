@@ -144,3 +144,5 @@ dmypy.json
 
 #sonarqube
 .scannerwork/
+
+node_modules/
