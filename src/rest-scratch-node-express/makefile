@@ -10,6 +10,7 @@ clean:
 	rm -rf build
 	rm -rf dist
 	rm -rf generated/node_modules
+	rm -rf generated/dist
 	rm -f make-dag.png
 
 build/VERSION.txt:
@@ -35,6 +36,8 @@ build/docker-build-image.txt: build/docker-build-builder.txt
 
 dist/image-latest.zip: dist/VERSION.txt build/docker-build-image.txt
 	docker save rsne-image:latest -o $@
+
+image-latest.zip: dist/image-latest.zip
 
 make-dag.png:
 	make -bnd | ~/repos/makefile2graph/make2graph | dot -Tpng -o $@
