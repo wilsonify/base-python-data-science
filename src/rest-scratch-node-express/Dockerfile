@@ -1,11 +1,10 @@
 FROM rsne-builder-image:latest as builder
-COPY generated /usr/src/app/generated
-WORKDIR /usr/src/app/generated
-RUN npm install
+COPY generated /home/node/app/generated
+WORKDIR /home/node/app/generated
 RUN npx webpack
 
 FROM rsne-base-image:latest
-COPY --from=builder /usr/src/app/generated/dist /usr/src/app/generated/dist
-WORKDIR /usr/src/app/generated/dist
+COPY --from=builder /home/node/app/generated /home/node/app/generated
+WORKDIR /home/node/app/generated
 EXPOSE 8080
-CMD ["node", "main.js" ]
+CMD ["node", "index.js" ]
