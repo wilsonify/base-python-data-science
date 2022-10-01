@@ -19,6 +19,15 @@ build/VERSION.txt:
 dist/VERSION.txt:
 	mkdir -p dist && $(call ver_file, $@)
 
+generated/node_modules/VERSION.txt:
+	cd generated && npm install && cd .. && $(call ver_file, $@)
+
+dist/index.js: generated/node_modules/VERSION.txt
+	cd generated && npx webpack
+
+start: dist/index.js
+	cd generated && node dist/index.js
+
 build/docker-build-base.txt: build/VERSION.txt
 	docker build -f Dockerfile-base -t rsne-base-image:latest --platform=amd64 . && $(call ver_file, $@)
 
