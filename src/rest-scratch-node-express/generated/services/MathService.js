@@ -671,7 +671,8 @@ const sqrt = ({ sqrtInput }) => new Promise(
   async (resolve, reject) => {
     try {
       resolve(Service.successResponse({
-        sqrtInput,
+        "x": x,
+        "result": Math.sqrt(sqrtInput.x)
       }));
     } catch (e) {
       reject(Service.rejectResponse(
