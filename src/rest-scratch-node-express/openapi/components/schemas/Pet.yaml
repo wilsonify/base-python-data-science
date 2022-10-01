@@ -1,7 +1,7 @@
 example:
   photoUrls:
-  - photoUrls
-  - photoUrls
+    - photoUrls
+    - photoUrls2
   name: doggie
   id: 0
   category:

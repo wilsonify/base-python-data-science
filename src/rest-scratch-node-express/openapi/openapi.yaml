@@ -124,7 +124,7 @@ paths:
   /pet/findByTags:
     $ref: "paths/pet/findByTags.yaml"
   /pet/{petId}:
-    $ref: "paths/pet/{petId}.yaml"
+    $ref: "paths/pet/petId_bracket.yaml"
   /pet/{petId}/uploadImage:
     $ref: "paths/pet/uploadImage.yaml"
   /store/inventory:
@@ -132,7 +132,7 @@ paths:
   /store/order:
     $ref: "paths/store/order.yaml"
   /store/order/{orderId}:
-    $ref: "paths/store/{orderId}.yaml"
+    $ref: "paths/store/orderId_bracket.yaml"
   /user:
     $ref: "paths/user/user.yaml"
   /user/createWithArray:
@@ -144,7 +144,7 @@ paths:
   /user/logout:
     $ref: "paths/user/logout.yaml"
   /user/{username}:
-    $ref: "paths/user/{username}.yaml"
+    $ref: "paths/user/username_bracket.yaml"
 components:
   securitySchemes:
     petstore_auth:
