@@ -6,7 +6,7 @@
   "scripts": {
     "prestart": "npm install",
     "start": "node index.js",
-    "build": "webpack"
+    "build": "npx webpack"
   },
   "keywords": [
     "openapi-generator",
