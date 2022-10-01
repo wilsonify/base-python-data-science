@@ -4,6 +4,7 @@ const path = require("path");
 const stylesHandler = "style-loader";
 
 module.exports = {
+  target: "node",
   mode: 'development',
   entry: "./index.js",
   output: { path: path.resolve(__dirname, "dist"), filename: "index.js" },
@@ -21,19 +22,20 @@ module.exports = {
   resolve: {
     extensions: [".tsx", ".ts", ".jsx", ".js", "..."],
     fallback: {
-      "fs": false,
+      "fs": require.resolve('fs'),
       "tls": false,
       "net": false,
-      "path": false,
+      "path": require.resolve("path-browserify"),
       "zlib": false,
       "http": false,
       "https": false,
       "stream": false,
       "os": require.resolve("os-browserify/browser"),
-      "util":false,
+      "util":require.resolve("util"),
       "url":false,
       "crypto":false,
-      "querystring": false
+      "querystring": false,
+      "async_hooks": false
     }
   },
 };
