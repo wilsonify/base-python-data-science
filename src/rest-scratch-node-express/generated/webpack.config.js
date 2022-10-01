@@ -15,7 +15,7 @@ module.exports = {
     rules: [
       { test: /\.(ts|tsx)$/i, loader: "ts-loader" },
       { test: /\.css$/i, use: [stylesHandler, "css-loader"] },
-      { test: /\.(eot|svg|ttf|woff|woff2|png|jpg|gif)$/i, type: "asset", },
+      { test: /\.(eot|svg|ttf|woff|woff2|png|jpg|gif|yaml)$/i, type: "asset" },
       // Add your rules for custom modules here from https://webpack.js.org/loaders/
     ],
   },
