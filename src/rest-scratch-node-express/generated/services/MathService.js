@@ -730,9 +730,18 @@ const standard_deviation = ({ standardDeviationInput }) => new Promise(
 const strength = ({ strengthInput }) => new Promise(
   async (resolve, reject) => {
     try {
-      resolve(Service.successResponse({
-        strengthInput,
-      }));
+        console.log('strengthInput = ', strengthInput)
+        var actual, expected, eps, strength, payload;
+        eps = 0.001;
+        actual = strengthInput.actual;
+        expected = strengthInput.expected;
+        strength = actual / (expected + eps);
+        payload={
+          "expected":expected,
+          "actual":actual,
+          "strength": strength
+          };
+        resolve(Service.successResponse(payload));
     } catch (e) {
       reject(Service.rejectResponse(
         e.message || 'Invalid input',
