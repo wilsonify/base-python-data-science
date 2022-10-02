@@ -189,3 +189,19 @@ than loosely-defined JSON objects.
 Given the nature of JavaScript programmers, who want to work with their own
 bootstrapped parameters, this concept might not work. 
 Keeping this here for future discussion and feedback.
+
+### named imports
+named imports are great.
+
+when we write:
+```
+import OpenApiValidator from 'express-openapi-validator'
+```
+we import the default symbol of the "express-openapi-validator" module then rename it "OpenApiValidator" in the current module.
+
+Whereas, when we write :
+```
+import { OpenApiValidator } from 'express-openapi-validator'
+```
+we import the "OpenApiValidator" function from the "express-openapi-validator" module. 
+If this function doesn't exist, then my IDE will let me know and the import will fail.
