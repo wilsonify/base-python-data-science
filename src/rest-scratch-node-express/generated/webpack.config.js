@@ -38,4 +38,9 @@ module.exports = {
       "async_hooks": false
     }
   },
+  node: {
+    global: "warn",
+    __filename: "warn-mock",
+    __dirname: "warn-mock",
+  }
 };
