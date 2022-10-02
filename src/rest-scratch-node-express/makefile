@@ -25,7 +25,13 @@ generated/node_modules/VERSION.txt:
 dist/index.js: generated/node_modules/VERSION.txt
 	cd generated && npx webpack
 
-start: dist/index.js
+generated/dist/api/openapi.yaml:
+	mkdir -p generated/dist/api && cp generated/api/openapi.yaml generated/dist/api/openapi.yaml
+
+generated/dist/node_modules/VERSION.txt:
+	mkdir -p generated/dist/node_modules && cp -R generated/node_modules generated/dist
+
+start: dist/index.js generated/dist/api/openapi.yaml generated/dist/node_modules/VERSION.txt
 	cd generated && node dist/index.js
 
 build/docker-build-base.txt: build/VERSION.txt
