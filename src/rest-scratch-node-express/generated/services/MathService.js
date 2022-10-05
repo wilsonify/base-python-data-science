@@ -670,6 +670,7 @@ const split_data = ({ splitDataInput }) => new Promise(
 * */
 const sqrt = (sqrtInput) => new Promise(
   async (resolve, reject) => {
+    console.log('sqrtInput = ', sqrtInput)
     try {
       console.log("sqrt")
       console.log("sqrtInput = ", sqrtInput)
