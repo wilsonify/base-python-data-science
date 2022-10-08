@@ -1,13 +1,12 @@
 // Generated using webpack-cli https://github.com/webpack/webpack-cli
-
 const path = require("path");
 const stylesHandler = "style-loader";
 
 module.exports = {
   target: "node",
   mode: 'development',
-  entry: "./index.js",
-  output: { path: path.resolve(__dirname, "dist"), filename: "index.js" },
+  entry: path.resolve(__dirname, "index.js"),
+  output: { path: path.resolve(__dirname, "dist"), filename: "[name].js" },
   plugins: [
     // Add your plugins here from https://webpack.js.org/configuration/plugins/
   ],
