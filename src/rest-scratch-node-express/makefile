@@ -12,6 +12,7 @@ clean:
 	rm -rf generated/node_modules
 	rm -rf generated/dist
 	rm -f make-dag.png
+	rm generated/*.log
 
 build/VERSION.txt:
 	mkdir -p build && $(call ver_file, $@)
