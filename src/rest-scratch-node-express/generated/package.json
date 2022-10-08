@@ -2,7 +2,6 @@
   "name": "swagger-petstore",
   "version": "1.0.0",
   "description": "This is a sample server Petstore server.  You can find out more about     Swagger at [http://swagger.io](http://swagger.io) or on [irc.freenode.net, #swagger](http://swagger.io/irc/).      For this sample, you can use the api key `special-key` to test the authorization     filters.",
-  "main": "index.js",
   "scripts": {
     "prestart": "npm install",
     "start": "node index.js",
@@ -14,7 +13,8 @@
   ],
   "license": "MIT",
   "private": true,
-  "dependencies": {
+  "dependencies": { },
+  "devDependencies": {
     "async_hooks": "^1.0.0",
     "body-parser": "^1.19.0",
     "camelcase": "^5.3.1",
@@ -30,9 +30,7 @@
     "path-browserify": "^1.0.1",
     "swagger-ui-express": "^4.0.2",
     "util": "^0.12.4",
-    "winston": "^3.2.1"
-  },
-  "devDependencies": {
+    "winston": "^3.2.1",
     "@webpack-cli/generators": "^2.5.0",
     "axios": "^0.19.0",
     "chai": "^4.2.0",
