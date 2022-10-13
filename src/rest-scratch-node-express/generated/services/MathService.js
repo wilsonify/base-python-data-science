@@ -667,9 +667,11 @@ const split_data = ({ splitDataInput }) => new Promise(
 * sqrtInput SqrtInput  (optional)
 * returns sqrt-output
 * */
-const sqrt = ({ sqrtInput }) => new Promise(
+const sqrt = (sqrtInput) => new Promise(
   async (resolve, reject) => {
     try {
+      console.log("sqrt")
+      console.log("sqrtInput = ", sqrtInput)
       resolve(Service.successResponse({
         "result": Math.sqrt(sqrtInput.x),
         "x": sqrtInput.x,
@@ -731,18 +733,18 @@ const standard_deviation = ({ standardDeviationInput }) => new Promise(
 const strength = ({ strengthInput }) => new Promise(
   async (resolve, reject) => {
     try {
-        console.log('strengthInput = ', strengthInput)
-        var actual, expected, eps, strength, payload;
-        eps = 0.001;
-        actual = strengthInput.actual;
-        expected = strengthInput.expected;
-        strength = actual / (expected + eps);
-        payload={
-          "expected":expected,
-          "actual":actual,
-          "strength": strength
-          };
-        resolve(Service.successResponse(payload));
+      console.log('strengthInput = ', strengthInput)
+      var actual, expected, eps, strength, payload;
+      eps = 0.001;
+      actual = strengthInput.actual;
+      expected = strengthInput.expected;
+      strength = actual / (expected + eps);
+      payload = {
+        "expected": expected,
+        "actual": actual,
+        "strength": strength
+      };
+      resolve(Service.successResponse(payload));
     } catch (e) {
       reject(Service.rejectResponse(
         e.message || 'Invalid input',

@@ -141,7 +141,12 @@ const split_data = async (request, response) => {
 };
 
 const sqrt = async (request, response) => {
-  await Controller.handleRequest(request, response, service.sqrt);
+  console.log("sqrt")
+  console.log("request.body = ", request.body)
+  const serviceResponse = await service.sqrt(request.body);
+  console.log("serviceResponse =", serviceResponse)
+  Controller.sendResponse(response, serviceResponse);
+  //await Controller.handleRequest(request, response, service.sqrt);
 };
 
 const squared_distance = async (request, response) => {

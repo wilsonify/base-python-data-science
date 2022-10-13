@@ -1,8 +1,7 @@
 const fs = require('fs');
 const path = require('path');
-const camelCase = require('camelcase');
 const config = require('../config');
-const logger = require('../logger');
+//const logger = require('../logger');
 
 class Controller {
   static sendResponse(response, payload) {
@@ -57,25 +56,33 @@ class Controller {
   }
 
   static getRequestBodyName(request) {
-    const codeGenDefinedBodyName = request.openapi.schema['x-codegen-request-body-name'];
-    if (codeGenDefinedBodyName !== undefined) {
-      return codeGenDefinedBodyName;
-    }
-    const refObjectPath = request.openapi.schema.requestBody.content['application/json'].schema.$ref;
-    if (refObjectPath !== undefined && refObjectPath.length > 0) {
-      return (refObjectPath.substr(refObjectPath.lastIndexOf('/') + 1));
-    }
-    return 'body';
+    var RequestBodyName = 'application/json'
+    console.log("getRequestBodyName")
+    console.log("request.openapi.schema = ", request.openapi.schema)
+    console.log("request.openapi.schema.requestBody.content = ", request.openapi.schema.requestBody.content)
+    //const codeGenDefinedBodyName = request.openapi.schema['x-codegen-request-body-name'];
+    // if (codeGenDefinedBodyName !== undefined) { return codeGenDefinedBodyName; }
+    //const refObjectPath = request.openapi.schema.requestBody.content['application/json'].schema.$ref;
+    //const refObjectPath_substr = refObjectPath.substr(refObjectPath.lastIndexOf('/') + 1)
+    //console.log("refObjectPath_substr =", refObjectPath_substr)
+    console.log("RequestBodyName =", RequestBodyName)
+    return RequestBodyName;
   }
 
   static collectRequestParams(request) {
     const requestParams = {};
     if (request.openapi.schema.requestBody !== undefined) {
+      console.log("requestBody", request.openapi.schema.requestBody)
       const { content } = request.openapi.schema.requestBody;
+      console.log("content = ", content)
+      console.log("request.body = ", request.body)
       if (content['application/json'] !== undefined) {
-        const requestBodyName = camelCase(this.getRequestBodyName(request));
-        requestParams[requestBodyName] = request.body;
-      } else if (content['multipart/form-data'] !== undefined) {
+        console.log("content['application/json'] = ", content['application/json'])
+        //const requestBodyName = this.getRequestBodyName(request);
+        requestParams['body'] = request.body;
+      }
+      else if (content['multipart/form-data'] !== undefined) {
+        console.log("multipart/form-data detected")
         Object.keys(content['multipart/form-data'].schema.properties).forEach(
           (property) => {
             const propertyObject = content['multipart/form-data'].schema.properties[property];
@@ -88,22 +95,27 @@ class Controller {
         );
       }
     }
-
-    request.openapi.schema.parameters.forEach((param) => {
-      if (param.in === 'path') {
-        requestParams[param.name] = request.openapi.pathParams[param.name];
-      } else if (param.in === 'query') {
-        requestParams[param.name] = request.query[param.name];
-      } else if (param.in === 'header') {
-        requestParams[param.name] = request.headers[param.name];
-      }
-    });
-    return requestParams;
+    if (request.openapi.schema.parameters !== undefined) {
+      request.openapi.schema.parameters.forEach((param) => {
+        if (param.in === 'path') {
+          requestParams[param.name] = request.openapi.pathParams[param.name];
+        } else if (param.in === 'query') {
+          requestParams[param.name] = request.query[param.name];
+        } else if (param.in === 'header') {
+          requestParams[param.name] = request.headers[param.name];
+        }
+      });
+    }
+    console.log("requestParams =", requestParams)
+    return request.body;
   }
 
   static async handleRequest(request, response, serviceOperation) {
+    console.log("handleRequest")
     try {
-      const serviceResponse = await serviceOperation(this.collectRequestParams(request));
+      var collected_request = this.collectRequestParams(request)
+      console.log("collected_request = ", collected_request)
+      const serviceResponse = await serviceOperation(collected_request);
       Controller.sendResponse(response, serviceResponse);
     } catch (error) {
       Controller.sendError(response, error);

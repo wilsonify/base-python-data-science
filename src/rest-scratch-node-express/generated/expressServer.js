@@ -8,8 +8,8 @@ const express = require('express');
 const cors = require('cors');
 const cookieParser = require('cookie-parser');
 const bodyParser = require('body-parser');
-const { OpenApiValidator } = require('express-openapi-validator');
-const logger = require('./logger');
+const { middleware } = require('express-openapi-validator');
+//const logger = require('./logger');
 const config = require('./config');
 
 class ExpressServer {
@@ -17,7 +17,7 @@ class ExpressServer {
     this.port = port;
     this.app = express();
     this.openApiPath = openApiYaml;
-    this.schema = jsYaml.safeLoad(fs.readFileSync(openApiYaml));
+    this.schema = jsYaml.load(fs.readFileSync(openApiYaml));
     this.setupMiddleware();
   }
 
@@ -52,15 +52,15 @@ class ExpressServer {
         errors: err.errors || '',
       });
     });
-    
+
   }
   launch() {
     console.log("launch")
-    new OpenApiValidator({
+    this.app.use(middleware({
       apiSpec: this.openApiPath,
       operationHandlers: path.join(__dirname),
       fileUploader: { dest: config.FILE_UPLOAD_PATH },
-    }).install(this.app);
+    }))
     console.log("createServer");
     http.createServer(this.app).listen(this.port);
     console.log(`Listening on port ${this.port}`);
