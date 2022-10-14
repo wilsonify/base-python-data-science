@@ -12,7 +12,7 @@ clean:
 	rm -rf generated/node_modules
 	rm -rf generated/dist
 	rm -f make-dag.png
-	rm generated/*.log
+	rm -f generated/*.log
 
 build/VERSION.txt:
 	mkdir -p build && $(call ver_file, $@)
@@ -23,17 +23,28 @@ dist/VERSION.txt:
 generated/node_modules/VERSION.txt:
 	cd generated && npm install && cd .. && $(call ver_file, $@)
 
-dist/index.js: generated/node_modules/VERSION.txt
-	cd generated && npx webpack
+dist/api/openapi.yaml:
+	mkdir -p dist/api
+	cp generated/api/openapi.yaml dist/api/openapi.yaml
 
-generated/dist/api/openapi.yaml:
-	mkdir -p generated/dist/api && cp generated/api/openapi.yaml generated/dist/api/openapi.yaml
+dist/node_modules/VERSION.txt: generated/node_modules/VERSION.txt
+	cp -R generated/node_modules dist
+
+dist/controllers:
+	mkdir -p dist/controllers
+	cp -r generated/controllers dist/controllers
+
+dist/main.js: generated/node_modules/VERSION.txt dist/VERSION.txt dist/api/openapi.yaml dist/node_modules/VERSION.txt dist/controllers
+	cd generated && npx webpack && mv dist/* ../dist
+
+run: dist/main.js
+	cd dist && node main.js
 
 generated/dist/node_modules/VERSION.txt:
 	mkdir -p generated/dist/node_modules && cp -R generated/node_modules generated/dist
 
-start: dist/index.js generated/dist/api/openapi.yaml generated/dist/node_modules/VERSION.txt
-	cd generated && node dist/index.js
+start: dist/main.js generated/dist/api/openapi.yaml generated/dist/node_modules/VERSION.txt
+	cd generated && node dist/main.js
 
 build/docker-build-base.txt: build/VERSION.txt
 	docker build -f Dockerfile-base -t rsne-base-image:latest --platform=amd64 . && $(call ver_file, $@)
@@ -63,8 +74,5 @@ docker-stop:
 
 docker-run: build/docker-build-image.txt docker-stop
 	# Node.js was not designed to run as PID 1, --init wraps Node.js with tini
-	docker run --rm \
---name rsne \
--p 49154:8080 \
-rsne-image:latest
+	docker run --rm --name rsne -p 49154:8080 rsne-image:latest
 
