@@ -5,6 +5,6 @@ RUN npx webpack
 
 FROM rsne-base-image:latest
 COPY --from=builder /home/node/app/generated /home/node/app/generated
-WORKDIR /home/node/app/generated/dist
+WORKDIR /home/node/app/generated
 EXPOSE 8080
 CMD ["node", "index.js" ]
