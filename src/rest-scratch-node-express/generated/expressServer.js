@@ -58,7 +58,7 @@ class ExpressServer {
     console.log("launch")
     this.app.use(middleware({
       apiSpec: this.openApiPath,
-      operationHandlers: path.join(__dirname),
+      operationHandlers: config.CONTROLLER_DIRECTORY,
       fileUploader: { dest: config.FILE_UPLOAD_PATH },
     }))
     console.log("createServer");
