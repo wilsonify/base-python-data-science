@@ -5,7 +5,7 @@ const config = {
   URL_PORT: 8080,
   URL_PATH: 'https://petstore.swagger.io',
   BASE_VERSION: '/v2',
-  CONTROLLER_DIRECTORY: path.join(__dirname, 'controllers'),
+  CONTROLLER_DIRECTORY: path.join(__dirname),
   PROJECT_DIR: __dirname,
 };
 config.OPENAPI_YAML = path.join(config.ROOT_DIR, 'api', 'openapi.yaml');

@@ -1,0 +1,15 @@
+{
+  "name": "mod1",
+  "version": "1.0.0",
+  "description": "getA",
+  "main": "module1.ts",
+  "scripts": {
+    "build": "npx tsc",
+    "test": "jest"
+  },
+  "author": "",
+  "license": "MIT",
+  "devDependencies": {
+    "typescript": "^4.8.3"
+  }
+}

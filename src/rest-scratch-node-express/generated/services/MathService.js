@@ -672,8 +672,10 @@ const sqrt = (sqrtInput) => new Promise(
     try {
       console.log("sqrt")
       console.log("sqrtInput = ", sqrtInput)
+      var result = Math.sqrt(sqrtInput.x);
+      console.log("result  = ", result )
       resolve(Service.successResponse({
-        "result": Math.sqrt(sqrtInput.x),
+        "result": result ,
         "x": sqrtInput.x,
       }));
     } catch (e) {
@@ -730,10 +732,11 @@ const standard_deviation = ({ standardDeviationInput }) => new Promise(
 * strengthInput StrengthInput  (optional)
 * returns strength-output
 * */
-const strength = ({ strengthInput }) => new Promise(
+const strength = (strengthInput) => new Promise(
   async (resolve, reject) => {
     try {
-      console.log('strengthInput = ', strengthInput)
+      console.log("strength")
+      console.log("strengthInput = ", strengthInput)
       var actual, expected, eps, strength, payload;
       eps = 0.001;
       actual = strengthInput.actual;
@@ -744,6 +747,7 @@ const strength = ({ strengthInput }) => new Promise(
         "actual": actual,
         "strength": strength
       };
+      console.log("payload = ", payload)
       resolve(Service.successResponse(payload));
     } catch (e) {
       reject(Service.rejectResponse(
