@@ -1,8 +1,8 @@
 {
-  "name": "mod1",
+  "name": "ts-strength",
   "version": "1.0.0",
   "description": "getA",
-  "main": "module1.ts",
+  "main": "signal-strength.ts",
   "scripts": {
     "build": "npx tsc",
     "test": "jest"
