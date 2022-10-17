@@ -2,7 +2,7 @@
     "name": "ts-sqrt",
     "version": "1.0.0",
     "description": "getA",
-    "main": "sqrt_nr.ts",
+    "main": "sqrt_nr.js",
     "scripts": {
         "build": "npx tsc",
         "test": "jest"

@@ -2,7 +2,7 @@
   "name": "ts-strength",
   "version": "1.0.0",
   "description": "getA",
-  "main": "signal-strength.ts",
+  "main": "signal-strength.js",
   "scripts": {
     "build": "npx tsc",
     "test": "jest"

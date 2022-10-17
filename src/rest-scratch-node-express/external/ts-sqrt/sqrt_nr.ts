@@ -1,4 +1,4 @@
-export default function sqrt_newton(x: number): number {
+export function sqrt_newton(x: number): number {
     // Newton Method Square Root
     var isGoodEnough = function (guess: number) {
         return Math.abs(guess * guess - x) / x < 0.001;

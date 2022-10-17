@@ -1,6 +1,7 @@
 /* eslint-disable no-unused-vars */
 const Service = require('./Service');
-
+const { sqrt_newton } = require('ts-sqrt');
+const { getStrength } = require('ts-strength');
 /**
 * Description of the endpoint
 *
@@ -672,10 +673,10 @@ const sqrt = (sqrtInput) => new Promise(
     try {
       console.log("sqrt")
       console.log("sqrtInput = ", sqrtInput)
-      var result = Math.sqrt(sqrtInput.x);
-      console.log("result  = ", result )
+      var result = sqrt_newton(sqrtInput.x);
+      console.log("result  = ", result)
       resolve(Service.successResponse({
-        "result": result ,
+        "result": result,
         "x": sqrtInput.x,
       }));
     } catch (e) {
@@ -737,12 +738,10 @@ const strength = (strengthInput) => new Promise(
     try {
       console.log("strength")
       console.log("strengthInput = ", strengthInput)
-      var actual, expected, eps, strength, payload;
-      eps = 0.001;
-      actual = strengthInput.actual;
-      expected = strengthInput.expected;
-      strength = actual / (expected + eps);
-      payload = {
+      var actual = strengthInput.actual;
+      var expected = strengthInput.expected;
+      var strength = getStrength(actual, expected);
+      var payload = {
         "expected": expected,
         "actual": actual,
         "strength": strength

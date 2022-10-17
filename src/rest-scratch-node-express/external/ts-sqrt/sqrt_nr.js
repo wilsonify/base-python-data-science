@@ -1,5 +1,6 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
+exports.sqrt_newton = void 0;
 function sqrt_newton(x) {
     // Newton Method Square Root
     var isGoodEnough = function (guess) {
@@ -13,5 +14,5 @@ function sqrt_newton(x) {
     };
     return sqrIter(1.0);
 }
-exports.default = sqrt_newton;
+exports.sqrt_newton = sqrt_newton;
 ;
