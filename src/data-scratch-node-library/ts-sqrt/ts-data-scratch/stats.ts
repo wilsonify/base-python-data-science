@@ -1,20 +1,23 @@
-from data_science_from_scratch import config
-from data_science_from_scratch.library.linear_algebra import sum_of_squares, dot, shape, get_column, make_matrix
+import {sum_of_squares, dot, shape, get_column, make_matrix} from "./linear_algebra" 
 
 
-function bucketize(point:number, bucket_size:number):number {
+export function bucketize(point:number, bucket_size:number):number {
     // floor the point to the next lower multiple of bucket_size
-    return bucket_size * math.floor(point / bucket_size);
+    return bucket_size * Math.floor(point / bucket_size);
   }
   
 
-function Counter(array:Array<number>) {
-    var count={};
-    array.forEach(val => count[val] = (count[val] || 0) + 1);
+export function Counter(array:Array<number>) {
+    let count = new Map<string, number>();
+    for (var i=0;i<array.length;i+=1) {
+        var val = array[i].toString()
+        var prev = count.get(val) || 0;
+        count.set(val, prev + 1 )
+    }
     return count;
   }
   
-function make_histogram(points:Array<number>, bucket_size:number) {
+export function make_histogram(points:Array<number>, bucket_size:number) {
     // buckets the points and counts how many in each bucket
     var counting=[];
     for (var point, _pj_c = 0, _pj_a = points, _pj_b = _pj_a.length; _pj_c < _pj_b; _pj_c += 1) {
@@ -27,7 +30,7 @@ function make_histogram(points:Array<number>, bucket_size:number) {
 }
 
 
-function correlation_matrix(data) {
+export function correlation_matrix(data:Array<Array<number>>) {
     //returns the num_columns x num_columns matrix whose (i, j)th entry is the correlation between columns i and j of data
     var _, num_columns;  
     [_, num_columns] = shape(data);
@@ -40,16 +43,20 @@ function correlation_matrix(data) {
   }
   
 
-function mean(x) {
-    return sum(x) / x.length;
+function summation(x:Array<number>):number {
+    return x.reduce((a, b) => a + b, 0)
+}
+
+function mean(x:Array<number>):number {
+    return summation(x) / x.length;
   }
   
-function median(v) {
+function median(v:Array<number>):number {
     //finds the 'middle-most' value of v by binary search
     var hi, lo, midpoint, n, sorted_v;
     n = v.length;
     sorted_v = v.sort();
-    midpoint = math.floor(n / 2);
+    midpoint = Math.floor(n / 2);
   
     if (n % 2 === 1) {
       return sorted_v[midpoint];
@@ -61,18 +68,27 @@ function median(v) {
   }
   
 
-
-def quantile(x, p):
+function quantile(x:Array<number>, p:number):number {
     // returns the pth-percentile value in x
-    p_index = int(p * len(x))
-    return sorted(x)[p_index]
+    var p_index = Math.floor(p * x.length)
+    return x.sort()[p_index]
+}
+    
 
-
-def mode(x):
+function mode(x:Array<number>):Array<number> {
     // returns a list, might be more than one mode
-    counts = Counter(x)
-    max_count = max(counts.values())
-    return [x_i for x_i, count in counts.items() if count == max_count]
+    var counts = Counter(x)
+    var max_count = Math.max(...counts.values())
+    var result = [];
+    for (i = 0 ; i <_counts.length; i += 1) {
+      var count = counts.get(i);
+      if (count === max_count) {
+        result.push(x_i);
+      }
+    }
+    return result
+
+}
 
 
 // "range" already means something in Python, so we'll use a different name
