@@ -1,23 +1,24 @@
-import {distance, vector_subtract, scalar_multiply} from "./linear_algebra" 
+import { distance, vector_subtract, scalar_multiply } from "./linear_algebra"
 
 type NumericFunction = (x: number) => number;
 type NumericArray = Array<number>;
+type NumericArrayFunction = (x: NumericArray) => NumericArray;
 
-function sum_of_squares(v:Array<number>):number {
+function sum_of_squares(v: Array<number>): number {
     /* computes the sum of squared elements in v */
     var result = 0;
     for (var i = 0; i < v.length; i += 1) {
-        result+=Math.pow(i, 2);
+        result += Math.pow(i, 2);
     }
     return result;
-  }
-  
-
-function difference_quotient(f:NumericFunction, x:number, h:number):number {
-    return (f(x + h) - f(x)) / h;    
 }
 
-function partial_difference_quotient(f:NumericFunction, v:Array<number>, i:number, h:number):number {
+
+function difference_quotient(f: NumericFunction, x: number, h: number): number {
+    return (f(x + h) - f(x)) / h;
+}
+
+function partial_difference_quotient(f: NumericFunction, v: Array<number>, i: number, h: number): number {
     // add h to just the i-th element of v
     var item;
     var result = 0;
@@ -25,182 +26,195 @@ function partial_difference_quotient(f:NumericFunction, v:Array<number>, i:numbe
         item = 0;
         if (j === i) { item = h; }
         result += (f(v[j] + item) - f(v[j])) / h;
-    }        
+    }
     return result;
 }
-   
-function estimate_gradient(f:NumericFunction, v:Array<number>, h:number = 1e-05):Array<number> {
-    var result:Array<number> = [];
+
+function estimate_gradient(f: NumericFunction, v: Array<number>, h: number = 1e-05): Array<number> {
+    var result: Array<number> = [];
     for (var i = 0, _pj_a = v.length; i < _pj_a; i += 1) {
         result.push(partial_difference_quotient(f, v, i, h));
     }
     return result;
-  }
-  
-  
-function step(v:NumericArray, direction:NumericArray, step_size:number) {
-    // move step_size in the direction from v
-    var result:Array<number> = [];
-    for (var i = 0, _pj_a = v.length; i < _pj_a; i += 1) {
-      var v_i = v[i];
-      var direction_i = direction[i];
-      result.push(v_i + step_size * direction_i);
-    }
-    return result;
-  }
-  
-function sum_of_squares_gradient(v:NumericArray):NumericArray {
-    var result = []; 
-    for (var i = 0; i < v.length; i += 1) {
-      var v_i = v[i];
-      result.push(2 * v_i);
-    }  
-    return result;
-  }
-
-
-function safe(f:NumericFunction) {
-    // define a new function that wraps f and return it
-    function safe_f(...args) {
-        try {
-            return f(...args);
-        } catch (e) {
-            return Number.parseFloat("inf");
-      }
-    }
-    return safe_f;
-  }
-
-// minimize / maximize batch
-        
-function minimize_batch(target_fn:NumericFunction, gradient_fn:NumericFunction, theta_0:number, tolerance:number = 1e-06) {
-    //use gradient descent to find theta that minimizes target function
-    var gradient;
-    var next_theta;
-    var next_thetas;
-    var next_value;
-    var step_sizes =[100, 10, 1, 0.1, 0.01, 0.001, 0.0001, 1e-05];
-    var theta= theta_0;
-    var value;
-    target_fn = safe(target_fn); // safe version of target_fn
-    value = target_fn(theta); // value we're minimizing
-    while (true) {
-        gradient = gradient_fn(theta);
-
-    next_thetas = function () {
-        var _pj_a = [],
-        _pj_b = step_sizes;
-        for (var _pj_c = 0, _pj_d = _pj_b.length; _pj_c < _pj_d; _pj_c += 1) {
-            var step_size = _pj_b[_pj_c];
-            _pj_a.push(step(theta, gradient, -step_size));
-      }
-
-      return _pj_a;
-    }.call(this);
-
-    // choose next_theta that minimizes the error function
-    next_theta = Math.min(next_thetas, { "key": target_fn });
-    next_value = target_fn(next_theta);
-
-    if (Math.abs(value - next_value) < tolerance) {
-        // if converging, stop
-      return theta;
-    } else {
-      [theta, value] = [next_theta, next_value];
-    }
-  }
 }
 
 
-def negate(f):
-    """return a function that for any input x returns -f(x)"""
-    return lambda *args, **kwargs: -f(*args, **kwargs)
+function step(v: NumericArray, direction: NumericArray, step_size: number) {
+    // move step_size in the direction from v
+    var result: Array<number> = [];
+    for (var i = 0, _pj_a = v.length; i < _pj_a; i += 1) {
+        var v_i = v[i];
+        var direction_i = direction[i];
+        result.push(v_i + step_size * direction_i);
+    }
+    return result;
+}
+
+function sum_of_squares_gradient(v: NumericArray): NumericArray {
+    var result = [];
+    for (var i = 0; i < v.length; i += 1) {
+        var v_i = v[i];
+        result.push(2 * v_i);
+    }
+    return result;
+}
 
 
-def negate_all(f):
-    """the same when f returns a list of numbers"""
-    return lambda *args, **kwargs: [-y for y in f(*args, **kwargs)]
+function safe(f: NumericFunction) {
+    // define a new function that wraps f and return it
+    function safe_f(x: number) {
+        try {
+            return f(x);
+        } catch (e) {
+            return NaN;
+        }
+    }
+    return safe_f;
+}
+
+// minimize / maximize batch
+
+function minimize_batch(
+    target_fn: NumericFunction,
+    gradient_fn: NumericFunction,
+    theta_0: number,
+    tolerance: number = 1e-06) {
+
+    //use gradient descent to find theta that minimizes target function
+    var gradient: number;
+    var next_theta;
+    var next_thetas;
+    var next_value;
+    var step_sizes = [100, 10, 1, 0.1, 0.01, 0.001, 0.0001, 1e-05];
+    var theta = theta_0;
+    var value;
+    var target_fn_safe = safe(target_fn); // safe version of target_fn
+    value = target_fn_safe(theta); // value we're minimizing
+    while (true) {
+        gradient = gradient_fn(theta);
+        next_thetas = []
+        for (var i = 0; i < step_sizes.length; i += 1) {
+            var step_size = step_sizes[i];
+            next_thetas.push(step(theta, gradient, -step_size));
+        }
+        // choose next_theta that minimizes the error function
+        next_theta = Math.min(next_thetas, { "key": target_fn });
+        next_value = target_fn(next_theta);
+        if (Math.abs(value - next_value) < tolerance) {
+            // if converging, stop
+            return theta;
+        } else {
+            [theta, value] = [next_theta, next_value];
+        }
+    }
+}
 
 
-def maximize_batch(target_fn, gradient_fn, theta_0, tolerance=0.000001):
-    return minimize_batch(
-        negate(target_fn), negate_all(gradient_fn), theta_0, tolerance
-    )
+function negate(f: NumericFunction) {
+    /* return a function that for any input x returns -f(x) */
+    function arbitrary(x: number) {
+        return -f(x)
+    }
+    return arbitrary;
+}
 
+function negate_all(f: NumericArrayFunction) {
+    // the same when f returns a list of numbers
+    function arbitrary(x: Array<number>) {
+        var result = []
+        for (var i = 0; i < x.length; i++) {
+            result.push(-f(x))
+        }
+        return
+    }
+    return arbitrary;
+}
 
+function maximize_batch(target_fn: NumericFunction, gradient_fn: NumericArrayFunction, theta_0: number, tolerance: number = 0.000001) {
+    return minimize_batch(negate(target_fn), negate_all(gradient_fn), theta_0, tolerance)
+}
 
 // minimize / maximize stochastic
 
+function shuffle(array: NumericArray) {
+    var m = array.length, t, i;
+    // While there remain elements to shuffle…
+    while (m) {
+        // Pick a remaining element…
+        i = Math.floor(Math.random() * m--);
+
+        // And swap it with the current element.
+        t = array[m];
+        array[m] = array[i];
+        array[i] = t;
+    }
+
+    return array;
+}
+
+function in_random_order(data: Array<Array<number>>) {
+    // generator returns the elements of data in random order
+    var indexes = []
+    for (var i = 0; i < data.length; i += 1) {
+        indexes.push(i)
+    }
+    indexes = shuffle(indexes)
+    for (var j = 0; j < indexes.length; j += 1) {
+        yield data[indexes[j]]
+    }
+}
 
 
-def in_random_order(data):
-    """generator that returns the elements of data in random order"""
-    indexes = [i for i, _ in enumerate(data)]  # create a list of indexes
-    random.shuffle(indexes)  # shuffle them
-    for i in indexes:  # return the data in that order
-        yield data[i]
+function minimize_stochastic(
+    target_fn: NumericFunction,
+    gradient_fn: NumericArrayFunction,
+    x: NumericArray,
+    y: NumericArray,
+    theta_0: number,
+    alpha_0: number = 0.01) {
+    var alpha;
+    var data;
+    var iterations_with_no_improvement;
+    var min_theta;
+    var min_value;
+    var observation;
+    var theta;
+    var value;
+    var x_i;
+    var y_i;
+    data = [];
+    for (var i = 0, _pj_a = x.length; i < _pj_a; i += 1) {
+        observation = [x[i], y[i]];
+        data.push(observation);
+    }
+    theta = theta_0;
+    alpha = alpha_0;
+    [min_theta, min_value] = [null, Number.parseFloat("inf")];
+    iterations_with_no_improvement = 0;
+    while (iterations_with_no_improvement < 100) {
+        value = 0;
+        for (var i = 0, _pj_a = data.length; i < _pj_a; i += 1) {
+            x_i = x[i];
+            y_i = y[i];
+            value += target_fn(x_i, y_i, theta);
+        }
+        if (value < min_value) {
+            [min_theta, min_value] = [theta, value];
+            iterations_with_no_improvement = 0;
+            alpha = alpha_0;
+        } else {
+            iterations_with_no_improvement += 1;
+            alpha *= 0.9;
+        }
+    }
+    // and take a gradient step for each of the data points
+    for (let [x_i, y_i] of in_random_order(data)) {
+        gradient_i = gradient_fn(x_i, y_i, theta)
+        theta = vector_subtract(theta, scalar_multiply(alpha, gradient_i))
+    }
+    return min_theta;
+}
 
-
-def minimize_stochastic(target_fn, gradient_fn, x, y, theta_0, alpha_0=0.01):
-    data = list(zip(x, y))
-    theta = theta_0  # initial guess
-    alpha = alpha_0  # initial step size
-    min_theta, min_value = None, float("inf")  # the minimum so far
-    iterations_with_no_improvement = 0
-
-    # if we ever go 100 iterations with no improvement, stop
-    while iterations_with_no_improvement < 100:
-        value = sum(target_fn(x_i, y_i, theta) for x_i, y_i in data)
-
-        if value < min_value:
-            # if we've found a new minimum, remember it
-            # and go back to the original step size
-            min_theta, min_value = theta, value
-            iterations_with_no_improvement = 0
-            alpha = alpha_0
-        else:
-            # otherwise we're not improving, so try shrinking the step size
-            iterations_with_no_improvement += 1
-            alpha *= 0.9
-
-        # and take a gradient step for each of the data points
-        for x_i, y_i in in_random_order(data):
-            gradient_i = gradient_fn(x_i, y_i, theta)
-            theta = vector_subtract(theta, scalar_multiply(alpha, gradient_i))
-
-    return min_theta
-
-
-def maximize_stochastic(target_fn, gradient_fn, x, y, theta_0, alpha_0=0.01):
-    return minimize_stochastic(
-        negate(target_fn), negate_all(gradient_fn), x, y, theta_0, alpha_0
-    )
-
-
-def main():
-    logging.info("using the gradient")
-
-    _v = [random.randint(-10, 10) for _ in range(3)]
-
-    _tolerance = 0.0000001
-
-    while True:
-        # print v, sum_of_squares(v)
-        _gradient = sum_of_squares_gradient(_v)  # compute the gradient at v
-        next_v = step(_v, _gradient, -0.01)  # take a negative gradient step
-        if distance(next_v, _v) < _tolerance:  # stop if we're converging
-            break
-        _v = next_v  # continue if we're not
-
-    logging.info("%r", "minimum v {}".format(_v))
-    logging.info("%r", "minimum value {}".format(sum_of_squares(_v)))
-
-    logging.info("using minimize_batch")
-
-    _v = [random.randint(-10, 10) for _ in range(3)]
-
-    _v = minimize_batch(sum_of_squares, sum_of_squares_gradient, _v)
-
-    logging.info("%r", "minimum v  = {}".format(_v))
-    logging.info("%r", "minimum value = {}".format(sum_of_squares(_v)))
-
+function maximize_stochastic(target_fn, gradient_fn, x, y, theta_0, alpha_0 = 0.01) {
+    return minimize_stochastic(negate(target_fn), negate_all(gradient_fn), x, y, theta_0, alpha_0)
+}  

@@ -35,7 +35,7 @@ export function correlation_matrix(data: Array<Array<number>>) {
     var _, num_columns;
     [_, num_columns] = shape(data);
 
-    function matrix_entry(i, j) {
+    function matrix_entry(i:number, j:number) {
         return correlation(get_column(data, i), get_column(data, j));
     }
 
