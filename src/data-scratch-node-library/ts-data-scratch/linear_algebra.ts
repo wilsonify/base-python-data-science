@@ -1,4 +1,4 @@
-type BivaritateFunction = (x: number, y: number) => number;
+import { BivaritateFunction } from "./type-helpers"
 
 export function scalar_add(a: number, b: number): number {
   return a + b

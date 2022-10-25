@@ -1,3 +1,5 @@
+import { NumericFunction, BivaritateFunction,  NumericArray, NumericArrayFunction } from "./type-helpers"
+
 function erf(x: number) {
     var a1 = 0.254829592;
     var a2 = -0.284496736;

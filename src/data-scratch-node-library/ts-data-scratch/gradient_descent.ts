@@ -1,10 +1,8 @@
 import { distance, vector_subtract, scalar_multiply } from "./linear_algebra"
+import { NumericFunction, NumericArray, NumericArrayFunction } from "./type-helpers"
 
-type NumericFunction = (x: number) => number;
-type NumericArray = Array<number>;
-type NumericArrayFunction = (x: NumericArray) => NumericArray;
 
-function sum_of_squares(v: Array<number>): number {
+export function sum_of_squares(v: Array<number>): number {
     /* computes the sum of squared elements in v */
     var result = 0;
     for (var i = 0; i < v.length; i += 1) {
@@ -14,11 +12,11 @@ function sum_of_squares(v: Array<number>): number {
 }
 
 
-function difference_quotient(f: NumericFunction, x: number, h: number): number {
+export function difference_quotient(f: NumericFunction, x: number, h: number): number {
     return (f(x + h) - f(x)) / h;
 }
 
-function partial_difference_quotient(f: NumericFunction, v: Array<number>, i: number, h: number): number {
+export function partial_difference_quotient(f: NumericFunction, v: Array<number>, i: number, h: number): number {
     // add h to just the i-th element of v
     var item;
     var result = 0;
@@ -30,7 +28,7 @@ function partial_difference_quotient(f: NumericFunction, v: Array<number>, i: nu
     return result;
 }
 
-function estimate_gradient(f: NumericFunction, v: Array<number>, h: number = 1e-05): Array<number> {
+export function estimate_gradient(f: NumericFunction, v: Array<number>, h: number = 1e-05): Array<number> {
     var result: Array<number> = [];
     for (var i = 0, _pj_a = v.length; i < _pj_a; i += 1) {
         result.push(partial_difference_quotient(f, v, i, h));
@@ -39,7 +37,7 @@ function estimate_gradient(f: NumericFunction, v: Array<number>, h: number = 1e-
 }
 
 
-function step(v: NumericArray, direction: NumericArray, step_size: number) {
+export function step(v: NumericArray, direction: NumericArray, step_size: number) {
     // move step_size in the direction from v
     var result: Array<number> = [];
     for (var i = 0, _pj_a = v.length; i < _pj_a; i += 1) {
@@ -50,7 +48,7 @@ function step(v: NumericArray, direction: NumericArray, step_size: number) {
     return result;
 }
 
-function sum_of_squares_gradient(v: NumericArray): NumericArray {
+export function sum_of_squares_gradient(v: NumericArray): NumericArray {
     var result = [];
     for (var i = 0; i < v.length; i += 1) {
         var v_i = v[i];
@@ -60,7 +58,7 @@ function sum_of_squares_gradient(v: NumericArray): NumericArray {
 }
 
 
-function safe(f: NumericFunction) {
+export function safe(f: NumericFunction) {
     // define a new function that wraps f and return it
     function safe_f(x: number) {
         try {
@@ -74,7 +72,7 @@ function safe(f: NumericFunction) {
 
 // minimize / maximize batch
 
-function minimize_batch(
+export function minimize_batch(
     target_fn: NumericFunction,
     gradient_fn: NumericFunction,
     theta_0: number,
@@ -110,7 +108,7 @@ function minimize_batch(
 }
 
 
-function negate(f: NumericFunction) {
+export function negate(f: NumericFunction) {
     /* return a function that for any input x returns -f(x) */
     function arbitrary(x: number) {
         return -f(x)
@@ -118,7 +116,7 @@ function negate(f: NumericFunction) {
     return arbitrary;
 }
 
-function negate_all(f: NumericArrayFunction) {
+export function negate_all(f: NumericArrayFunction) {
     // the same when f returns a list of numbers
     function arbitrary(x: Array<number>) {
         var result = []
@@ -130,13 +128,13 @@ function negate_all(f: NumericArrayFunction) {
     return arbitrary;
 }
 
-function maximize_batch(target_fn: NumericFunction, gradient_fn: NumericArrayFunction, theta_0: number, tolerance: number = 0.000001) {
+export function maximize_batch(target_fn: NumericFunction, gradient_fn: NumericArrayFunction, theta_0: number, tolerance: number = 0.000001) {
     return minimize_batch(negate(target_fn), negate_all(gradient_fn), theta_0, tolerance)
 }
 
 // minimize / maximize stochastic
 
-function shuffle(array: NumericArray) {
+export function shuffle(array: NumericArray) {
     var m = array.length, t, i;
     // While there remain elements to shuffle…
     while (m) {
@@ -152,7 +150,7 @@ function shuffle(array: NumericArray) {
     return array;
 }
 
-function in_random_order(data: Array<Array<number>>) {
+export function in_random_order(data: Array<Array<number>>) {
     // generator returns the elements of data in random order
     var indexes = []
     for (var i = 0; i < data.length; i += 1) {
@@ -165,7 +163,7 @@ function in_random_order(data: Array<Array<number>>) {
 }
 
 
-function minimize_stochastic(
+export function minimize_stochastic(
     target_fn: NumericFunction,
     gradient_fn: NumericArrayFunction,
     x: NumericArray,
@@ -215,6 +213,6 @@ function minimize_stochastic(
     return min_theta;
 }
 
-function maximize_stochastic(target_fn, gradient_fn, x, y, theta_0, alpha_0 = 0.01) {
+export function maximize_stochastic(target_fn, gradient_fn, x, y, theta_0, alpha_0 = 0.01) {
     return minimize_stochastic(negate(target_fn), negate_all(gradient_fn), x, y, theta_0, alpha_0)
 }  

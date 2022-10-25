@@ -1,4 +1,5 @@
 import { sum_of_squares, dot, shape, get_column, make_matrix } from "./linear_algebra"
+import { NumericFunction, BivaritateFunction,  NumericArray, NumericArrayFunction } from "./type-helpers"
 
 
 export function bucketize(point: number, bucket_size: number): number {
