@@ -2,27 +2,37 @@
 
 function  split_data(data:Array<Array<number>>, prob:number) {
     // split data into fractions [prob, 1 - prob]
-    var results = new Map<string,Array<Array<number>>>()
-    results.set("train",[])
-    results.set("test",[])
+    var results = { "train":[], "test":[] }
     for (var i = 0; i < data.length; i += 1 ) {
         var row=data[i]
-        var selected = "train"
         if (Math.random() < prob) {
-            selected = "test"
+            results["test"].push(row)
+        } else {
+            results["train"].push(row)
         }
-        var results_selected = results.get(selected) 
-        results_selected.push(row)
     }
     return results
 }
 
-function  train_test_split(x, y, test_pct) {
-    data = list(zip(x, y))  # pair corresponding values
-    train, test = split_data(data, 1 - test_pct)  # split the dataset of pairs
-    x_train, y_train = list(zip(*train))  # magical un-zip trick
-    x_test, y_test = list(zip(*test))
-    return x_train, x_test, y_train, y_test
+function train_test_split(x:Array<Array<number>>, y:Array<number>, test_pct:number) {
+    var results = {
+        "x_train":[],
+        "y_train":[],
+        "x_test":[],
+        "y_test":[]
+    }
+    for (var i = 0; i < x.length; i += 1 ) {
+        var x_i = x[i]
+        var y_i = y[i]
+        if (Math.random() < test_pct) {
+            results["x_test"].push(x_i)
+            results["y_test"].push(y_i)
+        } else {
+            results["x_train"].push(x_i)
+            results["y_train"].push(y_i)
+        }        
+    }
+    return results
 }
 
 // correctness
