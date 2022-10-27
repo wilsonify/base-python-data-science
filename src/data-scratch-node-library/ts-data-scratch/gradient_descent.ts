@@ -1,5 +1,5 @@
 import { distance, vector_subtract, scalar_multiply } from "./linear_algebra"
-import { NumericFunction, NumericArray, NumericArrayFunction } from "./type-helpers"
+import { NumericFunction, NumericArray, NumericArrayFunction, TrivaritateFunction } from "./type-helpers"
 
 
 export function sum_of_squares(v: Array<number>): number {
@@ -75,7 +75,7 @@ export function safe(f: NumericFunction) {
 export function minimize_batch(
     target_fn: NumericFunction,
     gradient_fn: NumericFunction,
-    theta_0: number,
+    theta_0: NumericArray,
     tolerance: number = 1e-06) {
 
     //use gradient descent to find theta that minimizes target function
@@ -150,7 +150,7 @@ export function shuffle(array: NumericArray) {
     return array;
 }
 
-export function in_random_order(data: Array<Array<number>>) {
+export function* in_random_order(data: Array<Array<number>>) {
     // generator returns the elements of data in random order
     var indexes = []
     for (var i = 0; i < data.length; i += 1) {
@@ -164,7 +164,7 @@ export function in_random_order(data: Array<Array<number>>) {
 
 
 export function minimize_stochastic(
-    target_fn: NumericFunction,
+    target_fn: TrivaritateFunction,
     gradient_fn: NumericArrayFunction,
     x: NumericArray,
     y: NumericArray,
@@ -213,6 +213,6 @@ export function minimize_stochastic(
     return min_theta;
 }
 
-export function maximize_stochastic(target_fn, gradient_fn, x, y, theta_0, alpha_0 = 0.01) {
+export function maximize_stochastic(target_fn: NumericFunction, gradient_fn: NumericArrayFunction, x: NumericArray, y: NumericArray, theta_0: number, alpha_0 = 0.01) {
     return minimize_stochastic(negate(target_fn), negate_all(gradient_fn), x, y, theta_0, alpha_0)
 }  
