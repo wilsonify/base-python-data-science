@@ -10,6 +10,10 @@
     "author": "",
     "license": "MIT",
     "devDependencies": {
+        "@types/amqplib": "^0.8.2",
         "typescript": "^4.8.3"
+    },
+    "dependencies": {
+        "amqplib": "^0.10.3"
     }
 }
