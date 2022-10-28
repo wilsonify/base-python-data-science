@@ -1,102 +1,167 @@
-import os
-import random
-from functools import partial
+import { difference_quotient, estimate_gradient, in_random_order, minimize_stochastic, partial_difference_quotient } from "../gradient_descent";
+import { dot } from "../linear_algebra";
 
-from data_science_from_scratch import multiple_regression
-from data_science_from_scratch.library import gradient_descent
-from data_science_from_scratch.library.gradient_descent import negate, negate_all
-from data_science_from_scratch.library.manipulation import directional_variance, directional_variance_gradient
+interface Idifference_quotient {
+    x: number;
+    h: number;
+}
+const difference_quotient_strategy = (body: Idifference_quotient) => new Promise(
+    async (resolve, reject) => {
+        try {
+            var x = body.x;
+            var h = body.h;
+            var result = difference_quotient((xi: number) => xi * xi, x, h);
+            resolve(
+                console.log(result)
+            );
+        } catch (e) {
+            reject(
+                console.error(`unable to resolve difference_quotient ${e}`)
+            );
+        }
+    }
+);
 
-current_dir = os.path.dirname(__file__)
-parent_dir = os.path.join(current_dir, os.pardir)
+interface Ipartial_difference_quotient {
+    v: any;
+    i: any;
+    h: any;
+}
+const partial_difference_quotient_strategy = (body: Ipartial_difference_quotient) => new Promise(
+    async (resolve, reject) => {
+        try {
+            var v = body.v
+            var i = body.i
+            var h = body.h
+            var output = partial_difference_quotient((xi: number) => xi * xi, v, i, h)
+            resolve(
+                console.log(output)
+            );
+        } catch (e) {
+            reject(
+                console.error(`unable to resolve difference_quotient ${e}`)
+            );
+        }
+    })
 
+interface Iestimate_gradient { v: any; h: any; }
+const estimate_gradient_strategy = (body: Iestimate_gradient) => new Promise(
+    async (resolve, reject) => {
+        try {
+            var v = body.v
+            var h = body.h
+            var output = estimate_gradient((xi: number[]) => dot(xi, xi), v, h)
+            resolve(
+                console.log(output)
+            );
+        } catch (e) {
+            reject(
+                console.error(`unable to resolve difference_quotient ${e}`)
+            );
+        }
+    })
 
-def difference_quotient(self, body: dict):
-    x = body["x"]
-    h = body["h"]
-    result = gradient_descent.difference_quotient(
-        f=lambda xi: xi * xi,
-        x=x,
-        h=h
-    )
-    self.publish(result)
+interface Iin_random_order { data: any; }
+const in_random_order_strategy = (body: Iin_random_order) => new Promise(
+    async (resolve, reject) => {
+        try {
+            var data = body.data
+            var output = []
+            for (var i = 0; i < data.length; i += 1) {
+                output.push(in_random_order(data))
+            }
+            resolve(
+                console.log(output)
+            );
+        } catch (e) {
+            reject(
+                console.error(`unable to resolve difference_quotient ${e}`)
+            );
+        }
+    }
+)
+interface Imaximize_batch { x: any; }
+const maximize_batch_strategy = (body: Imaximize_batch) => new Promise(
+    async (resolve, reject) => {
+        try {
+            var x = body.x
+            var target_fn = partial(directional_variance, x)
+            var gradient_fn = partial(directional_variance_gradient, x)
+            var theta_0 = [1 for _ in x[0]]
+            var tolerance = 0.000001
+            var result = gradient_descent.maximize_batch()
+            resolve(
+                console.log(result)
+            );
+        } catch (e) {
+            reject(
+                console.error(`unable to resolve difference_quotient ${e}`)
+            );
+        }
+    })
 
+interface Imaximize_stochastic { x: any; y: any; }
+const maximize_stochastic_strategy = (body: Imaximize_stochastic) => new Promise(
+    async (resolve, reject) => {
+        try {
+            var x = body.x
+            var y = body.y
+            var target_fn = negate(multiple_regression.squared_error),
+            var gradient_fn = negate_all(multiple_regression.squared_error_gradient),
+            var x = x,
+            var y = y,
+            var theta_0 = [random.random() for _ in x[0]],
+            var alpha_0 = 0.01
+            var result = gradient_descent.maximize_stochastic()
+            resolve(
+                console.log(result)
+            );
+        } catch (e) {
+            reject(
+                console.error(`unable to resolve difference_quotient ${e}`)
+            );
+        }
+    })
 
-def partial_difference_quotient(self, body: dict):
-    v = body["v"]
-    i = body["i"]
-    h = body["h"]
-    output = gradient_descent.partial_difference_quotient(
-        f=lambda xi: [_ * _ for _ in xi],
-        v=v,
-        i=i,
-        h=h
-    )
-    self.publish(output)
-
-
-def estimate_gradient(self, body: dict):
-    v = body["v"]
-    h = body["h"]
-    output = gradient_descent.estimate_gradient(
-        f=lambda xi: [_ * _ for _ in xi],
-        v=v,
-        h=h
-    )
-    self.publish(output)
-
-
-def in_random_order(self, body: dict):
-    data = body["data"]
-    output = [_ for _ in gradient_descent.in_random_order(data)]
-    self.publish(output)
-
-
-def maximize_batch(self, body: dict):
-    x = body["x"]
-    result = gradient_descent.maximize_batch(
-        target_fn=partial(directional_variance, x),
-        gradient_fn=partial(directional_variance_gradient, x),
-        theta_0=[1 for _ in x[0]],
-        tolerance=0.000001
-    )
-    self.publish(result)
-
-
-def maximize_stochastic(self, body: dict):
-    x = body["x"]
-    y = body["y"]
-    result = gradient_descent.maximize_stochastic(
-        target_fn=negate(multiple_regression.squared_error),
-        gradient_fn=negate_all(multiple_regression.squared_error_gradient),
-        x=x,
-        y=y,
-        theta_0=[random.random() for _ in x[0]],
-        alpha_0=0.01
-    )
-    self.publish(result)
-
-
-def minimize_batch(self, body: dict):
-    x = body["x"]
-    result = gradient_descent.minimize_batch(
-        target_fn=partial(directional_variance, x),
-        gradient_fn=partial(directional_variance_gradient, x),
-        theta_0=[1 for _ in x[0]],
-        tolerance=0.000001
-    )
-    self.publish(result)
-
-
-def minimize_stochastic(self, body: dict):
-    x = body["x"]
-    y = body["y"]
-    result = gradient_descent.minimize_stochastic(
-        target_fn=negate(multiple_regression.squared_error),
-        gradient_fn=negate_all(multiple_regression.squared_error_gradient),
-        x=x,
-        y=y,
-        theta_0=[random.random() for _ in x[0]],
-        alpha_0=0.01
-    )
-    self.publish(result)
+interface Iminimize_batch { x: any; }
+const minimize_batch_strategy = (body: Iminimize_batch) => new Promise(
+    async (resolve, reject) => {
+        try {
+            var x = body.x
+            var target_fn = partial(directional_variance, x)
+            var gradient_fn = partial(directional_variance_gradient, x)
+            var theta_0 = [1 for _ in x[0]]
+            var tolerance = 0.000001theta_0 = [1 for _ in x[0]]
+            var tolerance = 0.000001
+            var result = minimize_batch()
+            resolve(
+                console.log(result)
+            );
+        } catch (e) {
+            reject(
+                console.error(`unable to resolve difference_quotient ${e}`)
+            );
+        }
+    })
+interface Iminimize_stochastic { x: any; y: any; }
+const minimize_stochastic_strategy = (body: Iminimize_stochastic) => new Promise(
+    async (resolve, reject) => {
+        try {
+            var x = body.x
+            var y = body.y
+            var target_fn = negate(multiple_regression.squared_error),
+            var gradient_fn = negate_all(multiple_regression.squared_error_gradient),
+            var x = x,
+            var y = y,
+            var theta_0 = [random.random() for _ in x[0]],
+            var alpha_0 = 0.01
+            var result = minimize_stochastic()
+            resolve(
+                console.log(result)
+            );
+        } catch (e) {
+            reject(
+                console.error(`unable to resolve difference_quotient ${e}`)
+            );
+        }
+    })

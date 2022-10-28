@@ -1,17 +1,34 @@
-import logging
+import { sqrt_newton } from "../sqrt_nr";
 
-from data_science_from_scratch.library.probability import mysqrt
+/**
+* Description of the endpoint
+*
+* sqrtInput SqrtInput  (optional)
+* returns sqrt-output
+* */
+interface IsqrtInput {
+    x: number;
+}
+
+const sqrt = (sqrtInput: IsqrtInput) => new Promise(
+    async (resolve, reject) => {
+        try {
+            console.log("sqrt")
+            console.log("sqrtInput = ", sqrtInput)
+            var result = sqrt_newton(sqrtInput.x);
+            console.log("result  = ", result)
+            resolve(console.log({
+                "result": result,
+                "x": sqrtInput.x,
+            }));
+        } catch (e) {
+            reject(
+                console.error(`unable to resolve sqrt_newton ${e}`)
+            );
+        }
+    },
+);
 
 
-def mysqrt_strategy(self, body: dict):  # noqa: E501
-    """ square root """
-    logging.debug(f"body = {body}")
-    logging.debug(f"type(body) = {type(body)}")
-    x = body["x"]
-    sqrt_output = dict(
-        x=x,
-        result=mysqrt(x),
-    )
-    logging.debug(f"sqrt_output = {sqrt_output}")
-    logging.debug(f"exchange= reply_{self.props.correlation_id}")
-    self.publish(sqrt_output)
+
+
