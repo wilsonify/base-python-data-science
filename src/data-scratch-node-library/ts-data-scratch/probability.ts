@@ -1,6 +1,6 @@
-import { NumericFunction, BivaritateFunction,  NumericArray, NumericArrayFunction } from "./type-helpers"
+import { Numericexport function, Bivaritateexport function,  NumericArray, NumericArrayexport function } from "./type-helpers"
 
-function erf(x: number) {
+export function erf(x: number) {
     var a1 = 0.254829592;
     var a2 = -0.284496736;
     var a3 = 1.421413741;
@@ -15,11 +15,11 @@ function erf(x: number) {
     return sign * y;
 }
 
-function uniform_pdf(x: number, a = 0, b = 1) {
+export function uniform_pdf(x: number, a = 0, b = 1) {
     return a <= x && x < b ? 1 / (b - a) : 0;
 }
 
-function uniform_cdf(x: number, a = 0, b = 1) {
+export function uniform_cdf(x: number, a = 0, b = 1) {
     /* returns the probability that a uniform random variable is less than x */
     if (x < a) {
         return 0;
@@ -34,17 +34,17 @@ function uniform_cdf(x: number, a = 0, b = 1) {
     }
 }
 
-function normal_pdf(x: number, mu = 0, sigma = 1) {
+export function normal_pdf(x: number, mu = 0, sigma = 1) {
     var sqrt_two_pi;
     sqrt_two_pi = Math.sqrt(2 * Math.PI);
     return Math.exp(-Math.pow(x - mu, 2) / 2 / Math.pow(sigma, 2)) / (sqrt_two_pi * sigma);
 }
 
-function normal_cdf(x: number, mu = 0.0, sigma = 1.0) {
+export function normal_cdf(x: number, mu = 0.0, sigma = 1.0) {
     return (1.0 + erf((x - mu) / Math.sqrt(2.0) / sigma)) / 2.0;
 }
 
-function inverse_normal_cdf(p: number, mu = 0, sigma = 1, tolerance = 1e-05) {
+export function inverse_normal_cdf(p: number, mu = 0, sigma = 1, tolerance = 1e-05) {
     /* find approximate inverse using binary search */
     var hi_p, hi_z, low_p, low_z, mid_p, mid_z;
 
@@ -72,22 +72,22 @@ function inverse_normal_cdf(p: number, mu = 0, sigma = 1, tolerance = 1e-05) {
 
 
 
-function random_choice(choices: Array<string>) {
+export function random_choice(choices: Array<string>) {
     var index = Math.floor(Math.random() * choices.length);
     return choices[index];
 }
 
-function random_kid() {
+export function random_kid() {
     return random_choice(["boy", "girl"])
 }
 
-function random_normal() {
+export function random_normal() {
     //"""returns a random draw from a standard normal distribution"""
     return inverse_normal_cdf(Math.random())
 }
 
 
-function bernoulli_trial(p: number) {
+export function bernoulli_trial(p: number) {
     var result = 0;
     if (Math.random() < p) {
         result = 1;
@@ -95,7 +95,7 @@ function bernoulli_trial(p: number) {
     return result
 }
 
-function binomial(p: number, n: number) {
+export function binomial(p: number, n: number) {
     var result = 0;
     for (var i = 0; i < n; i += 1) {
         result += bernoulli_trial(p)

@@ -1,60 +1,135 @@
-import os
+import {
+    bernoulli_trial,
+    binomial,
+    inverse_normal_cdf,
+    normal_cdf,
+    normal_pdf,
+    random_kid,
+    uniform_cdf,
+    uniform_pdf,    
 
-from data_science_from_scratch.library import probability
+} from "../probability";
 
-current_dir = os.path.dirname(__file__)
-parent_dir = os.path.join(current_dir, os.pardir)
+interface Ibernoulli_trial {
+    p: any;
+}
 
+const bernoulli_trial_strategy = (body: Ibernoulli_trial) => new Promise(
+    async (resolve, reject) => {
+        try {
+            var p = body.p
+            var result = bernoulli_trial(p)
+            resolve(console.log(result))
+        } catch (e) {
+            reject(
+                console.log(`unable to resolve bernoulli_trial ${e}`)
+            );
+        }
+    }
+)
 
-def bernoulli_trial(self, body):
-    p = body["p"]
-    result = probability.bernoulli_trial(p)
-    self.publish(result)
+interface Ibinomial {
+    p: any;
+    n: any;
+}
 
+const binomial_strategy = (body: Ibinomial) => new Promise(
+    async (resolve, reject) => {
+        try {
+            var p = body.p
+            var n = body.n
+            var result = binomial(p, n)
+            resolve(console.log(result))
+        } catch (e) {
+            reject(
+                console.log(`unable to resolve binomial ${e}`)
+            );
+        }
+    }
+)
+const inverse_normal_cdf_strategy = (body: { p: any; mu: any; sigma: any; }) => new Promise(
+    async (resolve, reject) => {
+        try {
+            var p = body.p
+            var mu = body.mu
+            var sigma = body.sigma
+            var result = inverse_normal_cdf(p, mu, sigma)
+            resolve(console.log(result))
+        } catch (e) {
+            reject(
+                console.log(`unable to resolve inverse_normal_cdf ${e}`)
+            );
+        }
+    }
+)
+const normal_cdf_strategy = (body: { x: any; mu: any; sigma: any; }) => new Promise(
+    async (resolve, reject) => {
+        try {
+            var x = body.x
+            var mu = body.mu
+            var sigma = body.sigma
+            var result = normal_cdf(x, mu, sigma)
+            resolve(console.log(result))
+        } catch (e) {
+            reject(
+                console.log(`unable to resolve normal_cdf ${e}`)
+            );
+        }
+    }
+)
+const normal_pdf_strategy = (body: { x: any; mu: any; sigma: any; }) => new Promise(
+    async (resolve, reject) => {
+        try {
+            var x = body.x
+            var mu = body.mu
+            var sigma = body.sigma
+            var result = normal_pdf(x, mu, sigma)
+            resolve(console.log(result))
+        } catch (e) {
+            reject(
+                console.log(`unable to resolve normal_pdf ${e}`)
+            );
+        }
+    }
+)
 
-def binomial(self, body):
-    p = body["p"]
-    n = body["n"]
-    result = probability.binomial(p, n)
-    self.publish(result)
+const random_kid_strategy = (body: any) => new Promise(
+    async (resolve, reject) => {
+        try {
+            var result = random_kid()
+            resolve(console.log(result))
+        } catch (e) {
+            reject(
+                console.log(`unable to resolve random_kid ${e}`)
+            );
+        }
+    }
+)
 
+const uniform_cdf_strategy = (body: { x: any; }) => new Promise(
+    async (resolve, reject) => {
+        try {
+            var x = body.x
+            var result = uniform_cdf(x)
+            resolve(console.log(result))
+        } catch (e) {
+            reject(
+                console.log(`unable to resolve uniform_cdf ${e}`)
+            );
+        }
+    }
+)
 
-def inverse_normal_cdf(self, body):
-    p = body["p"]
-    mu = body["mu"]
-    sigma = body["sigma"]
-    result = probability.inverse_normal_cdf(p, mu, sigma)
-    self.publish(result)
-
-
-def normal_cdf(self, body):
-    x = body["x"]
-    mu = body["mu"]
-    sigma = body["sigma"]
-    result = probability.normal_cdf(x, mu, sigma)
-    self.publish(result)
-
-
-def normal_pdf(self, body):
-    x = body["x"]
-    mu = body["mu"]
-    sigma = body["sigma"]
-    result = probability.normal_pdf(x, mu, sigma)
-    self.publish(result)
-
-
-def random_kid(self, body):
-    result = probability.random_kid()
-    self.publish(result)
-
-
-def uniform_cdf(self, body):
-    x = body["x"]
-    result = probability.uniform_cdf(x)
-    self.publish(result)
-
-
-def uniform_pdf(self, body):
-    x = body["x"]
-    result = probability.uniform_pdf(x)
-    self.publish(result)
+const uniform_pdf_strategy = (body: { x: any; }) => new Promise(
+    async (resolve, reject) => {
+        try {
+            var x = body.x
+            var result = uniform_pdf(x)
+            resolve(console.log(result))
+        } catch (e) {
+            reject(
+                console.log(`unable to resolve uniform_pdf ${e}`)
+            );
+        }
+    }
+)
