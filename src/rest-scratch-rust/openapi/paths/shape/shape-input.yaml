@@ -1,0 +1,8 @@
+type: object
+properties:
+  mat:
+    type: array
+    items:
+      type: array
+      items:
+        type: number

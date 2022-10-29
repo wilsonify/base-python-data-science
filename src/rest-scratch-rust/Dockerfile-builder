@@ -1,0 +1,4 @@
+FROM rsr-base-image:latest
+COPY generated/Cargo.toml /usr/src/app/generated/Cargo.toml
+WORKDIR /usr/src/app/generated
+RUN cargo install

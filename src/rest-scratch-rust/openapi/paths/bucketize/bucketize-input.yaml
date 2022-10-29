@@ -1,0 +1,6 @@
+type: object
+properties:
+  point:
+    type: number
+  bucket_size:
+    type: number
