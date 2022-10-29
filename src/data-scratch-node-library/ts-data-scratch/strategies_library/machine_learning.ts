@@ -1,63 +1,140 @@
-import os
 
-from data_science_from_scratch.library import machine_learning
+interface Iaccuracy {
+    tp: any;
+    fp: any;
+    fn: any;
+    tn: any;
+};
 
-current_dir = os.path.dirname(__file__)
-parent_dir = os.path.join(current_dir, os.pardir)
+const accuracy_strategy = (body: Iaccuracy) => new Promise(
+    async (resolve, reject) => {
+        try {
+            var tp = body.tp
+            var fp = body.fp
+            var fn = body.fn
+            var tn = body.tn
+            var result = accuracy(tp, fp, fn, tn)
+            resolve(console.log(result));
+        } catch (e) {
+            reject(
+                console.log(`unable to resolve accuracy ${e}`)
+            );
+        }
+    }
+)
 
+interface If1_score {
+    tp: any;
+    fp: any;
+    fn: any;
+    tn: any;
+}
 
-def accuracy(self, body):
-    tp = body["tp"]
-    fp = body["fp"]
-    fn = body["fn"]
-    tn = body["tn"]
-    result = machine_learning.accuracy(tp, fp, fn, tn)
-    self.publish(result)
+const f1_score_strategy = (body: If1_score) => new Promise(
+    async (resolve, reject) => {
+        try {
+            var tp = body.tp
+            var fp = body.fp
+            var fn = body.fn
+            var tn = body.tn
+            var result = f1_score(tp, fp, fn, tn)
+            resolve(console.log(result));
+        } catch (e) {
+            reject(
+                console.log(`unable to resolve distance ${e}`)
+            );
+        }
+    }
+)
 
+interface Iprecision {
+    tp: any;
+    fp: any;
+    fn: any;
+    tn: any;
+}
 
-def f1_score(self, body):
-    tp = body["tp"]
-    fp = body["fp"]
-    fn = body["fn"]
-    tn = body["tn"]
-    result = machine_learning.f1_score(tp, fp, fn, tn)
-    self.publish(result)
+const precision_strategy = (body: Iprecision) => new Promise(
+    async (resolve, reject) => {
+        try {
+            var tp = body.tp
+            var fp = body.fp
+            var fn = body.fn
+            var tn = body.tn
+            var result = precision(tp, fp, fn, tn)
+            resolve(console.log(result));
+        } catch (e) {
+            reject(
+                console.log(`unable to resolve precision ${e}`)
+            );
+        }
+    }
+)
 
+interface Irecall {
+    tp: any;
+    fp: any;
+    fn: any;
+    tn: any;
+}
 
-def precision(self, body):
-    tp = body["tp"]
-    fp = body["fp"]
-    fn = body["fn"]
-    tn = body["tn"]
-    result = machine_learning.precision(tp, fp, fn, tn)
-    self.publish(result)
+const recall_strategy = (body: Irecall) => new Promise(
+    async (resolve, reject) => {
+        try {
+            var tp = body.tp
+            var fp = body.fp
+            var fn = body.fn
+            var tn = body.tn
+            var result = recall(tp, fp, fn, tn)
+            resolve(console.log(result));
 
+        } catch (e) {
+            reject(
+                console.log(`unable to resolve recall ${e}`)
+            );
+        }
+    }
+)
 
-def recall(self, body):
-    tp = body["tp"]
-    fp = body["fp"]
-    fn = body["fn"]
-    tn = body["tn"]
-    result = machine_learning.recall(tp, fp, fn, tn)
-    self.publish(result)
+interface Isplit_data {
+    mat: any;
+    p: any;
+}
 
+const split_data_strategy = (body: Isplit_data) => new Promise(
+    async (resolve, reject) => {
+        try {
+            var mat = body.mat
+            var p = body.p
+            var result = split_data(mat, p)
+            resolve(console.log(result));
 
-def split_data(self, body):
-    mat = body["mat"]
-    p = body['p']
-    result = machine_learning.split_data(mat, p)
-    self.publish(result)
+        } catch (e) {
+            reject(
+                console.log(`unable to resolve split_data ${e}`)
+            );
+        }
+    }
+)
 
+interface Itrain_test_split {
+    x: any;
+    y: any;
+    p: any;
+}
 
-def train_test_split(self, body):
-    x = body["x"]
-    y = body["y"]
-    p = body["p"]
-    x_train, x_test, y_train, y_test = machine_learning.train_test_split(x, y, p)
-    result = dict(
-        x_train=x_train,
-        x_test=x_test,
-        y_train=y_train,
-        y_test=y_test
-    )
-    self.publish(result)
+const train_test_split_strategy = (body: Itrain_test_split) => new Promise(
+    async (resolve, reject) => {
+        try {
+            var x = body.x
+            var y = body.y
+            var p = body.p
+            var result = train_test_split(x, y, p)
+            resolve(console.log(result));
+        } catch (e) {
+            reject(
+                console.log(`unable to resolve train_test_split ${e}`)
+            );
+        }
+    }
+)
