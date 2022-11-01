@@ -11,7 +11,7 @@ import {
 } from "../probability";
 
 interface Ibernoulli_trial {
-    p: any;
+    p: number;
 }
 
 const bernoulli_trial_strategy = (body: Ibernoulli_trial) => new Promise(
@@ -29,8 +29,8 @@ const bernoulli_trial_strategy = (body: Ibernoulli_trial) => new Promise(
 )
 
 interface Ibinomial {
-    p: any;
-    n: any;
+    p: number;
+    n: number;
 }
 
 const binomial_strategy = (body: Ibinomial) => new Promise(
@@ -47,7 +47,13 @@ const binomial_strategy = (body: Ibinomial) => new Promise(
         }
     }
 )
-const inverse_normal_cdf_strategy = (body: { p: any; mu: any; sigma: any; }) => new Promise(
+interface Iinverse_normal_cdf {
+    p: number;
+    mu: number;
+    sigma: number;
+}
+
+const inverse_normal_cdf_strategy = (body: Iinverse_normal_cdf) => new Promise(
     async (resolve, reject) => {
         try {
             var p = body.p
@@ -62,7 +68,13 @@ const inverse_normal_cdf_strategy = (body: { p: any; mu: any; sigma: any; }) => 
         }
     }
 )
-const normal_cdf_strategy = (body: { x: any; mu: any; sigma: any; }) => new Promise(
+interface Inormal_cdf {
+    x: number;
+    mu: number;
+    sigma: number;
+}
+
+const normal_cdf_strategy = (body: Inormal_cdf) => new Promise(
     async (resolve, reject) => {
         try {
             var x = body.x
@@ -77,7 +89,13 @@ const normal_cdf_strategy = (body: { x: any; mu: any; sigma: any; }) => new Prom
         }
     }
 )
-const normal_pdf_strategy = (body: { x: any; mu: any; sigma: any; }) => new Promise(
+interface Inormal_pdf {
+    x: number;
+    mu: number;
+    sigma: number;
+}
+
+const normal_pdf_strategy = (body: Inormal_pdf) => new Promise(
     async (resolve, reject) => {
         try {
             var x = body.x
@@ -93,7 +111,7 @@ const normal_pdf_strategy = (body: { x: any; mu: any; sigma: any; }) => new Prom
     }
 )
 
-const random_kid_strategy = (body: any) => new Promise(
+const random_kid_strategy = () => new Promise(
     async (resolve, reject) => {
         try {
             var result = random_kid()
@@ -106,7 +124,11 @@ const random_kid_strategy = (body: any) => new Promise(
     }
 )
 
-const uniform_cdf_strategy = (body: { x: any; }) => new Promise(
+interface Iuniform_cdf {
+    x: number;
+}
+
+const uniform_cdf_strategy = (body: Iuniform_cdf) => new Promise(
     async (resolve, reject) => {
         try {
             var x = body.x
@@ -120,7 +142,11 @@ const uniform_cdf_strategy = (body: { x: any; }) => new Promise(
     }
 )
 
-const uniform_pdf_strategy = (body: { x: any; }) => new Promise(
+interface Iuniform_pdf {
+    x: number;
+}
+
+const uniform_pdf_strategy = (body: Iuniform_pdf) => new Promise(
     async (resolve, reject) => {
         try {
             var x = body.x

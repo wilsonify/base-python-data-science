@@ -1,7 +1,12 @@
-import { sum_of_squares } from "../linear_algebra"
+import { sum_of_squares } from "../linear_algebra";
 import { bucketize, correlation, correlation_matrix, covariance, data_range, de_mean, interquartile_range, mean, median, mode, quantile, standard_deviation, variance } from "../stats"
 
-const bucketize_strategy = (body: { point: number; bucket_size: number }) => new Promise(
+interface Ibucketize {
+    point: any;
+    bucket_size: any;
+}
+
+const bucketize_strategy = (body: Ibucketize) => new Promise(
     async (resolve, reject) => {
         try {
             var point = body.point
@@ -15,7 +20,8 @@ const bucketize_strategy = (body: { point: number; bucket_size: number }) => new
         }
     }
 )
-const correlation_matrix_strategy = (body: { data: number[][] }) => new Promise(
+
+const correlation_matrix_strategy = (body: { data: any; }) => new Promise(
     async (resolve, reject) => {
         try {
             var data = body.data
@@ -28,11 +34,10 @@ const correlation_matrix_strategy = (body: { data: number[][] }) => new Promise(
         }
     }
 )
-const correlation_strategy = (body: { x: number[]; y: number[] }) => new Promise(
+
+const correlation_strategy = (body: { x: any; y: any; }) => new Promise(
     async (resolve, reject) => {
         try {
-
-
             var x = body.x
             var y = body.y
             var result = correlation(x, y)
@@ -44,11 +49,10 @@ const correlation_strategy = (body: { x: number[]; y: number[] }) => new Promise
         }
     }
 )
-const covariance_strategy = (body: { x: number[]; y: number[] }) => new Promise(
+
+const covariance_strategy = (body: { x: any; y: any; }) => new Promise(
     async (resolve, reject) => {
         try {
-
-
             var x = body.x
             var y = body.y
             var result = covariance(x, y)
@@ -60,7 +64,8 @@ const covariance_strategy = (body: { x: number[]; y: number[] }) => new Promise(
         }
     }
 )
-const data_range_strategy = (body: { x: number[] }) => new Promise(
+
+const data_range_strategy = (body: { x: any; }) => new Promise(
     async (resolve, reject) => {
         try {
             var x = body.x
@@ -73,7 +78,8 @@ const data_range_strategy = (body: { x: number[] }) => new Promise(
         }
     }
 )
-const de_mean_strategy = (body: { x: number[] }) => new Promise(
+
+const de_mean_strategy = (body: { x: any; }) => new Promise(
     async (resolve, reject) => {
         try {
             var x = body.x
@@ -86,7 +92,8 @@ const de_mean_strategy = (body: { x: number[] }) => new Promise(
         }
     }
 )
-const interquartile_range_strategy = (body: { x: number[] }) => new Promise(
+
+const interquartile_range_strategy = (body: { x: any; }) => new Promise(
     async (resolve, reject) => {
         try {
             var x = body.x
@@ -99,7 +106,8 @@ const interquartile_range_strategy = (body: { x: number[] }) => new Promise(
         }
     }
 )
-const mean_strategy = (body: { x: number[] }) => new Promise(
+
+const mean_strategy = (body: { x: any; }) => new Promise(
     async (resolve, reject) => {
         try {
             var x = body.x
@@ -107,17 +115,19 @@ const mean_strategy = (body: { x: number[] }) => new Promise(
             resolve(console.log(result))
         } catch (e) {
             reject(
-                console.log(`unable to resolve random_kid ${e}`)
+                console.log(`unable to resolve mean ${e}`)
             );
         }
     }
 )
-const median_strategy = (body: { x: number[] }) => new Promise(
+
+const median_strategy = (body: { x: any; }) => new Promise(
     async (resolve, reject) => {
         try {
             var x = body.x
             var result = median(x)
             resolve(console.log(result))
+
         } catch (e) {
             reject(
                 console.log(`unable to resolve median ${e}`)
@@ -125,7 +135,8 @@ const median_strategy = (body: { x: number[] }) => new Promise(
         }
     }
 )
-const mode_strategy = (body: { x: number[] }) => new Promise(
+
+const mode_strategy = (body: { x: any; }) => new Promise(
     async (resolve, reject) => {
         try {
             var x = body.x
@@ -139,13 +150,14 @@ const mode_strategy = (body: { x: number[] }) => new Promise(
     }
 )
 
-const quantile_strategy = (body: { x: number[]; p: number }) => new Promise(
+const quantile_strategy = (body: { x: any; p: any; }) => new Promise(
     async (resolve, reject) => {
         try {
             var x = body.x
             var p = body.p
             var result = quantile(x, p)
             resolve(console.log(result))
+
         } catch (e) {
             reject(
                 console.log(`unable to resolve quantile ${e}`)
@@ -154,7 +166,7 @@ const quantile_strategy = (body: { x: number[]; p: number }) => new Promise(
     }
 )
 
-const standard_deviation_strategy = (body: { x: number[] }) => new Promise(
+const standard_deviation_strategy = (body: { x: any; }) => new Promise(
     async (resolve, reject) => {
         try {
             var x = body.x
@@ -167,7 +179,8 @@ const standard_deviation_strategy = (body: { x: number[] }) => new Promise(
         }
     }
 )
-const sum_of_squares_strategy = (body: { x: number[] }) => new Promise(
+
+const sum_of_squares_strategy = (body: { x: any; }) => new Promise(
     async (resolve, reject) => {
         try {
             var x = body.x
@@ -181,7 +194,7 @@ const sum_of_squares_strategy = (body: { x: number[] }) => new Promise(
     }
 )
 
-const variance_strategy = (body: { x: number[] }) => new Promise(
+const variance_strategy = (body: { x: any; }) => new Promise(
     async (resolve, reject) => {
         try {
             var x = body.x
