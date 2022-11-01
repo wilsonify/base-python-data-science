@@ -1,94 +1,196 @@
-import os
+import { sum_of_squares } from "../linear_algebra"
+import { bucketize, correlation, correlation_matrix, covariance, data_range, de_mean, interquartile_range, mean, median, mode, quantile, standard_deviation, variance } from "../stats"
 
-from data_science_from_scratch.library import stats
-
-current_dir = os.path.dirname(__file__)
-parent_dir = os.path.join(current_dir, os.pardir)
-
-
-def bucketize(self, body):
-    point = body["point"]
-    bucket_size = body["bucket_size"]
-    result = stats.bucketize(point, bucket_size)
-    self.publish(result)
-
-
-def correlation_matrix(self, body):
-    data = body["data"]
-    result = stats.correlation_matrix(data)
-    self.publish(result)
-
-
-def correlation(self, body):
-    x = body["x"]
-    y = body["y"]
-    result = stats.correlation(x, y)
-    self.publish(result)
-
-
-def covariance(self, body):
-    x = body["x"]
-    y = body["y"]
-    result = stats.covariance(x, y)
-    self.publish(result)
-
-
-def data_range(self, body):
-    x = body["x"]
-    result = stats.data_range(x)
-    self.publish(result)
+const bucketize_strategy = (body: { point: number; bucket_size: number }) => new Promise(
+    async (resolve, reject) => {
+        try {
+            var point = body.point
+            var bucket_size = body.bucket_size
+            var result = bucketize(point, bucket_size)
+            resolve(console.log(result))
+        } catch (e) {
+            reject(
+                console.log(`unable to resolve bucketize ${e}`)
+            );
+        }
+    }
+)
+const correlation_matrix_strategy = (body: { data: number[][] }) => new Promise(
+    async (resolve, reject) => {
+        try {
+            var data = body.data
+            var result = correlation_matrix(data)
+            resolve(console.log(result))
+        } catch (e) {
+            reject(
+                console.log(`unable to resolve correlation_matrix ${e}`)
+            );
+        }
+    }
+)
+const correlation_strategy = (body: { x: number[]; y: number[] }) => new Promise(
+    async (resolve, reject) => {
+        try {
 
 
-def de_mean(self, body):
-    x = body["x"]
-    result = stats.de_mean(x)
-    self.publish(result)
+            var x = body.x
+            var y = body.y
+            var result = correlation(x, y)
+            resolve(console.log(result))
+        } catch (e) {
+            reject(
+                console.log(`unable to resolve correlation ${e}`)
+            );
+        }
+    }
+)
+const covariance_strategy = (body: { x: number[]; y: number[] }) => new Promise(
+    async (resolve, reject) => {
+        try {
 
 
-def interquartile_range(self, body):
-    x = body["x"]
-    result = stats.interquartile_range(x)
-    self.publish(result)
+            var x = body.x
+            var y = body.y
+            var result = covariance(x, y)
+            resolve(console.log(result))
+        } catch (e) {
+            reject(
+                console.log(`unable to resolve covariance ${e}`)
+            );
+        }
+    }
+)
+const data_range_strategy = (body: { x: number[] }) => new Promise(
+    async (resolve, reject) => {
+        try {
+            var x = body.x
+            var result = data_range(x)
+            resolve(console.log(result))
+        } catch (e) {
+            reject(
+                console.log(`unable to resolve data_range ${e}`)
+            );
+        }
+    }
+)
+const de_mean_strategy = (body: { x: number[] }) => new Promise(
+    async (resolve, reject) => {
+        try {
+            var x = body.x
+            var result = de_mean(x)
+            resolve(console.log(result))
+        } catch (e) {
+            reject(
+                console.log(`unable to resolve de_mean ${e}`)
+            );
+        }
+    }
+)
+const interquartile_range_strategy = (body: { x: number[] }) => new Promise(
+    async (resolve, reject) => {
+        try {
+            var x = body.x
+            var result = interquartile_range(x)
+            resolve(console.log(result))
+        } catch (e) {
+            reject(
+                console.log(`unable to resolve interquartile_range ${e}`)
+            );
+        }
+    }
+)
+const mean_strategy = (body: { x: number[] }) => new Promise(
+    async (resolve, reject) => {
+        try {
+            var x = body.x
+            var result = mean(x)
+            resolve(console.log(result))
+        } catch (e) {
+            reject(
+                console.log(`unable to resolve random_kid ${e}`)
+            );
+        }
+    }
+)
+const median_strategy = (body: { x: number[] }) => new Promise(
+    async (resolve, reject) => {
+        try {
+            var x = body.x
+            var result = median(x)
+            resolve(console.log(result))
+        } catch (e) {
+            reject(
+                console.log(`unable to resolve median ${e}`)
+            );
+        }
+    }
+)
+const mode_strategy = (body: { x: number[] }) => new Promise(
+    async (resolve, reject) => {
+        try {
+            var x = body.x
+            var result = mode(x)
+            resolve(console.log(result))
+        } catch (e) {
+            reject(
+                console.log(`unable to resolve mode ${e}`)
+            );
+        }
+    }
+)
 
+const quantile_strategy = (body: { x: number[]; p: number }) => new Promise(
+    async (resolve, reject) => {
+        try {
+            var x = body.x
+            var p = body.p
+            var result = quantile(x, p)
+            resolve(console.log(result))
+        } catch (e) {
+            reject(
+                console.log(`unable to resolve quantile ${e}`)
+            );
+        }
+    }
+)
 
-def mean(self, body):
-    x = body["x"]
-    result = stats.mean(x)
-    self.publish(result)
+const standard_deviation_strategy = (body: { x: number[] }) => new Promise(
+    async (resolve, reject) => {
+        try {
+            var x = body.x
+            var result = standard_deviation(x)
+            resolve(console.log(result))
+        } catch (e) {
+            reject(
+                console.log(`unable to resolve standard_deviation ${e}`)
+            );
+        }
+    }
+)
+const sum_of_squares_strategy = (body: { x: number[] }) => new Promise(
+    async (resolve, reject) => {
+        try {
+            var x = body.x
+            var result = sum_of_squares(x)
+            resolve(console.log(result))
+        } catch (e) {
+            reject(
+                console.log(`unable to resolve sum_of_squares ${e}`)
+            );
+        }
+    }
+)
 
-
-def median(self, body):
-    x = body["x"]
-    result = stats.median(x)
-    self.publish(result)
-
-
-def mode(self, body):
-    x = body["x"]
-    result = stats.mode(x)
-    self.publish(result)
-
-
-def quantile(self, body):
-    x = body["x"]
-    p = body["p"]
-    result = stats.quantile(x, p)
-    self.publish(result)
-
-
-def standard_deviation(self, body):
-    x = body["x"]
-    result = stats.standard_deviation(x)
-    self.publish(result)
-
-
-def sum_of_squares(self, body):
-    x = body["x"]
-    result = stats.sum_of_squares(x)
-    self.publish(result)
-
-
-def variance(self, body):
-    x = body["x"]
-    result = stats.variance(x)
-    self.publish(result)
+const variance_strategy = (body: { x: number[] }) => new Promise(
+    async (resolve, reject) => {
+        try {
+            var x = body.x
+            var result = variance(x)
+            resolve(console.log(result))
+        } catch (e) {
+            reject(
+                console.log(`unable to resolve variance ${e}`)
+            );
+        }
+    }
+)
