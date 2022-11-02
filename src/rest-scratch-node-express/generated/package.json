@@ -17,6 +17,7 @@
   "devDependencies": {
     "ts-strength": "file:../external/ts-strength",
     "ts-sqrt": "file:../external/ts-sqrt",
+    "data-scratch-node-library": "file:../external/data-scratch-node-library",
     "async_hooks": ">=1.0.0",
     "body-parser": ">=1.19.0",
     "camelcase": ">=5.3.1",

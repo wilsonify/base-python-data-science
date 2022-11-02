@@ -1,4 +1,5 @@
 FROM rsne-base-image:latest
 COPY generated/package.json /home/node/app/generated/package.json
+COPY external /home/node/app/external
 WORKDIR /home/node/app/generated
 RUN npm install

@@ -2,26 +2,35 @@
 const Service = require('./Service');
 const { sqrt_newton } = require('ts-sqrt');
 const { getStrength } = require('ts-strength');
+const { accuracy } = require("data-scratch-node-library")
 /**
 * Description of the endpoint
 *
 * accuracyInput AccuracyInput  (optional)
 * returns BigDecimal
 * */
+
 const accuracy = ({ accuracyInput }) => new Promise(
   async (resolve, reject) => {
     try {
+      var tp = accuracyInput.tp
+      var fp = accuracyInput.fp
+      var fn = accuracyInput.fn
+      var tn = accuracyInput.tn
+      var result = accuracy(tp, fp, fn, tn)
       resolve(Service.successResponse({
-        accuracyInput,
-      }));
+        result,
+      });
     } catch (e) {
       reject(Service.rejectResponse(
         e.message || 'Invalid input',
         e.status || 405,
       ));
     }
-  },
-);
+  }
+)
+
+
 /**
 * Description of the endpoint
 *

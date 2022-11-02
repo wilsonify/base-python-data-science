@@ -1,4 +1,4 @@
 FROM node:14-buster-slim
 EXPOSE 8080
 WORKDIR /home/node/app/generated
-RUN npm install webpack webpack-cli webpack-dev-server
+# RUN npm install webpack webpack-cli webpack-dev-server
