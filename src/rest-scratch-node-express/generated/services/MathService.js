@@ -10,7 +10,7 @@ const { accuracy } = require("data-scratch-node-library")
 * returns BigDecimal
 * */
 
-const accuracy = ({ accuracyInput }) => new Promise(
+const accuracy_service = ({ accuracyInput }) => new Promise(
   async (resolve, reject) => {
     try {
       var tp = accuracyInput.tp
@@ -18,9 +18,7 @@ const accuracy = ({ accuracyInput }) => new Promise(
       var fn = accuracyInput.fn
       var tn = accuracyInput.tn
       var result = accuracy(tp, fp, fn, tn)
-      resolve(Service.successResponse({
-        result,
-      });
+      resolve(Service.successResponse(result));
     } catch (e) {
       reject(Service.rejectResponse(
         e.message || 'Invalid input',

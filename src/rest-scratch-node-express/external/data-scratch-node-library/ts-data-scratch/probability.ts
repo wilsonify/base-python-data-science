@@ -1,4 +1,4 @@
-import { Numericexport function, Bivaritateexport function,  NumericArray, NumericArrayexport function } from "./type-helpers"
+import { NumericFunction, BivaritateFunction,  NumericArray, NumericArrayFunction } from "./type-helpers"
 
 export function erf(x: number) {
     var a1 = 0.254829592;

@@ -68,7 +68,7 @@ paths:
       - math
       x-openapi-router-controller: openapi_server.controllers.math_controller
       x-eov-operation-handler: controllers/MathController
-  /accuracy:
+  /accuracy_service:
     post:
       description: Description of the endpoint
       operationId: accuracy

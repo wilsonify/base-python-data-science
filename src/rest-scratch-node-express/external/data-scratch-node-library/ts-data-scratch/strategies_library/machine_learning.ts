@@ -1,3 +1,11 @@
+import {
+    accuracy,
+    f1_score,
+    precision,
+    recall,
+    split_data,
+    train_test_split
+} from "../machine_learning"
 
 interface Iaccuracy {
     tp: any;
