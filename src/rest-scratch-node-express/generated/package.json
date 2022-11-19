@@ -34,7 +34,7 @@
     "swagger-ui-express": ">=4.0.2",
     "util": ">=0.12.4",
     "winston": ">=3.2.1",
-    "@webpack-cli/generators": ">=2.5.0",
+    "@webpack-cli/generators": ">=3.0.0",
     "axios": ">=0.19.0",
     "chai": ">=4.2.0",
     "chai-as-promised": ">=7.1.1",
