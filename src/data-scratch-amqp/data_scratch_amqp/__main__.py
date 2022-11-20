@@ -3,21 +3,28 @@ amqp consumer
 """
 import json
 import logging
+import os
 from logging.config import dictConfig
-
 import pika
+from data_scratch_amqp import *
 
-import data_science_from_scratch
-from data_science_from_scratch import routing_key, try_exchange, done_exchange, fail_exchange, connection_parameters
-from data_science_from_scratch.strategies_library import *
+logging.getLogger(__name__).addHandler(logging.NullHandler())
+amqp_host = os.getenv("AMQP_HOST", "localhost")
+amqp_port = os.getenv("AMQP_PORT", "5672")
+routing_key = os.getenv("AMQP_ROUTING_KEY", "dsfs")
+heartbeat = os.getenv("AMQP_HEARTBEAT", "10000")
+timeout = os.getenv("AMQP_TIMEOUT", "10001")
+cred = pika.PlainCredentials(
+    os.getenv("AMQP_USER", "guest"),
+    os.getenv("AMQP_PASS", "guest")
+)
+try_exchange = f"try_{routing_key}"
+done_exchange = f"done_{routing_key}"
+fail_exchange = f"fail_{routing_key}"
 
 logging_config_dict = dict(
     version=1,
-    formatters={
-        "simple": {
-            "format": """%(asctime)s | %(filename)s | %(lineno)d | %(levelname)s | %(message)s"""
-        }
-    },
+    formatters={"simple": {"format": """%(asctime)s | %(filename)s | %(lineno)d | %(levelname)s | %(message)s"""}},
     handlers={"console": {"class": "logging.StreamHandler", "formatter": "simple"}},
     root={"handlers": ["console"], "level": logging.DEBUG},
 )
@@ -83,7 +90,7 @@ def route_callback(ch, method, properties, body):
     logging.info("route_callback")
     logging.debug("%r", "ch={}".format(ch))
     logging.debug("%r", "properties={}".format(properties))
-    logging.debug("%r", "key={}".format(data_science_from_scratch.routing_key))
+    logging.debug("%r", "key={}".format(routing_key))
     logging.debug("%r", "body={}".format(body))
     logging.debug("%r", "body has type {}".format(type(body)))
     payload = json.loads(body.decode("utf-8"))
@@ -124,6 +131,15 @@ def route_callback(ch, method, properties, body):
                 body=json.dumps(payload).encode('utf-8')
             )
     logging.info("waiting for more messages")
+
+
+connection_parameters = pika.ConnectionParameters(
+    host=amqp_host,
+    port=int(amqp_port),
+    heartbeat=int(heartbeat),
+    blocked_connection_timeout=int(timeout),
+    credentials=cred,
+)
 
 
 def main():

@@ -6,8 +6,9 @@ these are intended to be imported by many modules
 import logging
 import os
 
-AMQP_HOST = "10.1.1.16"
-AMQP_PORT = 5672
+MQTT_HOST = "10.1.1.16"
+MQTT_PORT = 8883
+MQTT_KEEPALIVE = 60
 HOME_DIR = os.path.expanduser("~")
 LOCAL_DATA_DIR = os.path.join(HOME_DIR, "repos/base-python-data-science/tests/data")
 LOGGING_LEVEL = logging.DEBUG

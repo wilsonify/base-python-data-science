@@ -1,0 +1,4 @@
+FROM alpine:3.16
+RUN set -eux && apk add --update --no-cache ca-certificates tzdata
+RUN addgroup -g 1001 cnb && adduser -u 1000 -G cnb -s /bin/bash -D cnb
+

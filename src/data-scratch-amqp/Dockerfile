@@ -1,10 +1,9 @@
-FROM bpds/alpine-build:alpine as builder
+FROM data-scratch-amqp-builder:latest as builder
 USER root
 RUN mkdir -p /usr/src/app
 COPY . /usr/src/app
 WORKDIR /usr/src/app
-RUN pip3 install -r requirements.txt
-RUN python3 setup.py install
+RUN pip3 install .
 RUN pyinstaller \
 --noconfirm \
 --onedir \
@@ -12,9 +11,9 @@ RUN pyinstaller \
 --distpath dist \
 --workpath build \
 --specpath . \
-data_science_from_scratch/__main__.py
+data_scratch_amqp/__main__.py
 
-FROM bpds/alpine-run:alpine
+FROM data-scratch-amqp-base:latest
 COPY --from=builder /usr/src/app/dist/__main__ /app
 WORKDIR /app
 ENV AMQP_HOST=localhost
