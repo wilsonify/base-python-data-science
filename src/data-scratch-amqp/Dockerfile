@@ -24,3 +24,4 @@ ENV AMQP_TIMEOUT=10001
 ENV AMQP_USER="guest"
 ENV AMQP_PASS="guest"
 ENTRYPOINT ["/app/__main__"]
+#ENTRYPOINT ["python3", "-m", "data_scratch_amqp"]

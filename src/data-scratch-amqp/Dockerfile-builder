@@ -1,123 +1,16 @@
 FROM data-scratch-amqp-base:latest
 USER root
-# ensure local python is preferred over distribution python
-ENV PATH /usr/local/bin:$PATH
+RUN apt-get install -y \
+build-essential \
+gcc \
+python3-dev \
+python3-pip
 
-# http://bugs.python.org/issue19846
-# > At the moment, setting "LANG=C" on a Linux system *fundamentally breaks Python 3*, and that's not OK.
-ENV LANG C.UTF-8
-ENV GPG_KEY A035C8C19219BA821ECEA86B64E628F8D684696D
-ENV PYTHON_VERSION 3.10.5
-
-# set thread stack size to 1MB so we don't segfault before we hit sys.getrecursionlimit()
-# https://github.com/alpinelinux/aports/commit/2026e1259422d4e0cf92391ca2d3844356c649d0
-ENV EXTRA_CFLAGS "-DTHREAD_STACK_SIZE=0x100000"
-ENV LDFLAGS "-Wl,--strip-all"
-
-# if this is called "PIP_VERSION", pip explodes with "ValueError: invalid truth value '<VERSION>'"
-ENV PYTHON_PIP_VERSION 22.0.4
-
-# https://github.com/docker-library/python/issues/365
-ENV PYTHON_SETUPTOOLS_VERSION 58.1.0
-
-# https://github.com/pypa/get-pip
-ENV PYTHON_GET_PIP_URL https://github.com/pypa/get-pip/raw/6ce3639da143c5d79b44f94b04080abf2531fd6e/public/get-pip.py
-ENV PYTHON_GET_PIP_SHA256 ba3ab8267d91fd41c58dbce08f76db99f747f716d85ce1865813842bb035524d
-ENV PYTHONDONTWRITEBYTECODE 1
-
-# Install packages that we want to make available at build time
-RUN apk add --update --no-cache \
-    ca-certificates \
-    git \
-    jq \
-    wget \
-    binutils \
-    gcc \
-    musl-dev \
-    git \
-    libffi-dev \
-    gnupg \
-    tar \
-    xz \
-    bluez-dev \
-    bzip2-dev \
-    dpkg-dev dpkg \
-    expat-dev \
-    findutils \
-    gcc \
-    gdbm-dev \
-    libc-dev \
-    libffi-dev \
-    libnsl-dev \
-    libtirpc-dev \
-    linux-headers \
-    make \
-    ncurses-dev \
-    openssl-dev \
-    pax-utils \
-    readline-dev \
-    sqlite-dev \
-    tcl-dev \
-    tk \
-    tk-dev \
-    util-linux-dev \
-    xz-dev \
-    zlib-dev
-
-# Install Python
-RUN wget -O python.tar.xz "https://www.python.org/ftp/python/${PYTHON_VERSION%%[a-z]*}/Python-$PYTHON_VERSION.tar.xz" && \
-    wget -O python.tar.xz.asc "https://www.python.org/ftp/python/${PYTHON_VERSION%%[a-z]*}/Python-$PYTHON_VERSION.tar.xz.asc" && \
-    GNUPGHOME="$(mktemp -d)" && \
-    export GNUPGHOME && \
-    gpg --batch --keyserver hkps://keys.openpgp.org --recv-keys "$GPG_KEY" && \
-    gpg --batch --verify python.tar.xz.asc python.tar.xz && \
-    command -v gpgconf > /dev/null && gpgconf --kill all || : && \
-    rm -rf "$GNUPGHOME" python.tar.xz.asc && \
-    mkdir -p /usr/src/python && \
-    tar --extract --directory /usr/src/python --strip-components=1 --file python.tar.xz && \
-    rm python.tar.xz && \
-    cd /usr/src/python && \
-    gnuArch="$(dpkg-architecture --query DEB_BUILD_GNU_TYPE)" && \
-    ./configure \
-    --build="$gnuArch" \
-    --enable-loadable-sqlite-extensions \
-    --enable-optimizations \
-    --enable-option-checking=fatal \
-    --enable-shared \
-    --with-lto \
-    --with-system-expat \
-    --without-ensurepip && \
-    make -j "$(nproc)" && \
-    make install && \
-    python3 --version
-
-# make some useful symlinks that are expected to exist ("/usr/local/bin/python" and friends)
-RUN set -eux; \
-    for src in idle3 pydoc3 python3 python3-config; do \
-    dst="$(echo "$src" | tr -d 3)"; \
-    [ -s "/usr/local/bin/$src" ]; \
-    [ ! -e "/usr/local/bin/$dst" ]; \
-    ln -svT "$src" "/usr/local/bin/$dst"; \
-    done
-
-# get pip
-RUN wget -O get-pip.py "$PYTHON_GET_PIP_URL" && \
-    echo "$PYTHON_GET_PIP_SHA256 *get-pip.py" | sha256sum -c - && \
-    python get-pip.py \
-    --disable-pip-version-check \
-    --no-cache-dir \
-    --no-compile \
-    "pip==$PYTHON_PIP_VERSION" \
-    "setuptools==$PYTHON_SETUPTOOLS_VERSION" && \
-    pip --version
-
-# Install external requirements
 COPY external external
-RUN pip3 install external/dsl-0.0.0-py3-none-any.whl
+RUN pip3 install --upgrade external/dsl-0.0.1-py3-none-any.whl
 
-# Install package requirements
 COPY requirements.txt .
 RUN pip3 install -r requirements.txt
 
 # Set user and group (as declared in base image)
-USER 1000:1001
+USER 1000:1000

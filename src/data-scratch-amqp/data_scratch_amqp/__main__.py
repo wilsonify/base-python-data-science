@@ -3,17 +3,12 @@ amqp consumer
 """
 import json
 import logging
-import os
 from logging.config import dictConfig
+
 import pika
+
 from data_scratch_amqp import *
 
-logging.getLogger(__name__).addHandler(logging.NullHandler())
-amqp_host = os.getenv("AMQP_HOST", "localhost")
-amqp_port = os.getenv("AMQP_PORT", "5672")
-routing_key = os.getenv("AMQP_ROUTING_KEY", "dsfs")
-heartbeat = os.getenv("AMQP_HEARTBEAT", "10000")
-timeout = os.getenv("AMQP_TIMEOUT", "10001")
 cred = pika.PlainCredentials(
     os.getenv("AMQP_USER", "guest"),
     os.getenv("AMQP_PASS", "guest")

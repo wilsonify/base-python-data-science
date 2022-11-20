@@ -1,3 +1,5 @@
+import os
+
 from data_scratch_amqp.strategies_library import Strategy
 from data_scratch_amqp.strategies_library import echo_strategy
 from data_scratch_amqp.strategies_library import difference_quotient
@@ -51,3 +53,9 @@ from data_scratch_amqp.strategies_library import mode
 from data_scratch_amqp.strategies_library import quantile
 from data_scratch_amqp.strategies_library import standard_deviation
 from data_scratch_amqp.strategies_library import variance
+
+amqp_host = os.getenv("AMQP_HOST", "localhost")
+amqp_port = os.getenv("AMQP_PORT", "5672")
+routing_key = os.getenv("AMQP_ROUTING_KEY", "dsfs")
+heartbeat = os.getenv("AMQP_HEARTBEAT", "10000")
+timeout = os.getenv("AMQP_TIMEOUT", "10001")
