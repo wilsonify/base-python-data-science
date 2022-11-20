@@ -1,6 +1,6 @@
 import random
 
-from data_science_from_scratch.library.linear_algebra import (
+from dsl.linear_algebra import (
     squared_distance,
     vector_mean,
     distance,

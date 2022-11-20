@@ -4,8 +4,8 @@ from collections import defaultdict, Counter
 from functools import partial
 from logging.config import dictConfig
 
-from data_science_from_scratch import config
-from data_science_from_scratch.naive_bayes import tokenize
+from dsl import config
+from dsl.naive_bayes import tokenize
 
 
 def word_count_old(documents):

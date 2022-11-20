@@ -41,17 +41,17 @@ class build_ext(build_ext_orig):
         logging.debug(f"build_dir = {build_dir}")
         logging.debug(f"root_dir = {root_dir}")
         logging.debug(f"target_dir = {target_dir}")
-        logging.warning(f'moving data_science_from_scratch/__init__.py from {root_dir} to {target_dir}')
+        logging.warning(f'moving dsl/__init__.py from {root_dir} to {target_dir}')
         try:
             self.copy_file(Path('dsl/__init__.py'), root_dir, target_dir)
         except:
-            logging.warning(f'could not move data_science_from_scratch/__init__.py from {root_dir} to {target_dir}')
+            logging.warning(f'could not move dsl/__init__.py from {root_dir} to {target_dir}')
 
-        logging.warning(f'moving data_science_from_scratch/__main__.py from {root_dir} to {target_dir}')
+        logging.warning(f'moving dsl/__main__.py from {root_dir} to {target_dir}')
         try:
             self.copy_file(Path('dsl/__main__.py'), root_dir, target_dir)
         except:
-            logging.warning(f'could not move data_science_from_scratch/__main__.py from {root_dir} to {target_dir}')
+            logging.warning(f'could not move dsl/__main__.py from {root_dir} to {target_dir}')
 
     def copy_file(self, path, source_dir, destination_dir):
         if not (source_dir / path).exists():
@@ -77,7 +77,7 @@ setup(
     packages=find_packages(),
     package_data={'': []},
     include_package_data=True,
-    entry_points={'console_scripts': ['data_science_from_scratch=data_science_from_scratch.__main__:main']},
+    entry_points={'console_scripts': ['dsl=dsl.__main__:main']},
     long_description="""
     Supplemental material (code examples, exercises, etc.) 
     is available at https://github.com/joelgrus/data-science-from-scratch.

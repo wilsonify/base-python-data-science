@@ -9,7 +9,7 @@ from collections import Counter, defaultdict
 from functools import partial
 from logging.config import dictConfig
 
-from data_science_from_scratch import config
+from dsl import config
 
 
 def entropy(class_probabilities):

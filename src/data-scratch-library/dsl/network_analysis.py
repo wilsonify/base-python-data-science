@@ -1,7 +1,7 @@
 from collections import deque
 from functools import partial
 
-from data_science_from_scratch.library.linear_algebra import (
+from dsl.linear_algebra import (
     dot,
     get_row,
     get_column,

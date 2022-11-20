@@ -1,6 +1,6 @@
 import math
 
-from data_science_from_scratch.library.linear_algebra import dot
+from dsl.linear_algebra import dot
 
 
 def step_function(x):

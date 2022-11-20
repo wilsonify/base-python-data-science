@@ -4,15 +4,15 @@ import random
 from functools import partial, reduce
 from logging.config import dictConfig
 
-from data_science_from_scratch import config
-from data_science_from_scratch.library.gradient_descent import (
+from dsl import config
+from dsl.gradient_descent import (
     maximize_stochastic,
     maximize_batch,
 )
-from data_science_from_scratch.library.linear_algebra import dot, vector_add
-from data_science_from_scratch.library.machine_learning import train_test_split
-from data_science_from_scratch.multiple_regression import estimate_beta
-from data_science_from_scratch.library.manipulation import rescale
+from dsl.linear_algebra import dot, vector_add
+from dsl.machine_learning import train_test_split
+from dsl.multiple_regression import estimate_beta
+from dsl.manipulation import rescale
 
 
 def logistic(x):

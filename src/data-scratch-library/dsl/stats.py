@@ -1,7 +1,7 @@
 import math
 from collections import Counter
 
-from data_science_from_scratch.library.linear_algebra import sum_of_squares, dot, shape, get_column, make_matrix
+from dsl.linear_algebra import sum_of_squares, dot, shape, get_column, make_matrix
 
 
 def bucketize(point, bucket_size):

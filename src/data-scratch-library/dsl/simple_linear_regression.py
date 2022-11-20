@@ -1,4 +1,4 @@
-from data_science_from_scratch.library.stats import (
+from dsl.stats import (
     mean,
     correlation,
     standard_deviation,

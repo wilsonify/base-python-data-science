@@ -4,7 +4,7 @@ import logging
 from collections import Counter, defaultdict
 from logging.config import dictConfig
 
-from data_science_from_scratch import config
+from dsl import config
 
 
 def tenure_bucket(tenure):

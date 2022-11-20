@@ -12,7 +12,7 @@ RUN pyinstaller \
 --distpath dist \
 --workpath build \
 --specpath . \
-data_science_from_scratch/__main__.py
+dsl/__main__.py
 
 FROM bpds/alpine-run:alpine
 COPY --from=builder /usr/src/app/dist/__main__ /app

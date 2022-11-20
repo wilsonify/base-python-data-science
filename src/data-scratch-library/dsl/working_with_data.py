@@ -1,4 +1,4 @@
-from data_science_from_scratch.library.manipulation import (
+from dsl.manipulation import (
     picker
 )
 

@@ -1,10 +1,10 @@
 from collections import defaultdict
 from functools import partial
 
-from data_science_from_scratch.library.gradient_descent import maximize_batch, maximize_stochastic
-from data_science_from_scratch.library.linear_algebra import shape, get_column, make_matrix, magnitude, dot, vector_sum, \
+from dsl.gradient_descent import maximize_batch, maximize_stochastic
+from dsl.linear_algebra import shape, get_column, make_matrix, magnitude, dot, vector_sum, \
     scalar_multiply, vector_subtract
-from data_science_from_scratch.library.stats import mean, standard_deviation
+from dsl.stats import mean, standard_deviation
 
 
 def parse_row(input_row, parsers):
