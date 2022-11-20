@@ -1,10 +1,9 @@
-FROM bpds/alpine-build:alpine as builder
+FROM data-scratch-mqtt-builder:latest as builder
 USER root
 RUN mkdir -p /usr/src/app
 COPY . /usr/src/app
 WORKDIR /usr/src/app
-RUN pip3 install -r requirements.txt
-RUN python3 setup.py install
+RUN pip3 install .
 RUN pyinstaller \
 --noconfirm \
 --onedir \
@@ -12,16 +11,17 @@ RUN pyinstaller \
 --distpath dist \
 --workpath build \
 --specpath . \
-data_science_from_scratch/__main__.py
+data_scratch_mqtt/__main__.py
 
-FROM bpds/alpine-run:alpine
+FROM data-scratch-mqtt-base:latest
 COPY --from=builder /usr/src/app/dist/__main__ /app
 WORKDIR /app
-ENV AMQP_HOST=localhost
-ENV AMQP_PORT=5672
-ENV AMQP_ROUTING_KEY="dsfs"
-ENV AMQP_HEARTBEAT=10000
-ENV AMQP_TIMEOUT=10001
-ENV AMQP_USER="guest"
-ENV AMQP_PASS="guest"
+ENV MQTT_HOST=localhost
+ENV MQTT_PORT=5672
+ENV MQTT_ROUTING_KEY="dsfs"
+ENV MQTT_HEARTBEAT=10000
+ENV MQTT_TIMEOUT=10001
+ENV MQTT_USER="thom"
+ENV MQTT_PASS="guest"
 ENTRYPOINT ["/app/__main__"]
+#ENTRYPOINT ["python3", "-m", "data_scratch_mqtt"]

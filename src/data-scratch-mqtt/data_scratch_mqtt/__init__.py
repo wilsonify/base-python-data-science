@@ -1,3 +1,4 @@
+from data_scratch_mqtt.config import MQTT_HOST, MQTT_PORT, MQTT_KEEPALIVE
 from data_scratch_mqtt.strategies_library.abstract import Strategy
 from data_scratch_mqtt.strategies_library.echo import echo_strategy
 from data_scratch_mqtt.strategies_library.gradient_descent import difference_quotient
@@ -38,7 +39,6 @@ from data_scratch_mqtt.strategies_library.probability import normal_pdf
 from data_scratch_mqtt.strategies_library.probability import random_kid
 from data_scratch_mqtt.strategies_library.probability import uniform_cdf
 from data_scratch_mqtt.strategies_library.probability import uniform_pdf
-
 from data_scratch_mqtt.strategies_library.stats import bucketize
 from data_scratch_mqtt.strategies_library.stats import correlation
 from data_scratch_mqtt.strategies_library.stats import correlation_matrix

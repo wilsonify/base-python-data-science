@@ -7,8 +7,8 @@ from inspect import getmembers, isfunction
 import pytest
 
 from dsl import gradient_descent
+from dsl.linear_algebra import distance
 from dsl.gradient_descent import (
-    distance,
     difference_quotient,
     partial_difference_quotient,
     estimate_gradient,
