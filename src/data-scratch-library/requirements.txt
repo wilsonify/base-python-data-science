@@ -1,2 +1,1 @@
 python-dateutil~=2.8.2
-pika~=1.2.1
