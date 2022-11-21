@@ -2,26 +2,20 @@ import json
 import logging
 from types import MethodType
 
-import pika
-
-from data_science_from_scratch import routing_key
-
 
 class Strategy:
     """The Strategy Pattern class"""
 
-    def __init__(self, function, channel, method, props):
+    def __init__(self, function, mqtt_client):
         logging.debug("initialize Strategy")
         self.name = "Default Strategy"
         self.execute = MethodType(function, self)
-        self.channel = channel
-        self.method = method
-        self.props = props
+        self.mqtt_client = mqtt_client
+        self.reply_to = None
+        self.correlation_id = None
 
     def publish(self, payload):
-        self.channel.basic_publish(
-            exchange=self.props.reply_to,
-            routing_key=routing_key,
-            properties=pika.BasicProperties(correlation_id=self.props.correlation_id),
+        self.mqtt_client.publish(
+            self.reply_to,
             body=json.dumps(payload).encode("utf-8")
         )

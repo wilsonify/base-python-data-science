@@ -2,10 +2,10 @@ import os
 import random
 from functools import partial
 
-from data_science_from_scratch import multiple_regression
-from data_science_from_scratch.library import gradient_descent
-from data_science_from_scratch.library.gradient_descent import negate, negate_all
-from data_science_from_scratch.library.manipulation import directional_variance, directional_variance_gradient
+from dsl import multiple_regression
+from dsl import gradient_descent
+from dsl.gradient_descent import negate, negate_all
+from dsl.manipulation import directional_variance, directional_variance_gradient
 
 current_dir = os.path.dirname(__file__)
 parent_dir = os.path.join(current_dir, os.pardir)

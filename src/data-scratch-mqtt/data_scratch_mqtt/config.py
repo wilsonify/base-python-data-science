@@ -4,7 +4,7 @@ import os
 MQTT_HOST = os.getenv("MQTT_HOST", "localhost")
 MQTT_PORT = int(os.getenv("AMQP_PORT", "1883"))
 MQTT_KEEPALIVE = int(os.getenv("MQTT_KEEPALIVE", "60"))
-MQTT_USER = os.getenv("MQTT_USER", "bob")
+MQTT_USER = os.getenv("MQTT_USER", "thom")
 MQTT_PASS = os.getenv("MQTT_PASS", "examplepassword")
 MQTT_TOPIC = os.getenv("MQTT_TOPIC", "dsfs")
 HOME_DIR = os.path.expanduser("~")

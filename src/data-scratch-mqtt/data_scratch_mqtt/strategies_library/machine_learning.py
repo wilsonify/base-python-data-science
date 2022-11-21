@@ -1,6 +1,6 @@
 import os
 
-from data_science_from_scratch.library import machine_learning
+from dsl import machine_learning
 
 current_dir = os.path.dirname(__file__)
 parent_dir = os.path.join(current_dir, os.pardir)

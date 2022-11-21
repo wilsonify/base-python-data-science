@@ -1,4 +1,4 @@
-from data_science_from_scratch.library.probability import mystrength
+from dsl.probability import mystrength
 
 
 def mystrength_strategy(self, body: dict):  # noqa: E501
