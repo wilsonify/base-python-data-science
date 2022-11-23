@@ -22,6 +22,6 @@ ENV MQTT_ROUTING_KEY="dsfs"
 ENV MQTT_HEARTBEAT=10000
 ENV MQTT_TIMEOUT=10001
 ENV MQTT_USER="thom"
-ENV MQTT_PASS="guest"
+ENV MQTT_PASS="examplepassword"
 ENTRYPOINT ["/app/__main__"]
 #ENTRYPOINT ["python3", "-m", "data_scratch_mqtt"]
