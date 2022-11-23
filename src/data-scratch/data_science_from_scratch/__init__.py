@@ -1,9 +1,8 @@
-import logging
 import os
 
 import pika
 
-logging.getLogger(__name__).addHandler(logging.NullHandler())
+
 amqp_host = os.getenv("AMQP_HOST", "localhost")
 amqp_port = os.getenv("AMQP_PORT", "5672")
 routing_key = os.getenv("AMQP_ROUTING_KEY", "dsfs")
