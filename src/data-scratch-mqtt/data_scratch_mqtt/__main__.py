@@ -78,7 +78,7 @@ available_strategies = dict(
 
 
 def on_connect(client, userdata, flags, rc):
-    print("Result from connect: {}".format(mqtt.connack_string(rc)))
+    logging.info("Result from connect: {}".format(mqtt.connack_string(rc)))
     # Subscribe to the vehicles/vehiclepi01/tests topic filter
     logging.info("start setting quality of service")
     client.subscribe(MQTT_TOPIC, qos=0)
@@ -86,11 +86,13 @@ def on_connect(client, userdata, flags, rc):
 
 
 def on_subscribe(client, userdata, mid, granted_qos):
-    print(f"I've subscribed with QoS: {granted_qos[0]}")
+    logging.info(f"I've subscribed with QoS: {granted_qos[0]}")
 
 
 def on_message(client, userdata, msg):
-    print(f"Message received. Topic: {msg.topic}. Payload: {msg.payload}")
+    logging.info(f"Message received")
+    logging.debug(f"msg.topic = {msg.topic}")
+    logging.debug(f"msg.payload {msg.payload}")
     payload = json.loads(msg.payload.decode("utf-8"))
     logging.debug("%r", "payload = {}".format(payload))
     logging.debug("%r", "payload has type {}".format(type(payload)))
