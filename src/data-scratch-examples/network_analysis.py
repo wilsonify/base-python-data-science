@@ -1,12 +1,27 @@
+import logging
+from logging.config import dictConfig
+
+from dsl.network_analysis import users_dict, eigenvector_centralities, page_rank
+
 
 def main():
     logging.info("Betweenness Centrality")
     for _user in users_dict:
-        logging.info("%r", "user {}, betweenness {}".format(_user["id"], _user["betweenness_centrality"]))
+        logging.info(
+            "%r",
+            "user {}, betweenness {}".format(
+                _user["id"], _user["betweenness_centrality"]
+            ),
+        )
 
     logging.info("Closeness Centrality")
     for _user in users_dict:
-        logging.info("%r", "user {}, closeness_centrality {}".format(_user["id"], _user["closeness_centrality"]))
+        logging.info(
+            "%r",
+            "user {}, closeness_centrality {}".format(
+                _user["id"], _user["closeness_centrality"]
+            ),
+        )
 
     logging.info("Eigenvector Centrality")
     for _user_id, centrality in enumerate(eigenvector_centralities):
@@ -18,5 +33,10 @@ def main():
 
 
 if __name__ == "__main__":
-    dictConfig(config.LOGGING_CONFIG_DICT)
+    dictConfig(dict(
+        version=1,
+        formatters={"simple": {"format": """%(asctime)s | %(name)s | %(lineno)s | %(levelname)s | %(message)s"""}},
+        handlers={"console": {"class": "logging.StreamHandler", "formatter": "simple"}},
+        root={"handlers": ["console"], "level": logging.DEBUG},
+    ))
     main()

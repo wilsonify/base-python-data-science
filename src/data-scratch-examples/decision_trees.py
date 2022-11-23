@@ -1,3 +1,9 @@
+import logging
+from logging.config import dictConfig
+
+from dsl.decision_trees import partition_entropy_by, build_tree_id3, classify
+
+
 def main():
     inputs_list = [
         ({"level": "Senior", "lang": "Java", "tweets": "no", "phd": "no"}, False),
@@ -58,5 +64,10 @@ def main():
 
 
 if __name__ == "__main__":
-    dictConfig(config.LOGGING_CONFIG_DICT)
+    dictConfig(dict(
+        version=1,
+        formatters={"simple": {"format": """%(asctime)s | %(name)s | %(lineno)s | %(levelname)s | %(message)s"""}},
+        handlers={"console": {"class": "logging.StreamHandler", "formatter": "simple"}},
+        root={"handlers": ["console"], "level": logging.DEBUG},
+    ))
     main()

@@ -1,3 +1,10 @@
+import logging
+import random
+from logging.config import dictConfig
+
+from dsl.nearest_neighbors import knn_classify, random_distances
+from dsl.stats import mean
+
 cities = [
     (-86.75, 33.5666666666667, "Python"),
     (-88.25, 30.6833333333333, "Python"),
@@ -119,5 +126,10 @@ def main():
 
 
 if __name__ == "__main__":
-    dictConfig(config.LOGGING_CONFIG_DICT)  # try several different values for k
+    dictConfig(dict(
+        version=1,
+        formatters={"simple": {"format": """%(asctime)s | %(name)s | %(lineno)s | %(levelname)s | %(message)s"""}},
+        handlers={"console": {"class": "logging.StreamHandler", "formatter": "simple"}},
+        root={"handlers": ["console"], "level": logging.DEBUG},
+    ))  # try several different values for k
     main()

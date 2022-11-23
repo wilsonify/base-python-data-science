@@ -8,9 +8,18 @@ from logging.config import dictConfig
 import dateutil
 from dateutil.parser import parser
 
-from data_science_from_scratch import config
-from dsl.manipulation import parse_rows_with, parse_dict, group_by, picker, pluck, scale, rescale, de_mean_matrix, \
-    principal_component_analysis, transform_vector
+from dsl.manipulation import (
+    parse_rows_with,
+    parse_dict,
+    group_by,
+    picker,
+    pluck,
+    scale,
+    rescale,
+    de_mean_matrix,
+    principal_component_analysis,
+    transform_vector,
+)
 from dsl.probability import random_normal
 from dsl.stats import correlation
 from dsl.working_with_data import day_over_day_changes
@@ -209,7 +218,10 @@ def main(path_to_csv_data, path_to_stocks):
     logging.info("%r", "principal components {}".format(components_p))
     logging.info("%r", "first point {}".format(x_matrix_demeaned[0]))
     logging.info(
-        "%r", "first point transformed {}".format(transform_vector(x_matrix_demeaned[0], components_p))
+        "%r",
+        "first point transformed {}".format(
+            transform_vector(x_matrix_demeaned[0], components_p)
+        ),
     )
 
 
@@ -228,6 +240,7 @@ if __name__ == "__main__":
     dictConfig(LOGGING_CONFIG_DICT)
     main(
         path_to_csv_data=os.path.join(
-            config.LOCAL_DATA_DIR, "comma_delimited_stock_prices.csv"
-        ), path_to_stocks=os.path.join(config.LOCAL_DATA_DIR, "stocks.txt")
+            "~", "repos/base-python-data-science/tests/data", "comma_delimited_stock_prices.csv"
+        ),
+        path_to_stocks=os.path.join("~", "repos/base-python-data-science/tests/data", "stocks.txt"),
     )

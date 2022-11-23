@@ -1,3 +1,9 @@
+import logging
+from logging.config import dictConfig
+
+from dsl.databases import Table
+
+
 def main():
     users = Table(["user_id", "name", "num_friends"])
     users.insert([0, "Hero", 0])
@@ -24,13 +30,17 @@ def main():
     selected_users = users.select(keep_columns=["user_id"])
     logging.info("%r", "selected_users = {}".format(selected_users))
 
-    users_named_dunn = users.where(lambda row: row["name"] == "Dunn").select(keep_columns=["user_id"])
+    users_named_dunn = users.where(lambda row: row["name"] == "Dunn").select(
+        keep_columns=["user_id"]
+    )
     logging.info("%r", "users_named_dunn = {}".format(users_named_dunn))
 
     def name_len(row):
         return len(row["name"])
 
-    user_with_name_length = users.select(keep_columns=[], additional_columns={"name_length": name_len})
+    user_with_name_length = users.select(
+        keep_columns=[], additional_columns={"name_length": name_len}
+    )
     logging.debug("name_len = {}".format(name_len))
     logging.info("%r", "user_with_name_length = {}".format(user_with_name_length))
 
@@ -91,8 +101,8 @@ def main():
     # noinspection PyPep8
     sql_users = (
         users.join(user_interests)
-            .where(lambda row: row["interest"] == "SQL")
-            .select(keep_columns=["name"])
+        .where(lambda row: row["interest"] == "SQL")
+        .select(keep_columns=["name"])
     )
 
     logging.info("%r", "sql_users = {}".format(sql_users))
@@ -121,5 +131,10 @@ def main():
 
 
 if __name__ == "__main__":
-    dictConfig(config.LOGGING_CONFIG_DICT)
+    dictConfig(dict(
+        version=1,
+        formatters={"simple": {"format": """%(asctime)s | %(name)s | %(lineno)s | %(levelname)s | %(message)s"""}},
+        handlers={"console": {"class": "logging.StreamHandler", "formatter": "simple"}},
+        root={"handlers": ["console"], "level": logging.DEBUG},
+    ))
     main()

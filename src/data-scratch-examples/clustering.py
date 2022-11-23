@@ -2,7 +2,13 @@ import logging
 import random
 from logging.config import dictConfig
 
-from dsl.clustering import KMeans, bottom_up_cluster, squared_clustering_errors, generate_clusters, get_values
+from dsl.clustering import (
+    KMeans,
+    bottom_up_cluster,
+    squared_clustering_errors,
+    generate_clusters,
+    get_values,
+)
 
 inputs_list = [
     [-14, -5],
@@ -42,7 +48,12 @@ def main():
     logging.info("compute errors as a function of k")
     for _k in range(1, len(inputs_list) + 1):
         logging.info("%r", "k = {}".format(_k))
-        logging.info("%r", "squared_clustering_errors = {}".format(squared_clustering_errors(inputs_list, _k)))
+        logging.info(
+            "%r",
+            "squared_clustering_errors = {}".format(
+                squared_clustering_errors(inputs_list, _k)
+            ),
+        )
     logging.info("done with errors as a function of k")
 
     logging.info("start bottom up hierarchical clustering")
@@ -65,7 +76,11 @@ def main():
 if __name__ == "__main__":
     LOGGING_CONFIG_DICT = dict(
         version=1,
-        formatters={"simple": {"format": """%(asctime)s | %(name)s | %(lineno)s | %(levelname)s | %(message)s"""}},
+        formatters={
+            "simple": {
+                "format": """%(asctime)s | %(name)s | %(lineno)s | %(levelname)s | %(message)s"""
+            }
+        },
         handlers={"console": {"class": "logging.StreamHandler", "formatter": "simple"}},
         root={"handlers": ["console"], "level": logging.DEBUG},
     )

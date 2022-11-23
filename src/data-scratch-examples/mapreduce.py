@@ -1,3 +1,10 @@
+import logging
+from functools import partial
+from logging.config import dictConfig
+
+from dsl.mapreduce import wc_mapper, word_count, wc_reducer, map_reduce, data_science_days, user_words, \
+    distinct_likers_per_user, matrix_multiply_mapper, matrix_multiply_reducer
+
 
 def main():
     _documents = ["data science", "big data", "science fiction"]
@@ -10,7 +17,12 @@ def main():
 
     logging.info("%r", "word count results {}".format(word_count(_documents)))
 
-    logging.info("%r", "word count using map_reduce function {}".format(map_reduce(_documents, wc_mapper, wc_reducer)))
+    logging.info(
+        "%r",
+        "word count using map_reduce function {}".format(
+            map_reduce(_documents, wc_mapper, wc_reducer)
+        ),
+    )
 
     logging.info("%r", "data science days {}".format(data_science_days))
 
@@ -36,5 +48,10 @@ def main():
 
 
 if __name__ == "__main__":
-    dictConfig(config.LOGGING_CONFIG_DICT)
+    dictConfig(dict(
+        version=1,
+        formatters={"simple": {"format": """%(asctime)s | %(name)s | %(lineno)s | %(levelname)s | %(message)s"""}},
+        handlers={"console": {"class": "logging.StreamHandler", "formatter": "simple"}},
+        root={"handlers": ["console"], "level": logging.DEBUG},
+    ))
     main()

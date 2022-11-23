@@ -1,3 +1,9 @@
+import logging
+from collections import defaultdict, Counter
+from logging.config import dictConfig
+
+from dsl.introduction import number_of_friends, friends_of_friend_ids, tenure_bucket, friends_of_friend_ids_bad
+
 
 def main():
     logging.info("setup data")
@@ -45,9 +51,9 @@ def main():
 
     num_users = len(users_list)
     avg_connections = total_connections / num_users  # 2.4
-
+    logging.info("%r", f"avg_connections = {avg_connections}")
     friends_of_friend_ids_3 = friends_of_friend_ids(users_list[3])
-    logging.info("%r", "friends_of_friend_ids_3 = {}".format(friends_of_friend_ids_3))  # Counter({0: 2, 5: 1})
+    logging.info("%r", f"friends_of_friend_ids_3 = {friends_of_friend_ids_3}")  # Counter({0: 2, 5: 1})
 
     interests_list = [
         (0, "Hadoop"),
@@ -209,5 +215,10 @@ def main():
 
 
 if __name__ == "__main__":
-    dictConfig(config.LOGGING_CONFIG_DICT)
+    dictConfig(dict(
+        version=1,
+        formatters={"simple": {"format": """%(asctime)s | %(name)s | %(lineno)s | %(levelname)s | %(message)s"""}},
+        handlers={"console": {"class": "logging.StreamHandler", "formatter": "simple"}},
+        root={"handlers": ["console"], "level": logging.DEBUG},
+    ))
     main()

@@ -1,3 +1,11 @@
+import logging
+import random
+from logging.config import dictConfig
+
+from dsl.gradient_descent import sum_of_squares_gradient, step, sum_of_squares, minimize_batch
+from dsl.linear_algebra import distance
+
+
 def main():
     logging.info("using the gradient")
 
@@ -27,5 +35,10 @@ def main():
 
 
 if __name__ == "__main__":
-    dictConfig(config.LOGGING_CONFIG_DICT)
+    dictConfig(dict(
+        version=1,
+        formatters={"simple": {"format": """%(asctime)s | %(name)s | %(lineno)s | %(levelname)s | %(message)s"""}},
+        handlers={"console": {"class": "logging.StreamHandler", "formatter": "simple"}},
+        root={"handlers": ["console"], "level": logging.DEBUG},
+    ))
     main()

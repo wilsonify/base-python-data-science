@@ -1,3 +1,12 @@
+import logging
+import random
+from collections import Counter
+from logging.config import dictConfig
+
+from dsl.machine_learning import split_data
+from dsl.naive_bayes import get_subject_data, p_spam_given_word, NaiveBayesClassifier
+
+
 def train_and_test_model(path):
     data = get_subject_data(path)
     random.seed(0)  # just so you get the same answers as me
@@ -35,5 +44,10 @@ def train_and_test_model(path):
 
 
 if __name__ == "__main__":
-    dictConfig(config.LOGGING_CONFIG_DICT)  # train_and_test_model(r"c:\spam\*\*")
+    dictConfig(dict(
+        version=1,
+        formatters={"simple": {"format": """%(asctime)s | %(name)s | %(lineno)s | %(levelname)s | %(message)s"""}},
+        handlers={"console": {"class": "logging.StreamHandler", "formatter": "simple"}},
+        root={"handlers": ["console"], "level": logging.DEBUG},
+    ))  # train_and_test_model(r"c:\spam\*\*")
     train_and_test_model(r"/home/joel/src/spam/*/*")

@@ -1,7 +1,16 @@
+import logging
+import random
+from logging.config import dictConfig
 
+from dsl.probability import random_kid
 
 if __name__ == "__main__":
-    dictConfig(config.LOGGING_CONFIG_DICT)  #
+    dictConfig(dict(
+        version=1,
+        formatters={"simple": {"format": """%(asctime)s | %(name)s | %(lineno)s | %(levelname)s | %(message)s"""}},
+        handlers={"console": {"class": "logging.StreamHandler", "formatter": "simple"}},
+        root={"handlers": ["console"], "level": logging.DEBUG},
+    ))  #
     # CONDITIONAL PROBABILITY
     #
 

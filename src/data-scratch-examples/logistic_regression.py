@@ -1,3 +1,16 @@
+import logging
+import random
+from functools import partial
+from logging.config import dictConfig
+
+from dsl.gradient_descent import maximize_batch, maximize_stochastic
+from dsl.linear_algebra import dot
+from dsl.logistic_regression import logistic_log_likelihood, logistic_log_gradient, logistic_log_likelihood_i, \
+    logistic_log_gradient_i, logistic
+from dsl.machine_learning import train_test_split
+from dsl.manipulation import rescale
+from dsl.multiple_regression import estimate_beta
+
 
 def main():
     data = [
@@ -259,5 +272,10 @@ def main():
 
 
 if __name__ == "__main__":
-    dictConfig(config.LOGGING_CONFIG_DICT)
+    dictConfig(dict(
+        version=1,
+        formatters={"simple": {"format": """%(asctime)s | %(name)s | %(lineno)s | %(levelname)s | %(message)s"""}},
+        handlers={"console": {"class": "logging.StreamHandler", "formatter": "simple"}},
+        root={"handlers": ["console"], "level": logging.DEBUG},
+    ))
     main()

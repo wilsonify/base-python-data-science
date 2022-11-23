@@ -1,3 +1,11 @@
+import logging
+import random
+from logging.config import dictConfig
+
+from dsl.hypothesis_and_inference import normal_approximation_to_binomial, normal_two_sided_bounds, \
+    normal_probability_between, normal_upper_bound, normal_probability_below, two_sided_p_value, upper_p_value, \
+    run_experiment, reject_fairness, a_b_test_statistic
+
 
 def main():
     mu_0, sigma_0 = normal_approximation_to_binomial(1000, 0.5)
@@ -32,7 +40,9 @@ def main():
 
     logging.info("one-sided test")
     _hi = normal_upper_bound(0.95, mu_0, sigma_0)
-    logging.info("%r", "hi {}".format(_hi))  # is 526 (< 531, since we need more probability in the upper tail))
+    logging.info(
+        "%r", "hi {}".format(_hi)
+    )  # is 526 (< 531, since we need more probability in the upper tail))
     type_2_probability = normal_probability_below(_hi, mu_1, sigma_1)
     power = 1 - type_2_probability  # = 0.936
     logging.info("%r", "type 2 probability {}".format(type_2_probability))
@@ -87,5 +97,10 @@ def main():
 
 
 if __name__ == "__main__":
-    dictConfig(config.LOGGING_CONFIG_DICT)
+    dictConfig(dict(
+        version=1,
+        formatters={"simple": {"format": """%(asctime)s | %(name)s | %(lineno)s | %(levelname)s | %(message)s"""}},
+        handlers={"console": {"class": "logging.StreamHandler", "formatter": "simple"}},
+        root={"handlers": ["console"], "level": logging.DEBUG},
+    ))
     main()
