@@ -14,4 +14,4 @@ stop:
 	docker stop data-scratch-mqtt | true
 
 run: stop
-	docker run --rm --name data-scratch-mqtt --network host data-scratch-mqtt:latest
+	docker run --rm --name data-scratch-mqtt -d --network host data-scratch-mqtt:latest
