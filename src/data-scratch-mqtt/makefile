@@ -1,14 +1,19 @@
+# function for creating version files with version string and date
+ver_file = echo "1.0.0" > $(1) && date +%Y-%m-%d >> $(1)
 
 all: data-scratch-mqtt
 
-data-scratch-mqtt-base:
-	docker build -f Dockerfile-base -t data-scratch-mqtt-base:latest .
+build/VERSION.txt:
+	mkdir -p build && $(call ver_file, $@)
 
-data-scratch-mqtt-builder: data-scratch-mqtt-base
-	docker build -f Dockerfile-builder -t data-scratch-mqtt-builder:latest .
+build/base.txt: build/VERSION.txt
+	docker build -f Dockerfile-base -t data-scratch-mqtt-base:latest . && $(call ver_file, $@)
 
-data-scratch-mqtt: data-scratch-mqtt-builder
-	docker build -f Dockerfile -t data-scratch-mqtt:latest .
+build/builder.txt: build/base.txt
+	docker build -f Dockerfile-builder -t data-scratch-mqtt-builder:latest . && $(call ver_file, $@)
+
+build/image.txt: build/builder.txt
+	docker build -f Dockerfile -t data-scratch-mqtt:latest . && $(call ver_file, $@)
 
 stop:
 	docker stop data-scratch-mqtt | true
