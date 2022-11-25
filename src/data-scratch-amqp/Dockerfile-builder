@@ -14,3 +14,4 @@ RUN pip3 install -r requirements.txt
 
 # Set user and group (as declared in base image)
 USER 1000:1000
+RUN pip3 list

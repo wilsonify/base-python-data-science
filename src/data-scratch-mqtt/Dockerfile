@@ -10,6 +10,8 @@ RUN pyinstaller \
 --console \
 --distpath dist \
 --workpath build \
+--collect-submodules dsl \
+--collect-binaries dsl \
 --specpath . \
 data_scratch_mqtt/__main__.py
 

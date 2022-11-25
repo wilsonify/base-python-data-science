@@ -10,6 +10,7 @@ RUN pyinstaller \
 --console \
 --distpath dist \
 --workpath build \
+--collect-all dsl \
 --specpath . \
 data_scratch_amqp/__main__.py
 
