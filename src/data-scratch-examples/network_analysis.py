@@ -1,35 +1,79 @@
 import logging
 from logging.config import dictConfig
 
-from dsl.network_analysis import users_dict, eigenvector_centralities, page_rank
+from dsl.network_analysis import (
+    page_rank, populate_friends, populate_shortest_paths, populate_betweeness, populate_closeness, get_betweeness,
+    get_closeness, construct_adjacency, compute_eigenvectors, get_eigenvector_centrality, populate_endorsments,
+    get_page_ranks, populate_endorsements
+)
+
+users_dict = [
+    {"id": 0, "name": "Hero"},
+    {"id": 1, "name": "Dunn"},
+    {"id": 2, "name": "Sue"},
+    {"id": 3, "name": "Chi"},
+    {"id": 4, "name": "Thor"},
+    {"id": 5, "name": "Clive"},
+    {"id": 6, "name": "Hicks"},
+    {"id": 7, "name": "Devin"},
+    {"id": 8, "name": "Kate"},
+    {"id": 9, "name": "Klein"},
+]
+
+friendships = [
+    (0, 1),
+    (0, 2),
+    (1, 2),
+    (1, 3),
+    (2, 3),
+    (3, 4),
+    (4, 5),
+    (5, 6),
+    (5, 7),
+    (6, 8),
+    (7, 8),
+    (8, 9),
+]
+
+endorsements = [
+    (0, 1),
+    (1, 0),
+    (0, 2),
+    (2, 0),
+    (1, 2),
+    (2, 1),
+    (1, 3),
+    (2, 3),
+    (3, 4),
+    (5, 4),
+    (5, 6),
+    (7, 5),
+    (6, 8),
+    (8, 7),
+    (8, 9),
+]
 
 
 def main():
-    logging.info("Betweenness Centrality")
-    for _user in users_dict:
-        logging.info(
-            "%r",
-            "user {}, betweenness {}".format(
-                _user["id"], _user["betweenness_centrality"]
-            ),
-        )
+    users_dict_outer = populate_friends(users_dict, friendships)
+    users_dict_outer = populate_shortest_paths(users_dict_outer)
+    users_dict_outer = populate_betweeness(users_dict_outer)
+    users_dict_outer = populate_closeness(users_dict_outer)
 
-    logging.info("Closeness Centrality")
-    for _user in users_dict:
-        logging.info(
-            "%r",
-            "user {}, closeness_centrality {}".format(
-                _user["id"], _user["closeness_centrality"]
-            ),
-        )
+    get_betweeness(users_dict_outer)
+    get_closeness(users_dict_outer)
 
-    logging.info("Eigenvector Centrality")
-    for _user_id, centrality in enumerate(eigenvector_centralities):
-        logging.info("%r", "user_id {}, centrality {}".format(_user_id, centrality))
+    adjacency_matrix = construct_adjacency(users_dict, friendships)
+    eigenvector_centralities = compute_eigenvectors(adjacency_matrix)
 
-    logging.info("PageRank")
-    for _user_id, _pr in page_rank(users_dict).items():
-        logging.info("%r", "user_id {}, pr{}".format(_user_id, _pr))
+    get_eigenvector_centrality(eigenvector_centralities)
+
+    users_dict_outer = populate_endorsments(users_dict_outer, endorsements)
+    page_rank_outer = page_rank(users_dict_outer)
+    get_page_ranks(page_rank_outer)
+
+    endorsements_list = populate_endorsements(users_dict_outer)
+    sorted(endorsements_list, key=lambda pair: pair[1], reverse=True)
 
 
 if __name__ == "__main__":

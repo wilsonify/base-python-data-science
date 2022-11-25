@@ -86,43 +86,41 @@ cities = [([longitude, latitude], language) for longitude, latitude, language in
 
 
 def main():
-    for _k in [1, 3, 5, 7]:
-        num_correct = 0
+    random.seed(0)
 
-        for location, actual_language in cities:
-
-            other_cities = [
-                other_city
-                for other_city in cities
-                if other_city != (location, actual_language)
-            ]
-
-            predicted_language = knn_classify(_k, other_cities, location)
-
-            if predicted_language == actual_language:
-                num_correct += 1
-
-        logging.info(
-            "%r",
-            "{} neighbor[s]: {} correct out of {}".format(_k, num_correct, len(cities)),
-        )
+    try_several_k()
 
     dimensions = range(1, 101, 5)
 
     avg_distances = []
     min_distances = []
-
-    random.seed(0)
     for _dim in dimensions:
         distances = random_distances(_dim, 10000)  # 10,000 random pairs
         avg_distances.append(mean(distances))  # track the average
         min_distances.append(min(distances))  # track the minimum
-        logging.info(
-            "%r",
-            "_dim {}, min(distances) {}, mean(distances) {}, min(distances) / mean(distances) {}".format(
-                _dim, min(distances), mean(distances), min(distances) / mean(distances)
-            ),
-        )
+        msg = f"""
+_dim {_dim},
+min(distances) {min(distances)}, 
+mean(distances) {mean(distances)}, 
+min(distances) / mean(distances) {min(distances) / mean(distances)}
+"""
+        logging.info("%r", msg)
+
+
+def try_several_k():
+    # try several values for k
+    for _k in [1, 3, 5, 7]:
+        num_correct = 0
+        for location, actual_language in cities:
+            other_cities = [
+                other_city
+                for other_city in cities
+                if other_city != (location, actual_language)
+            ]
+            predicted_language = knn_classify(_k, other_cities, location)
+            if predicted_language == actual_language:
+                num_correct += 1
+        logging.info("%r", f"{_k} neighbor[s]: {num_correct} correct out of {len(cities)}")
 
 
 if __name__ == "__main__":
@@ -131,5 +129,6 @@ if __name__ == "__main__":
         formatters={"simple": {"format": """%(asctime)s | %(name)s | %(lineno)s | %(levelname)s | %(message)s"""}},
         handlers={"console": {"class": "logging.StreamHandler", "formatter": "simple"}},
         root={"handlers": ["console"], "level": logging.DEBUG},
-    ))  # try several different values for k
+    ))
+
     main()
