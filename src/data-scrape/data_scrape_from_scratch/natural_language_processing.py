@@ -6,7 +6,6 @@ from logging.config import dictConfig
 
 import requests
 from bs4 import BeautifulSoup
-from data_science_from_scratch import config
 
 
 def plot_resumes(plt):
@@ -278,7 +277,12 @@ for iteration in range(1000):
             document_lengths[d] += 1
 
 if __name__ == "__main__":
-    dictConfig(config.LOGGING_CONFIG_DICT)
+    dictConfig(dict(
+        version=1,
+        formatters={"simple": {"format": """%(asctime)s | %(name)s | %(lineno)s | %(levelname)s | %(message)s"""}},
+        handlers={"console": {"class": "logging.StreamHandler", "formatter": "simple"}},
+        root={"handlers": ["console"], "level": logging.DEBUG},
+    ))
     document = get_document()
 
     bigrams = list(zip(document, document[1:]))

@@ -6,24 +6,24 @@ import matplotlib.image as mpimg
 from matplotlib import pyplot as plt
 
 from data_plots_from_scratch.plot_state_borders import plot_state_borders
-from data_science_from_scratch.clustering import KMeans, squared_clustering_errors
-from data_science_from_scratch.library.gradient_descent import difference_quotient
-from data_science_from_scratch.library.linear_algebra import (
+from dsl.clustering import KMeans, squared_clustering_errors
+from dsl.gradient_descent import difference_quotient
+from dsl.linear_algebra import (
     get_column,
     shape,
     dot,
     scalar_multiply,
 )
-from data_science_from_scratch.library.probability import (
+from dsl.probability import (
     normal_pdf,
     normal_cdf,
     inverse_normal_cdf,
     binomial,
 )
-from data_science_from_scratch.library.stats import make_histogram
-from data_science_from_scratch.nearest_neighbors import cities
-from data_science_from_scratch.nearest_neighbors import knn_classify
-from data_science_from_scratch.working_with_data import random_normal
+from dsl.stats import make_histogram
+from dsl.nearest_neighbors import cities
+from dsl.nearest_neighbors import knn_classify
+from dsl.working_with_data import random_normal
 
 
 def plot_normal_pdfs():
