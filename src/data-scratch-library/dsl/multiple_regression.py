@@ -88,8 +88,7 @@ def squared_error_ridge_gradient(x_i, y_i, beta, alpha):
 
 
 def estimate_beta_ridge(x, y, alpha):
-    """use gradient descent to fit a ridge regression
-    with penalty alpha"""
+    """use gradient descent to fit a ridge regression with penalty alpha"""
     beta_initial = [random.random() for _ in x[0]]
     return minimize_stochastic(
         partial(squared_error_ridge, alpha=alpha),

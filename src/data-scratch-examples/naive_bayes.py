@@ -7,19 +7,7 @@ from dsl.machine_learning import split_data
 from dsl.naive_bayes import get_subject_data, p_spam_given_word, NaiveBayesClassifier
 
 
-def train_and_test_model(path):
-    data = get_subject_data(path)
-    random.seed(0)  # just so you get the same answers as me
-    train_data, test_data = split_data(data, 0.75)
-
-    classifier = NaiveBayesClassifier()
-    classifier.train(train_data)
-
-    classified = [
-        (subject, is_spam, classifier.classify(subject))
-        for subject, is_spam in test_data
-    ]
-
+def word_counter(classified):
     counts = Counter(
         (is_spam, spam_probability > 0.5)  # (actual, predicted)
         for _, is_spam, spam_probability in classified
@@ -34,20 +22,52 @@ def train_and_test_model(path):
     logging.info("%r", "spammiest_hams {}".format(spammiest_hams))
     logging.info("%r", "hammiest_spams {}".format(hammiest_spams))
 
-    words = sorted(classifier.word_probs, key=p_spam_given_word)
 
+def predict_batch(classifier, test_data):
+    classified = [
+        (subject, is_spam, classifier.classify(subject))
+        for subject, is_spam in test_data
+    ]
+    return classified
+
+
+def read_classifier(classifier):
+    words = sorted(classifier.word_probs, key=p_spam_given_word)
     spammiest_words = words[-5:]
     hammiest_words = words[:5]
-
     logging.info("%r", "spammiest_words {}".format(spammiest_words))
     logging.info("%r", "hammiest_words {}".format(hammiest_words))
 
 
+def main(path):
+    logging.info("start reading data")
+    data = get_subject_data(path)
+    logging.info("done reading data")
+
+    logging.info("start splitting data")
+    train_data, test_data = split_data(data, 0.75)
+    logging.info("done splitting data")
+
+    logging.info("start training classifier")
+    classifier = NaiveBayesClassifier()
+    classifier.train(train_data)
+    logging.info("done training classifier")
+
+    read_classifier(classifier)
+
+    logging.info("start predicting")
+    classified = predict_batch(classifier, test_data)
+    logging.info("done predicting")
+
+    word_counter(classified)
+
+
 if __name__ == "__main__":
+    random.seed(0)  # just so you get repeatable answers
     dictConfig(dict(
         version=1,
         formatters={"simple": {"format": """%(asctime)s | %(name)s | %(lineno)s | %(levelname)s | %(message)s"""}},
         handlers={"console": {"class": "logging.StreamHandler", "formatter": "simple"}},
         root={"handlers": ["console"], "level": logging.DEBUG},
     ))  # train_and_test_model(r"c:\spam\*\*")
-    train_and_test_model(r"/home/joel/src/spam/*/*")
+    main(r"/home/thom/repos/base-python-data-science/tests/data/spam/*")

@@ -1,10 +1,7 @@
-import datetime
 import logging
 from collections import defaultdict, Counter
 from functools import partial
-from logging.config import dictConfig
 
-from dsl import config
 from dsl.naive_bayes import tokenize
 
 
@@ -69,36 +66,18 @@ max_reducer = values_reducer(max)
 min_reducer = values_reducer(min)
 count_distinct_reducer = values_reducer(lambda values: len(set(values)))
 
-#
-# Analyzing Status Updates
-#
 
-status_updates = [
-    {
-        "id": 1,
-        "username": "joelgrus",
-        "text": "Is anyone interested in a data science book?",
-        "created_at": datetime.datetime(2013, 12, 21, 11, 47, 0),
-        "liked_by": ["data_guy", "data_gal", "bill"],
-    },
-    # add your own
-]
+def most_popular_word_reducer(user, words_and_counts):
+    """given a sequence of (word, count) pairs,
+    return the word with the highest total count"""
 
+    word_counts = Counter()
+    for word, count in words_and_counts:
+        word_counts[word] += count
 
-def data_science_day_mapper(status_update):
-    """yields (day_of_week, 1) if status_update contains "data science" """
-    if "data science" in status_update["text"].lower():
-        day_of_week = status_update["created_at"].weekday()
-        yield (day_of_week, 1)
+    word, count = word_counts.most_common(1)[0]
 
-
-data_science_days = map_reduce(status_updates, data_science_day_mapper, sum_reducer)
-
-
-def words_per_user_mapper(status_update):
-    user = status_update["username"]
-    for word in tokenize(status_update["text"]):
-        yield (user, (word, 1))
+    yield (user, (word, count))
 
 
 def most_popular_word_reducer(user, words_and_counts):
@@ -114,20 +93,10 @@ def most_popular_word_reducer(user, words_and_counts):
     yield (user, (word, count))
 
 
-user_words = map_reduce(
-    status_updates, words_per_user_mapper, most_popular_word_reducer
-)
-
-
 def liker_mapper(status_update):
     user = status_update["username"]
     for liker in status_update["liked_by"]:
         yield (user, liker)
-
-
-distinct_likers_per_user = map_reduce(
-    status_updates, liker_mapper, count_distinct_reducer
-)
 
 
 #
@@ -136,8 +105,10 @@ distinct_likers_per_user = map_reduce(
 
 
 def matrix_multiply_mapper(m, element):
-    """m is the common dimension (columns of A, rows of B)
-    element is a tuple (matrix_name, i, j, value)"""
+    """
+    m is the common dimension (columns of A, rows of B)
+    element is a tuple (matrix_name, i, j, value)
+    """
     matrix, i, j, value = element
 
     if matrix == "A":
@@ -165,44 +136,3 @@ def matrix_multiply_reducer(m, key, indexed_values):
 
     if sum_product != 0.0:
         yield (key, sum_product)
-
-
-def main():
-    _documents = ["data science", "big data", "science fiction"]
-
-    wc_mapper_results = [
-        result for document in _documents for result in wc_mapper(document)
-    ]
-
-    logging.info("%r", "wc_mapper results {}".format(wc_mapper_results))
-
-    logging.info("%r", "word count results {}".format(word_count(_documents)))
-
-    logging.info("%r", "word count using map_reduce function {}".format(map_reduce(_documents, wc_mapper, wc_reducer)))
-
-    logging.info("%r", "data science days {}".format(data_science_days))
-
-    logging.info("%r", "user words {}".format(user_words))
-
-    logging.info("%r", "distinct likers {}".format(distinct_likers_per_user))
-
-    # matrix multiplication
-
-    entries = [
-        ("A", 0, 0, 3),
-        ("A", 0, 1, 2),
-        ("B", 0, 0, 4),
-        ("B", 0, 1, -1),
-        ("B", 1, 0, 10),
-    ]
-    _mapper = partial(matrix_multiply_mapper, 3)
-    _reducer = partial(matrix_multiply_reducer, 3)
-
-    logging.info("map-reduce matrix multiplication")
-    logging.info("%r", "entries: {}".format(entries))
-    logging.info("%r", "result: {}".format(map_reduce(entries, _mapper, _reducer)))
-
-
-if __name__ == "__main__":
-    dictConfig(config.LOGGING_CONFIG_DICT)
-    main()

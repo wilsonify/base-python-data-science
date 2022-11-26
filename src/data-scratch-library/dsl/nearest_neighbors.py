@@ -1,7 +1,9 @@
+import logging
 import random
 from collections import Counter
 
 from dsl.linear_algebra import distance
+from dsl.stats import mean
 
 
 def raw_majority_vote(labels):
@@ -130,3 +132,36 @@ def random_point(dim):
 
 def random_distances(dim, num_pairs):
     return [distance(random_point(dim), random_point(dim)) for _ in range(num_pairs)]
+
+
+def get_distances():
+    dimensions = range(1, 101, 5)
+    avg_distances = []
+    min_distances = []
+    for _dim in dimensions:
+        distances = random_distances(_dim, 10000)  # 10,000 random pairs
+        avg_distances.append(mean(distances))  # track the average
+        min_distances.append(min(distances))  # track the minimum
+        msg = f"""
+_dim {_dim},
+min(distances) {min(distances)}, 
+mean(distances) {mean(distances)}, 
+min(distances) / mean(distances) {min(distances) / mean(distances)}
+"""
+        logging.info("%r", msg)
+
+
+def try_several_k(cities):
+    # try several values for k
+    for _k in [1, 3, 5, 7]:
+        num_correct = 0
+        for location, actual_language in cities:
+            other_cities = [
+                other_city
+                for other_city in cities
+                if other_city != (location, actual_language)
+            ]
+            predicted_language = knn_classify(_k, other_cities, location)
+            if predicted_language == actual_language:
+                num_correct += 1
+        logging.info("%r", f"{_k} neighbor[s]: {num_correct} correct out of {len(cities)}")
