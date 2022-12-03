@@ -93,12 +93,14 @@ def on_message(client, userdata, msg):
     logging.info(f"Message received")
     logging.debug(f"msg.topic = {msg.topic}")
     logging.debug(f"msg.payload {msg.payload}")
-    payload = json.loads(msg.payload.decode("utf-8"))
+    payload_bytes = msg.payload
+    payload_str = payload_bytes.decode("utf-8")
+    payload = json.loads(payload_str)
     logging.debug("%r", "payload = {}".format(payload))
     logging.debug("%r", "payload has type {}".format(type(payload)))
     strategy_str = payload.get("strategy", "echo")
     selected_strategy = available_strategies.get(strategy_str, echo_strategy)
-    current_strategy = Strategy(selected_strategy, client)
+    current_strategy = Strategy(selected_strategy, client, userdata, msg)
     try:
         current_strategy.execute(payload)  # pylint:disable=not-callable
         logging.info("done")

@@ -4,6 +4,7 @@ from types import MethodType
 
 import pika
 
+from data_scratch_amqp import routing_key
 
 
 class Strategy:
@@ -24,3 +25,4 @@ class Strategy:
             properties=pika.BasicProperties(correlation_id=self.props.correlation_id),
             body=json.dumps(payload).encode("utf-8")
         )
+
