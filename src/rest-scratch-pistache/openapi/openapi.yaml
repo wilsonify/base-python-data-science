@@ -1,0 +1,20 @@
+openapi: 3.0.1
+info:  
+  description: "This is a sample server"
+  license:
+    name: Apache 2.0
+    url: http://www.apache.org/licenses/LICENSE-2.0.html  
+  title: Minimal Pistache
+  version: 1.0.0
+servers:
+  - url: "localhost"
+tags:
+  - name: math
+    description: apply mathematics to data
+paths:
+  /sqrt:
+    $ref: "paths/sqrt/sqrt.yaml"
+  /strength:
+    $ref: "paths/strength/strength.yaml"
+  /accuracy:
+    $ref: "paths/accuracy/accuracy.yaml"

@@ -1,0 +1,19 @@
+post:
+  description: This can only be done by the logged in user.
+  operationId: create_user
+  requestBody:
+    content:
+      "*/*":
+        schema:
+          $ref: "../../components/schemas/User.yaml"
+    description: Created user object
+    required: true
+  responses:
+    default:
+      content: {}
+      description: successful operation
+  summary: Create user
+  tags:
+    - user
+  x-codegen-request-body-name: body
+  x-openapi-router-controller: openapi_server.controllers.user_controller

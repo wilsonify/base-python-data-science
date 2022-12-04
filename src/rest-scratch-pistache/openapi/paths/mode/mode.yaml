@@ -1,0 +1,17 @@
+post:
+  tags: [math]
+  operationId: mode
+  x-openapi-router-controller: openapi_server.controllers.math_controller
+  description: "Description of the endpoint"
+  requestBody:
+    content:
+      application/json:
+        schema:
+          $ref: "mode-input.yaml"
+  responses:
+    "200":
+      description: "Description of this response."
+      content:
+        application/json:
+          schema:
+            $ref: "mode-output.yaml"

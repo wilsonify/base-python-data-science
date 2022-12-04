@@ -1,0 +1,65 @@
+delete:
+  description:
+    For valid response try integer IDs with positive integer value.         Negative
+    or non-integer values will generate API errors
+  operationId: delete_order
+  parameters:
+    - description: ID of the order that needs to be deleted
+      explode: false
+      in: path
+      name: orderId
+      required: true
+      schema:
+        format: int64
+        minimum: 1.0
+        type: integer
+      style: simple
+  responses:
+    "400":
+      content: {}
+      description: Invalid ID supplied
+    "404":
+      content: {}
+      description: Order not found
+  summary: Delete purchase order by ID
+  tags:
+    - store
+  x-openapi-router-controller: openapi_server.controllers.store_controller
+
+get:
+  description:
+    For valid response try integer IDs with value >= 1 and <= 10.         Other
+    values will generated exceptions
+  operationId: get_order_by_id
+  parameters:
+    - description: ID of pet that needs to be fetched
+      explode: false
+      in: path
+      name: orderId
+      required: true
+      schema:
+        format: int64
+        maximum: 10.0
+        minimum: 1.0
+        type: integer
+      style: simple
+  responses:
+    "200":
+      content:
+        application/xml:
+          schema:
+            $ref: "../../components/schemas/Order.yaml"
+        application/json:
+          schema:
+            $ref: "../../components/schemas/Order.yaml"
+      description: successful operation
+    "400":
+      content: {}
+      description: Invalid ID supplied
+    "404":
+      content: {}
+      description: Order not found
+  summary: Find purchase order by ID
+  tags:
+    - store
+  x-openapi-router-controller: openapi_server.controllers.store_controller

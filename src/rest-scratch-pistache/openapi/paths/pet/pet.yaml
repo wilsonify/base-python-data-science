@@ -1,0 +1,57 @@
+post:
+  operationId: add_pet
+  requestBody:
+    content:
+      application/json:
+        schema:
+          $ref: "../../components/schemas/Pet.yaml"
+      application/xml:
+        schema:
+          $ref: "../../components/schemas/Pet.yaml"
+    description: Pet object that needs to be added to the store
+    required: true
+  responses:
+    "405":
+      content: {}
+      description: Invalid input
+  security:
+    - petstore_auth:
+        - write:pets
+        - read:pets
+  summary: Add a new pet to the store
+  tags:
+    - pet
+  x-codegen-request-body-name: body
+  x-openapi-router-controller: openapi_server.controllers.pet_controller
+
+put:
+  operationId: update_pet
+  requestBody:
+    content:
+      application/json:
+        schema:
+          $ref: "../../components/schemas/Pet.yaml"
+      application/xml:
+        schema:
+          $ref: "../../components/schemas/Pet.yaml"
+    description: Pet object that needs to be added to the store
+    required: true
+  responses:
+    "400":
+      content: {}
+      description: Invalid ID supplied
+    "404":
+      content: {}
+      description: Pet not found
+    "405":
+      content: {}
+      description: Validation exception
+  security:
+    - petstore_auth:
+        - write:pets
+        - read:pets
+  summary: Update an existing pet
+  tags:
+    - pet
+  x-codegen-request-body-name: body
+  x-openapi-router-controller: openapi_server.controllers.pet_controller

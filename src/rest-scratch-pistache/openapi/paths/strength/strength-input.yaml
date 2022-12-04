@@ -1,0 +1,7 @@
+type: object
+properties:
+  actual:
+    type: integer
+  expected:
+    type: integer
+example: { "actual": 60, "expected": 100}

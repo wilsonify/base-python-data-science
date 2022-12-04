@@ -1,0 +1,17 @@
+post:
+  tags: [math]
+  operationId: vector_sum
+  x-openapi-router-controller: openapi_server.controllers.math_controller
+  description: "Description of the endpoint"
+  requestBody:
+    content:
+      application/json:
+        schema:
+          $ref: "vector_sum-input.yaml"
+  responses:
+    "200":
+      description: "Description of this response."
+      content:
+        application/json:
+          schema:
+            $ref: "vector_sum-output.yaml"
