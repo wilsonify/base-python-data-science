@@ -1,0 +1,31 @@
+ver_file = echo "1.0.0" > $(1) && date +%Y-%m-%d >> $(1)
+
+all: clean dist/api-server
+
+clean:
+	rm -rf build
+	rm -rf dist	
+
+build/VERSION.txt:
+	mkdir -p build && $(call ver_file, $@)
+
+dist/VERSION.txt:
+	mkdir -p dist && $(call ver_file, $@)
+
+build/makefile: build/VERSION.txt
+	cd build && cmake ..
+
+build/api-server: build/makefile
+	cd build && make
+
+dist/api-server: dist/VERSION.txt build/api-server
+	cp build/api-server dist
+
+build/rest-scratch-pistache-base.txt: build/VERSION.txt
+	docker build -f Dockerfile-base -t rest-scratch-pistache-base:latest . && $(call ver_file, $@)
+
+build/rest-scratch-pistache-builder.txt:  build/rest-scratch-pistache-base.txt
+	docker build -f Dockerfile-builder -t rest-scratch-pistache-builder:latest . && $(call ver_file, $@)
+
+build/rest-scratch-pistache.txt: build/rest-scratch-pistache-builder.txt
+	docker build -t rest-scratch-pistache:latest . && $(call ver_file, $@)

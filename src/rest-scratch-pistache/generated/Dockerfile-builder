@@ -1,0 +1,7 @@
+FROM rest-scratch-pistache-base:latest
+RUN apt-get install -y \
+git \
+cmake \
+g++ \
+meson \
+rapidjson-dev

@@ -25,12 +25,15 @@ MathApiImpl::MathApiImpl(const std::shared_ptr<Pistache::Rest::Router>& rtr)
 }
 
 void MathApiImpl::accuracy(const Accuracy_input &accuracyInput, Pistache::Http::ResponseWriter &response) {
+
     response.send(Pistache::Http::Code::Ok, "Do some magic\n");
 }
 void MathApiImpl::sqrt(const Sqrt_input &sqrtInput, Pistache::Http::ResponseWriter &response) {
+
     response.send(Pistache::Http::Code::Ok, "Do some magic\n");
 }
 void MathApiImpl::strength(const Strength_input &strengthInput, Pistache::Http::ResponseWriter &response) {
+    
     response.send(Pistache::Http::Code::Ok, "Do some magic\n");
 }
 
