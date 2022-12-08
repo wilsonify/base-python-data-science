@@ -41,3 +41,12 @@ target_link_libraries(test-data-scratch-cpp gtest gtest_main data-scratch-cpp-li
 
 enable_testing ()
 add_test(run-test-data-scratch-cpp test-data-scratch-cpp)
+
+# build an installer
+include (InstallRequiredSystemLibraries)
+set (CPACK_RESOURCE_FILE_LICENSE "${CMAKE_CURRENT_SOURCE_DIR}/LICENSE")
+set (CPACK_PACKAGE_NAME "base-python-data-science")
+set (CPACK_PACKAGE_VERSION_MAJOR "${VERSION_MAJOR}")
+set (CPACK_PACKAGE_VERSION_MINOR "${VERSION_MINOR}")
+set (CPACK_SOURCE_GENERATOR "TGZ")
+include (CPack)
