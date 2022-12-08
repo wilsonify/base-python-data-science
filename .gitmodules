@@ -1,0 +1,12 @@
+[submodule "src/rest-scratch-pistache/generated/external/json"]
+	path = src/rest-scratch-pistache/generated/external/json
+	url = https://github.com/nlohmann/json.git
+[submodule "src/rest-scratch-pistache/generated/external/pistache"]
+	path = src/rest-scratch-pistache/generated/external/pistache
+	url = https://github.com/pistacheio/pistache.git
+[submodule "src/rest-scratch-pistache/generated/external/googletest"]
+	path = src/rest-scratch-pistache/generated/external/googletest
+	url = https://github.com/google/googletest
+[submodule "src/rest-scratch-pistache/generated/external/rapidjson"]
+	path = src/rest-scratch-pistache/generated/external/rapidjson
+	url = https://github.com/Tencent/rapidjson.git
