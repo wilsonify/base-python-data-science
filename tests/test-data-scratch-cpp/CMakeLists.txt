@@ -28,7 +28,7 @@ add_library(data-scratch-cpp-library SHARED ${datascratchcpplibrarySources})
 link_directories(${CMAKE_CURRENT_BINARY_DIR})
 
 # build a test
-FILE(GLOB testfizzbuzzerSources test-data-scratch-cpp/*.cpp)
+FILE(GLOB testfizzbuzzerSources *.cpp)
 add_executable(test-data-scratch-cpp ${testfizzbuzzerSources} )
 target_link_libraries(test-data-scratch-cpp gtest gtest_main data-scratch-cpp-library)
 
@@ -44,7 +44,6 @@ add_test(run-test-data-scratch-cpp test-data-scratch-cpp)
 
 # build an installer
 include (InstallRequiredSystemLibraries)
-set (CPACK_RESOURCE_FILE_LICENSE "${CMAKE_CURRENT_SOURCE_DIR}/LICENSE")
 set (CPACK_PACKAGE_NAME "base-python-data-science")
 set (CPACK_PACKAGE_VERSION_MAJOR "${VERSION_MAJOR}")
 set (CPACK_PACKAGE_VERSION_MINOR "${VERSION_MINOR}")
