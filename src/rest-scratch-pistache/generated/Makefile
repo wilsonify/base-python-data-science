@@ -29,3 +29,6 @@ build/rest-scratch-pistache-builder.txt:  build/rest-scratch-pistache-base.txt
 
 build/rest-scratch-pistache.txt: build/rest-scratch-pistache-builder.txt
 	docker build -t rest-scratch-pistache:latest . && $(call ver_file, $@)
+
+docker-run: build/rest-scratch-pistache.txt
+	docker run --rm --name rest-scratch-pistache -p 49153:8080 rest-scratch-pistache:latest
