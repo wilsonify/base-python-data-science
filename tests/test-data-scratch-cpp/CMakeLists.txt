@@ -22,13 +22,13 @@ add_subdirectory(external/googletest)
 link_directories(external/googletest/build/lib)
 
 # build a shared library
-include_directories(src/data-scratch-cpp-library)
-FILE(GLOB datascratchcpplibrarySources src/data-scratch-cpp-library/*.cpp)
+include_directories(external/data-scratch-cpp-library)
+FILE(GLOB datascratchcpplibrarySources external/data-scratch-cpp-library/*.cpp)
 add_library(data-scratch-cpp-library SHARED ${datascratchcpplibrarySources})
 link_directories(${CMAKE_CURRENT_BINARY_DIR})
 
 # build a test
-FILE(GLOB testfizzbuzzerSources tests/test-data-scratch-cpp/*.cpp)
+FILE(GLOB testfizzbuzzerSources test-data-scratch-cpp/*.cpp)
 add_executable(test-data-scratch-cpp ${testfizzbuzzerSources} )
 target_link_libraries(test-data-scratch-cpp gtest gtest_main data-scratch-cpp-library)
 

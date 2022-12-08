@@ -10,6 +10,6 @@
 [submodule "src/rest-scratch-pistache/generated/external/rapidjson"]
 	path = src/rest-scratch-pistache/generated/external/rapidjson
 	url = https://github.com/Tencent/rapidjson.git
-[submodule "external/googletest"]
-	path = external/googletest
+[submodule "tests/test-data-scratch-cpp/external/googletest"]
+	path = tests/test-data-scratch-cpp/external/googletest
 	url = https://github.com/google/googletest
