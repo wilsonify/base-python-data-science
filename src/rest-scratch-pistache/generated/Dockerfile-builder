@@ -3,5 +3,6 @@ RUN apt-get install -y \
 git \
 cmake \
 g++ \
+ninja \
 meson \
 rapidjson-dev

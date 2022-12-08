@@ -13,10 +13,10 @@ dist/VERSION.txt:
 	mkdir -p dist && $(call ver_file, $@)
 
 build/makefile: build/VERSION.txt
-	cd build && cmake ..
+	cd build && cmake .. -G Ninja
 
 build/api-server: build/makefile
-	cd build && make
+	cd build && ninja
 
 dist/api-server: dist/VERSION.txt build/api-server
 	cp build/api-server dist

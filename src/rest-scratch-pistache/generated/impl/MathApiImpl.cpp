@@ -25,16 +25,53 @@ MathApiImpl::MathApiImpl(const std::shared_ptr<Pistache::Rest::Router>& rtr)
 }
 
 void MathApiImpl::accuracy(const Accuracy_input &accuracyInput, Pistache::Http::ResponseWriter &response) {
+    double tp;
+    double fp;
+    double fn;
+    double tn;    
+    double result;
+    double eps = 0.001;
+    nlohmann::json json_to_dump;    
+    std::string string_to_send;
 
-    response.send(Pistache::Http::Code::Ok, "Do some magic\n");
+    tp=accuracyInput.getTp();
+    fp=accuracyInput.getFp();
+    fn=accuracyInput.getFn();
+    tn=accuracyInput.getTn();
+
+    result = (tp + tn) / (tp + fp + fn + tn + eps);
+
+    nlohmann::to_json(json_to_dump, result);
+    string_to_send = json_to_dump.dump();
+    response.send(Pistache::Http::Code::Ok, string_to_send);    
 }
-void MathApiImpl::sqrt(const Sqrt_input &sqrtInput, Pistache::Http::ResponseWriter &response) {
-
-    response.send(Pistache::Http::Code::Ok, "Do some magic\n");
+void MathApiImpl::sqrt(const Sqrt_input &sqrtInput, Pistache::Http::ResponseWriter &response) {   
+    double x;
+    Sqrt_output result;    
+    nlohmann::json json_to_dump;    
+    std::string string_to_send;
+        
+    x=sqrtInput.getX();
+    result.setX(x);
+    result.setResult(std::sqrt(x));  
+    
+    nlohmann::to_json(json_to_dump, result);
+    string_to_send = json_to_dump.dump();
+    response.send(Pistache::Http::Code::Ok, string_to_send);
 }
 void MathApiImpl::strength(const Strength_input &strengthInput, Pistache::Http::ResponseWriter &response) {
-    
-    response.send(Pistache::Http::Code::Ok, "Do some magic\n");
+    double expected;
+    double actual;        
+    double result;    
+    double eps=0.01;
+    nlohmann::json json_to_dump;
+    std::string string_to_send;
+    actual=strengthInput.getActual();
+    expected=strengthInput.getExpected();
+    result = actual / (expected+eps);
+    nlohmann::to_json(json_to_dump, result);
+    string_to_send = json_to_dump.dump();
+    response.send(Pistache::Http::Code::Ok, string_to_send);
 }
 
 }

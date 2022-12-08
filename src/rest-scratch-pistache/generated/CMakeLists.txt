@@ -1,38 +1,41 @@
 cmake_minimum_required (VERSION 3.2)
-
 project(api-server)
+set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++20 -pg -g3" )
 
-set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++17 -pg -g3" )
+set(VERSION_MAJOR 1)
+set(VERSION_MINOR 0)
+set(VERSION_PATCH 1)
 
-include(ExternalProject)
+#build the test runner
+include_directories(external/googletest/googletest/include)
+include_directories(external/googletest/googlemock/include)
+add_subdirectory(external/googletest)
+link_directories(external/googletest/build/lib)
 
-set(EXTERNAL_INSTALL_LOCATION ${CMAKE_CURRENT_SOURCE_DIR}/external)
+#build header only library
+include_directories(external/json/include)
 
-ExternalProject_Add(PISTACHE
-    GIT_REPOSITORY https://github.com/pistacheio/pistache.git
-    BUILD_IN_SOURCE true
-    INSTALL_COMMAND meson setup build --prefix=${EXTERNAL_INSTALL_LOCATION} --libdir=lib && meson install -C build
-)
+#build rapidjson
+include_directories(external/rapidjson/include)
+add_subdirectory(external/rapidjson)
+link_directories(external/rapidjson/build/lib)
 
-ExternalProject_Add(NLOHMANN
-    GIT_REPOSITORY https://github.com/nlohmann/json.git
-    CMAKE_ARGS -DCMAKE_INSTALL_PREFIX=${EXTERNAL_INSTALL_LOCATION} -DJSON_BuildTests=OFF
-)
+#build the rest runner
+include_directories(external/pistache/include)
+add_subdirectory(external/pistache)
+link_directories(external/pistache/build/src)
 
-include_directories(${EXTERNAL_INSTALL_LOCATION}/include)
-link_directories(${EXTERNAL_INSTALL_LOCATION}/lib)
-
+# build the main
 include_directories(model)
 include_directories(api)
 include_directories(impl)
 
-file(GLOB SRCS
-    ${CMAKE_CURRENT_SOURCE_DIR}/api/*.cpp
-    ${CMAKE_CURRENT_SOURCE_DIR}/impl/*.cpp
-    ${CMAKE_CURRENT_SOURCE_DIR}/model/*.cpp
-    ${CMAKE_CURRENT_SOURCE_DIR}/*.cpp
+file(GLOB SRCS 
+${CMAKE_CURRENT_SOURCE_DIR}/model/*.cpp
+${CMAKE_CURRENT_SOURCE_DIR}/api/*.cpp
+${CMAKE_CURRENT_SOURCE_DIR}/impl/*.cpp
+${CMAKE_CURRENT_SOURCE_DIR}/*.cpp
 )
 
-add_executable(${PROJECT_NAME} ${SRCS} )
-add_dependencies(${PROJECT_NAME} PISTACHE NLOHMANN)
-target_link_libraries(${PROJECT_NAME} pistache pthread)
+add_executable(api-server ${SRCS}) 
+target_link_libraries(api-server pistache pthread)
