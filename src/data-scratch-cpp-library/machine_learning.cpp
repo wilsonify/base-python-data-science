@@ -28,29 +28,23 @@ double train_test_split(x, y, test_pct) {
 //
 
 
-double accuracy(tp, fp, fn, tn) {
-    correct = tp + tn
-    total = tp + fp + fn + tn
-    return correct / total
+double accuracy(double tp, double fp, double fn, double tn)
+{
+    double result;
+    double eps = 0.01;
+    result = (tp + tn) / (tp + fp + fn + tn + eps);
+    return result;
 }
 
-double precision(tp, fp, fn, tn) {
-    logging.debug("%s", "tp = {}".format(tp))
-    logging.debug("%s", "fp = {}".format(fp))
-    logging.debug("%s", "fn = {}".format(fn))
-    logging.debug("%s", "tn = {}".format(tn))
+double precision(double tp, double fp, double fn, double tn) {    
     return tp / (tp + fp)
 }
 
-double recall(tp, fp, fn, tn) {
-    logging.debug("%s", "tp = {}".format(tp))
-    logging.debug("%s", "fp = {}".format(fp))
-    logging.debug("%s", "fn = {}".format(fn))
-    logging.debug("%s", "tn = {}".format(tn))
+double recall(double tp, double fp, double fn, double tn) {    
     return tp / (tp + fn)
 }
 
-double f1_score(tp, fp, fn, tn) {
+double f1_score(double tp, double fp, double fn, double tn) {
     p = precision(tp, fp, fn, tn)
     r = recall(tp, fp, fn, tn)
 
