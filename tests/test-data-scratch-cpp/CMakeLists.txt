@@ -28,7 +28,7 @@ add_library(data-scratch-cpp-library SHARED ${datascratchcpplibrarySources})
 link_directories(${CMAKE_CURRENT_BINARY_DIR})
 
 # build a test
-FILE(GLOB testfizzbuzzerSources *.cpp)
+FILE(GLOB testfizzbuzzerSources test-dscpp/*.cpp)
 add_executable(test-data-scratch-cpp ${testfizzbuzzerSources} )
 target_link_libraries(test-data-scratch-cpp gtest gtest_main data-scratch-cpp-library)
 

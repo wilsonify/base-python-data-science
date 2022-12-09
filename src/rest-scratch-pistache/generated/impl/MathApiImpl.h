@@ -30,10 +30,71 @@
 
 
 #include "Accuracy_input.h"
+#include "Bucketize_input.h"
+#include "Bucketize_output.h"
+#include "Correlation_input.h"
+#include "Correlation_matrix_input.h"
+#include "Correlation_matrix_output.h"
+#include "Correlation_output.h"
+#include "Covariance_input.h"
+#include "Covariance_output.h"
+#include "Data_range_input.h"
+#include "Data_range_output.h"
+#include "De_mean_input.h"
+#include "De_mean_output.h"
+#include "Difference_quotient_input.h"
+#include "Difference_quotient_output.h"
+#include "Distance_input.h"
+#include "Distance_output.h"
+#include "Dot_input.h"
+#include "Dot_output.h"
+#include "Estimate_gradient_input.h"
+#include "Estimate_gradient_output.h"
+#include "F1_score_input.h"
+#include "Get_column_input.h"
+#include "Get_column_output.h"
+#include "Get_row_input.h"
+#include "Get_row_output.h"
+#include "In_random_order_input.h"
+#include "Interquartile_range_input.h"
+#include "Magnitude_input.h"
+#include "Matrix_add_input.h"
+#include "Maximize_batch_input.h"
+#include "Maximize_batch_output.h"
+#include "Maximize_stochastic_input.h"
+#include "Maximize_stochastic_output.h"
+#include "Mean_input.h"
+#include "Median_input.h"
+#include "Minimize_batch_input.h"
+#include "Minimize_batch_output.h"
+#include "Minimize_stochastic_input.h"
+#include "Minimize_stochastic_output.h"
+#include "Mode_input.h"
+#include "Object.h"
+#include "Partial_difference_quotient_input.h"
+#include "Partial_difference_quotient_output.h"
+#include "Precision_input.h"
+#include "Quantile_input.h"
+#include "Recall_input.h"
+#include "Scalar_multiply_input.h"
+#include "Shape_input.h"
+#include "Shape_output.h"
+#include "Split_data_input.h"
+#include "Split_data_output.h"
 #include "Sqrt_input.h"
 #include "Sqrt_output.h"
+#include "Squared_distance_input.h"
+#include "Standard_deviation_input.h"
 #include "Strength_input.h"
 #include "Strength_output.h"
+#include "Sum_of_squares_input.h"
+#include "Train_test_split_input.h"
+#include "Train_test_split_output.h"
+#include "Variance_input.h"
+#include "Vector_add_input.h"
+#include "Vector_mean_input.h"
+#include "Vector_subtract_input.h"
+#include "Vector_sum_input.h"
 
 namespace org::openapitools::server::api
 {
@@ -46,8 +107,49 @@ public:
     ~MathApiImpl() override = default;
 
     void accuracy(const Accuracy_input &accuracyInput, Pistache::Http::ResponseWriter &response);
+    void bucketize(const Bucketize_input &bucketizeInput, Pistache::Http::ResponseWriter &response);
+    void correlation(const Correlation_input &correlationInput, Pistache::Http::ResponseWriter &response);
+    void correlation_matrix(const Correlation_matrix_input &correlationMatrixInput, Pistache::Http::ResponseWriter &response);
+    void covariance(const Covariance_input &covarianceInput, Pistache::Http::ResponseWriter &response);
+    void data_range(const Data_range_input &dataRangeInput, Pistache::Http::ResponseWriter &response);
+    void de_mean(const De_mean_input &deMeanInput, Pistache::Http::ResponseWriter &response);
+    void difference_quotient(const Difference_quotient_input &differenceQuotientInput, Pistache::Http::ResponseWriter &response);
+    void distance(const Distance_input &distanceInput, Pistache::Http::ResponseWriter &response);
+    void dot(const Dot_input &dotInput, Pistache::Http::ResponseWriter &response);
+    void echo(const org::openapitools::server::model::Object &body, Pistache::Http::ResponseWriter &response);
+    void estimate_gradient(const Estimate_gradient_input &estimateGradientInput, Pistache::Http::ResponseWriter &response);
+    void f1_score(const F1_score_input &f1ScoreInput, Pistache::Http::ResponseWriter &response);
+    void get_column(const Get_column_input &getColumnInput, Pistache::Http::ResponseWriter &response);
+    void get_row(const Get_row_input &getRowInput, Pistache::Http::ResponseWriter &response);
+    void in_random_order(const In_random_order_input &inRandomOrderInput, Pistache::Http::ResponseWriter &response);
+    void interquartile_range(const Interquartile_range_input &interquartileRangeInput, Pistache::Http::ResponseWriter &response);
+    void magnitude(const Magnitude_input &magnitudeInput, Pistache::Http::ResponseWriter &response);
+    void matrix_add(const Matrix_add_input &matrixAddInput, Pistache::Http::ResponseWriter &response);
+    void maximize_batch(const Maximize_batch_input &maximizeBatchInput, Pistache::Http::ResponseWriter &response);
+    void maximize_stochastic(const Maximize_stochastic_input &maximizeStochasticInput, Pistache::Http::ResponseWriter &response);
+    void mean(const Mean_input &meanInput, Pistache::Http::ResponseWriter &response);
+    void median(const Median_input &medianInput, Pistache::Http::ResponseWriter &response);
+    void minimize_batch(const Minimize_batch_input &minimizeBatchInput, Pistache::Http::ResponseWriter &response);
+    void minimize_stochastic(const Minimize_stochastic_input &minimizeStochasticInput, Pistache::Http::ResponseWriter &response);
+    void mode(const Mode_input &modeInput, Pistache::Http::ResponseWriter &response);
+    void partial_difference_quotient(const Partial_difference_quotient_input &partialDifferenceQuotientInput, Pistache::Http::ResponseWriter &response);
+    void precision(const Precision_input &precisionInput, Pistache::Http::ResponseWriter &response);
+    void quantile(const Quantile_input &quantileInput, Pistache::Http::ResponseWriter &response);
+    void recall(const Recall_input &recallInput, Pistache::Http::ResponseWriter &response);
+    void scalar_multiply(const Scalar_multiply_input &scalarMultiplyInput, Pistache::Http::ResponseWriter &response);
+    void shape(const Shape_input &shapeInput, Pistache::Http::ResponseWriter &response);
+    void split_data(const Split_data_input &splitDataInput, Pistache::Http::ResponseWriter &response);
     void sqrt(const Sqrt_input &sqrtInput, Pistache::Http::ResponseWriter &response);
+    void squared_distance(const Squared_distance_input &squaredDistanceInput, Pistache::Http::ResponseWriter &response);
+    void standard_deviation(const Standard_deviation_input &standardDeviationInput, Pistache::Http::ResponseWriter &response);
     void strength(const Strength_input &strengthInput, Pistache::Http::ResponseWriter &response);
+    void sum_of_squares(const Sum_of_squares_input &sumOfSquaresInput, Pistache::Http::ResponseWriter &response);
+    void train_test_split(const Train_test_split_input &trainTestSplitInput, Pistache::Http::ResponseWriter &response);
+    void variance(const Variance_input &varianceInput, Pistache::Http::ResponseWriter &response);
+    void vector_add(const Vector_add_input &vectorAddInput, Pistache::Http::ResponseWriter &response);
+    void vector_mean(const Vector_mean_input &vectorMeanInput, Pistache::Http::ResponseWriter &response);
+    void vector_subtract(const Vector_subtract_input &vectorSubtractInput, Pistache::Http::ResponseWriter &response);
+    void vector_sum(const Vector_sum_input &vectorSumInput, Pistache::Http::ResponseWriter &response);
 
 };
 

@@ -1,4 +1,4 @@
-#include <stdio.h>
+//include <stdio.h>
 
 double mysqrt(double x)
 {
