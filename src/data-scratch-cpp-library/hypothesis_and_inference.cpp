@@ -117,13 +117,17 @@ double reject_fairness(experiment) {
 ////
 
 
-double estimated_parameters(n_matrix, n) {
+double estimated_parameters(std::vector<std::vector<double>> n_matrix, double n) {
     p = n / n_matrix
     sigma = math.sqrt(p * (1 - p) / n_matrix)
     return p, sigma
 }
 
-double a_b_test_statistic(a_matrix, a_weight, b_matrix, b_weight) {
+double a_b_test_statistic(
+     std::vector<std::vector<double>> a_matrix, 
+     double a_weight, 
+     std::vector<std::vector<double>> b_matrix,
+      double b_weight) {
     density_a, sigma_a = estimated_parameters(a_matrix, a_weight)
     density_b, sigma_b = estimated_parameters(b_matrix, b_weight)
     return (density_b - density_a) / math.sqrt(sigma_a ** 2 + sigma_b ** 2)

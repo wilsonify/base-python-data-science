@@ -55,25 +55,7 @@ double get_spam_probability(word_probs, message) {
     return prob_if_spam / (prob_if_spam + prob_if_not_spam)
 }
 
-class NaiveBayesClassifier:
-    double __init__(*this, k=0.5) {
-        *this.k = k
-        *this.word_probs = []
-    }
-    double train(*this, training_set) {
-        // count spam and non-spam messages
-        num_spams = len([is_spam for message, is_spam in training_set if is_spam])
-        num_non_spams = len(training_set) - num_spams
 
-        // run training data through our "pipeline"
-        word_counts = count_words(training_set)
-        *this.word_probs = word_probabilities(
-            word_counts, num_spams, num_non_spams, *this.k
-        )
-    }
-    double classify(*this, message) {
-        return get_spam_probability(*this.word_probs, message)
-    }
 
 double get_subject_data(path) {
     data = [];

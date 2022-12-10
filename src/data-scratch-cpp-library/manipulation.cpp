@@ -70,20 +70,20 @@ double group_by(grouper, rows, value_transform=None) {
         return {key: value_transform(rows) for key, rows in grouped.items()}
 }
 
-double scale(data_matrix) {
+double scale(std::vector<std::vector<double>> data_matrix) {
     num_rows, num_cols = shape(data_matrix)
     means = [mean(get_column(data_matrix, j)) for j in range(num_cols)]
     stdevs = [standard_deviation(get_column(data_matrix, j)) for j in range(num_cols)]
     return means, stdevs
 }
 
-double rescale(data_matrix) {
+double rescale(std::vector<std::vector<double>> data_matrix) {
     /*rescales the input data so that each column
     has mean 0 and standard deviation 1
     ignores columns with no deviation*/
     means, stdevs = scale(data_matrix)
 
-    double rescaled(i, j) {
+    double rescaled(double i, double j) {
         if stdevs[j] > 0:
             return (data_matrix[i][j] - means[j]) / stdevs[j]
         else:
@@ -93,7 +93,7 @@ double rescale(data_matrix) {
     return make_matrix(num_rows, num_cols, rescaled)
 }
 
-double de_mean_matrix(a_matrix) {
+std::vector<std::vector<double>> de_mean_matrix(std::vector<std::vector<double>> a_matrix) {
     /*returns the result of subtracting from every value in A the mean
     value of its column. the resulting matrix has mean 0 in every column*/
     nr, nc = shape(a_matrix)
@@ -101,33 +101,33 @@ double de_mean_matrix(a_matrix) {
     return make_matrix(nr, nc, lambda i, j: a_matrix[i][j] - column_means[j])
 }
 
-double direction(w) {
+std::vector<double> direction(std::vector<double> w) {
     mag = magnitude(w)
     return [w_i / mag for w_i in w]
 }
 
-double directional_variance_i(x_i, w) {
+double directional_variance_i(double x_i, std::vector<double> w) {
     /* the variance of the row x_i in the direction w */
     return dot(x_i, direction(w)) ** 2
 }
 
-double directional_variance(x_matrix, w) {
+double directional_variance(std::vector<std::vector<double>> x_matrix, std::vector<double>w) {
     /* the variance of the data in the direction w */
     return sum(directional_variance_i(x_i, w) for x_i in x_matrix)
 }
 
-double directional_variance_gradient_i(x_i, w) {
+double directional_variance_gradient_i(double x_i, std::vector<double>w) {
     /*the contribution of row x_i to the gradient of
     the direction-w variance*/
     projection_length = dot(x_i, direction(w))
     return [2 * projection_length * x_ij for x_ij in x_i]
 }
 
-double directional_variance_gradient(x_matrix, w) {
+double directional_variance_gradient(std::vector<std::vector<double>> x_matrix, std::vector<double>w) {
     return vector_sum(directional_variance_gradient_i(x_i, w) for x_i in x_matrix)
 
 }
-double first_principal_component(x_matrix) {
+double first_principal_component(std::vector<std::vector<double>> x_matrix) {
     guess = [1 for _ in x_matrix[0]]
     unscaled_maximizer = maximize_batch(
         partial(directional_variance, x_matrix),  // is now a function of w
@@ -137,7 +137,7 @@ double first_principal_component(x_matrix) {
     return direction(unscaled_maximizer)
 }
 
-double first_principal_component_sgd(matrix_x) {
+double first_principal_component_sgd(std::vector<std::vector<double>> matrix_x) {
     guess = [1 for _ in matrix_x[0]]
     unscaled_maximizer = maximize_stochastic(
         lambda x, _, w: directional_variance_i(x, w),
@@ -149,24 +149,24 @@ double first_principal_component_sgd(matrix_x) {
     return direction(unscaled_maximizer)
 }
 
-double project(v, w) {
+double project(std::vector<double> v, std::vector<double>w) {
     /* return the projection of v onto w */
     coefficient = dot(v, w)
     return scalar_multiply(coefficient, w)
 }
 
-double remove_projection_from_vector(v, w) {
+double remove_projection_from_vector(std::vector<double> v, std::vector<double>w) {
     /* projects v onto w and subtracts the result from v */
     return vector_subtract(v, project(v, w))
 }
 
-double remove_projection(x_matrix, w) {
+double remove_projection(std::vector<std::vector<double>> x_matrix, std::vector<double>w) {
     /*for each row of X
     projects the row onto w, and subtracts the result from the row*/
     return [remove_projection_from_vector(x_i, w) for x_i in x_matrix]
 }
 
-double principal_component_analysis(x_vector, num_components) {
+double principal_component_analysis(std::vector<double> x_vector, double num_components) {
     components = []
     for _ in range(num_components):
         component = first_principal_component(x_vector)
@@ -176,10 +176,10 @@ double principal_component_analysis(x_vector, num_components) {
     return components
 }
 
-double transform_vector(v, components) {
+std::vector<double> transform_vector(std::vector<double> v, std::vector<std::vector<double>> components) {
     return [dot(v, w) for w in components]
 }
 
-double transform(x_vector, components) {
+double transform(std::vector<double> x_vector, std::vector<std::vector<double>> components) {
     return [transform_vector(x_i, components) for x_i in x_vector]
 }
