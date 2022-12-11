@@ -26,3 +26,15 @@ double mysqrt(double x)
     }
     return result;
 }
+
+std::vector<double> mysqrt_vector(std::vector<double> x)
+{
+    std::vector<double> result;
+    result.resize(x.size());
+    std::transform(
+        x.begin(), x.end(), // iterate from start to end
+        result.begin(), // save results here
+        mysqrt // transformation
+        );
+    return result;
+}
