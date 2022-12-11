@@ -10,7 +10,7 @@ set(CMAKE_SHARED_LINKER_FLAGS="-fprofile-arcs -ftest-coverage")
 set(CMAKE_EXE_LINKER_FLAGS="-fprofile-arcs -ftest-coverage")
 
 # build a shared library
-include_directories(external/data-scratch-cpp-library)
-FILE(GLOB datascratchcpplibrarySources external/data-scratch-cpp-library/*.cpp)
+include_directories(data-scratch-cpp-library)
+FILE(GLOB datascratchcpplibrarySources *.cpp)
 add_library(data-scratch-cpp-library SHARED ${datascratchcpplibrarySources})
 link_directories(${CMAKE_CURRENT_BINARY_DIR})
