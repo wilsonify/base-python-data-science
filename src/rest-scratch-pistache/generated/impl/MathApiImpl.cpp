@@ -25,7 +25,7 @@ MathApiImpl::MathApiImpl(const std::shared_ptr<Pistache::Rest::Router>& rtr)
 }
 
 void MathApiImpl::accuracy(const Accuracy_input &accuracyInput, Pistache::Http::ResponseWriter &response) {
-        double tp;
+    double tp;
     double fp;
     double fn;
     double tn;    
@@ -162,7 +162,7 @@ void MathApiImpl::standard_deviation(const Standard_deviation_input &standardDev
     response.send(Pistache::Http::Code::Ok, "Do some magic\n");
 }
 void MathApiImpl::strength(const Strength_input &strengthInput, Pistache::Http::ResponseWriter &response) {
-        double expected;
+    double expected;
     double actual;        
     double result;    
     double eps=0.01;
