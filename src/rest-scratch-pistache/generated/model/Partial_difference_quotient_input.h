@@ -19,7 +19,6 @@
 #define Partial_difference_quotient_input_H_
 
 
-#include "Object.h"
 #include <vector>
 #include <nlohmann/json.hpp>
 
@@ -69,15 +68,15 @@ public:
     /// <summary>
     /// 
     /// </summary>
-    org::openapitools::server::model::Object getI() const;
-    void setI(org::openapitools::server::model::Object const& value);
+    double getI() const;
+    void setI(double const value);
     bool IIsSet() const;
     void unseti();
     /// <summary>
     /// 
     /// </summary>
-    org::openapitools::server::model::Object getH() const;
-    void setH(org::openapitools::server::model::Object const& value);
+    double getH() const;
+    void setH(double const value);
     bool HIsSet() const;
     void unseth();
 
@@ -86,9 +85,9 @@ public:
 protected:
     std::vector<double> m_v;
     bool m_vIsSet;
-    org::openapitools::server::model::Object m_i;
+    double m_i;
     bool m_iIsSet;
-    org::openapitools::server::model::Object m_h;
+    double m_h;
     bool m_hIsSet;
     
 };

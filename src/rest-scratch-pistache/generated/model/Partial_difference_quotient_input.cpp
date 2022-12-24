@@ -22,7 +22,9 @@ namespace org::openapitools::server::model
 Partial_difference_quotient_input::Partial_difference_quotient_input()
 {
     m_vIsSet = false;
+    m_i = 0.0;
     m_iIsSet = false;
+    m_h = 0.0;
     m_hIsSet = false;
     
 }
@@ -142,11 +144,11 @@ void Partial_difference_quotient_input::unsetv()
 {
     m_vIsSet = false;
 }
-org::openapitools::server::model::Object Partial_difference_quotient_input::getI() const
+double Partial_difference_quotient_input::getI() const
 {
     return m_i;
 }
-void Partial_difference_quotient_input::setI(org::openapitools::server::model::Object const& value)
+void Partial_difference_quotient_input::setI(double const value)
 {
     m_i = value;
     m_iIsSet = true;
@@ -159,11 +161,11 @@ void Partial_difference_quotient_input::unseti()
 {
     m_iIsSet = false;
 }
-org::openapitools::server::model::Object Partial_difference_quotient_input::getH() const
+double Partial_difference_quotient_input::getH() const
 {
     return m_h;
 }
-void Partial_difference_quotient_input::setH(org::openapitools::server::model::Object const& value)
+void Partial_difference_quotient_input::setH(double const value)
 {
     m_h = value;
     m_hIsSet = true;
