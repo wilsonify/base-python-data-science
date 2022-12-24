@@ -8,19 +8,12 @@ set(VERSION_PATCH 1)
 
 set(CMAKE_EXPORT_COMPILE_COMMANDS true)
 
-#build the test runner
-include_directories(external/googletest/googletest/include)
-include_directories(external/googletest/googlemock/include)
-add_subdirectory(external/googletest)
-link_directories(external/googletest/build/lib)
-
 #build header only library
 include_directories(external/json/include)
 
 #build rapidjson
 include_directories(external/rapidjson/include)
-#add_subdirectory(external/rapidjson)
-#link_directories(external/rapidjson/build/lib)
+add_subdirectory(external/rapidjson)
 
 #build the rest runner
 include_directories(external/pistache/include)
@@ -40,4 +33,4 @@ ${CMAKE_CURRENT_SOURCE_DIR}/*.cpp
 )
 
 add_executable(api-server ${SRCS}) 
-target_link_libraries(api-server pistache json pthread)
+target_link_libraries(api-server pistache pthread)
