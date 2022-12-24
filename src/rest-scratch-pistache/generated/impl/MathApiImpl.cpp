@@ -72,8 +72,13 @@ void MathApiImpl::distance(const Distance_input &distanceInput, Pistache::Http::
 void MathApiImpl::dot(const Dot_input &dotInput, Pistache::Http::ResponseWriter &response) {
     response.send(Pistache::Http::Code::Ok, "Do some magic\n");
 }
-void MathApiImpl::echo(const org::openapitools::server::model::Object &body, Pistache::Http::ResponseWriter &response) {
-    response.send(Pistache::Http::Code::Ok, "Do some magic\n");
+void MathApiImpl::echo(const std::string &body, Pistache::Http::ResponseWriter &response) {
+    nlohmann::json json_to_dump;
+    std::string string_to_send;
+    std::string result = body;
+    nlohmann::to_json(json_to_dump, result);
+    string_to_send = json_to_dump.dump();
+    response.send(Pistache::Http::Code::Ok, string_to_send);
 }
 void MathApiImpl::estimate_gradient(const Estimate_gradient_input &estimateGradientInput, Pistache::Http::ResponseWriter &response) {
     response.send(Pistache::Http::Code::Ok, "Do some magic\n");

@@ -70,7 +70,6 @@
 #include "Minimize_stochastic_input.h"
 #include "Minimize_stochastic_output.h"
 #include "Mode_input.h"
-#include "Object.h"
 #include "Partial_difference_quotient_input.h"
 #include "Partial_difference_quotient_output.h"
 #include "Precision_input.h"
@@ -95,6 +94,7 @@
 #include "Vector_mean_input.h"
 #include "Vector_subtract_input.h"
 #include "Vector_sum_input.h"
+#include <string>
 
 namespace org::openapitools::server::api
 {
@@ -116,7 +116,7 @@ public:
     void difference_quotient(const Difference_quotient_input &differenceQuotientInput, Pistache::Http::ResponseWriter &response);
     void distance(const Distance_input &distanceInput, Pistache::Http::ResponseWriter &response);
     void dot(const Dot_input &dotInput, Pistache::Http::ResponseWriter &response);
-    void echo(const org::openapitools::server::model::Object &body, Pistache::Http::ResponseWriter &response);
+    void echo(const std::string &body, Pistache::Http::ResponseWriter &response);
     void estimate_gradient(const Estimate_gradient_input &estimateGradientInput, Pistache::Http::ResponseWriter &response);
     void f1_score(const F1_score_input &f1ScoreInput, Pistache::Http::ResponseWriter &response);
     void get_column(const Get_column_input &getColumnInput, Pistache::Http::ResponseWriter &response);

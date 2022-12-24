@@ -436,7 +436,7 @@ void MathApi::echo_handler(const Pistache::Rest::Request &request, Pistache::Htt
 
     // Getting the body param
     
-    org::openapitools::server::model::Object body;
+    std::string body;
     
     try {
         body = request.body();

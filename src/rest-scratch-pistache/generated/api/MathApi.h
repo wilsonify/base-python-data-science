@@ -67,7 +67,6 @@
 #include "Minimize_stochastic_input.h"
 #include "Minimize_stochastic_output.h"
 #include "Mode_input.h"
-#include "Object.h"
 #include "Partial_difference_quotient_input.h"
 #include "Partial_difference_quotient_output.h"
 #include "Precision_input.h"
@@ -92,6 +91,7 @@
 #include "Vector_mean_input.h"
 #include "Vector_subtract_input.h"
 #include "Vector_sum_input.h"
+#include <string>
 
 namespace org::openapitools::server::api
 {
@@ -256,7 +256,7 @@ private:
     /// Description of the endpoint
     /// </remarks>
     /// <param name="body"> (optional)</param>
-    virtual void echo(const org::openapitools::server::model::Object &body, Pistache::Http::ResponseWriter &response) = 0;
+    virtual void echo(const std::string &body, Pistache::Http::ResponseWriter &response) = 0;
     /// <summary>
     /// 
     /// </summary>
