@@ -6,5 +6,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: show version
-        run: docker --version    
+        run: |
+          docker --version
+          make --version    
         
