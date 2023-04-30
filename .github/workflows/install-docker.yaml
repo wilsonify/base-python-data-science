@@ -8,5 +8,6 @@ jobs:
       - name: show version
         run: |
           docker --version
-          make --version    
+          make --version 
+          cmake --version   
         
