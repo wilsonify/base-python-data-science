@@ -3,7 +3,7 @@ on:
 
 jobs:
   job01:
-    runs-on: ubuntu:latest
+    runs-on: ubuntu-latest
     steps:
       - name: show version
         run: docker --version    
