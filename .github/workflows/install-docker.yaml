@@ -1,7 +1,10 @@
 on:
   workflow_dispatch:
-    
+
 jobs:
-  runs-on: ubuntu-latest
-  run: docker --version
+  job01:
+    runs-on: ubuntu:latest
+    steps:
+      - name: show version
+        run: docker --version    
         
