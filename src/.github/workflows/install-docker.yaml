@@ -1,0 +1,7 @@
+on:
+  workflow_dispatch:
+    
+jobs:
+  runs-on: ubuntu-latest
+  run: docker --version
+        
