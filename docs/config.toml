@@ -4,7 +4,7 @@ theme = "github-style"
 languageCode = "en-us"
 pygmentsCodeFences = true
 pygmentsUseClasses = true
-
+lastmod = true
 
 [params]
   author = "Tom Wilson"
@@ -19,3 +19,6 @@ pygmentsUseClasses = true
   userStatusEmoji = "😀"
   location = "USA"
   enableGitalk = false
+
+[frontmatter]
+  lastmod = ["lastmod", ":fileModTime", ":default"]
