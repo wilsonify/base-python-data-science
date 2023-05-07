@@ -1,0 +1,21 @@
+baseURL = ""
+title = 'Base Python Data Science'
+theme = "github-style"
+languageCode = "en-us"
+pygmentsCodeFences = true
+pygmentsUseClasses = true
+
+
+[params]
+  author = "Tom Wilson"
+  description = "Data Science Without the dependecies"
+  github = "wilsonify"
+  linkedin = "tom-andrew-wilson"
+  email = "tom.andrew.wilson@gmail.com"
+  url = "https://wilsonify.github.io"
+  keywords = "python, data, science"
+  rss = false
+  lastmod = false
+  userStatusEmoji = "😀"
+  location = "USA"
+  enableGitalk = false
