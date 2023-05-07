@@ -13,3 +13,6 @@
 [submodule "tests/test-data-scratch-cpp/external/googletest"]
 	path = tests/test-data-scratch-cpp/external/googletest
 	url = https://github.com/google/googletest
+[submodule "docs/themes/github-style"]
+	path = docs/themes/github-style
+	url = https://github.com/MeiK2333/github-style.git
