@@ -12,7 +12,10 @@ build/VERSION.txt:
 dist/VERSION.txt:
 	mkdir -p dist && $(call ver_file, $@)
 
-build/makefile: build/VERSION.txt
+external/googletest/CMakeLists.txt:
+	git submodule update --init --recursive 
+
+build/makefile: build/VERSION.txt external/googletest/CMakeLists.txt
 	cd build && cmake .. -G Ninja
 
 build/api-server: build/makefile

@@ -7,6 +7,8 @@ properties:
     description: vector
     example: [10.0, 2.0]
   i:
+    type: number
     example: 0
   h:
+    type: number
     example: 1

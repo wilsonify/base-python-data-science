@@ -34,8 +34,49 @@ void MathApi::setupRoutes() {
     using namespace Pistache::Rest;
 
     Routes::Post(*router, base + "/accuracy", Routes::bind(&MathApi::accuracy_handler, this));
+    Routes::Post(*router, base + "/bucketize", Routes::bind(&MathApi::bucketize_handler, this));
+    Routes::Post(*router, base + "/correlation", Routes::bind(&MathApi::correlation_handler, this));
+    Routes::Post(*router, base + "/correlation_matrix", Routes::bind(&MathApi::correlation_matrix_handler, this));
+    Routes::Post(*router, base + "/covariance", Routes::bind(&MathApi::covariance_handler, this));
+    Routes::Post(*router, base + "/data_range", Routes::bind(&MathApi::data_range_handler, this));
+    Routes::Post(*router, base + "/de_mean", Routes::bind(&MathApi::de_mean_handler, this));
+    Routes::Post(*router, base + "/difference_quotient", Routes::bind(&MathApi::difference_quotient_handler, this));
+    Routes::Post(*router, base + "/distance", Routes::bind(&MathApi::distance_handler, this));
+    Routes::Post(*router, base + "/dot", Routes::bind(&MathApi::dot_handler, this));
+    Routes::Post(*router, base + "/echo", Routes::bind(&MathApi::echo_handler, this));
+    Routes::Post(*router, base + "/estimate_gradient", Routes::bind(&MathApi::estimate_gradient_handler, this));
+    Routes::Post(*router, base + "/f1_score", Routes::bind(&MathApi::f1_score_handler, this));
+    Routes::Post(*router, base + "/get_column", Routes::bind(&MathApi::get_column_handler, this));
+    Routes::Post(*router, base + "/get_row", Routes::bind(&MathApi::get_row_handler, this));
+    Routes::Post(*router, base + "/in_random_order", Routes::bind(&MathApi::in_random_order_handler, this));
+    Routes::Post(*router, base + "/interquartile_range", Routes::bind(&MathApi::interquartile_range_handler, this));
+    Routes::Post(*router, base + "/magnitude", Routes::bind(&MathApi::magnitude_handler, this));
+    Routes::Post(*router, base + "/matrix_add", Routes::bind(&MathApi::matrix_add_handler, this));
+    Routes::Post(*router, base + "/maximize_batch", Routes::bind(&MathApi::maximize_batch_handler, this));
+    Routes::Post(*router, base + "/maximize_stochastic", Routes::bind(&MathApi::maximize_stochastic_handler, this));
+    Routes::Post(*router, base + "/mean", Routes::bind(&MathApi::mean_handler, this));
+    Routes::Post(*router, base + "/median", Routes::bind(&MathApi::median_handler, this));
+    Routes::Post(*router, base + "/minimize_batch", Routes::bind(&MathApi::minimize_batch_handler, this));
+    Routes::Post(*router, base + "/minimize_stochastic", Routes::bind(&MathApi::minimize_stochastic_handler, this));
+    Routes::Post(*router, base + "/mode", Routes::bind(&MathApi::mode_handler, this));
+    Routes::Post(*router, base + "/partial_difference_quotient", Routes::bind(&MathApi::partial_difference_quotient_handler, this));
+    Routes::Post(*router, base + "/precision", Routes::bind(&MathApi::precision_handler, this));
+    Routes::Post(*router, base + "/quantile", Routes::bind(&MathApi::quantile_handler, this));
+    Routes::Post(*router, base + "/recall", Routes::bind(&MathApi::recall_handler, this));
+    Routes::Post(*router, base + "/scalar_multiply", Routes::bind(&MathApi::scalar_multiply_handler, this));
+    Routes::Post(*router, base + "/shape", Routes::bind(&MathApi::shape_handler, this));
+    Routes::Post(*router, base + "/split_data", Routes::bind(&MathApi::split_data_handler, this));
     Routes::Post(*router, base + "/sqrt", Routes::bind(&MathApi::sqrt_handler, this));
+    Routes::Post(*router, base + "/squared_distance", Routes::bind(&MathApi::squared_distance_handler, this));
+    Routes::Post(*router, base + "/standard_deviation", Routes::bind(&MathApi::standard_deviation_handler, this));
     Routes::Post(*router, base + "/strength", Routes::bind(&MathApi::strength_handler, this));
+    Routes::Post(*router, base + "/sum_of_squares", Routes::bind(&MathApi::sum_of_squares_handler, this));
+    Routes::Post(*router, base + "/train_test_split", Routes::bind(&MathApi::train_test_split_handler, this));
+    Routes::Post(*router, base + "/variance", Routes::bind(&MathApi::variance_handler, this));
+    Routes::Post(*router, base + "/vector_add", Routes::bind(&MathApi::vector_add_handler, this));
+    Routes::Post(*router, base + "/vector_mean", Routes::bind(&MathApi::vector_mean_handler, this));
+    Routes::Post(*router, base + "/vector_subtract", Routes::bind(&MathApi::vector_subtract_handler, this));
+    Routes::Post(*router, base + "/vector_sum", Routes::bind(&MathApi::vector_sum_handler, this));
 
     // Default handler, called when a route is not found
     router->addCustomHandler(Routes::bind(&MathApi::math_api_default_handler, this));
@@ -92,6 +133,1061 @@ void MathApi::accuracy_handler(const Pistache::Rest::Request &request, Pistache:
     }
 
 }
+void MathApi::bucketize_handler(const Pistache::Rest::Request &request, Pistache::Http::ResponseWriter response) {
+    try {
+
+
+    // Getting the body param
+    
+    Bucketize_input bucketizeInput;
+    
+    try {
+        nlohmann::json::parse(request.body()).get_to(bucketizeInput);
+        bucketizeInput.validate();
+    } catch (std::exception &e) {
+        const std::pair<Pistache::Http::Code, std::string> errorInfo = this->handleParsingException(e);
+        response.send(errorInfo.first, errorInfo.second);
+        return;
+    }
+
+    try {
+        this->bucketize(bucketizeInput, response);
+    } catch (Pistache::Http::HttpError &e) {
+        response.send(static_cast<Pistache::Http::Code>(e.code()), e.what());
+        return;
+    } catch (std::exception &e) {
+        const std::pair<Pistache::Http::Code, std::string> errorInfo = this->handleOperationException(e);
+        response.send(errorInfo.first, errorInfo.second);
+        return;
+    }
+
+    } catch (std::exception &e) {
+        response.send(Pistache::Http::Code::Internal_Server_Error, e.what());
+    }
+
+}
+void MathApi::correlation_handler(const Pistache::Rest::Request &request, Pistache::Http::ResponseWriter response) {
+    try {
+
+
+    // Getting the body param
+    
+    Correlation_input correlationInput;
+    
+    try {
+        nlohmann::json::parse(request.body()).get_to(correlationInput);
+        correlationInput.validate();
+    } catch (std::exception &e) {
+        const std::pair<Pistache::Http::Code, std::string> errorInfo = this->handleParsingException(e);
+        response.send(errorInfo.first, errorInfo.second);
+        return;
+    }
+
+    try {
+        this->correlation(correlationInput, response);
+    } catch (Pistache::Http::HttpError &e) {
+        response.send(static_cast<Pistache::Http::Code>(e.code()), e.what());
+        return;
+    } catch (std::exception &e) {
+        const std::pair<Pistache::Http::Code, std::string> errorInfo = this->handleOperationException(e);
+        response.send(errorInfo.first, errorInfo.second);
+        return;
+    }
+
+    } catch (std::exception &e) {
+        response.send(Pistache::Http::Code::Internal_Server_Error, e.what());
+    }
+
+}
+void MathApi::correlation_matrix_handler(const Pistache::Rest::Request &request, Pistache::Http::ResponseWriter response) {
+    try {
+
+
+    // Getting the body param
+    
+    Correlation_matrix_input correlationMatrixInput;
+    
+    try {
+        nlohmann::json::parse(request.body()).get_to(correlationMatrixInput);
+        correlationMatrixInput.validate();
+    } catch (std::exception &e) {
+        const std::pair<Pistache::Http::Code, std::string> errorInfo = this->handleParsingException(e);
+        response.send(errorInfo.first, errorInfo.second);
+        return;
+    }
+
+    try {
+        this->correlation_matrix(correlationMatrixInput, response);
+    } catch (Pistache::Http::HttpError &e) {
+        response.send(static_cast<Pistache::Http::Code>(e.code()), e.what());
+        return;
+    } catch (std::exception &e) {
+        const std::pair<Pistache::Http::Code, std::string> errorInfo = this->handleOperationException(e);
+        response.send(errorInfo.first, errorInfo.second);
+        return;
+    }
+
+    } catch (std::exception &e) {
+        response.send(Pistache::Http::Code::Internal_Server_Error, e.what());
+    }
+
+}
+void MathApi::covariance_handler(const Pistache::Rest::Request &request, Pistache::Http::ResponseWriter response) {
+    try {
+
+
+    // Getting the body param
+    
+    Covariance_input covarianceInput;
+    
+    try {
+        nlohmann::json::parse(request.body()).get_to(covarianceInput);
+        covarianceInput.validate();
+    } catch (std::exception &e) {
+        const std::pair<Pistache::Http::Code, std::string> errorInfo = this->handleParsingException(e);
+        response.send(errorInfo.first, errorInfo.second);
+        return;
+    }
+
+    try {
+        this->covariance(covarianceInput, response);
+    } catch (Pistache::Http::HttpError &e) {
+        response.send(static_cast<Pistache::Http::Code>(e.code()), e.what());
+        return;
+    } catch (std::exception &e) {
+        const std::pair<Pistache::Http::Code, std::string> errorInfo = this->handleOperationException(e);
+        response.send(errorInfo.first, errorInfo.second);
+        return;
+    }
+
+    } catch (std::exception &e) {
+        response.send(Pistache::Http::Code::Internal_Server_Error, e.what());
+    }
+
+}
+void MathApi::data_range_handler(const Pistache::Rest::Request &request, Pistache::Http::ResponseWriter response) {
+    try {
+
+
+    // Getting the body param
+    
+    Data_range_input dataRangeInput;
+    
+    try {
+        nlohmann::json::parse(request.body()).get_to(dataRangeInput);
+        dataRangeInput.validate();
+    } catch (std::exception &e) {
+        const std::pair<Pistache::Http::Code, std::string> errorInfo = this->handleParsingException(e);
+        response.send(errorInfo.first, errorInfo.second);
+        return;
+    }
+
+    try {
+        this->data_range(dataRangeInput, response);
+    } catch (Pistache::Http::HttpError &e) {
+        response.send(static_cast<Pistache::Http::Code>(e.code()), e.what());
+        return;
+    } catch (std::exception &e) {
+        const std::pair<Pistache::Http::Code, std::string> errorInfo = this->handleOperationException(e);
+        response.send(errorInfo.first, errorInfo.second);
+        return;
+    }
+
+    } catch (std::exception &e) {
+        response.send(Pistache::Http::Code::Internal_Server_Error, e.what());
+    }
+
+}
+void MathApi::de_mean_handler(const Pistache::Rest::Request &request, Pistache::Http::ResponseWriter response) {
+    try {
+
+
+    // Getting the body param
+    
+    De_mean_input deMeanInput;
+    
+    try {
+        nlohmann::json::parse(request.body()).get_to(deMeanInput);
+        deMeanInput.validate();
+    } catch (std::exception &e) {
+        const std::pair<Pistache::Http::Code, std::string> errorInfo = this->handleParsingException(e);
+        response.send(errorInfo.first, errorInfo.second);
+        return;
+    }
+
+    try {
+        this->de_mean(deMeanInput, response);
+    } catch (Pistache::Http::HttpError &e) {
+        response.send(static_cast<Pistache::Http::Code>(e.code()), e.what());
+        return;
+    } catch (std::exception &e) {
+        const std::pair<Pistache::Http::Code, std::string> errorInfo = this->handleOperationException(e);
+        response.send(errorInfo.first, errorInfo.second);
+        return;
+    }
+
+    } catch (std::exception &e) {
+        response.send(Pistache::Http::Code::Internal_Server_Error, e.what());
+    }
+
+}
+void MathApi::difference_quotient_handler(const Pistache::Rest::Request &request, Pistache::Http::ResponseWriter response) {
+    try {
+
+
+    // Getting the body param
+    
+    Difference_quotient_input differenceQuotientInput;
+    
+    try {
+        nlohmann::json::parse(request.body()).get_to(differenceQuotientInput);
+        differenceQuotientInput.validate();
+    } catch (std::exception &e) {
+        const std::pair<Pistache::Http::Code, std::string> errorInfo = this->handleParsingException(e);
+        response.send(errorInfo.first, errorInfo.second);
+        return;
+    }
+
+    try {
+        this->difference_quotient(differenceQuotientInput, response);
+    } catch (Pistache::Http::HttpError &e) {
+        response.send(static_cast<Pistache::Http::Code>(e.code()), e.what());
+        return;
+    } catch (std::exception &e) {
+        const std::pair<Pistache::Http::Code, std::string> errorInfo = this->handleOperationException(e);
+        response.send(errorInfo.first, errorInfo.second);
+        return;
+    }
+
+    } catch (std::exception &e) {
+        response.send(Pistache::Http::Code::Internal_Server_Error, e.what());
+    }
+
+}
+void MathApi::distance_handler(const Pistache::Rest::Request &request, Pistache::Http::ResponseWriter response) {
+    try {
+
+
+    // Getting the body param
+    
+    Distance_input distanceInput;
+    
+    try {
+        nlohmann::json::parse(request.body()).get_to(distanceInput);
+        distanceInput.validate();
+    } catch (std::exception &e) {
+        const std::pair<Pistache::Http::Code, std::string> errorInfo = this->handleParsingException(e);
+        response.send(errorInfo.first, errorInfo.second);
+        return;
+    }
+
+    try {
+        this->distance(distanceInput, response);
+    } catch (Pistache::Http::HttpError &e) {
+        response.send(static_cast<Pistache::Http::Code>(e.code()), e.what());
+        return;
+    } catch (std::exception &e) {
+        const std::pair<Pistache::Http::Code, std::string> errorInfo = this->handleOperationException(e);
+        response.send(errorInfo.first, errorInfo.second);
+        return;
+    }
+
+    } catch (std::exception &e) {
+        response.send(Pistache::Http::Code::Internal_Server_Error, e.what());
+    }
+
+}
+void MathApi::dot_handler(const Pistache::Rest::Request &request, Pistache::Http::ResponseWriter response) {
+    try {
+
+
+    // Getting the body param
+    
+    Dot_input dotInput;
+    
+    try {
+        nlohmann::json::parse(request.body()).get_to(dotInput);
+        dotInput.validate();
+    } catch (std::exception &e) {
+        const std::pair<Pistache::Http::Code, std::string> errorInfo = this->handleParsingException(e);
+        response.send(errorInfo.first, errorInfo.second);
+        return;
+    }
+
+    try {
+        this->dot(dotInput, response);
+    } catch (Pistache::Http::HttpError &e) {
+        response.send(static_cast<Pistache::Http::Code>(e.code()), e.what());
+        return;
+    } catch (std::exception &e) {
+        const std::pair<Pistache::Http::Code, std::string> errorInfo = this->handleOperationException(e);
+        response.send(errorInfo.first, errorInfo.second);
+        return;
+    }
+
+    } catch (std::exception &e) {
+        response.send(Pistache::Http::Code::Internal_Server_Error, e.what());
+    }
+
+}
+void MathApi::echo_handler(const Pistache::Rest::Request &request, Pistache::Http::ResponseWriter response) {
+    try {
+
+
+    // Getting the body param
+    
+    std::string body;
+    
+    try {
+        body = request.body();
+    } catch (std::exception &e) {
+        const std::pair<Pistache::Http::Code, std::string> errorInfo = this->handleParsingException(e);
+        response.send(errorInfo.first, errorInfo.second);
+        return;
+    }
+
+    try {
+        this->echo(body, response);
+    } catch (Pistache::Http::HttpError &e) {
+        response.send(static_cast<Pistache::Http::Code>(e.code()), e.what());
+        return;
+    } catch (std::exception &e) {
+        const std::pair<Pistache::Http::Code, std::string> errorInfo = this->handleOperationException(e);
+        response.send(errorInfo.first, errorInfo.second);
+        return;
+    }
+
+    } catch (std::exception &e) {
+        response.send(Pistache::Http::Code::Internal_Server_Error, e.what());
+    }
+
+}
+void MathApi::estimate_gradient_handler(const Pistache::Rest::Request &request, Pistache::Http::ResponseWriter response) {
+    try {
+
+
+    // Getting the body param
+    
+    Estimate_gradient_input estimateGradientInput;
+    
+    try {
+        nlohmann::json::parse(request.body()).get_to(estimateGradientInput);
+        estimateGradientInput.validate();
+    } catch (std::exception &e) {
+        const std::pair<Pistache::Http::Code, std::string> errorInfo = this->handleParsingException(e);
+        response.send(errorInfo.first, errorInfo.second);
+        return;
+    }
+
+    try {
+        this->estimate_gradient(estimateGradientInput, response);
+    } catch (Pistache::Http::HttpError &e) {
+        response.send(static_cast<Pistache::Http::Code>(e.code()), e.what());
+        return;
+    } catch (std::exception &e) {
+        const std::pair<Pistache::Http::Code, std::string> errorInfo = this->handleOperationException(e);
+        response.send(errorInfo.first, errorInfo.second);
+        return;
+    }
+
+    } catch (std::exception &e) {
+        response.send(Pistache::Http::Code::Internal_Server_Error, e.what());
+    }
+
+}
+void MathApi::f1_score_handler(const Pistache::Rest::Request &request, Pistache::Http::ResponseWriter response) {
+    try {
+
+
+    // Getting the body param
+    
+    F1_score_input f1ScoreInput;
+    
+    try {
+        nlohmann::json::parse(request.body()).get_to(f1ScoreInput);
+        f1ScoreInput.validate();
+    } catch (std::exception &e) {
+        const std::pair<Pistache::Http::Code, std::string> errorInfo = this->handleParsingException(e);
+        response.send(errorInfo.first, errorInfo.second);
+        return;
+    }
+
+    try {
+        this->f1_score(f1ScoreInput, response);
+    } catch (Pistache::Http::HttpError &e) {
+        response.send(static_cast<Pistache::Http::Code>(e.code()), e.what());
+        return;
+    } catch (std::exception &e) {
+        const std::pair<Pistache::Http::Code, std::string> errorInfo = this->handleOperationException(e);
+        response.send(errorInfo.first, errorInfo.second);
+        return;
+    }
+
+    } catch (std::exception &e) {
+        response.send(Pistache::Http::Code::Internal_Server_Error, e.what());
+    }
+
+}
+void MathApi::get_column_handler(const Pistache::Rest::Request &request, Pistache::Http::ResponseWriter response) {
+    try {
+
+
+    // Getting the body param
+    
+    Get_column_input getColumnInput;
+    
+    try {
+        nlohmann::json::parse(request.body()).get_to(getColumnInput);
+        getColumnInput.validate();
+    } catch (std::exception &e) {
+        const std::pair<Pistache::Http::Code, std::string> errorInfo = this->handleParsingException(e);
+        response.send(errorInfo.first, errorInfo.second);
+        return;
+    }
+
+    try {
+        this->get_column(getColumnInput, response);
+    } catch (Pistache::Http::HttpError &e) {
+        response.send(static_cast<Pistache::Http::Code>(e.code()), e.what());
+        return;
+    } catch (std::exception &e) {
+        const std::pair<Pistache::Http::Code, std::string> errorInfo = this->handleOperationException(e);
+        response.send(errorInfo.first, errorInfo.second);
+        return;
+    }
+
+    } catch (std::exception &e) {
+        response.send(Pistache::Http::Code::Internal_Server_Error, e.what());
+    }
+
+}
+void MathApi::get_row_handler(const Pistache::Rest::Request &request, Pistache::Http::ResponseWriter response) {
+    try {
+
+
+    // Getting the body param
+    
+    Get_row_input getRowInput;
+    
+    try {
+        nlohmann::json::parse(request.body()).get_to(getRowInput);
+        getRowInput.validate();
+    } catch (std::exception &e) {
+        const std::pair<Pistache::Http::Code, std::string> errorInfo = this->handleParsingException(e);
+        response.send(errorInfo.first, errorInfo.second);
+        return;
+    }
+
+    try {
+        this->get_row(getRowInput, response);
+    } catch (Pistache::Http::HttpError &e) {
+        response.send(static_cast<Pistache::Http::Code>(e.code()), e.what());
+        return;
+    } catch (std::exception &e) {
+        const std::pair<Pistache::Http::Code, std::string> errorInfo = this->handleOperationException(e);
+        response.send(errorInfo.first, errorInfo.second);
+        return;
+    }
+
+    } catch (std::exception &e) {
+        response.send(Pistache::Http::Code::Internal_Server_Error, e.what());
+    }
+
+}
+void MathApi::in_random_order_handler(const Pistache::Rest::Request &request, Pistache::Http::ResponseWriter response) {
+    try {
+
+
+    // Getting the body param
+    
+    In_random_order_input inRandomOrderInput;
+    
+    try {
+        nlohmann::json::parse(request.body()).get_to(inRandomOrderInput);
+        inRandomOrderInput.validate();
+    } catch (std::exception &e) {
+        const std::pair<Pistache::Http::Code, std::string> errorInfo = this->handleParsingException(e);
+        response.send(errorInfo.first, errorInfo.second);
+        return;
+    }
+
+    try {
+        this->in_random_order(inRandomOrderInput, response);
+    } catch (Pistache::Http::HttpError &e) {
+        response.send(static_cast<Pistache::Http::Code>(e.code()), e.what());
+        return;
+    } catch (std::exception &e) {
+        const std::pair<Pistache::Http::Code, std::string> errorInfo = this->handleOperationException(e);
+        response.send(errorInfo.first, errorInfo.second);
+        return;
+    }
+
+    } catch (std::exception &e) {
+        response.send(Pistache::Http::Code::Internal_Server_Error, e.what());
+    }
+
+}
+void MathApi::interquartile_range_handler(const Pistache::Rest::Request &request, Pistache::Http::ResponseWriter response) {
+    try {
+
+
+    // Getting the body param
+    
+    Interquartile_range_input interquartileRangeInput;
+    
+    try {
+        nlohmann::json::parse(request.body()).get_to(interquartileRangeInput);
+        interquartileRangeInput.validate();
+    } catch (std::exception &e) {
+        const std::pair<Pistache::Http::Code, std::string> errorInfo = this->handleParsingException(e);
+        response.send(errorInfo.first, errorInfo.second);
+        return;
+    }
+
+    try {
+        this->interquartile_range(interquartileRangeInput, response);
+    } catch (Pistache::Http::HttpError &e) {
+        response.send(static_cast<Pistache::Http::Code>(e.code()), e.what());
+        return;
+    } catch (std::exception &e) {
+        const std::pair<Pistache::Http::Code, std::string> errorInfo = this->handleOperationException(e);
+        response.send(errorInfo.first, errorInfo.second);
+        return;
+    }
+
+    } catch (std::exception &e) {
+        response.send(Pistache::Http::Code::Internal_Server_Error, e.what());
+    }
+
+}
+void MathApi::magnitude_handler(const Pistache::Rest::Request &request, Pistache::Http::ResponseWriter response) {
+    try {
+
+
+    // Getting the body param
+    
+    Magnitude_input magnitudeInput;
+    
+    try {
+        nlohmann::json::parse(request.body()).get_to(magnitudeInput);
+        magnitudeInput.validate();
+    } catch (std::exception &e) {
+        const std::pair<Pistache::Http::Code, std::string> errorInfo = this->handleParsingException(e);
+        response.send(errorInfo.first, errorInfo.second);
+        return;
+    }
+
+    try {
+        this->magnitude(magnitudeInput, response);
+    } catch (Pistache::Http::HttpError &e) {
+        response.send(static_cast<Pistache::Http::Code>(e.code()), e.what());
+        return;
+    } catch (std::exception &e) {
+        const std::pair<Pistache::Http::Code, std::string> errorInfo = this->handleOperationException(e);
+        response.send(errorInfo.first, errorInfo.second);
+        return;
+    }
+
+    } catch (std::exception &e) {
+        response.send(Pistache::Http::Code::Internal_Server_Error, e.what());
+    }
+
+}
+void MathApi::matrix_add_handler(const Pistache::Rest::Request &request, Pistache::Http::ResponseWriter response) {
+    try {
+
+
+    // Getting the body param
+    
+    Matrix_add_input matrixAddInput;
+    
+    try {
+        nlohmann::json::parse(request.body()).get_to(matrixAddInput);
+        matrixAddInput.validate();
+    } catch (std::exception &e) {
+        const std::pair<Pistache::Http::Code, std::string> errorInfo = this->handleParsingException(e);
+        response.send(errorInfo.first, errorInfo.second);
+        return;
+    }
+
+    try {
+        this->matrix_add(matrixAddInput, response);
+    } catch (Pistache::Http::HttpError &e) {
+        response.send(static_cast<Pistache::Http::Code>(e.code()), e.what());
+        return;
+    } catch (std::exception &e) {
+        const std::pair<Pistache::Http::Code, std::string> errorInfo = this->handleOperationException(e);
+        response.send(errorInfo.first, errorInfo.second);
+        return;
+    }
+
+    } catch (std::exception &e) {
+        response.send(Pistache::Http::Code::Internal_Server_Error, e.what());
+    }
+
+}
+void MathApi::maximize_batch_handler(const Pistache::Rest::Request &request, Pistache::Http::ResponseWriter response) {
+    try {
+
+
+    // Getting the body param
+    
+    Maximize_batch_input maximizeBatchInput;
+    
+    try {
+        nlohmann::json::parse(request.body()).get_to(maximizeBatchInput);
+        maximizeBatchInput.validate();
+    } catch (std::exception &e) {
+        const std::pair<Pistache::Http::Code, std::string> errorInfo = this->handleParsingException(e);
+        response.send(errorInfo.first, errorInfo.second);
+        return;
+    }
+
+    try {
+        this->maximize_batch(maximizeBatchInput, response);
+    } catch (Pistache::Http::HttpError &e) {
+        response.send(static_cast<Pistache::Http::Code>(e.code()), e.what());
+        return;
+    } catch (std::exception &e) {
+        const std::pair<Pistache::Http::Code, std::string> errorInfo = this->handleOperationException(e);
+        response.send(errorInfo.first, errorInfo.second);
+        return;
+    }
+
+    } catch (std::exception &e) {
+        response.send(Pistache::Http::Code::Internal_Server_Error, e.what());
+    }
+
+}
+void MathApi::maximize_stochastic_handler(const Pistache::Rest::Request &request, Pistache::Http::ResponseWriter response) {
+    try {
+
+
+    // Getting the body param
+    
+    Maximize_stochastic_input maximizeStochasticInput;
+    
+    try {
+        nlohmann::json::parse(request.body()).get_to(maximizeStochasticInput);
+        maximizeStochasticInput.validate();
+    } catch (std::exception &e) {
+        const std::pair<Pistache::Http::Code, std::string> errorInfo = this->handleParsingException(e);
+        response.send(errorInfo.first, errorInfo.second);
+        return;
+    }
+
+    try {
+        this->maximize_stochastic(maximizeStochasticInput, response);
+    } catch (Pistache::Http::HttpError &e) {
+        response.send(static_cast<Pistache::Http::Code>(e.code()), e.what());
+        return;
+    } catch (std::exception &e) {
+        const std::pair<Pistache::Http::Code, std::string> errorInfo = this->handleOperationException(e);
+        response.send(errorInfo.first, errorInfo.second);
+        return;
+    }
+
+    } catch (std::exception &e) {
+        response.send(Pistache::Http::Code::Internal_Server_Error, e.what());
+    }
+
+}
+void MathApi::mean_handler(const Pistache::Rest::Request &request, Pistache::Http::ResponseWriter response) {
+    try {
+
+
+    // Getting the body param
+    
+    Mean_input meanInput;
+    
+    try {
+        nlohmann::json::parse(request.body()).get_to(meanInput);
+        meanInput.validate();
+    } catch (std::exception &e) {
+        const std::pair<Pistache::Http::Code, std::string> errorInfo = this->handleParsingException(e);
+        response.send(errorInfo.first, errorInfo.second);
+        return;
+    }
+
+    try {
+        this->mean(meanInput, response);
+    } catch (Pistache::Http::HttpError &e) {
+        response.send(static_cast<Pistache::Http::Code>(e.code()), e.what());
+        return;
+    } catch (std::exception &e) {
+        const std::pair<Pistache::Http::Code, std::string> errorInfo = this->handleOperationException(e);
+        response.send(errorInfo.first, errorInfo.second);
+        return;
+    }
+
+    } catch (std::exception &e) {
+        response.send(Pistache::Http::Code::Internal_Server_Error, e.what());
+    }
+
+}
+void MathApi::median_handler(const Pistache::Rest::Request &request, Pistache::Http::ResponseWriter response) {
+    try {
+
+
+    // Getting the body param
+    
+    Median_input medianInput;
+    
+    try {
+        nlohmann::json::parse(request.body()).get_to(medianInput);
+        medianInput.validate();
+    } catch (std::exception &e) {
+        const std::pair<Pistache::Http::Code, std::string> errorInfo = this->handleParsingException(e);
+        response.send(errorInfo.first, errorInfo.second);
+        return;
+    }
+
+    try {
+        this->median(medianInput, response);
+    } catch (Pistache::Http::HttpError &e) {
+        response.send(static_cast<Pistache::Http::Code>(e.code()), e.what());
+        return;
+    } catch (std::exception &e) {
+        const std::pair<Pistache::Http::Code, std::string> errorInfo = this->handleOperationException(e);
+        response.send(errorInfo.first, errorInfo.second);
+        return;
+    }
+
+    } catch (std::exception &e) {
+        response.send(Pistache::Http::Code::Internal_Server_Error, e.what());
+    }
+
+}
+void MathApi::minimize_batch_handler(const Pistache::Rest::Request &request, Pistache::Http::ResponseWriter response) {
+    try {
+
+
+    // Getting the body param
+    
+    Minimize_batch_input minimizeBatchInput;
+    
+    try {
+        nlohmann::json::parse(request.body()).get_to(minimizeBatchInput);
+        minimizeBatchInput.validate();
+    } catch (std::exception &e) {
+        const std::pair<Pistache::Http::Code, std::string> errorInfo = this->handleParsingException(e);
+        response.send(errorInfo.first, errorInfo.second);
+        return;
+    }
+
+    try {
+        this->minimize_batch(minimizeBatchInput, response);
+    } catch (Pistache::Http::HttpError &e) {
+        response.send(static_cast<Pistache::Http::Code>(e.code()), e.what());
+        return;
+    } catch (std::exception &e) {
+        const std::pair<Pistache::Http::Code, std::string> errorInfo = this->handleOperationException(e);
+        response.send(errorInfo.first, errorInfo.second);
+        return;
+    }
+
+    } catch (std::exception &e) {
+        response.send(Pistache::Http::Code::Internal_Server_Error, e.what());
+    }
+
+}
+void MathApi::minimize_stochastic_handler(const Pistache::Rest::Request &request, Pistache::Http::ResponseWriter response) {
+    try {
+
+
+    // Getting the body param
+    
+    Minimize_stochastic_input minimizeStochasticInput;
+    
+    try {
+        nlohmann::json::parse(request.body()).get_to(minimizeStochasticInput);
+        minimizeStochasticInput.validate();
+    } catch (std::exception &e) {
+        const std::pair<Pistache::Http::Code, std::string> errorInfo = this->handleParsingException(e);
+        response.send(errorInfo.first, errorInfo.second);
+        return;
+    }
+
+    try {
+        this->minimize_stochastic(minimizeStochasticInput, response);
+    } catch (Pistache::Http::HttpError &e) {
+        response.send(static_cast<Pistache::Http::Code>(e.code()), e.what());
+        return;
+    } catch (std::exception &e) {
+        const std::pair<Pistache::Http::Code, std::string> errorInfo = this->handleOperationException(e);
+        response.send(errorInfo.first, errorInfo.second);
+        return;
+    }
+
+    } catch (std::exception &e) {
+        response.send(Pistache::Http::Code::Internal_Server_Error, e.what());
+    }
+
+}
+void MathApi::mode_handler(const Pistache::Rest::Request &request, Pistache::Http::ResponseWriter response) {
+    try {
+
+
+    // Getting the body param
+    
+    Mode_input modeInput;
+    
+    try {
+        nlohmann::json::parse(request.body()).get_to(modeInput);
+        modeInput.validate();
+    } catch (std::exception &e) {
+        const std::pair<Pistache::Http::Code, std::string> errorInfo = this->handleParsingException(e);
+        response.send(errorInfo.first, errorInfo.second);
+        return;
+    }
+
+    try {
+        this->mode(modeInput, response);
+    } catch (Pistache::Http::HttpError &e) {
+        response.send(static_cast<Pistache::Http::Code>(e.code()), e.what());
+        return;
+    } catch (std::exception &e) {
+        const std::pair<Pistache::Http::Code, std::string> errorInfo = this->handleOperationException(e);
+        response.send(errorInfo.first, errorInfo.second);
+        return;
+    }
+
+    } catch (std::exception &e) {
+        response.send(Pistache::Http::Code::Internal_Server_Error, e.what());
+    }
+
+}
+void MathApi::partial_difference_quotient_handler(const Pistache::Rest::Request &request, Pistache::Http::ResponseWriter response) {
+    try {
+
+
+    // Getting the body param
+    
+    Partial_difference_quotient_input partialDifferenceQuotientInput;
+    
+    try {
+        nlohmann::json::parse(request.body()).get_to(partialDifferenceQuotientInput);
+        partialDifferenceQuotientInput.validate();
+    } catch (std::exception &e) {
+        const std::pair<Pistache::Http::Code, std::string> errorInfo = this->handleParsingException(e);
+        response.send(errorInfo.first, errorInfo.second);
+        return;
+    }
+
+    try {
+        this->partial_difference_quotient(partialDifferenceQuotientInput, response);
+    } catch (Pistache::Http::HttpError &e) {
+        response.send(static_cast<Pistache::Http::Code>(e.code()), e.what());
+        return;
+    } catch (std::exception &e) {
+        const std::pair<Pistache::Http::Code, std::string> errorInfo = this->handleOperationException(e);
+        response.send(errorInfo.first, errorInfo.second);
+        return;
+    }
+
+    } catch (std::exception &e) {
+        response.send(Pistache::Http::Code::Internal_Server_Error, e.what());
+    }
+
+}
+void MathApi::precision_handler(const Pistache::Rest::Request &request, Pistache::Http::ResponseWriter response) {
+    try {
+
+
+    // Getting the body param
+    
+    Precision_input precisionInput;
+    
+    try {
+        nlohmann::json::parse(request.body()).get_to(precisionInput);
+        precisionInput.validate();
+    } catch (std::exception &e) {
+        const std::pair<Pistache::Http::Code, std::string> errorInfo = this->handleParsingException(e);
+        response.send(errorInfo.first, errorInfo.second);
+        return;
+    }
+
+    try {
+        this->precision(precisionInput, response);
+    } catch (Pistache::Http::HttpError &e) {
+        response.send(static_cast<Pistache::Http::Code>(e.code()), e.what());
+        return;
+    } catch (std::exception &e) {
+        const std::pair<Pistache::Http::Code, std::string> errorInfo = this->handleOperationException(e);
+        response.send(errorInfo.first, errorInfo.second);
+        return;
+    }
+
+    } catch (std::exception &e) {
+        response.send(Pistache::Http::Code::Internal_Server_Error, e.what());
+    }
+
+}
+void MathApi::quantile_handler(const Pistache::Rest::Request &request, Pistache::Http::ResponseWriter response) {
+    try {
+
+
+    // Getting the body param
+    
+    Quantile_input quantileInput;
+    
+    try {
+        nlohmann::json::parse(request.body()).get_to(quantileInput);
+        quantileInput.validate();
+    } catch (std::exception &e) {
+        const std::pair<Pistache::Http::Code, std::string> errorInfo = this->handleParsingException(e);
+        response.send(errorInfo.first, errorInfo.second);
+        return;
+    }
+
+    try {
+        this->quantile(quantileInput, response);
+    } catch (Pistache::Http::HttpError &e) {
+        response.send(static_cast<Pistache::Http::Code>(e.code()), e.what());
+        return;
+    } catch (std::exception &e) {
+        const std::pair<Pistache::Http::Code, std::string> errorInfo = this->handleOperationException(e);
+        response.send(errorInfo.first, errorInfo.second);
+        return;
+    }
+
+    } catch (std::exception &e) {
+        response.send(Pistache::Http::Code::Internal_Server_Error, e.what());
+    }
+
+}
+void MathApi::recall_handler(const Pistache::Rest::Request &request, Pistache::Http::ResponseWriter response) {
+    try {
+
+
+    // Getting the body param
+    
+    Recall_input recallInput;
+    
+    try {
+        nlohmann::json::parse(request.body()).get_to(recallInput);
+        recallInput.validate();
+    } catch (std::exception &e) {
+        const std::pair<Pistache::Http::Code, std::string> errorInfo = this->handleParsingException(e);
+        response.send(errorInfo.first, errorInfo.second);
+        return;
+    }
+
+    try {
+        this->recall(recallInput, response);
+    } catch (Pistache::Http::HttpError &e) {
+        response.send(static_cast<Pistache::Http::Code>(e.code()), e.what());
+        return;
+    } catch (std::exception &e) {
+        const std::pair<Pistache::Http::Code, std::string> errorInfo = this->handleOperationException(e);
+        response.send(errorInfo.first, errorInfo.second);
+        return;
+    }
+
+    } catch (std::exception &e) {
+        response.send(Pistache::Http::Code::Internal_Server_Error, e.what());
+    }
+
+}
+void MathApi::scalar_multiply_handler(const Pistache::Rest::Request &request, Pistache::Http::ResponseWriter response) {
+    try {
+
+
+    // Getting the body param
+    
+    Scalar_multiply_input scalarMultiplyInput;
+    
+    try {
+        nlohmann::json::parse(request.body()).get_to(scalarMultiplyInput);
+        scalarMultiplyInput.validate();
+    } catch (std::exception &e) {
+        const std::pair<Pistache::Http::Code, std::string> errorInfo = this->handleParsingException(e);
+        response.send(errorInfo.first, errorInfo.second);
+        return;
+    }
+
+    try {
+        this->scalar_multiply(scalarMultiplyInput, response);
+    } catch (Pistache::Http::HttpError &e) {
+        response.send(static_cast<Pistache::Http::Code>(e.code()), e.what());
+        return;
+    } catch (std::exception &e) {
+        const std::pair<Pistache::Http::Code, std::string> errorInfo = this->handleOperationException(e);
+        response.send(errorInfo.first, errorInfo.second);
+        return;
+    }
+
+    } catch (std::exception &e) {
+        response.send(Pistache::Http::Code::Internal_Server_Error, e.what());
+    }
+
+}
+void MathApi::shape_handler(const Pistache::Rest::Request &request, Pistache::Http::ResponseWriter response) {
+    try {
+
+
+    // Getting the body param
+    
+    Shape_input shapeInput;
+    
+    try {
+        nlohmann::json::parse(request.body()).get_to(shapeInput);
+        shapeInput.validate();
+    } catch (std::exception &e) {
+        const std::pair<Pistache::Http::Code, std::string> errorInfo = this->handleParsingException(e);
+        response.send(errorInfo.first, errorInfo.second);
+        return;
+    }
+
+    try {
+        this->shape(shapeInput, response);
+    } catch (Pistache::Http::HttpError &e) {
+        response.send(static_cast<Pistache::Http::Code>(e.code()), e.what());
+        return;
+    } catch (std::exception &e) {
+        const std::pair<Pistache::Http::Code, std::string> errorInfo = this->handleOperationException(e);
+        response.send(errorInfo.first, errorInfo.second);
+        return;
+    }
+
+    } catch (std::exception &e) {
+        response.send(Pistache::Http::Code::Internal_Server_Error, e.what());
+    }
+
+}
+void MathApi::split_data_handler(const Pistache::Rest::Request &request, Pistache::Http::ResponseWriter response) {
+    try {
+
+
+    // Getting the body param
+    
+    Split_data_input splitDataInput;
+    
+    try {
+        nlohmann::json::parse(request.body()).get_to(splitDataInput);
+        splitDataInput.validate();
+    } catch (std::exception &e) {
+        const std::pair<Pistache::Http::Code, std::string> errorInfo = this->handleParsingException(e);
+        response.send(errorInfo.first, errorInfo.second);
+        return;
+    }
+
+    try {
+        this->split_data(splitDataInput, response);
+    } catch (Pistache::Http::HttpError &e) {
+        response.send(static_cast<Pistache::Http::Code>(e.code()), e.what());
+        return;
+    } catch (std::exception &e) {
+        const std::pair<Pistache::Http::Code, std::string> errorInfo = this->handleOperationException(e);
+        response.send(errorInfo.first, errorInfo.second);
+        return;
+    }
+
+    } catch (std::exception &e) {
+        response.send(Pistache::Http::Code::Internal_Server_Error, e.what());
+    }
+
+}
 void MathApi::sqrt_handler(const Pistache::Rest::Request &request, Pistache::Http::ResponseWriter response) {
     try {
 
@@ -125,6 +1221,72 @@ void MathApi::sqrt_handler(const Pistache::Rest::Request &request, Pistache::Htt
     }
 
 }
+void MathApi::squared_distance_handler(const Pistache::Rest::Request &request, Pistache::Http::ResponseWriter response) {
+    try {
+
+
+    // Getting the body param
+    
+    Squared_distance_input squaredDistanceInput;
+    
+    try {
+        nlohmann::json::parse(request.body()).get_to(squaredDistanceInput);
+        squaredDistanceInput.validate();
+    } catch (std::exception &e) {
+        const std::pair<Pistache::Http::Code, std::string> errorInfo = this->handleParsingException(e);
+        response.send(errorInfo.first, errorInfo.second);
+        return;
+    }
+
+    try {
+        this->squared_distance(squaredDistanceInput, response);
+    } catch (Pistache::Http::HttpError &e) {
+        response.send(static_cast<Pistache::Http::Code>(e.code()), e.what());
+        return;
+    } catch (std::exception &e) {
+        const std::pair<Pistache::Http::Code, std::string> errorInfo = this->handleOperationException(e);
+        response.send(errorInfo.first, errorInfo.second);
+        return;
+    }
+
+    } catch (std::exception &e) {
+        response.send(Pistache::Http::Code::Internal_Server_Error, e.what());
+    }
+
+}
+void MathApi::standard_deviation_handler(const Pistache::Rest::Request &request, Pistache::Http::ResponseWriter response) {
+    try {
+
+
+    // Getting the body param
+    
+    Standard_deviation_input standardDeviationInput;
+    
+    try {
+        nlohmann::json::parse(request.body()).get_to(standardDeviationInput);
+        standardDeviationInput.validate();
+    } catch (std::exception &e) {
+        const std::pair<Pistache::Http::Code, std::string> errorInfo = this->handleParsingException(e);
+        response.send(errorInfo.first, errorInfo.second);
+        return;
+    }
+
+    try {
+        this->standard_deviation(standardDeviationInput, response);
+    } catch (Pistache::Http::HttpError &e) {
+        response.send(static_cast<Pistache::Http::Code>(e.code()), e.what());
+        return;
+    } catch (std::exception &e) {
+        const std::pair<Pistache::Http::Code, std::string> errorInfo = this->handleOperationException(e);
+        response.send(errorInfo.first, errorInfo.second);
+        return;
+    }
+
+    } catch (std::exception &e) {
+        response.send(Pistache::Http::Code::Internal_Server_Error, e.what());
+    }
+
+}
 void MathApi::strength_handler(const Pistache::Rest::Request &request, Pistache::Http::ResponseWriter response) {
     try {
 
@@ -144,6 +1306,237 @@ void MathApi::strength_handler(const Pistache::Rest::Request &request, Pistache:
 
     try {
         this->strength(strengthInput, response);
+    } catch (Pistache::Http::HttpError &e) {
+        response.send(static_cast<Pistache::Http::Code>(e.code()), e.what());
+        return;
+    } catch (std::exception &e) {
+        const std::pair<Pistache::Http::Code, std::string> errorInfo = this->handleOperationException(e);
+        response.send(errorInfo.first, errorInfo.second);
+        return;
+    }
+
+    } catch (std::exception &e) {
+        response.send(Pistache::Http::Code::Internal_Server_Error, e.what());
+    }
+
+}
+void MathApi::sum_of_squares_handler(const Pistache::Rest::Request &request, Pistache::Http::ResponseWriter response) {
+    try {
+
+
+    // Getting the body param
+    
+    Sum_of_squares_input sumOfSquaresInput;
+    
+    try {
+        nlohmann::json::parse(request.body()).get_to(sumOfSquaresInput);
+        sumOfSquaresInput.validate();
+    } catch (std::exception &e) {
+        const std::pair<Pistache::Http::Code, std::string> errorInfo = this->handleParsingException(e);
+        response.send(errorInfo.first, errorInfo.second);
+        return;
+    }
+
+    try {
+        this->sum_of_squares(sumOfSquaresInput, response);
+    } catch (Pistache::Http::HttpError &e) {
+        response.send(static_cast<Pistache::Http::Code>(e.code()), e.what());
+        return;
+    } catch (std::exception &e) {
+        const std::pair<Pistache::Http::Code, std::string> errorInfo = this->handleOperationException(e);
+        response.send(errorInfo.first, errorInfo.second);
+        return;
+    }
+
+    } catch (std::exception &e) {
+        response.send(Pistache::Http::Code::Internal_Server_Error, e.what());
+    }
+
+}
+void MathApi::train_test_split_handler(const Pistache::Rest::Request &request, Pistache::Http::ResponseWriter response) {
+    try {
+
+
+    // Getting the body param
+    
+    Train_test_split_input trainTestSplitInput;
+    
+    try {
+        nlohmann::json::parse(request.body()).get_to(trainTestSplitInput);
+        trainTestSplitInput.validate();
+    } catch (std::exception &e) {
+        const std::pair<Pistache::Http::Code, std::string> errorInfo = this->handleParsingException(e);
+        response.send(errorInfo.first, errorInfo.second);
+        return;
+    }
+
+    try {
+        this->train_test_split(trainTestSplitInput, response);
+    } catch (Pistache::Http::HttpError &e) {
+        response.send(static_cast<Pistache::Http::Code>(e.code()), e.what());
+        return;
+    } catch (std::exception &e) {
+        const std::pair<Pistache::Http::Code, std::string> errorInfo = this->handleOperationException(e);
+        response.send(errorInfo.first, errorInfo.second);
+        return;
+    }
+
+    } catch (std::exception &e) {
+        response.send(Pistache::Http::Code::Internal_Server_Error, e.what());
+    }
+
+}
+void MathApi::variance_handler(const Pistache::Rest::Request &request, Pistache::Http::ResponseWriter response) {
+    try {
+
+
+    // Getting the body param
+    
+    Variance_input varianceInput;
+    
+    try {
+        nlohmann::json::parse(request.body()).get_to(varianceInput);
+        varianceInput.validate();
+    } catch (std::exception &e) {
+        const std::pair<Pistache::Http::Code, std::string> errorInfo = this->handleParsingException(e);
+        response.send(errorInfo.first, errorInfo.second);
+        return;
+    }
+
+    try {
+        this->variance(varianceInput, response);
+    } catch (Pistache::Http::HttpError &e) {
+        response.send(static_cast<Pistache::Http::Code>(e.code()), e.what());
+        return;
+    } catch (std::exception &e) {
+        const std::pair<Pistache::Http::Code, std::string> errorInfo = this->handleOperationException(e);
+        response.send(errorInfo.first, errorInfo.second);
+        return;
+    }
+
+    } catch (std::exception &e) {
+        response.send(Pistache::Http::Code::Internal_Server_Error, e.what());
+    }
+
+}
+void MathApi::vector_add_handler(const Pistache::Rest::Request &request, Pistache::Http::ResponseWriter response) {
+    try {
+
+
+    // Getting the body param
+    
+    Vector_add_input vectorAddInput;
+    
+    try {
+        nlohmann::json::parse(request.body()).get_to(vectorAddInput);
+        vectorAddInput.validate();
+    } catch (std::exception &e) {
+        const std::pair<Pistache::Http::Code, std::string> errorInfo = this->handleParsingException(e);
+        response.send(errorInfo.first, errorInfo.second);
+        return;
+    }
+
+    try {
+        this->vector_add(vectorAddInput, response);
+    } catch (Pistache::Http::HttpError &e) {
+        response.send(static_cast<Pistache::Http::Code>(e.code()), e.what());
+        return;
+    } catch (std::exception &e) {
+        const std::pair<Pistache::Http::Code, std::string> errorInfo = this->handleOperationException(e);
+        response.send(errorInfo.first, errorInfo.second);
+        return;
+    }
+
+    } catch (std::exception &e) {
+        response.send(Pistache::Http::Code::Internal_Server_Error, e.what());
+    }
+
+}
+void MathApi::vector_mean_handler(const Pistache::Rest::Request &request, Pistache::Http::ResponseWriter response) {
+    try {
+
+
+    // Getting the body param
+    
+    Vector_mean_input vectorMeanInput;
+    
+    try {
+        nlohmann::json::parse(request.body()).get_to(vectorMeanInput);
+        vectorMeanInput.validate();
+    } catch (std::exception &e) {
+        const std::pair<Pistache::Http::Code, std::string> errorInfo = this->handleParsingException(e);
+        response.send(errorInfo.first, errorInfo.second);
+        return;
+    }
+
+    try {
+        this->vector_mean(vectorMeanInput, response);
+    } catch (Pistache::Http::HttpError &e) {
+        response.send(static_cast<Pistache::Http::Code>(e.code()), e.what());
+        return;
+    } catch (std::exception &e) {
+        const std::pair<Pistache::Http::Code, std::string> errorInfo = this->handleOperationException(e);
+        response.send(errorInfo.first, errorInfo.second);
+        return;
+    }
+
+    } catch (std::exception &e) {
+        response.send(Pistache::Http::Code::Internal_Server_Error, e.what());
+    }
+
+}
+void MathApi::vector_subtract_handler(const Pistache::Rest::Request &request, Pistache::Http::ResponseWriter response) {
+    try {
+
+
+    // Getting the body param
+    
+    Vector_subtract_input vectorSubtractInput;
+    
+    try {
+        nlohmann::json::parse(request.body()).get_to(vectorSubtractInput);
+        vectorSubtractInput.validate();
+    } catch (std::exception &e) {
+        const std::pair<Pistache::Http::Code, std::string> errorInfo = this->handleParsingException(e);
+        response.send(errorInfo.first, errorInfo.second);
+        return;
+    }
+
+    try {
+        this->vector_subtract(vectorSubtractInput, response);
+    } catch (Pistache::Http::HttpError &e) {
+        response.send(static_cast<Pistache::Http::Code>(e.code()), e.what());
+        return;
+    } catch (std::exception &e) {
+        const std::pair<Pistache::Http::Code, std::string> errorInfo = this->handleOperationException(e);
+        response.send(errorInfo.first, errorInfo.second);
+        return;
+    }
+
+    } catch (std::exception &e) {
+        response.send(Pistache::Http::Code::Internal_Server_Error, e.what());
+    }
+
+}
+void MathApi::vector_sum_handler(const Pistache::Rest::Request &request, Pistache::Http::ResponseWriter response) {
+    try {
+
+
+    // Getting the body param
+    
+    Vector_sum_input vectorSumInput;
+    
+    try {
+        nlohmann::json::parse(request.body()).get_to(vectorSumInput);
+        vectorSumInput.validate();
+    } catch (std::exception &e) {
+        const std::pair<Pistache::Http::Code, std::string> errorInfo = this->handleParsingException(e);
+        response.send(errorInfo.first, errorInfo.second);
+        return;
+    }
+
+    try {
+        this->vector_sum(vectorSumInput, response);
     } catch (Pistache::Http::HttpError &e) {
         response.send(static_cast<Pistache::Http::Code>(e.code()), e.what());
         return;

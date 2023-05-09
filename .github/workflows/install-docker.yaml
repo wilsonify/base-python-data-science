@@ -1,0 +1,13 @@
+on:
+  workflow_dispatch:
+
+jobs:
+  job01:
+    runs-on: ubuntu-latest
+    steps:
+      - name: show version
+        run: |
+          docker --version
+          make --version 
+          cmake --version   
+        

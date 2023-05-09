@@ -1,4 +1,4 @@
-#include <stdio.h>
+//include <stdio.h>
 
 double mysqrt(double x)
 {
@@ -24,5 +24,17 @@ double mysqrt(double x)
         result = result + 0.5 * delta / result;
         fprintf(stdout, "Computing sqrt of %g to be %g\n", x, result);
     }
+    return result;
+}
+
+std::vector<double> mysqrt_vector(std::vector<double> x)
+{
+    std::vector<double> result;
+    result.resize(x.size());
+    std::transform(
+        x.begin(), x.end(), // iterate from start to end
+        result.begin(), // save results here
+        mysqrt // transformation
+        );
     return result;
 }

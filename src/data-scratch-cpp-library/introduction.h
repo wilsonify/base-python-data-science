@@ -1,0 +1,20 @@
+double tenure_bucket(tenure);
+double predict_paid_or_unpaid(years_experience);
+double number_of_friends(_user);
+double friends_of_friend_ids_bad(user_);
+double not_the_same(user_, other_user);
+double not_friends(user_, other_user);
+double friends_of_friend_ids(user_);
+double data_scientists_who_like(target_interest, interests_list);
+double most_common_interests_with(user_id, interests_by_user_id, user_ids_by_interest);
+double read_most_common_words(words_and_counts);
+double read_num_friends_by_id(users_list)
+double create_words_and_counts(interests_list);
+double create_average_salary_by_bucket(salaries_and_tenures);
+double create_average_salary_by_tenure(salary_by_tenure);
+double create_salary_by_tenure(salaries_and_tenures);
+double create_interests_by_user(interests_list);
+double create_users_by_interest(interests_list);
+double read_avg_connections(users_list);
+double read_user_connections(users_list, uid=3);
+double populate_friendships(friendships, users_list);

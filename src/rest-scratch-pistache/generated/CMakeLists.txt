@@ -1,16 +1,12 @@
 cmake_minimum_required (VERSION 3.2)
 project(api-server)
-set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++20 -pg -g3" )
+set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++17 -pg -g3" )
 
 set(VERSION_MAJOR 1)
 set(VERSION_MINOR 0)
 set(VERSION_PATCH 1)
 
-#build the test runner
-include_directories(external/googletest/googletest/include)
-include_directories(external/googletest/googlemock/include)
-add_subdirectory(external/googletest)
-link_directories(external/googletest/build/lib)
+set(CMAKE_EXPORT_COMPILE_COMMANDS true)
 
 #build header only library
 include_directories(external/json/include)
@@ -18,7 +14,6 @@ include_directories(external/json/include)
 #build rapidjson
 include_directories(external/rapidjson/include)
 add_subdirectory(external/rapidjson)
-link_directories(external/rapidjson/build/lib)
 
 #build the rest runner
 include_directories(external/pistache/include)
