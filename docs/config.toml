@@ -1,4 +1,4 @@
-baseURL = ""
+baseURL = "base-python-data-science"
 title = 'Base Python Data Science'
 theme = "github-style"
 languageCode = "en-us"
