@@ -1,4 +1,4 @@
-baseURL = "base-python-data-science"
+baseURL = "https://wilsonify.github.io/base-python-data-science"
 title = 'Base Python Data Science'
 theme = "github-style"
 languageCode = "en-us"
