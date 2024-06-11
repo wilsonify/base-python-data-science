@@ -23,7 +23,7 @@
     "camelcase": ">=5.3.1",
     "cookie-parser": ">=1.4.4",
     "cors": ">=2.8.5",
-    "express": ">=4.16.4",
+    "express": ">=4.19.2",
     "express-openapi-validator": ">=3.17.2",
     "fs": "0.0.1-security",
     "js-yaml": ">=3.3.0",
