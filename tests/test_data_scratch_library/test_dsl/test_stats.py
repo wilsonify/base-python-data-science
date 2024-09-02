@@ -4,7 +4,7 @@ from inspect import getmembers, isfunction
 
 import pytest
 
-from dsl import stats
+from dsl.c05_statistics import stats
 
 current_dir = os.path.dirname(__file__)
 parent_dir = os.path.join(current_dir, os.pardir)

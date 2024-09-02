@@ -5,12 +5,28 @@ from inspect import getmembers, isfunction
 
 import pytest
 
-from dsl import linear_algebra
-from dsl.linear_algebra import distance, dot, get_column, get_row, is_diagonal, magnitude, make_matrix, matrix_add, \
+from dsl.c04_linear_algebra import linear_algebra
+from dsl.c04_linear_algebra.linear_algebra import distance, dot, get_column, get_row, is_diagonal, magnitude, \
+    make_matrix, matrix_add, \
     scalar_multiply, shape, squared_distance, sum_of_squares, vector_add, vector_mean, vector_subtract, vector_sum
+from dsl.c06_probability.probability import random_normal
 
 current_dir = os.path.dirname(__file__)
 parent_dir = os.path.join(current_dir, os.pardir)
+
+
+@pytest.fixture(name="random_matrix")
+def random_matrix_fixture():
+    num_points = 100
+    data = []
+    for _ in range(num_points):
+        row = [None, None, None, None]
+        row[0] = random_normal()
+        row[1] = -5 * row[0] + random_normal()
+        row[2] = row[0] + row[1] + 5 * random_normal()
+        row[3] = 6 if row[2] > -2 else 0
+        data.append(row)
+    return data
 
 
 def test_smoke():

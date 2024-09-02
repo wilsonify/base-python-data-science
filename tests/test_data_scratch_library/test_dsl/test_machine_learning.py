@@ -4,10 +4,25 @@ from inspect import getmembers, isfunction
 
 import pytest
 
-from dsl import machine_learning
+from dsl.c06_probability.probability import random_normal
+from dsl.c11_machine_learning import machine_learning
 
 current_dir = os.path.dirname(__file__)
 parent_dir = os.path.join(current_dir, os.pardir)
+
+
+@pytest.fixture(name="random_matrix")
+def random_matrix_fixture():
+    num_points = 100
+    data = []
+    for _ in range(num_points):
+        row = [None, None, None, None]
+        row[0] = random_normal()
+        row[1] = -5 * row[0] + random_normal()
+        row[2] = row[0] + row[1] + 5 * random_normal()
+        row[3] = 6 if row[2] > -2 else 0
+        data.append(row)
+    return data
 
 
 def test_smoke():
@@ -15,7 +30,6 @@ def test_smoke():
     for member in getmembers(machine_learning):
         if isfunction(member[1]):
             print(member[0])
-
 
 
 @pytest.mark.parametrize(

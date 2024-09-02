@@ -1,22 +1,6 @@
 import pytest
 
-from dsl.probability import random_normal
-
-
-@pytest.fixture
-def naive_square():
-    def square(x):
-        return x * x
-
-    return square
-
-
-@pytest.fixture
-def naive_square_comprehension():
-    def square(x):
-        return [_ * _ for _ in x]
-
-    return square
+from dsl.c06_probability.probability import random_normal
 
 
 @pytest.fixture
@@ -36,18 +20,7 @@ def friendships():
     return friendships
 
 
-@pytest.fixture(name="random_matrix")
-def random_matrix_fixture():
-    num_points = 100
-    data = []
-    for _ in range(num_points):
-        row = [None, None, None, None]
-        row[0] = random_normal()
-        row[1] = -5 * row[0] + random_normal()
-        row[2] = row[0] + row[1] + 5 * random_normal()
-        row[3] = 6 if row[2] > -2 else 0
-        data.append(row)
-    return data
+
 
 
 @pytest.fixture(name="daily_minutes")

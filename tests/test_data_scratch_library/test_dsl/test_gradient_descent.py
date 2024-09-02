@@ -6,9 +6,10 @@ from inspect import getmembers, isfunction
 
 import pytest
 
-from dsl import gradient_descent
-from dsl.linear_algebra import distance
-from dsl.gradient_descent import (
+from dsl.c02_crash_course.manipulation import directional_variance, directional_variance_gradient
+from dsl.c04_linear_algebra.linear_algebra import distance
+from dsl.c08_gradient_descent import gradient_descent
+from dsl.c08_gradient_descent.gradient_descent import (
     difference_quotient,
     partial_difference_quotient,
     estimate_gradient,
@@ -18,11 +19,18 @@ from dsl.gradient_descent import (
     negate,
     negate_all
 )
-from dsl.manipulation import directional_variance, directional_variance_gradient
-from dsl.multiple_regression import squared_error, squared_error_gradient
+from dsl.c15_multiple_regression.multiple_regression import squared_error, squared_error_gradient
 
 current_dir = os.path.dirname(__file__)
 parent_dir = os.path.join(current_dir, os.pardir)
+
+
+def naive_square(x):
+    return x * x
+
+
+def naive_square_comprehension(x):
+    return [_ * _ for _ in x]
 
 
 def test_smoke():
@@ -32,7 +40,7 @@ def test_smoke():
             print(member[0])
 
 
-def test_difference_quotient(naive_square):
+def test_difference_quotient():
     x = 5
     h = 1
     result = difference_quotient(
@@ -43,7 +51,7 @@ def test_difference_quotient(naive_square):
     assert result == (naive_square(x + h) - naive_square(x)) / h
 
 
-def test_partial_difference_quotient(naive_square_comprehension):
+def test_partial_difference_quotient():
     output = partial_difference_quotient(
         f=naive_square_comprehension,
         v=[10.0, 2.0],
@@ -66,7 +74,7 @@ def test_distance(v, w, expected):
     assert result - expected == pytest.approx(0, abs=0.01)
 
 
-def test_estimate_gradient(naive_square_comprehension):
+def test_estimate_gradient():
     output = estimate_gradient(
         f=naive_square_comprehension,
         v=[10.0, 2.0],
