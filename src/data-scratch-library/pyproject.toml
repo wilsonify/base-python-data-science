@@ -1,0 +1,16 @@
+[build-system]
+requires = ["setuptools"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "data-scratch-library"
+version = "1.0.0"
+description = "Data Science From Scratch"
+keywords = ["datascience", "python"]
+
+[project.urls]
+homepage = "https://github.com/wilsonify/base-python-data-science"
+
+[tool.setuptools]
+packages = ["dsl"]
+
