@@ -1,11 +1,13 @@
 import csv
 import logging
+import os
 from collections import defaultdict
+from datetime import datetime
 from logging.config import dictConfig
+from os.path import abspath
 
-import dateutil
-from dateutil.parser import parser
-
+from dsl.c05_statistics.stats import correlation
+from dsl.c06_probability.probability import random_normal
 from dsl.c10_working_with_data.manipulation import (
     parse_rows_with,
     parse_dict,
@@ -17,14 +19,20 @@ from dsl.c10_working_with_data.manipulation import (
     principal_component_analysis,
     transform_vector,
 )
-from dsl.c06_probability.probability import random_normal
-from dsl.c05_statistics.stats import correlation
 from dsl.c10_working_with_data.working_with_data import day_over_day_changes, overall_change
+
+
+def parse_date(date_str: str):
+    # Simplified version of date parsing
+    try:
+        return datetime.strptime(date_str, "%Y-%m-%d")
+    except ValueError:
+        return None
 
 
 def read_stocks_txt(path_to_stocks):
     _data = []
-    parsers = {"date": dateutil.parser.parse, "closing_price": float}
+    parsers = {"date": parse_date, "closing_price": float}
     with open(path_to_stocks, "r", encoding="utf8", newline="") as f:
         reader_dict = csv.DictReader(f, delimiter="\t")
         _data = [parse_dict(row_dict, parsers) for row_dict in reader_dict]
@@ -33,7 +41,7 @@ def read_stocks_txt(path_to_stocks):
 
 def read_comma_delimited_stock_prices(path_to_csv_data):
     _data = []
-    parsers = [dateutil.parser.parse, None, float]
+    parsers = [parse_date, None, float]
     with open(path_to_csv_data, "r", encoding="utf8", newline="") as f:
         reader_csv = csv.reader(f)
         for line in parse_rows_with(reader_csv, parsers):
@@ -229,7 +237,10 @@ if __name__ == "__main__":
         handlers={"console": {"class": "logging.StreamHandler", "formatter": "simple"}},
         root={"handlers": ["console"], "level": logging.DEBUG},
     ))
-    main1(path_to_csv_data="/home/thom/repos/base-python-data-science/tests/data/comma_delimited_stock_prices.csv")
-    main2(path_to_stocks="/home/thom/repos/base-python-data-science/tests/data/stocks.txt")
+    current_dir = abspath(os.path.dirname(__file__))
+    data_dir = abspath(f"{current_dir}/../../../../data")
+
+    main1(path_to_csv_data=f"{data_dir}/comma_delimited_stock_prices.csv")
+    main2(path_to_stocks=f"{data_dir}/stocks.txt")
     main3()
     main4()
