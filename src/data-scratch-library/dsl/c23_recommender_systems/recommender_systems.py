@@ -3,8 +3,9 @@ from collections import defaultdict, Counter
 
 from dsl.c04_linear_algebra.linear_algebra import dot
 
+big_data_str = "Big Data"
 users_interests = [
-    ["Hadoop", "Big Data", "HBase", "Java", "Spark", "Storm", "Cassandra"],
+    ["Hadoop", big_data_str, "HBase", "Java", "Spark", "Storm", "Cassandra"],
     ["NoSQL", "MongoDB", "Cassandra", "HBase", "Postgres"],
     ["Python", "scikit-learn", "scipy", "numpy", "statsmodels", "pandas"],
     ["R", "Python", "statistics", "regression", "probability"],
@@ -12,8 +13,8 @@ users_interests = [
     ["Python", "R", "Java", "C++", "Haskell", "programming languages"],
     ["statistics", "probability", "mathematics", "theory"],
     ["machine learning", "scikit-learn", "Mahout", "neural networks"],
-    ["neural networks", "deep learning", "Big Data", "artificial intelligence"],
-    ["Hadoop", "Java", "MapReduce", "Big Data"],
+    ["neural networks", "deep learning", big_data_str, "artificial intelligence"],
+    ["Hadoop", "Java", "MapReduce", big_data_str],
     ["statistics", "R", "statsmodels"],
     ["C++", "deep learning", "artificial intelligence", "probability"],
     ["pandas", "R", "Python"],
