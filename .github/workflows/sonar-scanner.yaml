@@ -7,7 +7,15 @@ jobs:
   scan:
     runs-on: ubuntu-latest
     steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup sonar-scanner
+        run: |
+          wget https://binaries.sonarsource.com/Distribution/sonar-scanner-cli/sonar-scanner-cli-6.1.0.4477-linux-x64.zip
+          unzip sonar-scanner-cli-6.1.0.4477-linux-x64.zip
+
       - name: sonar-scanner
         env:
           SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
-        run: /opt/sonar-scanner/v6.1.0/bin/sonar-scanner -Dsonar.organization=wilsonify -Dsonar.projectKey=wilsonify-base-python-data-science -Dsonar.sources=src/data-scratch-library -Dsonar.host.url=https://sonarcloud.io
+        run: ./sonar-scanner-cli-6.1.0.4477-linux-x64/bin/sonar-scanner -Dsonar.organization=wilsonify -Dsonar.projectKey=wilsonify-base-python-data-science -Dsonar.sources=src/data-scratch-library -Dsonar.host.url=https://sonarcloud.io
