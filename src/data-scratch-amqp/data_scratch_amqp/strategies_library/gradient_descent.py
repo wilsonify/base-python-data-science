@@ -2,7 +2,7 @@ import os
 import random
 from functools import partial
 
-from dsl.c02_crash_course.manipulation import directional_variance, directional_variance_gradient
+from dsl.c10_working_with_data.manipulation import directional_variance, directional_variance_gradient
 from dsl.c08_gradient_descent.gradient_descent import negate, negate_all
 from dsl.c14_simple_linear_regression.simple_linear_regression import squared_error_gradient
 from dsl.c15_multiple_regression.multiple_regression import squared_error

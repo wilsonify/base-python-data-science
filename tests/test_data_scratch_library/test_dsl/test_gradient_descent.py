@@ -6,7 +6,7 @@ from inspect import getmembers, isfunction
 
 import pytest
 
-from dsl.c02_crash_course.manipulation import directional_variance, directional_variance_gradient
+from dsl.c10_working_with_data.manipulation import directional_variance, directional_variance_gradient
 from dsl.c04_linear_algebra.linear_algebra import distance
 from dsl.c08_gradient_descent import gradient_descent
 from dsl.c08_gradient_descent.gradient_descent import (

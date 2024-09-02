@@ -6,7 +6,7 @@ from logging.config import dictConfig
 import dateutil
 from dateutil.parser import parser
 
-from dsl.c02_crash_course.manipulation import (
+from dsl.c10_working_with_data.manipulation import (
     parse_rows_with,
     parse_dict,
     group_by,

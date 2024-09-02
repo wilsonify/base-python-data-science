@@ -2,7 +2,7 @@ import logging
 import random
 from logging.config import dictConfig
 
-from dsl.c02_crash_course.manipulation import rescale
+from dsl.c10_working_with_data.manipulation import rescale
 from dsl.c11_machine_learning.machine_learning import train_test_split
 from dsl.c15_multiple_regression.multiple_regression import estimate_beta
 from dsl.c16_logistic_regression.logistic_regression import (
