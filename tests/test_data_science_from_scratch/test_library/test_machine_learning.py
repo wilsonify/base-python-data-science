@@ -4,7 +4,7 @@ from inspect import getmembers, isfunction
 
 import pytest
 
-from data_science_from_scratch.library import machine_learning
+from dsl.c11_machine_learning import machine_learning
 
 current_dir = os.path.dirname(__file__)
 parent_dir = os.path.join(current_dir, os.pardir)

@@ -5,10 +5,12 @@ from functools import partial
 from inspect import getmembers, isfunction
 
 import pytest
-from data_science_from_scratch.library import gradient_descent
-from data_science_from_scratch import multiple_regression
-from data_science_from_scratch.library.gradient_descent import negate, negate_all
-from data_science_from_scratch.library.manipulation import directional_variance, directional_variance_gradient
+
+from dsl.c04_linear_algebra.linear_algebra import distance
+from dsl.c08_gradient_descent import gradient_descent
+from dsl.c08_gradient_descent.gradient_descent import negate, negate_all
+from dsl.c10_working_with_data.manipulation import directional_variance, directional_variance_gradient
+from dsl.c15_multiple_regression import multiple_regression
 
 current_dir = os.path.dirname(__file__)
 parent_dir = os.path.join(current_dir, os.pardir)
@@ -19,7 +21,6 @@ def test_smoke():
     for member in getmembers(gradient_descent):
         if isfunction(member[1]):
             print(member[0])
-            
 
 
 def test_difference_quotient(naive_square):
@@ -52,7 +53,7 @@ def test_partial_difference_quotient(naive_square_comprehension):
     )
 )
 def test_distance(v, w, expected):
-    result = gradient_descent.distance(v=v, w=w)
+    result = distance(v=v, w=w)
     assert result - expected == pytest.approx(0, abs=0.01)
 
 

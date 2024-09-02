@@ -1,6 +1,6 @@
 import pytest
 
-from data_science_from_scratch.library.probability import random_normal
+from dsl.c06_probability.probability import random_normal
 
 
 @pytest.fixture

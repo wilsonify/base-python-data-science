@@ -5,7 +5,7 @@ from inspect import getmembers, isfunction
 
 import pytest
 
-from data_science_from_scratch.library import linear_algebra
+from dsl.c04_linear_algebra import linear_algebra
 
 current_dir = os.path.dirname(__file__)
 parent_dir = os.path.join(current_dir, os.pardir)

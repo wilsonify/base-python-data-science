@@ -3,7 +3,7 @@ requires = ["setuptools"]
 build-backend = "setuptools.build_meta"
 
 [project]
-name = "data-scratch-library"
+name = "dsl"
 version = "1.0.0"
 description = "Data Science From Scratch"
 keywords = ["datascience", "python"]
