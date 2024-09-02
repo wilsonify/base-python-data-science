@@ -83,7 +83,8 @@ def main():
     get_page_ranks(page_rank_outer)
 
     endorsements_list = populate_endorsements(users_dict_outer)
-    sorted(endorsements_list, key=lambda pair: pair[1], reverse=True)
+    endorsements_list_sorted = sorted(endorsements_list, key=lambda pair: pair[1], reverse=True)
+    print(f"endorsements_list_sorted = {endorsements_list_sorted}")
 
 
 if __name__ == "__main__":
