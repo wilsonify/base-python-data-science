@@ -2,7 +2,7 @@ import logging
 import random
 from logging.config import dictConfig
 
-from dsl.probability import random_kid
+from dsl.c06_probability.probability import random_kid
 
 
 def simulate():

@@ -6,7 +6,7 @@ from dsl.logistic_regression import (
     score_logistic, logistic_fit
 )
 from dsl.machine_learning import train_test_split
-from dsl.manipulation import rescale
+from dsl.c02_crash_course.manipulation import rescale
 from dsl.multiple_regression import estimate_beta
 
 

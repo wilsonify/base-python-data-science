@@ -18,7 +18,7 @@ from dsl.mapreduce import (
     liker_mapper,
     count_distinct_reducer
 )
-from dsl.naive_bayes import tokenize
+from dsl.c13_naive_bayes.naive_bayes import tokenize
 
 status_updates = [
     {

@@ -2,7 +2,7 @@ import logging
 import random
 from logging.config import dictConfig
 
-from dsl.clustering import (
+from dsl.c20_clustering.clustering import (
     KMeans,
     bottom_up_cluster,
     squared_clustering_errors,

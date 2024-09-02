@@ -2,8 +2,8 @@ import logging
 import random
 from logging.config import dictConfig
 
-from dsl.gradient_descent import sum_of_squares_gradient, step, sum_of_squares, minimize_batch
-from dsl.linear_algebra import distance
+from dsl.c08_gradient_descent.gradient_descent import sum_of_squares_gradient, step, sum_of_squares, minimize_batch
+from dsl.c04_linear_algebra.linear_algebra import distance
 
 
 def main():

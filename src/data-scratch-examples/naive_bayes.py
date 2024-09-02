@@ -4,7 +4,7 @@ from collections import Counter
 from logging.config import dictConfig
 
 from dsl.machine_learning import split_data
-from dsl.naive_bayes import get_subject_data, p_spam_given_word, NaiveBayesClassifier
+from dsl.c13_naive_bayes.naive_bayes import get_subject_data, p_spam_given_word, NaiveBayesClassifier
 
 
 def word_counter(classified):

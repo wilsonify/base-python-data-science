@@ -6,7 +6,7 @@ from logging.config import dictConfig
 import dateutil
 from dateutil.parser import parser
 
-from dsl.manipulation import (
+from dsl.c02_crash_course.manipulation import (
     parse_rows_with,
     parse_dict,
     group_by,
@@ -17,9 +17,9 @@ from dsl.manipulation import (
     principal_component_analysis,
     transform_vector,
 )
-from dsl.probability import random_normal
-from dsl.stats import correlation
-from dsl.working_with_data import day_over_day_changes, overall_change
+from dsl.c06_probability.probability import random_normal
+from dsl.c05_statistics.stats import correlation
+from dsl.c10_working_with_data.working_with_data import day_over_day_changes, overall_change
 
 
 def read_stocks_txt(path_to_stocks):

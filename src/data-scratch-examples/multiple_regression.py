@@ -2,7 +2,7 @@ import logging
 import random
 from logging.config import dictConfig
 
-from dsl.linear_algebra import dot
+from dsl.c04_linear_algebra.linear_algebra import dot
 from dsl.multiple_regression import (
     estimate_beta,
     multiple_r_squared,
@@ -11,7 +11,7 @@ from dsl.multiple_regression import (
     p_value,
     estimate_beta_ridge
 )
-from dsl.stats import median, standard_deviation
+from dsl.c05_statistics.stats import median, standard_deviation
 
 _x = [
     [1, 49, 4, 0], [1, 41, 9, 0], [1, 40, 8, 0], [1, 25, 6, 0], [1, 21, 1, 0], [1, 21, 0, 0], [1, 19, 3, 0],

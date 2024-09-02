@@ -1,7 +1,7 @@
 import logging
 from logging.config import dictConfig
 
-from dsl.stats import (
+from dsl.c05_statistics.stats import (
     mean,
     median,
     quantile,

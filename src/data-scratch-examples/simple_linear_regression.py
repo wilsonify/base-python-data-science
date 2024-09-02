@@ -2,7 +2,7 @@ import logging
 import random
 from logging.config import dictConfig
 
-from dsl.gradient_descent import minimize_stochastic
+from dsl.c08_gradient_descent.gradient_descent import minimize_stochastic
 from dsl.simple_linear_regression import least_squares_fit, r_squared, squared_error, squared_error_gradient
 
 num_friends_good = [
