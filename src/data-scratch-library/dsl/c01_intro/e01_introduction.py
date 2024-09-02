@@ -45,9 +45,10 @@ friendships = [
     (8, 9),
 ]
 
+big_data_str = "Big Data"
 interests_list = [
     (0, "Hadoop"),
-    (0, "Big Data"),
+    (0, big_data_str),
     (0, "HBase"),
     (0, "Java"),
     (0, "Spark"),
@@ -89,12 +90,12 @@ interests_list = [
     (7, "neural networks"),
     (8, "neural networks"),
     (8, "deep learning"),
-    (8, "Big Data"),
+    (8, big_data_str),
     (8, "artificial intelligence"),
     (9, "Hadoop"),
     (9, "Java"),
     (9, "MapReduce"),
-    (9, "Big Data"),
+    (9, big_data_str),
 ]
 salaries_and_tenures = [
     (83000, 8.7),
