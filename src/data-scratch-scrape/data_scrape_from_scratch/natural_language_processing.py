@@ -188,8 +188,9 @@ def sample_from(weights):
             return _i  # sum(weights[:(_i+1)]) >= rnd
 
 
+big_data_str = "Big Data"
 documents = [
-    ["Hadoop", "Big Data", "HBase", "Java", "Spark", "Storm", "Cassandra"],
+    ["Hadoop", big_data_str, "HBase", "Java", "Spark", "Storm", "Cassandra"],
     ["NoSQL", "MongoDB", "Cassandra", "HBase", "Postgres"],
     ["Python", "scikit-learn", "scipy", "numpy", "statsmodels", "pandas"],
     ["R", "Python", "statistics", "regression", "probability"],
@@ -197,8 +198,8 @@ documents = [
     ["Python", "R", "Java", "C++", "Haskell", "programming languages"],
     ["statistics", "probability", "mathematics", "theory"],
     ["machine learning", "scikit-learn", "Mahout", "neural networks"],
-    ["neural networks", "deep learning", "Big Data", "artificial intelligence"],
-    ["Hadoop", "Java", "MapReduce", "Big Data"],
+    ["neural networks", "deep learning", big_data_str, "artificial intelligence"],
+    ["Hadoop", "Java", "MapReduce", big_data_str],
     ["statistics", "R", "statsmodels"],
     ["C++", "deep learning", "artificial intelligence", "probability"],
     ["pandas", "R", "Python"],
