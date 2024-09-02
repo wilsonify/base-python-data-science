@@ -47,6 +47,7 @@ def inverse_normal_cdf(p, mu=0, sigma=1, tolerance=0.00001):
     hi_z, hi_p = 10.0, 1  # normal_cdf(10)  is (very close to) 1
     mid_z = (low_z + hi_z) / 2
     logging.debug(f"before loop low_z, low_p = ({low_z}, {low_p})")
+    logging.debug(f"before loop hi_p={hi_p}")
     while hi_z - low_z > tolerance:
         mid_z = (low_z + hi_z) / 2  # consider the midpoint
         mid_p = normal_cdf(mid_z)  # and the cdf's value there
@@ -59,6 +60,7 @@ def inverse_normal_cdf(p, mu=0, sigma=1, tolerance=0.00001):
         else:
             break
     logging.debug(f"after loop low_z, low_p = ({low_z}, {low_p})")
+    logging.debug(f"after loop hi_p={hi_p}")
     return mid_z
 
 
