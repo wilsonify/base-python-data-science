@@ -5,10 +5,9 @@ date: 2019-10-22T12:00:00+06:00
 weight: 4
 ---
 
-# Heading 1
+## port to C++
 
-body1
-
-## Heading 2
-
-body2
+since Data Scratch Library
+is written in pure python, 
+it is not hard to port it to pure C++
+<!--more-->

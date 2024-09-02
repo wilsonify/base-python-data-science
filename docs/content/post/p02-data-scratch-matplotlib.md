@@ -5,10 +5,10 @@ date: 2019-10-22T12:00:00+06:00
 weight: 2
 ---
 
-# Heading 1
+## plotting code that depends on matplotlib
 
-body1
+data visualization is fundamental to data science.
+it is very easy to create visualizations, 
+but it is hard to produce good visualizations.
 
-## Heading 2
-
-body2
+<!--more-->

@@ -5,10 +5,12 @@ date: 2019-10-22T12:00:00+06:00
 weight: 3
 ---
 
-# Heading 1
+## scraping code that depends on requests and beautiful soup
 
-body1
+data scientist needs data. 
 
-## Heading 2
+data scientists spend a large amount of time acquiring and transforming data. 
 
-body2
+you can always type the data in manually, but that is not a good use of time.
+
+<!--more-->
