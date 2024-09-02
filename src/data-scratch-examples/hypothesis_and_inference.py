@@ -2,9 +2,18 @@ import logging
 import random
 from logging.config import dictConfig
 
-from dsl.hypothesis_and_inference import normal_approximation_to_binomial, normal_two_sided_bounds, \
-    normal_probability_between, normal_upper_bound, normal_probability_below, two_sided_p_value, upper_p_value, \
-    run_experiment, reject_fairness, a_b_test_statistic
+from dsl.c07_hypothesis_and_inference.hypothesis_and_inference import (
+    normal_approximation_to_binomial,
+    normal_two_sided_bounds,
+    normal_probability_between,
+    normal_upper_bound,
+    normal_probability_below,
+    two_sided_p_value,
+    upper_p_value,
+    run_experiment,
+    reject_fairness,
+    a_b_test_statistic
+)
 
 
 def main():

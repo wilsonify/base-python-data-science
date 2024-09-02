@@ -2,7 +2,7 @@ import logging
 import random
 from logging.config import dictConfig
 
-from dsl.neural_networks import backpropagate, feed_forward
+from dsl.c18_neural_networks.neural_networks import backpropagate, feed_forward
 
 random.seed(0)  # to get repeatable results
 input_size = 25  # each input is a vector of length 25

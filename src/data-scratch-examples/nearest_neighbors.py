@@ -2,7 +2,7 @@ import logging
 import random
 from logging.config import dictConfig
 
-from dsl.nearest_neighbors import get_distances, try_several_k
+from dsl.c12_k_nearest_neighbors.nearest_neighbors import get_distances, try_several_k
 
 cities = [
     ([-86.75, 33.5666666666667], "Python"),

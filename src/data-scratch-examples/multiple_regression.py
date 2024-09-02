@@ -3,7 +3,8 @@ import random
 from logging.config import dictConfig
 
 from dsl.c04_linear_algebra.linear_algebra import dot
-from dsl.multiple_regression import (
+from dsl.c05_statistics.stats import median, standard_deviation
+from dsl.c15_multiple_regression.multiple_regression import (
     estimate_beta,
     multiple_r_squared,
     bootstrap_statistic,
@@ -11,7 +12,6 @@ from dsl.multiple_regression import (
     p_value,
     estimate_beta_ridge
 )
-from dsl.c05_statistics.stats import median, standard_deviation
 
 _x = [
     [1, 49, 4, 0], [1, 41, 9, 0], [1, 40, 8, 0], [1, 25, 6, 0], [1, 21, 1, 0], [1, 21, 0, 0], [1, 19, 3, 0],
@@ -74,11 +74,11 @@ def try_several_alphas():
         multiple_r_squared_beta = multiple_r_squared(_x, daily_minutes_good, _beta)
         logging.info("%r", f"alpha {_alpha}")
         logging.info("%r", f"beta {_beta}")
-        logging.info("%r", f"dot(beta[1:],beta[1:]) {dot(_beta[1:], _beta[1:])}")
+        logging.info("%r", f"dot(beta[1:], beta[1:]) {dot(_beta[1:], _beta[1:])}")
         logging.info("%r", f"r-squared {multiple_r_squared_beta}")
 
 
-def bootsrtapping():
+def bootstrapping():
     logging.info("digression: the bootstrap")
     bootstrap_statistic_close_to_100 = bootstrap_statistic(close_to_100, median, 100)
     bootstrap_statistic_far_from_100 = bootstrap_statistic(far_from_100, median, 100)
@@ -108,7 +108,7 @@ def main():
     logging.info("%r", f"r-squared {multiple_r_squared_beta}")
 
     logging.info("start bootstapping")
-    bootsrtapping()
+    bootstrapping()
     logging.info("done bootstapping")
 
     logging.info("start regularizing")

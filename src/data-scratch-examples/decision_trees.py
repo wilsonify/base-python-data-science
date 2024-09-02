@@ -1,7 +1,7 @@
 import logging
 from logging.config import dictConfig
 
-from dsl.decision_trees import partition_entropy_by, build_tree_id3, classify
+from dsl.c17_decision_trees.decision_trees import partition_entropy_by, build_tree_id3, classify
 
 
 def main():

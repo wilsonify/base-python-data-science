@@ -1,7 +1,7 @@
 import logging
 from logging.config import dictConfig
 
-from dsl.machine_learning import accuracy, precision, f1_score, recall
+from dsl.c11_machine_learning.machine_learning import accuracy, precision, f1_score, recall
 
 
 def main():

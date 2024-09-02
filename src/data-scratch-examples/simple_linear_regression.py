@@ -3,7 +3,12 @@ import random
 from logging.config import dictConfig
 
 from dsl.c08_gradient_descent.gradient_descent import minimize_stochastic
-from dsl.simple_linear_regression import least_squares_fit, r_squared, squared_error, squared_error_gradient
+from dsl.c14_simple_linear_regression.simple_linear_regression import (
+    least_squares_fit,
+    r_squared,
+    squared_error,
+    squared_error_gradient
+)
 
 num_friends_good = [
     49, 41, 40, 25, 21, 21, 19, 19, 18, 18, 16, 15, 15, 15, 15, 14, 14, 13, 13, 13, 13, 12, 12, 11, 10, 10, 10, 10,

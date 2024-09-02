@@ -6,7 +6,8 @@ from datetime import datetime
 from functools import partial
 from logging.config import dictConfig
 
-from dsl.mapreduce import (
+from dsl.c13_naive_bayes.naive_bayes import tokenize
+from dsl.c25_mapreduce.mapreduce import (
     wc_mapper,
     word_count,
     wc_reducer,
@@ -18,7 +19,6 @@ from dsl.mapreduce import (
     liker_mapper,
     count_distinct_reducer
 )
-from dsl.c13_naive_bayes.naive_bayes import tokenize
 
 status_updates = [
     {
@@ -36,13 +36,13 @@ def data_science_day_mapper(status_update):
     """yields (day_of_week, 1) if status_update contains "data science" """
     if "data science" in status_update["text"].lower():
         day_of_week = status_update["created_at"].weekday()
-        yield (day_of_week, 1)
+        yield day_of_week, 1
 
 
 def words_per_user_mapper(status_update):
     user = status_update["username"]
     for word in tokenize(status_update["text"]):
-        yield (user, (word, 1))
+        yield user, (word, 1)
 
 
 A = [[3, 2]]

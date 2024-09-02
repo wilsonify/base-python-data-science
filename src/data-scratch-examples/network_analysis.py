@@ -1,10 +1,20 @@
 import logging
 from logging.config import dictConfig
 
-from dsl.network_analysis import (
-    page_rank, populate_friends, populate_shortest_paths, populate_betweeness, populate_closeness, get_betweeness,
-    get_closeness, construct_adjacency, compute_eigenvectors, get_eigenvector_centrality, populate_endorsments,
-    get_page_ranks, populate_endorsements
+from dsl.c22_network_analysis.network_analysis import (
+    page_rank,
+    populate_friends,
+    populate_shortest_paths,
+    populate_betweeness,
+    populate_closeness,
+    get_betweeness,
+    get_closeness,
+    construct_adjacency,
+    compute_eigenvectors,
+    get_eigenvector_centrality,
+    populate_endorsments,
+    get_page_ranks,
+    populate_endorsements
 )
 
 users_dict = [

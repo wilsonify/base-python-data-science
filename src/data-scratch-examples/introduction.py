@@ -1,7 +1,7 @@
 import logging
 from logging.config import dictConfig
 
-from dsl.introduction import (
+from dsl.c01_intro.introduction import (
     friends_of_friend_ids,
     friends_of_friend_ids_bad,
     read_most_common_words,

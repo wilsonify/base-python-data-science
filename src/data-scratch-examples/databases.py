@@ -1,7 +1,7 @@
 import logging
 from logging.config import dictConfig
 
-from dsl.databases import Table
+from dsl.c24_databases.databases import Table
 
 
 def main():
