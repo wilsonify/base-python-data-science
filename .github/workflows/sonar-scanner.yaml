@@ -13,9 +13,9 @@ jobs:
       - name: Setup sonar-scanner
         run: |
           wget https://binaries.sonarsource.com/Distribution/sonar-scanner-cli/sonar-scanner-cli-6.1.0.4477-linux-x64.zip
-          unzip sonar-scanner-cli-6.1.0.4477-linux-x64.zip
+          unzip sonar-scanner-cli-6.1.0.4477-linux-x64.zip -d ./sonar-scanner-cli
 
       - name: sonar-scanner
         env:
           SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
-        run: ./sonar-scanner-cli-6.1.0.4477-linux-x64/bin/sonar-scanner -Dsonar.organization=wilsonify -Dsonar.projectKey=wilsonify-base-python-data-science -Dsonar.sources=src/data-scratch-library -Dsonar.host.url=https://sonarcloud.io
+        run: ./sonar-scanner-cli/bin/sonar-scanner -Dsonar.organization=wilsonify -Dsonar.projectKey=wilsonify-base-python-data-science -Dsonar.sources=src/data-scratch-library -Dsonar.host.url=https://sonarcloud.io
