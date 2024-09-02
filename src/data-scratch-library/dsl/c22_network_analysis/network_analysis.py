@@ -90,7 +90,7 @@ def populate_shortest_paths(users_dict):
     return users_dict
 
 
-def populate_betweeness(users_dict):
+def populate_betweeness_v1(users_dict):
     for user in users_dict:
         user["betweenness_centrality"] = 0.0
     for source in users_dict:
@@ -103,6 +103,37 @@ def populate_betweeness(users_dict):
                     for identification in path:
                         if identification not in [source_id, target_id]:
                             users_dict[identification]["betweenness_centrality"] += contrib
+    return users_dict
+
+
+def initialize_centrality(users_dict):
+    """Initialize betweenness centrality for all users."""
+    for user in users_dict.values():
+        user["betweenness_centrality"] = 0.0
+
+
+def process_shortest_paths(source, users_dict):
+    """Update centrality contributions based on shortest paths."""
+    source_id = source["id"]
+    for target_id, paths_item in source["shortest_paths"].items():
+        if source_id < target_id:  # avoid double counting
+            contrib = 1 / len(paths_item)  # contribution to centrality
+            for path in paths_item:
+                update_centrality(path, contrib, source_id, target_id, users_dict)
+
+
+def update_centrality(path, contrib, source_id, target_id, users_dict):
+    """Add contributions to centrality for each user in the path."""
+    for identification in path:
+        if identification not in (source_id, target_id):
+            users_dict[identification]["betweenness_centrality"] += contrib
+
+
+def populate_betweeness(users_dict):
+    """Calculate and populate betweenness centrality for users."""
+    initialize_centrality(users_dict)
+    for source in users_dict.values():
+        process_shortest_paths(source, users_dict)
     return users_dict
 
 
