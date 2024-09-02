@@ -1,4 +1,4 @@
-FROM rsne-builder-image:1.0.0 as builder
+FROM rsne-builder-image:1.0.0 AS builder
 COPY . /home/node/app
 WORKDIR /home/node/app/generated
 # RUN npx webpack

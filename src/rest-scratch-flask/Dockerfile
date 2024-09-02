@@ -1,4 +1,4 @@
-FROM bpds/alpine-build:alpine as builder
+FROM bpds/alpine-build:alpine AS builder
 USER root
 RUN mkdir -p /usr/src/app
 COPY . /usr/src/app

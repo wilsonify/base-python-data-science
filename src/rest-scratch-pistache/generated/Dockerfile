@@ -1,4 +1,4 @@
-FROM rest-scratch-pistache-builder:1.0.0 as builder
+FROM rest-scratch-pistache-builder:1.0.0 AS builder
 COPY . /usr/src/app
 WORKDIR /usr/src/app
 RUN make all

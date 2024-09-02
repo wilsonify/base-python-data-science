@@ -1,4 +1,4 @@
-FROM data-scratch-amqp-builder:1.0.0 as builder
+FROM data-scratch-amqp-builder:1.0.0 AS builder
 USER root
 RUN mkdir -p /usr/src/app
 COPY . /usr/src/app
