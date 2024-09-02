@@ -7,23 +7,23 @@ from matplotlib import pyplot as plt
 
 from data_plots_from_scratch.plot_state_borders import plot_state_borders
 from dsl.clustering import KMeans, squared_clustering_errors
-from dsl.gradient_descent import difference_quotient
-from dsl.linear_algebra import (
+from dsl.c08_gradient_descent.gradient_descent import difference_quotient
+from dsl.c04_linear_algebra.linear_algebra import (
     get_column,
     shape,
     dot,
     scalar_multiply,
 )
-from dsl.probability import (
+from dsl.c06_probability.probability import (
     normal_pdf,
     normal_cdf,
     inverse_normal_cdf,
     binomial,
 )
-from dsl.stats import make_histogram
+from dsl.c05_statistics.stats import make_histogram
 from dsl.nearest_neighbors import cities
 from dsl.nearest_neighbors import knn_classify
-from dsl.working_with_data import random_normal
+from dsl.c10_working_with_data.working_with_data import random_normal
 
 
 def plot_normal_pdfs():
