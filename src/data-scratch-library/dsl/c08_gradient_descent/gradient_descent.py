@@ -44,15 +44,15 @@ def sum_of_squares_gradient(v):
 
 
 def safe(f):
-    """define a new function that wraps f and return it"""
+    """Define a new function that wraps f and returns it"""
 
-    # noinspection PyBroadException
     def safe_f(*args, **kwargs):
-        # noinspection PyPep8
         try:
             return f(*args, **kwargs)
-        except:
-            return float("inf")  # this means "infinity" in Python
+        except KeyboardInterrupt:
+            raise  # Re-raise KeyboardInterrupt so it is not caught
+        except (KeyError, ValueError, AttributeError, ZeroDivisionError):
+            return float("inf")  # Return "infinity" for all other exceptions
 
     return safe_f
 
