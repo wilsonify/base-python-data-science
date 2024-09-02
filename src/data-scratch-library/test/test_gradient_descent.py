@@ -1,12 +1,10 @@
 import logging
+import math
 import os
 import random
 from functools import partial
 from inspect import getmembers, isfunction
 
-import pytest
-
-from dsl.c10_working_with_data.manipulation import directional_variance, directional_variance_gradient
 from dsl.c04_linear_algebra.linear_algebra import distance
 from dsl.c08_gradient_descent import gradient_descent
 from dsl.c08_gradient_descent.gradient_descent import (
@@ -19,6 +17,7 @@ from dsl.c08_gradient_descent.gradient_descent import (
     negate,
     negate_all
 )
+from dsl.c10_working_with_data.manipulation import directional_variance, directional_variance_gradient
 from dsl.c15_multiple_regression.multiple_regression import squared_error, squared_error_gradient
 
 current_dir = os.path.dirname(__file__)
@@ -58,20 +57,23 @@ def test_partial_difference_quotient():
         i=0,
         h=1
     )
-    assert output == [pytest.approx(21.0), pytest.approx(0.0)]
+
+    assert math.isclose(output[0], 21.0)
+    assert math.isclose(output[1], 0.0)
 
 
-@pytest.mark.parametrize(
-    ('v', 'w', 'expected'),
-    (
-            ([63, 150], [67, 160], 10.77),
-            ([63, 150], [70, 171], 22.14),
-            ([67, 160], [70, 171], 11.40)
-    )
-)
-def test_distance(v, w, expected):
+def test_distance():
+    v, w, expected = ([63, 150], [67, 160], 10.77)
     result = distance(v=v, w=w)
-    assert result - expected == pytest.approx(0, abs=0.01)
+    assert math.isclose(result, expected, abs_tol=0.01)
+
+    v, w, expected = ([63, 150], [70, 171], 22.14)
+    result = distance(v=v, w=w)
+    assert math.isclose(result, expected, abs_tol=0.01)
+
+    v, w, expected = ([67, 160], [70, 171], 11.40)
+    result = distance(v=v, w=w)
+    assert math.isclose(result, expected, abs_tol=0.01)
 
 
 def test_estimate_gradient():

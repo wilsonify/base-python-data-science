@@ -132,7 +132,7 @@ def create_salary_by_tenure(salaries_and_tenures):
 
 
 def create_interests_by_user(interests_list):
-    # keys are user_ids, values are lists of interests for that user_id
+    # keys are user_ids, values are lists of interests in that user_id
     interests_by_user_id = defaultdict(list)
     for _user_id, interest in interests_list:
         interests_by_user_id[_user_id].append(interest)

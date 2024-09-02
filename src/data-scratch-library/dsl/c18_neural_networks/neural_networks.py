@@ -21,7 +21,7 @@ def neuron_output(weights, inputs):
 
 
 def feed_forward(neural_network, input_vector):
-    """takes in a neural network (represented as a list of lists of lists of weights)
+    """takes in a neural network (represented as a list of lists of weights)
     and returns the output from forward-propagating the input"""
 
     outputs = []
@@ -40,7 +40,7 @@ def feed_forward(neural_network, input_vector):
     return outputs
 
 
-def backpropagate(network, input_vector, target):
+def backpropagation(network, input_vector, target):
     hidden_outputs, outputs = feed_forward(network, input_vector)
 
     # the output * (1 - output) is from the derivative of sigmoid

@@ -2,7 +2,7 @@ import logging
 import random
 from logging.config import dictConfig
 
-from dsl.c18_neural_networks.neural_networks import backpropagate, feed_forward
+from dsl.c18_neural_networks.neural_networks import backpropagation, feed_forward
 
 random.seed(0)  # to get repeatable results
 input_size = 25  # each input is a vector of length 25
@@ -83,7 +83,7 @@ def fit_network(network, inputs, targets):
     logging.info("fit_network backpropagate 10,000 iterations; should converge")
     for _ in range(10000):
         for input_vector, target_vector in zip(inputs, targets):
-            backpropagate(network, input_vector, target_vector)
+            backpropagation(network, input_vector, target_vector)
 
 
 def predict(network, in_put):

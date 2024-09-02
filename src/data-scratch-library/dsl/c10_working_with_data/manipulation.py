@@ -94,7 +94,7 @@ def rescale(data_matrix):
 
 
 def de_mean_matrix(a_matrix):
-    """returns the result of subtracting from every value in A the mean
+    """returns the result of subtracting from every value in A mean
     value of its column. the resulting matrix has mean 0 in every column"""
     nr, nc = shape(a_matrix)
     column_means, _ = scale(a_matrix)

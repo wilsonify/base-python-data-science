@@ -1,7 +1,7 @@
 #!/usr/bin/env python
 """
 If you run your Python scripts at the command line,
-you can pipe data through them using sys.stdin and sys.stdout.
+then you can pipe data through them via stdin and stdout.
 reads in lines of text and spit back the ones that match a regular expression
 """
 

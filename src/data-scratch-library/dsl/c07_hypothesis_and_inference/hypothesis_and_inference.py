@@ -142,6 +142,6 @@ def normalizer(alpha, beta):
 
 
 def beta_pdf(x, alpha, beta):
-    if x < 0 or x > 1:  # no weight outside of [0, 1]
+    if x < 0 or x > 1:  # no weight outside [0, 1]
         return 0
     return x ** (alpha - 1) * (1 - x) ** (beta - 1) / normalizer(alpha, beta)
