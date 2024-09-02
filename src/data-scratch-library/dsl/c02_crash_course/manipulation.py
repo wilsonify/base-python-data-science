@@ -1,10 +1,10 @@
 from collections import defaultdict
 from functools import partial
 
-from dsl.gradient_descent import maximize_batch, maximize_stochastic
-from dsl.linear_algebra import shape, get_column, make_matrix, magnitude, dot, vector_sum, \
+from dsl.c04_linear_algebra.linear_algebra import shape, get_column, make_matrix, magnitude, dot, vector_sum, \
     scalar_multiply, vector_subtract
-from dsl.stats import mean, standard_deviation
+from dsl.c05_statistics.stats import mean, standard_deviation
+from dsl.c08_gradient_descent.gradient_descent import maximize_batch, maximize_stochastic
 
 
 def parse_row(input_row, parsers):

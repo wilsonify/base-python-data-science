@@ -1,6 +1,6 @@
 from functools import reduce
 
-from dsl.manipulation import (
+from dsl.c02_crash_course.manipulation import (
     picker, pluck
 )
 

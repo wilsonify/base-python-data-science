@@ -2,8 +2,8 @@ import logging
 import random
 from collections import Counter
 
-from dsl.linear_algebra import distance
-from dsl.stats import mean
+from dsl.c04_linear_algebra.linear_algebra import distance
+from dsl.c05_statistics.stats import mean
 
 
 def raw_majority_vote(labels):

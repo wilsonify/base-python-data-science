@@ -1,10 +1,10 @@
 import random
 from functools import partial
 
-from dsl.gradient_descent import minimize_stochastic
-from dsl.linear_algebra import dot, vector_add
-from dsl.probability import normal_cdf
-from dsl.simple_linear_regression import total_sum_of_squares
+from dsl.c08_gradient_descent.gradient_descent import minimize_stochastic
+from dsl.c04_linear_algebra.linear_algebra import dot, vector_add
+from dsl.c06_probability.probability import normal_cdf
+from dsl.c14_simple_linear_regression.simple_linear_regression import total_sum_of_squares
 
 
 def predict(x_i, beta):

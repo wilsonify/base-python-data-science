@@ -2,7 +2,7 @@ import logging
 from collections import deque
 from functools import partial
 
-from dsl.linear_algebra import (
+from dsl.c04_linear_algebra.linear_algebra import (
     dot,
     get_row,
     get_column,

@@ -1,7 +1,7 @@
 import operator
 import random
 
-from dsl.linear_algebra import (
+from dsl.c04_linear_algebra.linear_algebra import (
     vector_subtract,
     scalar_multiply,
 )

@@ -2,7 +2,7 @@ import logging
 from collections import defaultdict, Counter
 from functools import partial
 
-from dsl.naive_bayes import tokenize
+from dsl.c13_naive_bayes.naive_bayes import tokenize
 
 
 def word_count_old(documents):

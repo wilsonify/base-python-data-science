@@ -1,7 +1,7 @@
 import math
 import random
 
-from dsl.probability import normal_cdf, inverse_normal_cdf
+from dsl.c06_probability.probability import normal_cdf, inverse_normal_cdf
 
 
 def normal_approximation_to_binomial(n, p):

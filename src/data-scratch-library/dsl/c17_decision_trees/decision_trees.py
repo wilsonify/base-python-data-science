@@ -3,13 +3,9 @@ A decision tree uses a tree structure to represent a number of possible decision
 
 """
 
-import logging
 import math
 from collections import Counter, defaultdict
 from functools import partial
-from logging.config import dictConfig
-
-from dsl import config
 
 
 def entropy(class_probabilities):
@@ -117,5 +113,3 @@ def forest_classify(trees, inputs):
     votes = [classify(tree, inputs) for tree in trees]
     vote_counts = Counter(votes)
     return vote_counts.most_common(1)[0][0]
-
-

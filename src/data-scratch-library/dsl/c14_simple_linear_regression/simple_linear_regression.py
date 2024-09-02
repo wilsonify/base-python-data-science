@@ -1,4 +1,4 @@
-from dsl.stats import (
+from dsl.c05_statistics.stats import (
     mean,
     correlation,
     standard_deviation,

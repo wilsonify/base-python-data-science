@@ -1,7 +1,7 @@
 import math
 from collections import defaultdict, Counter
 
-from dsl.linear_algebra import dot
+from dsl.c04_linear_algebra.linear_algebra import dot
 
 users_interests = [
     ["Hadoop", "Big Data", "HBase", "Java", "Spark", "Storm", "Cassandra"],

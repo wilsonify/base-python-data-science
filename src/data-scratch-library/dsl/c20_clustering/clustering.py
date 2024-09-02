@@ -1,6 +1,6 @@
 import random
 
-from dsl.linear_algebra import (
+from dsl.c04_linear_algebra.linear_algebra import (
     squared_distance,
     vector_mean,
     distance,
