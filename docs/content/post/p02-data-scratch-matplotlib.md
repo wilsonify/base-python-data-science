@@ -1,7 +1,8 @@
 ---
-title: Data Scratch AMQP
-description: Data Scratch AMQP Description
+title: Data Plots
+description: Data Plots Description
 date: 2019-10-22T12:00:00+06:00
+weight: 2
 ---
 
 # Heading 1
