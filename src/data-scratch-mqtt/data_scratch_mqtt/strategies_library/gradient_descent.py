@@ -2,10 +2,10 @@ import os
 import random
 from functools import partial
 
-from dsl import multiple_regression
-from dsl import gradient_descent
-from dsl.gradient_descent import negate, negate_all
-from dsl.manipulation import directional_variance, directional_variance_gradient
+from dsl.c02_crash_course.manipulation import directional_variance, directional_variance_gradient
+from dsl.c08_gradient_descent import gradient_descent
+from dsl.c08_gradient_descent.gradient_descent import negate, negate_all
+from dsl.c15_multiple_regression import multiple_regression
 
 current_dir = os.path.dirname(__file__)
 parent_dir = os.path.join(current_dir, os.pardir)

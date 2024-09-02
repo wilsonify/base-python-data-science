@@ -1,6 +1,6 @@
 import os
 
-from dsl import probability
+from dsl.c06_probability import probability
 
 current_dir = os.path.dirname(__file__)
 parent_dir = os.path.join(current_dir, os.pardir)
