@@ -1,4 +1,5 @@
 import logging
+import math
 from collections import defaultdict, Counter
 from functools import partial
 
@@ -134,5 +135,5 @@ def matrix_multiply_reducer(m, key, indexed_values):
         if len(results) == 2
     )
 
-    if sum_product != 0.0:
+    if not math.isclose(sum_product, 0.0, abs_tol=0.0001):
         yield (key, sum_product)
