@@ -1,4 +1,4 @@
-from dsl.probability import mystrength
+from dsl.c06_probability.probability import mystrength
 
 
 def mystrength_strategy(self, body: dict):  # noqa: E501

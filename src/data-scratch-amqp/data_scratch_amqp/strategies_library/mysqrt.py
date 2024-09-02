@@ -1,6 +1,6 @@
 import logging
 
-from dsl.probability import mysqrt
+from dsl.c06_probability.probability import mysqrt
 
 
 def mysqrt_strategy(self, body: dict):  # noqa: E501

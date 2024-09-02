@@ -2,10 +2,10 @@ import os
 import random
 from functools import partial
 
-from dsl import multiple_regression
-from dsl import gradient_descent
-from dsl.gradient_descent import negate, negate_all
-from dsl.manipulation import directional_variance, directional_variance_gradient
+from dsl.c02_crash_course.manipulation import directional_variance, directional_variance_gradient
+from dsl.c08_gradient_descent.gradient_descent import negate, negate_all
+from dsl.c14_simple_linear_regression.simple_linear_regression import squared_error_gradient
+from dsl.c15_multiple_regression.multiple_regression import squared_error
 
 current_dir = os.path.dirname(__file__)
 parent_dir = os.path.join(current_dir, os.pardir)
@@ -14,7 +14,7 @@ parent_dir = os.path.join(current_dir, os.pardir)
 def difference_quotient(self, body: dict):
     x = body["x"]
     h = body["h"]
-    result = gradient_descent.difference_quotient(
+    result = difference_quotient(
         f=lambda xi: xi * xi,
         x=x,
         h=h
@@ -26,7 +26,7 @@ def partial_difference_quotient(self, body: dict):
     v = body["v"]
     i = body["i"]
     h = body["h"]
-    output = gradient_descent.partial_difference_quotient(
+    output = partial_difference_quotient(
         f=lambda xi: [_ * _ for _ in xi],
         v=v,
         i=i,
@@ -38,7 +38,7 @@ def partial_difference_quotient(self, body: dict):
 def estimate_gradient(self, body: dict):
     v = body["v"]
     h = body["h"]
-    output = gradient_descent.estimate_gradient(
+    output = estimate_gradient(
         f=lambda xi: [_ * _ for _ in xi],
         v=v,
         h=h
@@ -48,13 +48,13 @@ def estimate_gradient(self, body: dict):
 
 def in_random_order(self, body: dict):
     data = body["data"]
-    output = [_ for _ in gradient_descent.in_random_order(data)]
+    output = [_ for _ in in_random_order(data)]
     self.publish(output)
 
 
 def maximize_batch(self, body: dict):
     x = body["x"]
-    result = gradient_descent.maximize_batch(
+    result = maximize_batch(
         target_fn=partial(directional_variance, x),
         gradient_fn=partial(directional_variance_gradient, x),
         theta_0=[1 for _ in x[0]],
@@ -66,9 +66,9 @@ def maximize_batch(self, body: dict):
 def maximize_stochastic(self, body: dict):
     x = body["x"]
     y = body["y"]
-    result = gradient_descent.maximize_stochastic(
-        target_fn=negate(multiple_regression.squared_error),
-        gradient_fn=negate_all(multiple_regression.squared_error_gradient),
+    result = maximize_stochastic(
+        target_fn=negate(squared_error),
+        gradient_fn=negate_all(squared_error_gradient),
         x=x,
         y=y,
         theta_0=[random.random() for _ in x[0]],
@@ -79,7 +79,7 @@ def maximize_stochastic(self, body: dict):
 
 def minimize_batch(self, body: dict):
     x = body["x"]
-    result = gradient_descent.minimize_batch(
+    result = minimize_batch(
         target_fn=partial(directional_variance, x),
         gradient_fn=partial(directional_variance_gradient, x),
         theta_0=[1 for _ in x[0]],
@@ -91,9 +91,9 @@ def minimize_batch(self, body: dict):
 def minimize_stochastic(self, body: dict):
     x = body["x"]
     y = body["y"]
-    result = gradient_descent.minimize_stochastic(
-        target_fn=negate(multiple_regression.squared_error),
-        gradient_fn=negate_all(multiple_regression.squared_error_gradient),
+    result = minimize_stochastic(
+        target_fn=negate(squared_error),
+        gradient_fn=negate_all(squared_error_gradient),
         x=x,
         y=y,
         theta_0=[random.random() for _ in x[0]],
