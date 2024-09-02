@@ -1,4 +1,4 @@
-FROM data-scratch-library-base:latest as builder
+FROM data-scratch-library-base:1.0.0 as builder
 USER root
 RUN apt-get update #&& apt-get install -y xz-utils ca-certificates
 RUN apt-get install -y \

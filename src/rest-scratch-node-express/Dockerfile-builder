@@ -1,4 +1,4 @@
-FROM rsne-base-image:latest
+FROM rsne-base-image:1.0.0
 COPY generated/package.json /home/node/app/generated/package.json
 COPY external /home/node/app/external
 WORKDIR /home/node/app/generated

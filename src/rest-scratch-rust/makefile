@@ -35,22 +35,22 @@ start: dist/index.js generated/dist/api/openapi.yaml generated/dist/node_modules
 	cd generated && node dist/index.js
 
 build/docker-build-base.txt: build/VERSION.txt
-	docker build -f Dockerfile-base -t rsr-base-image:latest --platform=amd64 . && $(call ver_file, $@)
+	docker build -f Dockerfile-base -t rsr-base-image:1.0.0 --platform=amd64 . && $(call ver_file, $@)
 
 dist/base-latest.tar: dist/VERSION.txt build/docker-build-base.txt
-	docker save rsr-base-image:latest -o $@
+	docker save rsr-base-image:1.0.0 -o $@
 
 build/docker-build-builder.txt:  build/docker-build-base.txt
-	docker build -f Dockerfile-builder -t rsr-builder-image:latest --platform=amd64 . && $(call ver_file, $@)
+	docker build -f Dockerfile-builder -t rsr-builder-image:1.0.0 --platform=amd64 . && $(call ver_file, $@)
 
 dist/builder-latest.tar: dist/VERSION.txt build/docker-build-builder.txt
-	docker save rsr-builder-image:latest -o $@
+	docker save rsr-builder-image:1.0.0 -o $@
 
 build/docker-build-image.txt: build/docker-build-builder.txt
-	docker build -t rsr-image:latest --platform=amd64 . && $(call ver_file, $@)
+	docker build -t rsr-image:1.0.0 --platform=amd64 . && $(call ver_file, $@)
 
 dist/image-latest.tar: dist/VERSION.txt build/docker-build-image.txt
-	docker save rsr-image:latest -o $@
+	docker save rsr-image:1.0.0 -o $@
 
 image-latest.tar: dist/image-latest.tar
 
@@ -65,5 +65,5 @@ docker-run: build/docker-build-image.txt docker-stop
 	docker run --rm \
 --name rsr \
 -p 49154:8080 \
-rsr-image:latest
+rsr-image:1.0.0
 

@@ -1,4 +1,4 @@
-FROM data-scratch-mqtt-builder:latest as builder
+FROM data-scratch-mqtt-builder:1.0.0 as builder
 USER root
 RUN mkdir -p /usr/src/app
 COPY . /usr/src/app
@@ -15,7 +15,7 @@ RUN pyinstaller \
 --specpath . \
 data_scratch_mqtt/__main__.py
 
-FROM data-scratch-mqtt-base:latest
+FROM data-scratch-mqtt-base:1.0.0
 COPY --from=builder /usr/src/app/dist/__main__ /app
 WORKDIR /app
 ENV MQTT_HOST=localhost

@@ -45,7 +45,7 @@ build/base-python-data-science-image.txt: build/base-python-data-science-builder
 	docker build -t base-python-data-science -f Dockerfile . && $(call ver_file, $@)
 
 docker-run: build/base-python-data-science-image.txt
-	docker run --rm --name base-python-data-science base-python-data-science:latest
+	docker run --rm --name base-python-data-science base-python-data-science:1.0.0
 
 docker/build/test-data-scratch-cpp: build/base-python-data-science-builder.txt
-	docker run --rm --name base-python-data-science-builder -u 1000:1000 -v $(shell pwd):/usr/src/app base-python-data-science-builder:latest make all
+	docker run --rm --name base-python-data-science-builder -u 1000:1000 -v $(shell pwd):/usr/src/app base-python-data-science-builder:1.0.0 make all

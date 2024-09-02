@@ -7,16 +7,16 @@ build/VERSION.txt:
 	mkdir -p build && $(call ver_file, $@)
 
 build/base.txt: build/VERSION.txt
-	docker build -f Dockerfile-base -t data-scratch-mqtt-base:latest . && $(call ver_file, $@)
+	docker build -f Dockerfile-base -t data-scratch-mqtt-base:1.0.0 . && $(call ver_file, $@)
 
 build/builder.txt: build/base.txt
-	docker build -f Dockerfile-builder -t data-scratch-mqtt-builder:latest . && $(call ver_file, $@)
+	docker build -f Dockerfile-builder -t data-scratch-mqtt-builder:1.0.0 . && $(call ver_file, $@)
 
 build/image.txt: build/builder.txt
-	docker build -f Dockerfile -t data-scratch-mqtt:latest . && $(call ver_file, $@)
+	docker build -f Dockerfile -t data-scratch-mqtt:1.0.0 . && $(call ver_file, $@)
 
 stop:
 	docker stop data-scratch-mqtt | true
 
 run: stop
-	docker run --rm --name data-scratch-mqtt -d --network host data-scratch-mqtt:latest
+	docker run --rm --name data-scratch-mqtt -d --network host data-scratch-mqtt:1.0.0

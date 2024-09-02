@@ -1,4 +1,4 @@
-FROM data-scratch-amqp-builder:latest as builder
+FROM data-scratch-amqp-builder:1.0.0 as builder
 USER root
 RUN mkdir -p /usr/src/app
 COPY . /usr/src/app
@@ -14,7 +14,7 @@ RUN pyinstaller \
 --specpath . \
 data_scratch_amqp/__main__.py
 
-FROM data-scratch-amqp-base:latest
+FROM data-scratch-amqp-base:1.0.0
 COPY --from=builder /usr/src/app/dist/__main__ /app
 WORKDIR /app
 ENV AMQP_HOST=localhost
