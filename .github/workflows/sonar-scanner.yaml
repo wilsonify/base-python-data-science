@@ -1,0 +1,13 @@
+name: sonar-scanner
+
+on:
+  workflow_dispatch:
+
+jobs:
+  scan:
+    runs-on: ubuntu-latest
+    steps:
+      - name: sonar-scanner
+        env:
+          SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
+        run: /opt/sonar-scanner/v6.1.0/bin/sonar-scanner -Dsonar.organization=wilsonify -Dsonar.projectKey=wilsonify-base-python-data-science -Dsonar.sources=src/data-scratch-library -Dsonar.host.url=https://sonarcloud.io
