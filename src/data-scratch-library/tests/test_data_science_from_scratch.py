@@ -20,7 +20,7 @@ from dsl.c25_mapreduce import e01_mapreduce
 
 current_dir = abspath(dirname(__file__))
 
-data_dir = abspath(f"{current_dir}/../data")
+data_dir = abspath(f"{current_dir}/../../../data")
 
 
 def test_smoke():
