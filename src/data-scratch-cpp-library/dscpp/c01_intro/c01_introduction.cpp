@@ -1,9 +1,6 @@
 #include "introduction.h"
 
-struct User {
-    int id;
-    std::vector<User*> friends;
-};
+
 
 std::string tenure_bucket(double tenure) {
     if (tenure < 2.0) {
@@ -191,7 +188,7 @@ void read_avg_connections(const std::vector<User>& users_list) {
     std::cout << "average connections " << avg_connections << std::endl;
 }
 
-void read_user_connections(const std::vector<User>& users_list, int uid = 3) {
+void read_user_connections(const std::vector<User>& users_list, int uid) {
     auto friends_of_friend_ids_uid = friends_of_friend_ids(users_list[uid]);
     std::cout << "friends_of_friend_ids_" << uid << " = ";
     for (const auto& [id, count] : friends_of_friend_ids_uid) {
