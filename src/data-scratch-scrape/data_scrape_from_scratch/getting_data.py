@@ -2,18 +2,24 @@ import csv
 import json
 import re
 from collections import Counter
+from os.path import dirname, abspath
 from time import sleep
 
 import requests
 from bs4 import BeautifulSoup
 from dateutil.parser import parse
 
+path_to_here = abspath(dirname(__file__))
+path_to_data = abspath(f"{path_to_here}/../../../data")
 
-######
-#
-# BOOKS ABOUT DATA
-#
-######
+github_endpoint = "https://api.github.com/users/joelgrus/repos"
+
+serialized_example = """{
+"title" : "Data Science Book",
+"author" : "Joel Grus",
+"publicationYear" : 2014,
+"topics" : [ "data", "science", "data science"] }
+"""
 
 
 def is_video(td):
@@ -38,10 +44,9 @@ def book_info(td):
 
 
 def scrape(num_pages=31):
+    # BOOKS ABOUT DATA
     base_url = "http://shop.oreilly.com/category/browse-subjects/data.do?sortby=publicationDate&page="
-
     books = []
-
     for page_num in range(1, num_pages + 1):
         print("souping page", page_num)
         url = base_url + str(page_num)
@@ -76,94 +81,63 @@ def plot_years(plt, books):
     plt.show()
 
 
-##
-#
-# APIs
-#
-##
-
-endpoint = "https://api.github.com/users/joelgrus/repos"
-
-repos = json.loads(requests.get(endpoint).text)
-
-dates = [parse(repo["created_at"]) for repo in repos]
-month_counts = Counter(date.month for date in dates)
-weekday_counts = Counter(date.weekday() for date in dates)
-
-
-####
-#
-# Twitter
-#
-####
-
-
-def main():
-    def process(date, symbol, price):
-        print(date, symbol, price)
-
+def main_tab_delimited():
     print("tab delimited stock prices:")
-
-    with open("tab_delimited_stock_prices.txt", "r", encoding="utf8", newline="") as f:
+    with open(f"{path_to_data}/tab_delimited_stock_prices.txt", "r", encoding="utf8", newline="") as f:
         reader = csv.reader(f, delimiter="\t")
         # reader = csv.reader(codecs.iterdecode(f, 'utf-8'), delimiter='\t')
         for row in reader:
             date = row[0]
             symbol = row[1]
             closing_price = float(row[2])
-            process(date, symbol, closing_price)
+            print(date, symbol, closing_price)
 
-    print()
 
+def main_colon_delimited():
     print("colon delimited stock prices:")
-
-    with open(
-            "colon_delimited_stock_prices.txt", "r", encoding="utf8", newline=""
-    ) as f:
+    with open(f"{path_to_data}/colon_delimited_stock_prices.txt", "r", encoding="utf8", newline="") as f:
         reader = csv.DictReader(f, delimiter=":")
         # reader = csv.DictReader(codecs.iterdecode(f, 'utf-8'), delimiter=':')
         for row in reader:
             date = row["date"]
             symbol = row["symbol"]
             closing_price = float(row["closing_price"])
-            process(date, symbol, closing_price)
+            print(date, symbol, closing_price)
 
-    print()
 
+def write_comma_delimited():
     print("writing out comma_delimited_stock_prices.txt")
-
     today_prices = {"AAPL": 90.91, "MSFT": 41.68, "FB": 64.5}
-
-    with open(
-            "comma_delimited_stock_prices.txt", "w", encoding="utf8", newline=""
-    ) as f:
+    with open(f"{path_to_data}/comma_delimited_stock_prices.txt", "w", encoding="utf8", newline="") as f:
         writer = csv.writer(f, delimiter=",")
         for stock, price in today_prices.items():
             writer.writerow([stock, price])
 
+
+def example_soup():
     print("BeautifulSoup")
     html = requests.get("http://www.example.com").text
     soup = BeautifulSoup(html)
     print(soup)
-    print()
 
-    print("parsing json")
 
-    serialized = """{ "title" : "Data Science Book",
-                      "author" : "Joel Grus",
-                      "publicationYear" : 2014,
-                      "topics" : [ "data", "science", "data science"] }"""
-
-    # parse the JSON to create a Python object
-    deserialized = json.loads(serialized)
+def parse_serialized_example():
+    print("parse the JSON to create a Python object")
+    deserialized = json.loads(serialized_example)
     if "data science" in deserialized["topics"]:
         print(deserialized)
 
-    print()
 
+def main():
     print("GitHub API")
+    repos = json.loads(requests.get(github_endpoint).text)
+    dates = [parse(repo["created_at"]) for repo in repos]
     print("dates", dates)
+
+    month_counts = Counter(date.month for date in dates)
     print("month_counts", month_counts)
+
+    weekday_counts = Counter(date.weekday() for date in dates)
     print("weekday_count", weekday_counts)
 
     last_5_repositories = sorted(repos, key=lambda r: r["created_at"], reverse=True)[:5]
