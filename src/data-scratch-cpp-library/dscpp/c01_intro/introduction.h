@@ -1,13 +1,15 @@
+#include <algorithm>
+#include <cstdio>
 #include <iostream>
+#include <iterator>
+#include <map>
+#include <numeric>
+#include <sstream>
 #include <string>
-#include <vector>
 #include <unordered_map>
 #include <unordered_set>
-#include <map>
-#include <algorithm>
-#include <numeric>
-#include <iterator>
-#include <sstream>
+#include <vector>
+
 
 // Struct representing a user with an ID and a list of friends (pointers to other User objects).
 struct User {

@@ -1,12 +1,4 @@
-#include <iostream>
-#include <string>
-#include <vector>
-#include <unordered_map>
-#include <unordered_set>
-#include <map>
-#include <algorithm>
-#include <numeric>
-#include <iterator>
+#include "introduction.h"
 
 struct User {
     int id;

@@ -1,4 +1,4 @@
-#include <algorithm>
+#include "strength.h"
 
 double strength(double actual, double expected)
 {
