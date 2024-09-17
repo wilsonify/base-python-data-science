@@ -11,4 +11,4 @@ cmake: build_dir
 	cd build && cmake ..
 
 make: cmake
-	make all
+	cd build && make all
