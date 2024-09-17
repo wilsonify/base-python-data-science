@@ -26,7 +26,6 @@ def correlation_matrix(data):
     return make_matrix(num_columns, num_columns, matrix_entry)
 
 
-# this isn't right if you don't from __future__ import division
 def mean(x):
     return sum(x) / len(x)
 

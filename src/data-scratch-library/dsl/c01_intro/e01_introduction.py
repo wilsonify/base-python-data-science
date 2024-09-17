@@ -1,6 +1,7 @@
 import logging
 from logging.config import dictConfig
 
+from dsl import logging_config_dict
 from dsl.c01_intro.introduction import (
     friends_of_friend_ids,
     friends_of_friend_ids_bad,
@@ -137,10 +138,5 @@ def main():
 
 
 if __name__ == "__main__":
-    dictConfig(dict(
-        version=1,
-        formatters={"simple": {"format": """%(asctime)s | %(name)s | %(lineno)s | %(levelname)s | %(message)s"""}},
-        handlers={"console": {"class": "logging.StreamHandler", "formatter": "simple"}},
-        root={"handlers": ["console"], "level": logging.DEBUG},
-    ))
+    dictConfig(logging_config_dict)
     main()

@@ -2,12 +2,18 @@ import logging
 import math
 from functools import reduce, partial
 
-from dsl.c08_gradient_descent.gradient_descent import maximize_batch, maximize_stochastic
 from dsl.c04_linear_algebra.linear_algebra import dot, vector_add
+from dsl.c08_gradient_descent.gradient_descent import maximize_batch, maximize_stochastic
 
 
 def logistic(x):
-    return 1.0 / (1 + math.exp(-x))
+    # avoid overflow, log(1e308) is around 709
+    if x > 709:
+        return 1.0
+    elif x < -709:
+        return 0.0
+    result = 1.0 / (1 + math.exp(-x))
+    return result
 
 
 def logistic_prime(x):
