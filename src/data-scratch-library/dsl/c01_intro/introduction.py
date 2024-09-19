@@ -23,8 +23,11 @@ def predict_paid_or_unpaid(years_experience):
 
 
 def number_of_friends(_user):
-    """how many friends does _user_ have?"""
-    return len(_user["friends"])  # length of friend_ids list
+    """
+    how many friends does _user have?
+    length of friend_ids list
+    """
+    return len(_user["friends"])
 
 
 def friends_of_friend_ids_bad(user_):
