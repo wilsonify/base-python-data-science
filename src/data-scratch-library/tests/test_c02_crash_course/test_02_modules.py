@@ -4,7 +4,8 @@ from collections import defaultdict, Counter
 from dsl.c02_crash_course.e0202_modules import (
     compile_regex,
     compile_regex_with_alias,
-    plot_with_pyplot,
+
+
     create_defaultdict,
     create_counter,
 
@@ -19,13 +20,6 @@ def test_compile_regex():
 def test_compile_regex_with_alias():
     regex_obj = compile_regex_with_alias("[0-9]+")
     assert isinstance(regex_obj, re.Pattern)
-
-
-def test_plot_with_pyplot():
-    fig = plot_with_pyplot()
-    assert fig is not None
-    assert hasattr(fig, 'axes')
-    assert len(fig.axes) > 0
 
 
 def test_create_defaultdict():

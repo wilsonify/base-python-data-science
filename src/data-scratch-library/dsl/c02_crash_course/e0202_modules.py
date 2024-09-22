@@ -1,7 +1,7 @@
 import re
 from collections import defaultdict, Counter
 
-import matplotlib.pyplot as plt
+
 
 
 def compile_regex(pattern, flags=re.I):
@@ -17,16 +17,6 @@ def compile_regex_with_alias(pattern, flags=re.I):
     """
     import re as regex
     return regex.compile(pattern, flags)
-
-
-def plot_with_pyplot():
-    """
-    Creates a simple plot using matplotlib's pyplot module.
-    Returns the figure object to allow testable interactions with it.
-    """
-    fig, ax = plt.subplots()
-    ax.plot([1, 2, 3], [4, 5, 6])
-    return fig
 
 
 def create_defaultdict():
