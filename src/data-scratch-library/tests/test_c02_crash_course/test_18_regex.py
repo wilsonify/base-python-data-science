@@ -1,38 +1,39 @@
 import re
 
-from dsl.c02_crash_course.e0218_regex import zip_lists, unzip_pairs, add
+from dsl.c02_crash_course.e0218_regex import (
+    re_count_ab,
+    re_has_a_c,
+    re_has_an_a,
+    re_starts_with_a,
+    re_digits_to_dashes
+)
 
 
-def test_regex1():
-    # Function to test regex match and search operations
-    assert not re.match("a", "cat")  # 'cat' doesn't start with 'a'
-    assert re.search("a", "cat")  # 'cat' has an 'a' in it
-    assert not re.search("c", "dog")  # 'dog' doesn't have a 'c' in it
-    assert len(re.split("[ab]", "carbs")) == 3  # Split on a or b to ['c', 'r', 's']
-    assert re.sub("[0-9]", "-", "R2D2") == "R-D-"  # Replace digits with dashes
+def test_re_starts_with_a():
+    # 'cat' doesn't start with 'a'
+    assert not re_starts_with_a("cat")
+    assert not re.match("a", "cat")
 
 
-def test_zip_unzip():
-    """Tests zipping and unzipping functionality."""
-    list1 = ['a', 'b', 'c']
-    list2 = [1, 2, 3]
-    zipped = zip_lists(list1, list2)
-    assert zipped == [('a', 1), ('b', 2), ('c', 3)], f"Expected [('a', 1), ('b', 2), ('c', 3)], got {zipped}"
-
-    pairs = [('a', 1), ('b', 2), ('c', 3)]
-    letters, numbers = unzip_pairs(pairs)
-    assert letters == ('a', 'b', 'c'), f"Expected ('a', 'b', 'c'), got {letters}"
-    assert numbers == (1, 2, 3), f"Expected (1, 2, 3), got {numbers}"
+def test_re_has_an_a():
+    # 'cat' has an 'a' in it
+    assert re_has_an_a("cat")
+    assert re.search("a", "cat")
 
 
-def test_add():
-    """Tests the add function."""
-    assert add(1, 2) == 3, "Expected 3"
+def test_re_has_a_c():
+    # 'dog' doesn't have a 'c' in it
+    assert not re_has_a_c("dog")
+    assert not re.search("c", "dog")
 
-    try:
-        add([1, 2])
-    except TypeError:
-        print("add expects two inputs")
 
-    result = add(*[1, 2])
-    assert result == 3, f"Expected 3, got {result}"
+def test_re_count_ab():
+    # Split on a or b to ['c', 'r', 's']
+    assert re_count_ab("carbs") == 3
+    assert len(re.split("[ab]", "carbs")) == 3
+
+
+def test_re_digits_to_dashes():
+    # Replace digits with dashes
+    assert re_digits_to_dashes("R2D2")
+    assert re.sub("[0-9]", "-", "R2D2") == "R-D-"
