@@ -4,59 +4,50 @@ import matplotlib.pyplot as plt
 from matplotlib.gridspec import GridSpec
 
 
-def make_chart_simple_line_chart():
-    years = [1950, 1960, 1970, 1980, 1990, 2000, 2010]
-    gdp = [300.2, 543.3, 1075.9, 2862.5, 5979.6, 10289.7, 14958.3]
+def plot_with_pyplot():
+    """
+    Creates a simple plot using matplotlib's pyplot module.
+    Returns the figure object to allow testable interactions with it.
+    """
+    fig, ax = plt.subplots()
+    ax.plot([1, 2, 3], [4, 5, 6])
+    return fig
+
+
+def make_chart_simple_line_chart(x, y):
     fig = plt.figure(figsize=(8, 5))
     gs = GridSpec(nrows=1, ncols=1, height_ratios=[1])
-    ax1 = fig.add_subplot(gs[0])
-    create_line_chart(ax1, gdp, years)
-    fig.tight_layout()
-    plt.show()
-
-
-def create_line_chart(ax, x, y):
+    ax = fig.add_subplot(gs[0])
     ax.plot(x, y, color="green", marker="o", linestyle="solid")  # create a line chart, years on x-axis, gdp on y-axis
     ax.set_title("Nominal GDP")  # add a title
     ax.set_ylabel("Billions of $")  # add a label to the y-axis
+    fig.tight_layout()
+    return fig, ax
 
 
-def make_chart_simple_bar_chart():
-    movies = ["Annie Hall", "Ben-Hur", "Casablanca", "Gandhi", "West Side Story"]
-    num_oscars = [5, 11, 3, 8, 10]
-    fig = plt.figure(figsize=(8, 5))
-    gs = GridSpec(nrows=1, ncols=1, height_ratios=[1])
-    ax1 = fig.add_subplot(gs[0])
-
-    simple_bar_chart(ax1, movies, num_oscars)
-
-    plt.show()
-
-
-def simple_bar_chart(ax, x, y):
-    # bars are by default width 0.8,
+def make_chart_simple_bar_chart(x, y):
+    """    # bars are by default width 0.8,
     # so we'll add 0.1 to the left coordinates
     # so that each bar is centered
     # plot bars with left x-coordinates [xs], heights [num_oscars]
     # label x-axis with movie names at bar centers
-
+    """
+    fig = plt.figure(figsize=(8, 5))
+    gs = GridSpec(nrows=1, ncols=1, height_ratios=[1])
+    ax = fig.add_subplot(gs[0])
     xs = [i + 0.1 for i, _ in enumerate(x)]
     ax.bar(xs, y)
     ax.set_title("My Favorite Movies")
     ax.set_ylabel("# of Academy Awards")
     ax.set_xticks([i + 0.5 for i, _ in enumerate(x)], x)
+    return fig, ax
 
 
-def make_chart_histogram():
-    grades = [83, 95, 91, 87, 70, 0, 85, 82, 100, 67, 73, 77, 0]
+def make_chart_histogram(x):
     fig = plt.figure(figsize=(8, 5))
     gs = GridSpec(nrows=1, ncols=1, height_ratios=[1])
-    ax1 = fig.add_subplot(gs[0])
-    simple_histogram(ax1, grades)
-    plt.show()
+    ax = fig.add_subplot(gs[0])
 
-
-def simple_histogram(ax, grades):
     def decile(grade):
         return grade // 10 * 10
 
@@ -71,6 +62,7 @@ def simple_histogram(ax, grades):
     ax.set_xlabel("Decile")
     ax.set_ylabel("# of Students")
     ax.set_title("Distribution of Exam 1 Grades")
+    return fig, ax
 
 
 def make_chart_misleading_y_axis(mislead=True):
@@ -81,7 +73,7 @@ def make_chart_misleading_y_axis(mislead=True):
     plt.show()
 
 
-def misleading_y(ax,mentions, mislead, years):
+def misleading_y(ax, mentions, mislead, years):
     ax.bar([2012.6, 2013.6], mentions, 0.8)
     ax.set_xticks(years)
     ax.set_ylabel("# of times I heard someone say 'data science'")
@@ -174,11 +166,19 @@ def make_chart_pie_chart():
 
 
 if __name__ == "__main__":
-    make_chart_simple_line_chart()
+    years = [1950, 1960, 1970, 1980, 1990, 2000, 2010]
+    gdp = [300.2, 543.3, 1075.9, 2862.5, 5979.6, 10289.7, 14958.3]
+    make_chart_simple_line_chart(x=years, y=gdp)
+    plt.savefig("simple_line_chart.png")
 
-    make_chart_simple_bar_chart()
+    movies = ["Annie Hall", "Ben-Hur", "Casablanca", "Gandhi", "West Side Story"]
+    num_oscars = [5, 11, 3, 8, 10]
+    make_chart_simple_bar_chart(x=movies, y=num_oscars)
+    plt.savefig("chart_simple_bar_chart.png")
 
-    make_chart_histogram()
+    grades = [83, 95, 91, 87, 70, 0, 85, 82, 100, 67, 73, 77, 0]
+    make_chart_histogram(x=grades)
+    plt.savefig("chart_histogram.png")
 
     # make_chart_misleading_y_axis(mislead=True)
 
@@ -191,13 +191,3 @@ if __name__ == "__main__":
     # make_chart_scatterplot_axes(equal_axes=True)
 
     # make_chart_pie_chart()
-
-
-def plot_with_pyplot():
-    """
-    Creates a simple plot using matplotlib's pyplot module.
-    Returns the figure object to allow testable interactions with it.
-    """
-    fig, ax = plt.subplots()
-    ax.plot([1, 2, 3], [4, 5, 6])
-    return fig
