@@ -1,7 +1,8 @@
 from collections import Counter
 
 import matplotlib.pyplot as plt
-from matplotlib.gridspec import GridSpec
+
+from data_plots_from_scratch import initialize_plot
 
 
 def decile(grade):
@@ -15,20 +16,17 @@ def make_chart_simple_bar_chart(x, y):
     # plot bars with left x-coordinates [xs], heights [num_oscars]
     # label x-axis with movie names at bar centers
     """
-    fig = plt.figure(figsize=(8, 5))
-    gs = GridSpec(nrows=1, ncols=1, height_ratios=[1])
-    ax = fig.add_subplot(gs[0])
+    fig, ax = initialize_plot()
     xs = [i + 0.1 for i, _ in enumerate(x)]
     ax.bar(xs, y)
     ax.set_title("My Favorite Movies")
     ax.set_ylabel("# of Academy Awards")
     ax.set_xticks([i + 0.5 for i, _ in enumerate(x)], x)
+    return fig, ax
 
 
 def make_chart_histogram(xs):
-    fig = plt.figure(figsize=(8, 5))
-    gs = GridSpec(nrows=1, ncols=1, height_ratios=[1])
-    ax = fig.add_subplot(gs[0])
+    fig, ax = initialize_plot()
     histogram = Counter(decile(x) for x in xs)
     xs = list(histogram.keys())
     ys = list(histogram.values())  # give each bar its correct height
@@ -40,12 +38,10 @@ def make_chart_histogram(xs):
     ax.set_xlabel("Decile")
     ax.set_ylabel("# of Students")
     ax.set_title("Distribution of Exam 1 Grades")
-
+    return fig, ax
 
 def make_chart_misleading_y_axis(mentions, years):
-    fig = plt.figure(figsize=(8, 5))
-    gs = GridSpec(nrows=1, ncols=1, height_ratios=[1])
-    ax = fig.add_subplot(gs[0])
+    fig, ax = initialize_plot()
     ax.bar(years, mentions, 0.8)
     ax.set_xticks(years)
     ax.set_ylabel("# of times I heard someone say 'data science'")
@@ -55,12 +51,10 @@ def make_chart_misleading_y_axis(mentions, years):
     ax.set_xlim([2012.5, 2014.5])
     ax.set_ylim([499, 506])
     ax.set_title("Look at the 'Huge' Increase!")
-
+    return fig, ax
 
 def make_chart_corrected_y_axis(mentions, years):
-    fig = plt.figure(figsize=(8, 5))
-    gs = GridSpec(nrows=1, ncols=1, height_ratios=[1])
-    ax = fig.add_subplot(gs[0])
+    fig, ax = initialize_plot()
     ax.bar(years, mentions, 0.8)
     ax.set_xticks(years)
     ax.set_ylabel("# of times I heard someone say 'data science'")
@@ -70,7 +64,7 @@ def make_chart_corrected_y_axis(mentions, years):
     ax.set_xlim([2012.5, 2014.5])
     ax.set_ylim([0, 550])
     ax.set_title("Not So Huge Anymore.")
-
+    return fig, ax
 
 if __name__ == "__main__":
     movies = ["Annie Hall", "Ben-Hur", "Casablanca", "Gandhi", "West Side Story"]

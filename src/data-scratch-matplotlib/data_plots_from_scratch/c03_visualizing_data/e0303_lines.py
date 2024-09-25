@@ -6,7 +6,8 @@ def make_chart_simple_line_chart(x, y):
     fig = plt.figure(figsize=(8, 5))
     gs = GridSpec(nrows=1, ncols=1, height_ratios=[1])
     ax = fig.add_subplot(gs[0])
-    ax.plot(x, y, color="green", marker="o", linestyle="solid")  # create a line chart, years on x-axis, gdp on y-axis
+    # create a line chart, years on x-axis, gdp on y-axis
+    ax.plot(x, y, color="green", marker="o", linestyle="solid")
     ax.set_title("Nominal GDP")  # add a title
     ax.set_ylabel("Billions of $")  # add a label to the y-axis
     fig.tight_layout()
@@ -30,6 +31,7 @@ def make_chart_several_line_charts(variance, bias_squared):
     ax.legend(loc=9)
     ax.set_xlabel("model complexity")
     ax.set_title("The Bias-Variance Tradeoff")
+    return fig, ax
 
 
 if __name__ == "__main__":

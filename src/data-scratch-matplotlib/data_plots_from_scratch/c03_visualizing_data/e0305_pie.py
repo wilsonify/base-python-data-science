@@ -1,10 +1,14 @@
 import matplotlib.pyplot as plt
 
+from data_plots_from_scratch import initialize_plot
+
 
 def make_chart_pie_chart():
-    plt.pie([0.95, 0.05], labels=["Uses pie charts", "Knows better"])
+    fig, ax = initialize_plot()
+    ax.pie([0.95, 0.05], labels=["Uses pie charts", "Knows better"])
     # make sure pie is a circle and not an oval
-    plt.axis("equal")
+    ax.axis("equal")
+    return fig, ax
 
 
 if __name__ == "__main__":

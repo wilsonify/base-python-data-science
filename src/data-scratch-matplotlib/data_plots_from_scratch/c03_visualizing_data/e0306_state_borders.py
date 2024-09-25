@@ -3,6 +3,8 @@ from os.path import abspath, dirname
 
 from matplotlib import pyplot as plt
 
+from data_plots_from_scratch import initialize_plot
+
 
 def read_lines(file_path):
     with open(file_path, "r") as f:
@@ -26,14 +28,17 @@ def lines_to_segments(lines):
     return segments
 
 
-def plot_state_borders(segments, color="0.8"):
+def plot_state_borders(lines, color="0.8"):
+    fig, ax = initialize_plot()
+    segments = lines_to_segments(lines)
     for (lon1, lat1), (lon2, lat2) in segments:
-        plt.plot([lon1, lon2], [lat1, lat2], color=color)
+        ax.plot([lon1, lon2], [lat1, lat2], color=color)
+    return fig, ax
 
 
 if __name__ == "__main__":
     current_dir = abspath(dirname(__file__))
-    data_dir = abspath(f"{current_dir}/../../../data")
+    data_dir = abspath(f"{current_dir}/../../../../data")
     lns = read_lines(file_path=f"{data_dir}/states.txt")
-    sgmts = lines_to_segments(lns)
-    plot_state_borders(segments=sgmts)
+    plot_state_borders(lns)
+    plt.savefig("state_borders.png")
