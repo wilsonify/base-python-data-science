@@ -6,12 +6,24 @@ from matplotlib.gridspec import GridSpec
 class LineTracker:
     def __init__(self, title, ylabel):
         self.artists_list = []
+        self.title = title
+        self.ylabel = ylabel
         self.fig = plt.figure(figsize=(8, 5))
         self.gs = GridSpec(nrows=1, ncols=1, height_ratios=[1])
         self.ax0 = self.fig.add_subplot(self.gs[0])
         self.line = self.ax0.plot([], [], color="green", marker="o", linestyle="solid")
         self.ax0.set_title(title)
         self.ax0.set_ylabel(ylabel)
+        self.fig.tight_layout()
+
+    def reset(self):
+        plt.close()
+        self.fig = plt.figure(figsize=(8, 5))
+        self.gs = GridSpec(nrows=1, ncols=1, height_ratios=[1])
+        self.ax0 = self.fig.add_subplot(self.gs[0])
+        self.line = self.ax0.plot([], [], color="green", marker="o", linestyle="solid")
+        self.ax0.set_title(self.title)
+        self.ax0.set_ylabel(self.ylabel)
         self.fig.tight_layout()
 
     def create_plot(self, x, y, output_path):
