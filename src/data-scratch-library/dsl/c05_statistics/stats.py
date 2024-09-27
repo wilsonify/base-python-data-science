@@ -1,7 +1,16 @@
 import math
 from collections import Counter
+from typing import List
 
-from dsl.c04_linear_algebra.linear_algebra import sum_of_squares, dot, shape, get_column, make_matrix
+from dsl.c04_linear_algebra.e0401_vectors import (
+    sum_of_squares,
+    dot
+)
+from dsl.c04_linear_algebra.e0402_matrices import (
+    shape,
+    get_column,
+    make_matrix
+)
 
 
 def bucketize(point, bucket_size):
@@ -26,24 +35,26 @@ def correlation_matrix(data):
     return make_matrix(num_columns, num_columns, matrix_entry)
 
 
-def mean(x):
-    return sum(x) / len(x)
+def mean(xs: List[float]) -> float:
+    return sum(xs) / len(xs)
 
 
-def median(v):
+def median(v: List[float]) -> float:
     """finds the 'middle-most' value of v"""
     n = len(v)
-    sorted_v = sorted(v)
-    midpoint = n // 2
-
+    assert n > 0, "Cannot compute median of an empty list"
     if n % 2 == 1:
         # if odd, return the middle value
+        sorted_v = sorted(v)
+        midpoint = n // 2
         return sorted_v[midpoint]
     else:
-        # if even, return the average of the middle values
+        # if even, return the average of two middle values
+        sorted_v = sorted(v)
+        midpoint = n // 2
         lo = midpoint - 1
         hi = midpoint
-        return (sorted_v[lo] + sorted_v[hi]) / 2
+        return (sorted_v[lo] + sorted_v[hi]) / 2.0
 
 
 def quantile(x, p):
