@@ -1,0 +1,67 @@
+{
+  "users": [
+    {
+      "id": 0,
+      "name": "User 0",
+      "friends": []
+    },
+    {
+      "id": 1,
+      "name": "User 1",
+      "friends": []
+    },
+    {
+      "id": 2,
+      "name": "User 2",
+      "friends": []
+    }
+  ],
+  "friendships": [
+    {
+      "user1_id": 0,
+      "user2_id": 1
+    },
+    {
+      "user1_id": 1,
+      "user2_id": 2
+    }
+  ],
+  "interests": [
+    {
+      "user_id": 0,
+      "interest": "Python"
+    },
+    {
+      "user_id": 1,
+      "interest": "Data Science"
+    },
+    {
+      "user_id": 1,
+      "interest": "Python"
+    },
+    {
+      "user_id": 2,
+      "interest": "Machine Learning"
+    }
+  ],
+  "salaries_and_tenures": [
+    {
+      "salary": 50000,
+      "tenure": 2.5
+    },
+    {
+      "salary": 70000,
+      "tenure": 3.0
+    },
+    {
+      "salary": 90000,
+      "tenure": 8.0
+    }
+  ],
+  "interests_by_user_id": {},
+  "user_ids_by_interest": {},
+  "words_and_counts": {},
+  "average_salary_by_bucket": {},
+  "salary_by_tenure": {},
+  "average_salary_by_tenure": {}
+}
