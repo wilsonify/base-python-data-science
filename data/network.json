@@ -1,0 +1,338 @@
+{
+  "users": [
+    {
+      "id": 0,
+      "name": "Hero"
+    },
+    {
+      "id": 1,
+      "name": "Dunn"
+    },
+    {
+      "id": 2,
+      "name": "Sue"
+    },
+    {
+      "id": 3,
+      "name": "Chi"
+    },
+    {
+      "id": 4,
+      "name": "Thor"
+    },
+    {
+      "id": 5,
+      "name": "Clive"
+    },
+    {
+      "id": 6,
+      "name": "Hicks"
+    },
+    {
+      "id": 7,
+      "name": "Devin"
+    },
+    {
+      "id": 8,
+      "name": "Kate"
+    },
+    {
+      "id": 9,
+      "name": "Klein"
+    },
+    {
+      "id": 10,
+      "name": "Jen"
+    }
+  ],
+  "friendships": [
+    {
+      "user1_id": 0,
+      "user2_id": 1
+    },
+    {
+      "user1_id": 0,
+      "user2_id": 2
+    },
+    {
+      "user1_id": 1,
+      "user2_id": 2
+    },
+    {
+      "user1_id": 1,
+      "user2_id": 3
+    },
+    {
+      "user1_id": 2,
+      "user2_id": 3
+    },
+    {
+      "user1_id": 3,
+      "user2_id": 4
+    },
+    {
+      "user1_id": 4,
+      "user2_id": 5
+    },
+    {
+      "user1_id": 5,
+      "user2_id": 6
+    },
+    {
+      "user1_id": 5,
+      "user2_id": 7
+    },
+    {
+      "user1_id": 6,
+      "user2_id": 8
+    },
+    {
+      "user1_id": 7,
+      "user2_id": 8
+    },
+    {
+      "user1_id": 8,
+      "user2_id": 9
+    }
+  ],
+  "interests": [
+    {
+      "user_id": 0,
+      "interest": "Hadoop"
+    },
+    {
+      "user_id": 0,
+      "interest": "Big Data"
+    },
+    {
+      "user_id": 0,
+      "interest": "HBase"
+    },
+    {
+      "user_id": 0,
+      "interest": "Java"
+    },
+    {
+      "user_id": 0,
+      "interest": "Spark"
+    },
+    {
+      "user_id": 0,
+      "interest": "Storm"
+    },
+    {
+      "user_id": 0,
+      "interest": "Cassandra"
+    },
+    {
+      "user_id": 1,
+      "interest": "NoSQL"
+    },
+    {
+      "user_id": 1,
+      "interest": "MongoDB"
+    },
+    {
+      "user_id": 1,
+      "interest": "Cassandra"
+    },
+    {
+      "user_id": 1,
+      "interest": "HBase"
+    },
+    {
+      "user_id": 1,
+      "interest": "Postgres"
+    },
+    {
+      "user_id": 2,
+      "interest": "Python"
+    },
+    {
+      "user_id": 2,
+      "interest": "scikit-learn"
+    },
+    {
+      "user_id": 2,
+      "interest": "scipy"
+    },
+    {
+      "user_id": 2,
+      "interest": "numpy"
+    },
+    {
+      "user_id": 2,
+      "interest": "statsmodels"
+    },
+    {
+      "user_id": 2,
+      "interest": "pandas"
+    },
+    {
+      "user_id": 3,
+      "interest": "R"
+    },
+    {
+      "user_id": 3,
+      "interest": "Python"
+    },
+    {
+      "user_id": 3,
+      "interest": "statistics"
+    },
+    {
+      "user_id": 3,
+      "interest": "regression"
+    },
+    {
+      "user_id": 3,
+      "interest": "probability"
+    },
+    {
+      "user_id": 4,
+      "interest": "machine learning"
+    },
+    {
+      "user_id": 4,
+      "interest": "regression"
+    },
+    {
+      "user_id": 4,
+      "interest": "decision trees"
+    },
+    {
+      "user_id": 4,
+      "interest": "libsvm"
+    },
+    {
+      "user_id": 5,
+      "interest": "Python"
+    },
+    {
+      "user_id": 5,
+      "interest": "R"
+    },
+    {
+      "user_id": 5,
+      "interest": "Java"
+    },
+    {
+      "user_id": 5,
+      "interest": "C++"
+    },
+    {
+      "user_id": 5,
+      "interest": "Haskell"
+    },
+    {
+      "user_id": 5,
+      "interest": "programming languages"
+    },
+    {
+      "user_id": 6,
+      "interest": "statistics"
+    },
+    {
+      "user_id": 6,
+      "interest": "probability"
+    },
+    {
+      "user_id": 6,
+      "interest": "mathematics"
+    },
+    {
+      "user_id": 6,
+      "interest": "theory"
+    },
+    {
+      "user_id": 7,
+      "interest": "machine learning"
+    },
+    {
+      "user_id": 7,
+      "interest": "scikit-learn"
+    },
+    {
+      "user_id": 7,
+      "interest": "Mahout"
+    },
+    {
+      "user_id": 7,
+      "interest": "neural networks"
+    },
+    {
+      "user_id": 8,
+      "interest": "neural networks"
+    },
+    {
+      "user_id": 8,
+      "interest": "deep learning"
+    },
+    {
+      "user_id": 8,
+      "interest": "Big Data"
+    },
+    {
+      "user_id": 8,
+      "interest": "artificial intelligence"
+    },
+    {
+      "user_id": 9,
+      "interest": "Hadoop"
+    },
+    {
+      "user_id": 9,
+      "interest": "Java"
+    },
+    {
+      "user_id": 9,
+      "interest": "MapReduce"
+    },
+    {
+      "user_id": 9,
+      "interest": "Big Data"
+    }
+  ],
+  "salaries_and_tenures": [
+    {
+      "salary": 83000,
+      "tenure": 8.7
+    },
+    {
+      "salary": 88000,
+      "tenure": 8.1
+    },
+    {
+      "salary": 48000,
+      "tenure": 0.7
+    },
+    {
+      "salary": 76000,
+      "tenure": 6
+    },
+    {
+      "salary": 69000,
+      "tenure": 6.5
+    },
+    {
+      "salary": 76000,
+      "tenure": 7.5
+    },
+    {
+      "salary": 60000,
+      "tenure": 2.5
+    },
+    {
+      "salary": 83000,
+      "tenure": 10
+    },
+    {
+      "salary": 48000,
+      "tenure": 1.9
+    },
+    {
+      "salary": 63000,
+      "tenure": 4.2
+    }
+  ]
+}
