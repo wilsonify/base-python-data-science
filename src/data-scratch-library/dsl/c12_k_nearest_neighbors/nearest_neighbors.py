@@ -3,7 +3,7 @@ import random
 from collections import Counter
 
 from dsl.c04_linear_algebra.linear_algebra import distance
-from dsl.c05_statistics.stats import mean
+from dsl.c05_statistics.e0501_central_tendancy import mean
 
 
 def raw_majority_vote(labels):

@@ -6,7 +6,7 @@ from datetime import datetime
 from logging.config import dictConfig
 from os.path import abspath
 
-from dsl.c05_statistics.stats import correlation
+from dsl.c05_statistics.e0503_correlation import correlation
 from dsl.c06_probability.probability import random_normal
 from dsl.c10_working_with_data.manipulation import (
     parse_rows_with,

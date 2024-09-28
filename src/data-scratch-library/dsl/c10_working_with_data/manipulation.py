@@ -1,9 +1,10 @@
 from collections import defaultdict
 from functools import partial
 
-from dsl.c04_linear_algebra.linear_algebra import shape, get_column, make_matrix, magnitude, dot, vector_sum, \
-    scalar_multiply, vector_subtract
-from dsl.c05_statistics.stats import mean, standard_deviation
+from dsl.c04_linear_algebra.e0401_vectors import magnitude, vector_sum, dot, vector_subtract, scalar_multiply
+from dsl.c04_linear_algebra.e0402_matrices import shape, get_column, make_matrix
+from dsl.c05_statistics.e0501_central_tendancy import mean
+from dsl.c05_statistics.e0502_dispersion import standard_deviation
 from dsl.c08_gradient_descent.gradient_descent import maximize_batch, maximize_stochastic
 
 

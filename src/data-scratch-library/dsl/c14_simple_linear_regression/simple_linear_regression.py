@@ -1,9 +1,6 @@
-from dsl.c05_statistics.stats import (
-    mean,
-    correlation,
-    standard_deviation,
-    de_mean,
-)
+from dsl.c05_statistics.e0503_correlation import correlation
+from dsl.c05_statistics.e0502_dispersion import de_mean, standard_deviation
+from dsl.c05_statistics.e0501_central_tendancy import mean
 
 
 def predict(alpha, beta, x_i):
