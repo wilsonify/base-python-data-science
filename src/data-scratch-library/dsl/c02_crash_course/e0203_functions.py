@@ -1,3 +1,6 @@
+import math
+
+
 def double(x):
     """
     Multiplies the input by 2.
@@ -32,3 +35,8 @@ def full_name(first="What's-his-name", last="Something"):
     Defaults are provided for both arguments.
     """
     return first + " " + last
+
+
+def mysqrt(x: float) -> float:  # noqa: E501
+    """ square root """
+    return math.sqrt(x)

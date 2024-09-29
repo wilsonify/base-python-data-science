@@ -7,7 +7,7 @@ def bernoulli_trial(p):
     return 1 if random.random() < p else 0
 
 
-def binomial(p, n):
+def binomial(n: int, p: float) -> int:
     """Returns the sum of n bernoulli(p) trials"""
     return sum(bernoulli_trial(p) for _ in range(n))
 

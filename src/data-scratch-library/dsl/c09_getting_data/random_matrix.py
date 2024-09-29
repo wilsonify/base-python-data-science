@@ -1,4 +1,4 @@
-from dsl.c06_probability.probability import random_normal
+from dsl.c06_probability.e0603_normal import random_normal
 
 
 def random_matrix():
