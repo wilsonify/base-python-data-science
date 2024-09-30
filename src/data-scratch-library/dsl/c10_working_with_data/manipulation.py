@@ -5,7 +5,9 @@ from dsl.c04_linear_algebra.e0401_vectors import magnitude, vector_sum, dot, vec
 from dsl.c04_linear_algebra.e0402_matrices import shape, get_column, make_matrix
 from dsl.c05_statistics.e0501_central_tendancy import mean
 from dsl.c05_statistics.e0502_dispersion import standard_deviation
-from dsl.c08_gradient_descent.gradient_descent import maximize_batch, maximize_stochastic
+from dsl.c08_gradient_descent.e0804_minibatch_gd import maximize_batch
+
+from dsl.c08_gradient_descent.e0805_stochastic_gd import maximize_stochastic
 
 
 def parse_row(input_row, parsers):

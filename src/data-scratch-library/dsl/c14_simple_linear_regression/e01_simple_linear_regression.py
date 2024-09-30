@@ -2,7 +2,7 @@ import logging
 import random
 from logging.config import dictConfig
 
-from dsl.c08_gradient_descent.gradient_descent import minimize_stochastic
+from dsl.c08_gradient_descent.e0805_stochastic_gd import minimize_stochastic
 from dsl.c14_simple_linear_regression.simple_linear_regression import (
     least_squares_fit,
     r_squared,

@@ -3,7 +3,8 @@ import math
 from functools import reduce, partial
 
 from dsl.c04_linear_algebra.linear_algebra import dot, vector_add
-from dsl.c08_gradient_descent.gradient_descent import maximize_batch, maximize_stochastic
+from dsl.c08_gradient_descent.gradient_descent import maximize_batch
+from dsl.c08_gradient_descent.e0805_stochastic_gd import maximize_stochastic
 
 
 def logistic(x):

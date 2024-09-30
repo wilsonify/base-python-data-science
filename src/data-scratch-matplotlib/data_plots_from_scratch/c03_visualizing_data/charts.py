@@ -17,7 +17,7 @@ from dsl.c10_working_with_data.working_with_data import make_histogram
 from dsl.c06_probability.probability import (
     binomial, )
 from dsl.c06_probability.e0603_normal import random_normal, normal_pdf, normal_cdf, inverse_normal_cdf
-from dsl.c08_gradient_descent.gradient_descent import difference_quotient
+from dsl.c08_gradient_descent.e0801_estimating_gradient import difference_quotient
 from dsl.c12_k_nearest_neighbors.nearest_neighbors import cities
 from dsl.c12_k_nearest_neighbors.nearest_neighbors import knn_classify
 from dsl.c20_clustering.clustering import KMeans, squared_clustering_errors

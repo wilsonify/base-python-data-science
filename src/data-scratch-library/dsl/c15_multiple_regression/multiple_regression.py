@@ -1,8 +1,9 @@
 import random
 from functools import partial
 
-from dsl.c08_gradient_descent.gradient_descent import minimize_stochastic
-from dsl.c04_linear_algebra.linear_algebra import dot, vector_add
+from dsl.c04_linear_algebra.e0401_vectors import dot, vector_add
+from dsl.c08_gradient_descent.e0805_stochastic_gd import minimize_stochastic
+
 from dsl.c06_probability.e0603_normal import normal_cdf
 from dsl.c14_simple_linear_regression.simple_linear_regression import total_sum_of_squares
 

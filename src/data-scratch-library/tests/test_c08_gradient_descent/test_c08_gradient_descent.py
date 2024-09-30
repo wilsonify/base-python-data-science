@@ -3,20 +3,13 @@ import math
 import os
 import random
 from functools import partial
-from inspect import getmembers, isfunction
 
-from dsl.c04_linear_algebra.linear_algebra import distance
-from dsl.c08_gradient_descent import gradient_descent
-from dsl.c08_gradient_descent.gradient_descent import (
-    difference_quotient,
-    partial_difference_quotient,
-    estimate_gradient,
-    in_random_order,
-    maximize_batch,
-    maximize_stochastic,
-    negate,
-    negate_all
-)
+from dsl.c04_linear_algebra.e0401_vectors import distance
+from dsl.c08_gradient_descent import negate_all, negate
+from dsl.c08_gradient_descent.e0801_estimating_gradient import difference_quotient, partial_difference_quotient, \
+    estimate_gradient
+from dsl.c08_gradient_descent.e0804_minibatch_gd import maximize_batch
+from dsl.c08_gradient_descent.e0805_stochastic_gd import in_random_order, maximize_stochastic
 from dsl.c10_working_with_data.manipulation import directional_variance, directional_variance_gradient
 from dsl.c15_multiple_regression.multiple_regression import squared_error, squared_error_gradient
 
@@ -34,9 +27,6 @@ def naive_square_comprehension(x):
 
 def test_smoke():
     logging.info("is anything on fire")
-    for member in getmembers(gradient_descent):
-        if isfunction(member[1]):
-            print(member[0])
 
 
 def test_difference_quotient():

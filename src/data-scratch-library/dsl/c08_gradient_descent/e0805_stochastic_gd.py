@@ -5,7 +5,7 @@ stochastically
 import random
 
 from dsl.c04_linear_algebra.e0401_vectors import vector_subtract, scalar_multiply
-from dsl.c08_gradient_descent.gradient_descent import negate, negate_all
+from dsl.c08_gradient_descent import negate, negate_all
 
 
 def in_random_order(data):
