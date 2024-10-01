@@ -3,6 +3,7 @@ import math
 import os
 import random
 from functools import partial
+from typing import List
 
 from dsl.c04_linear_algebra.e0401_vectors import distance
 from dsl.c08_gradient_descent import negate_all, negate
@@ -17,12 +18,12 @@ current_dir = os.path.dirname(__file__)
 parent_dir = os.path.join(current_dir, os.pardir)
 
 
-def naive_square(x):
+def naive_square(x: float) -> float:
     return x * x
 
 
-def naive_square_comprehension(x):
-    return [_ * _ for _ in x]
+def naive_square_comprehension(x: List[float]) -> float:
+    return x[0] * x[1]
 
 
 def test_smoke():
@@ -48,8 +49,8 @@ def test_partial_difference_quotient():
         h=1
     )
 
-    assert math.isclose(output[0], 21.0)
-    assert math.isclose(output[1], 0.0)
+    assert math.isclose(output, 2.0)
+
 
 
 def test_distance():
@@ -72,7 +73,7 @@ def test_estimate_gradient():
         v=[10.0, 2.0],
         h=1
     )
-    assert output == [[21.0, 0.0], [0.0, 5.0]]
+    assert output == [2.0, 10.0]
 
 
 def test_in_random_order():

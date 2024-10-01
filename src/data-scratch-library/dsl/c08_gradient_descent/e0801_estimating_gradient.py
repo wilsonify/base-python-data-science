@@ -4,7 +4,7 @@ from typing import Callable
 from dsl.c04_linear_algebra import Vector
 
 
-def difference_quotient(f: Callable[[float], float], x: float, h: float) -> float:
+def difference_quotient(f: Callable[[float], float | list[float]], x: float, h: float) -> float | list[float]:
     """
     f is a function of one variable,
     its derivative at a point x measures how f(x)
