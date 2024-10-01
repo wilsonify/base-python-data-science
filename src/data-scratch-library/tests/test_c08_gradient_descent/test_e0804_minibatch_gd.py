@@ -1,9 +1,7 @@
 import math
 import random
-import pytest
-from typing import List
+
 from dsl.c04_linear_algebra.e0401_vectors import vector_mean
-from dsl.c08_gradient_descent import T, safe, negate, negate_all
 from dsl.c08_gradient_descent.e0802_using_gradient import gradient_step
 from dsl.c08_gradient_descent.e0803_fitting_models import linear_gradient
 from dsl.c08_gradient_descent.e0804_minibatch_gd import minibatches, minimize_batch, maximize_batch
@@ -12,8 +10,8 @@ from dsl.c08_gradient_descent.e0804_minibatch_gd import minibatches, minimize_ba
 inputs = [(x, 20 * x + 5) for x in range(-50, 50)]  # y = 20x + 5
 
 
-# Test the minibatches function
 def test_minibatches():
+    """Test the minibatches function"""
     batch_size = 10
     dataset = list(range(50))
 
@@ -27,16 +25,14 @@ def test_minibatches():
 def test_minibatches_shuffle():
     batch_size = 10
     dataset = list(range(50))
-
     shuffled_batches = list(minibatches(dataset, batch_size=batch_size, shuffle=True))
-
     # Ensure that the total number of elements remains the same
     shuffled_data = [item for batch in shuffled_batches for item in batch]
     assert sorted(shuffled_data) == dataset  # Data should remain the same but shuffled
 
 
-# Test minibatch stochastic gradient descent convergence
 def test_minibatch_sgd_convergence():
+    """Test minibatch stochastic gradient descent convergence"""
     random.seed(42)
     theta = [random.uniform(-1, 1), random.uniform(-1, 1)]
     learning_rate = 0.001
@@ -52,8 +48,8 @@ def test_minibatch_sgd_convergence():
     assert 4.9 < intercept < 5.1, "Intercept should converge to around 5"
 
 
-# Test single-example stochastic gradient descent convergence
 def test_single_example_sgd_convergence():
+    """Test single-example stochastic gradient descent convergence"""
     random.seed(42)
     theta = [random.uniform(-1, 1), random.uniform(-1, 1)]
     learning_rate = 0.001
@@ -68,8 +64,9 @@ def test_single_example_sgd_convergence():
     assert 4.9 < intercept < 5.1, "Intercept should converge to around 5"
 
 
-# Test minimize_batch convergence
 def test_minimize_batch():
+    """Test minimize_batch convergence"""
+
     def target_fn(v):
         return sum(v_i ** 2 for v_i in v)  # A simple quadratic function
 
@@ -83,8 +80,9 @@ def test_minimize_batch():
         assert abs(v_i) < 0.001, "Theta values should converge to near zero"
 
 
-# Test maximize_batch convergence
 def test_maximize_batch():
+    """Test maximize_batch convergence"""
+
     def target_fn(v):
         return -sum(v_i ** 2 for v_i in v)  # A simple negative quadratic function
 
@@ -95,11 +93,11 @@ def test_maximize_batch():
     maximized_theta = maximize_batch(target_fn, gradient_fn, theta_0)
 
     for v_i in maximized_theta:
-        assert math.isclose(abs(v_i),0.001,abs_tol=0.01)
+        assert math.isclose(abs(v_i), 0.001, abs_tol=0.01)
 
 
-# Test for reproducibility using a fixed random seed
 def test_sgd_with_fixed_seed():
+    """Test for reproducibility using a fixed random seed"""
     random.seed(42)
     theta = [random.uniform(-1, 1), random.uniform(-1, 1)]
     learning_rate = 0.001
