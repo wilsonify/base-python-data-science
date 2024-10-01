@@ -1,0 +1,7 @@
+You could then use these to count how many lines of a file contain numbers.
+
+In Windows, you’d use:
+type SomeFile.txt | python egrep.py '[0-9]' | python line_count.py
+
+Whereas in a Unix system you’d use:
+cat SomeFile.txt | python egrep.py '[0-9]' | python line_count.py

@@ -1,0 +1,3 @@
+# 'r' means read-only, it's assumed if you leave it out
+file_for_reading = open('reading_file.txt', 'r')
+file_for_reading2 = open('reading_file.txt')

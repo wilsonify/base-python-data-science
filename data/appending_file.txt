@@ -1,0 +1,2 @@
+# 'a' is append -- for adding to the end of the file
+file_for_appending = open('appending_file.txt', 'a')

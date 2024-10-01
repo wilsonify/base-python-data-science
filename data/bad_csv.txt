@@ -1,0 +1,4 @@
+test1,success,Monday
+test2,success, kind of,Tuesday
+test3,failure, kind of,Wednesday
+test4,failure, utter,Thursday

@@ -1,0 +1,2 @@
+# 'w' is write -- will destroy the file if it already exists!
+file_for_writing = open('writing_file.txt', 'w')
