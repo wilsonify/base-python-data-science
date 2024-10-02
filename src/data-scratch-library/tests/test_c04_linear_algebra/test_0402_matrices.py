@@ -8,16 +8,15 @@ from dsl.c04_linear_algebra.e0402_matrices import (
     make_matrix,
     matrix_add,
     shape,
-    make_identity_matrix, matrix_multiply,
+    make_identity_matrix, matrix_multiply, make_random_matrix,
 )
-from dsl.c09_getting_data.random_matrix import random_matrix
 
 A = [[1, 2, 3], [4, 5, 6]]  # A has 2 rows and 3 columns
 B = [[1, 2], [3, 4], [5, 6]]  # B has 3 rows and 2 columns
 
 
 def test_shape():
-    num_rows, num_columns = shape(random_matrix())
+    num_rows, num_columns = shape(make_random_matrix())
     assert num_rows == 100
     assert num_columns == 4
 

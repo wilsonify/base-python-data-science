@@ -4,6 +4,7 @@ functions for working with matrices
 from typing import Callable, Tuple
 
 from dsl.c04_linear_algebra import Matrix, Vector
+from dsl.c06_probability.e0603_normal import random_normal
 
 
 def shape(a_matrix: Matrix) -> Tuple[int, int]:
@@ -62,3 +63,26 @@ def matrix_multiply(a_matrix, b_matrix):
         return sum(a_matrix[i][k] * b_matrix[k][j] for k in range(num_cols_a))
 
     return make_matrix(num_rows_a, num_cols_b, entry_multiply)
+
+
+def make_random_matrix(num_points: int = 100):
+    data = []
+    def random_entry_fn(i, j):
+        if j == 0:
+            return random_normal()
+        elif j == 1:
+            return -5 * data[i][0] + random_normal()
+        elif j == 2:
+            return data[i][0] + data[i][1] + 5 * random_normal()
+        elif j == 3:
+            return 6 if data[i][2] > -2 else 0
+        else:
+            return random_normal()
+
+    for i in range(num_points):
+        rowi = []
+        for j in range(3):
+            make_random_matrix_ij = random_entry_fn(i, j)
+            rowi.append(make_random_matrix_ij)
+        data.append(rowi)
+    return data

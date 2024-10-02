@@ -4,7 +4,7 @@ from inspect import getmembers, isfunction
 
 import pytest
 
-from dsl.c09_getting_data.random_matrix import random_matrix
+from dsl.c04_linear_algebra.e0402_matrices import make_random_matrix
 from dsl.c11_machine_learning import machine_learning
 
 current_dir = os.path.dirname(__file__)
@@ -63,14 +63,14 @@ def test_recall(tp, fp, fn, tn, expected):
 
 
 def test_split_data():
-    result = machine_learning.split_data(random_matrix(), 0.5)
+    result = machine_learning.split_data(make_random_matrix(), 0.5)
     assert len(result[0]) == pytest.approx(50, abs=10)
     assert len(result[1]) == pytest.approx(50, abs=10)
 
 
 def test_train_test_split():
-    print(random_matrix)
-    x_train, x_test, y_train, y_test = machine_learning.train_test_split(random_matrix(), random_matrix(), 0.5)
+    print(make_random_matrix)
+    x_train, x_test, y_train, y_test = machine_learning.train_test_split(make_random_matrix(), make_random_matrix(), 0.5)
     assert len(x_train) == pytest.approx(50, abs=10)
     assert len(x_test) == pytest.approx(50, abs=10)
     assert len(y_train) == pytest.approx(50, abs=10)
