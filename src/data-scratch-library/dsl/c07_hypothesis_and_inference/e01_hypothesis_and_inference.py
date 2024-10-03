@@ -5,10 +5,10 @@ from logging.config import dictConfig
 from dsl.c07_hypothesis_and_inference.e0701_coin_flip import (
     normal_approximation_to_binomial,
     normal_probability_below,
-    normal_probability_between
+    normal_probability_between, normal_probability_above
 )
 from dsl.c07_hypothesis_and_inference.e0702_normal_bounds import normal_upper_bound, normal_two_sided_bounds
-from dsl.c07_hypothesis_and_inference.e0703_pvalues import two_sided_p_value, upper_p_value
+from dsl.c07_hypothesis_and_inference.e0703_pvalues import two_sided_p_value
 from dsl.c07_hypothesis_and_inference.e0704_p_hacking import run_experiment, reject_fairness
 from dsl.c07_hypothesis_and_inference.e0705_a_b import a_b_test_statistic
 
@@ -71,13 +71,13 @@ def main():
     logging.info(
         "%r",
         "upper_p_value(525, mu_0, sigma_0) {}".format(
-            upper_p_value(525, mu_0, sigma_0)
+            normal_probability_above(525, mu_0, sigma_0)
         ),
     )
     logging.info(
         "%r",
         "upper_p_value(527, mu_0, sigma_0) {}".format(
-            upper_p_value(527, mu_0, sigma_0)
+            normal_probability_above(527, mu_0, sigma_0)
         ),
     )
 

@@ -1,7 +1,7 @@
 import math
 from collections import defaultdict, Counter
 
-from dsl.c04_linear_algebra.linear_algebra import dot
+from dsl.c04_linear_algebra.e0401_vectors import dot
 
 big_data_str = "Big Data"
 users_interests = [

@@ -1,6 +1,6 @@
 import math
 
-from dsl.c04_linear_algebra.linear_algebra import dot
+from dsl.c04_linear_algebra.e0401_vectors import dot
 
 
 def step_function(x):

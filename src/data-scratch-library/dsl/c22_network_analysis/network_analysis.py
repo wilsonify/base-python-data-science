@@ -2,15 +2,17 @@ import logging
 from collections import deque
 from functools import partial
 
-from dsl.c04_linear_algebra.linear_algebra import (
+from dsl.c04_linear_algebra.e0401_vectors import (
     dot,
+    magnitude,
+    scalar_multiply,
+    distance,
+)
+from dsl.c04_linear_algebra.e0402_matrices import (
     get_row,
     get_column,
     make_matrix,
-    magnitude,
-    scalar_multiply,
     shape,
-    distance,
 )
 
 
@@ -108,7 +110,7 @@ def populate_betweeness_v1(users_dict):
 
 def initialize_centrality(users_dict):
     """Initialize betweenness centrality for all users."""
-    if isinstance(users_dict,list):
+    if isinstance(users_dict, list):
         for user in users_dict:
             user["betweenness_centrality"] = 0.0
     else:
@@ -136,7 +138,7 @@ def update_centrality(path, contrib, source_id, target_id, users_dict):
 def populate_betweeness(users_dict):
     """Calculate and populate betweenness centrality for users."""
     initialize_centrality(users_dict)
-    if isinstance(users_dict,list):
+    if isinstance(users_dict, list):
         for source in users_dict:
             process_shortest_paths(source, users_dict)
     else:

@@ -2,7 +2,7 @@ import logging
 import random
 from logging.config import dictConfig
 
-from dsl.c04_linear_algebra.linear_algebra import dot
+from dsl.c04_linear_algebra.e0401_vectors import dot
 from dsl.c05_statistics.e0502_dispersion import standard_deviation
 from dsl.c05_statistics.e0501_central_tendancy import median
 from dsl.c15_multiple_regression.multiple_regression import (

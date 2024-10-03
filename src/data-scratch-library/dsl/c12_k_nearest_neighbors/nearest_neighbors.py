@@ -2,7 +2,7 @@ import logging
 import random
 from collections import Counter
 
-from dsl.c04_linear_algebra.linear_algebra import distance
+from dsl.c04_linear_algebra.e0401_vectors import distance
 from dsl.c05_statistics.e0501_central_tendancy import mean
 
 

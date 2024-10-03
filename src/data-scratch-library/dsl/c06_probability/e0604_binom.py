@@ -2,7 +2,7 @@ import random
 from math import comb
 
 
-def bernoulli_trial(p):
+def bernoulli_trial(p:float):
     """Returns 1 with probability p and 0 with probability 1-p"""
     return 1 if random.random() < p else 0
 
