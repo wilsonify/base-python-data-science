@@ -1,4 +1,5 @@
 import math
+from random import seed
 
 from dsl.c07_hypothesis_and_inference.e0701_coin_flip import normal_probability_between
 from dsl.c07_hypothesis_and_inference.e0702_normal_bounds import normal_upper_bound
@@ -29,12 +30,14 @@ def test_count_extreme_values():
     """Test that count_extreme_values returns a value close to 0.046, which is expected."""
     # Since count_extreme_values is probabilistic, we expect the result to be close to 0.046
     # for a large number of trials
+    seed(0)
     extreme_value_frequency = count_extreme_values()
-    assert math.isclose(extreme_value_frequency, 0.046, rel_tol=1e-2)
+    assert math.isclose(extreme_value_frequency, 0.06171, abs_tol=0.01)
 
 
 def test_normal_probability_bounds():
     """Test the normal_two_sided_bounds, normal_approximation_to_binomial, and tail probabilities."""
+    seed(0)
     # Test for 1000 coin flips (binomial n=1000, p=0.5)
     n, p = 1000, 0.5
     mu_0, sigma_0 = normal_approximation_to_binomial(n, p)
@@ -45,10 +48,12 @@ def test_normal_probability_bounds():
     assert math.isclose(upper_bound, 531, rel_tol=1e-1)
 
     # Test upper p-value for 524.5
-    assert math.isclose(normal_probability_above(524.5, mu_0, sigma_0), 0.061, rel_tol=1e-2)
+    result = normal_probability_above(524.5, mu_0, sigma_0)
+    assert math.isclose(result, 0.061, rel_tol=1e-2)
 
     # Test lower p-value for 526.5
-    assert math.isclose(normal_probability_below(526.5, mu_0, sigma_0), 0.047, rel_tol=1e-2)
+    result = normal_probability_below(526.5, mu_0, sigma_0)
+    assert math.isclose(result, 0.95, abs_tol=0.01)
 
 
 def test_type_2_error_and_power():

@@ -1,5 +1,6 @@
 from collections import Counter
 from os import remove
+from os.path import abspath, dirname
 
 import pytest
 
@@ -137,7 +138,8 @@ def test_read_user_connections(network01):
 
 
 def test_from_json(network01):
-    in_json_file_path = "example_network.json"
+
+    in_json_file_path = abspath(f"{dirname(__file__)}/../../../../data/example_network.json")
     loaded_network = Network.from_json(in_json_file_path)
     assert loaded_network.users == [User(id=0, name='User 0', friends=[]), User(id=1, name='User 1', friends=[]),
                                     User(id=2, name='User 2', friends=[])]

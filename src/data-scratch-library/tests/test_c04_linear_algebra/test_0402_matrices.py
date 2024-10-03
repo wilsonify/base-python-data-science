@@ -16,11 +16,14 @@ B = [[1, 2], [3, 4], [5, 6]]  # B has 3 rows and 2 columns
 
 
 def test_shape():
-    num_rows, num_columns = shape(make_random_matrix())
+    assert shape([[1, 2, 3], [4, 5, 6]]) == (2, 3)
+    num_rows, num_columns = shape(
+        make_random_matrix(
+            num_points=100,
+            num_columns=4
+        ))
     assert num_rows == 100
     assert num_columns == 4
-
-    assert shape([[1, 2, 3], [4, 5, 6]]) == (2, 3)
 
 
 def test_make_identity_matrix():
@@ -82,6 +85,7 @@ def test_matrix_add():
     result = matrix_add(mat1, mat2)
     assert result == expected
 
+
 def test_matrix_multiply():
     # Test 1: Multiply two 1x1 matrices
     mat1, mat2, expected = ([[2]], [[3]], [[6]])
@@ -115,4 +119,3 @@ def test_matrix_multiply():
     expected = [[27, 30, 33], [61, 68, 75], [95, 106, 117]]
     result = matrix_multiply(mat1, mat2)
     assert result == expected, f"Expected {expected}, but got {result}"
-

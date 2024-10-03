@@ -40,7 +40,7 @@ def test_binomial():
     # Test the binomial function
     p = 0.5
     n = 10
-    successes = binomial(p, n)
+    successes = binomial(n=n, p=p)
     assert 0 <= successes <= n  # Number of successes should be between 0 and n
 
 

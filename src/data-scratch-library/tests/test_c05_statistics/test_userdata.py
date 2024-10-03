@@ -1,5 +1,5 @@
 from os import remove
-from os.path import exists
+from os.path import exists, dirname, abspath
 
 import pytest
 
@@ -28,6 +28,7 @@ def test_to_json(ud01):
 
 def test_from_json(ud01):
     """Test the from_json method."""
-    loaded_user_data = UserData.from_json("example_user_data.json")
+    path_to_example=abspath(f"{dirname(__file__)}/../../../../data/example_user_data.json")
+    loaded_user_data = UserData.from_json(path_to_example)
     assert len(loaded_user_data.daily_minutes) == 5
     assert len(loaded_user_data.num_friends) == 5
