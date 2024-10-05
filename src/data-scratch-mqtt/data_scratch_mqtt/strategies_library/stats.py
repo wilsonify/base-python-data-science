@@ -3,6 +3,7 @@ import os
 import dsl.c05_statistics.e0501_central_tendancy
 import dsl.c05_statistics.e0502_dispersion
 import dsl.c05_statistics.e0503_correlation
+import dsl.c10_working_with_data.e1001_univariate
 import dsl.c10_working_with_data.working_with_data
 from dsl.c05_statistics import stats
 
@@ -13,7 +14,7 @@ parent_dir = os.path.join(current_dir, os.pardir)
 def bucketize(self, body):
     point = body["point"]
     bucket_size = body["bucket_size"]
-    result = dsl.c10_working_with_data.working_with_data.bucketize(point, bucket_size)
+    result = dsl.c10_working_with_data.e1001_univariate.bucketize(point, bucket_size)
     self.publish(result)
 
 

@@ -6,6 +6,7 @@ from inspect import getmembers, isfunction
 import dsl.c05_statistics.e0501_central_tendancy
 import dsl.c05_statistics.e0502_dispersion
 import dsl.c05_statistics.e0503_correlation
+import dsl.c10_working_with_data.e1001_univariate
 import dsl.c10_working_with_data.working_with_data
 from dsl.c04_linear_algebra.e0401_vectors import sum_of_squares
 
@@ -19,15 +20,15 @@ def test_smoke():
 
 def test_bucketize():
     point, bucket_size, expected = (25.4958, 5, 25)
-    result = dsl.c10_working_with_data.working_with_data.bucketize(point, bucket_size)
+    result = dsl.c10_working_with_data.e1001_univariate.bucketize(point, bucket_size)
     assert result == expected
 
     point, bucket_size, expected = (250.303, 5, 250)
-    result = dsl.c10_working_with_data.working_with_data.bucketize(point, bucket_size)
+    result = dsl.c10_working_with_data.e1001_univariate.bucketize(point, bucket_size)
     assert result == expected
 
     point, bucket_size, expected = (25.9, 25, 25)
-    result = dsl.c10_working_with_data.working_with_data.bucketize(point, bucket_size)
+    result = dsl.c10_working_with_data.e1001_univariate.bucketize(point, bucket_size)
     assert result == expected
 
 

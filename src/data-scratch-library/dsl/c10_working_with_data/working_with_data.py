@@ -1,5 +1,3 @@
-import math
-from collections import Counter
 from functools import reduce
 
 from dsl.c10_working_with_data.manipulation import (
@@ -38,11 +36,3 @@ def overall_change(changes):
     return reduce(combine_pct_changes, pluck("change", changes))
 
 
-def bucketize(point, bucket_size):
-    """floor the point to the next lower multiple of bucket_size"""
-    return bucket_size * math.floor(point / bucket_size)
-
-
-def make_histogram(points, bucket_size):
-    """buckets the points and counts how many in each bucket"""
-    return Counter(bucketize(point, bucket_size) for point in points)

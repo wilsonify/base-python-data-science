@@ -147,3 +147,4 @@ dmypy.json
 
 node_modules/
 external/
+*.pdf

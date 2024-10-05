@@ -13,7 +13,7 @@ from dsl.c04_linear_algebra.e0401_vectors import (
 from dsl.c04_linear_algebra.e0402_matrices import (
     get_column,
     shape)
-from dsl.c10_working_with_data.working_with_data import make_histogram
+from dsl.c10_working_with_data.e1001_univariate import make_histogram
 from dsl.c06_probability.probability import (
     binomial, )
 from dsl.c06_probability.e0603_normal import random_normal, normal_pdf, normal_cdf, inverse_normal_cdf
