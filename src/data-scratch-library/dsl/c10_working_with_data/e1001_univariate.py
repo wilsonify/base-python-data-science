@@ -6,13 +6,14 @@ from typing import List
 def bucketize(point: float, bucket_size: float) -> float:
     """
     Floor the point to the next lower multiple of bucket_size.
+    useful for making histogram
 
     Args:
-        point (float): The value to bucketize.
+        point (float): The value to be bucketed.
         bucket_size (float): The size of each bucket.
 
     Returns:
-        float: The bucketized value.
+        float: The bucketed value.
     """
     return bucket_size * math.floor(point / bucket_size)
 
