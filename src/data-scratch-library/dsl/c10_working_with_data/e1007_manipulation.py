@@ -1,7 +1,7 @@
 from collections import defaultdict
 from dataclasses import dataclass
 from datetime import date
-from typing import List
+from typing import Dict
 
 from dsl.c10_working_with_data.e1004_named_tuples import StockPrice
 
@@ -72,10 +72,11 @@ def find_largest_and_smallest_changes(data):
 
 def average_daily_change_by_month(all_changes):
     """Return the average daily percentage change by month."""
-    changes_by_month: List[DailyChange] = {month: [] for month in range(1, 13)}
+    changes_by_month: Dict[int, DailyChange] = {month: [] for month in range(1, 13)}
     for change in all_changes:
         changes_by_month[change.date.month].append(change)
     avg_daily_change = {
-        month: sum(change.pct_change for change in changes) / len(changes)
+        month: sum(change.pct_change for change in changes) / len(all_changes)
         for month, changes in changes_by_month.items()
     }
+    return avg_daily_change
