@@ -1,8 +1,7 @@
 import csv
 import re
+from datetime import datetime
 from typing import Optional, List
-
-from dateutil.parser import parse
 
 from dsl.c10_working_with_data.e1004_named_tuples import StockPrice
 
@@ -16,8 +15,32 @@ def parse_row(row: List[str]) -> StockPrice:
     Returns:
         StockPrice: A StockPrice object containing the parsed data.
     """
-    symbol, date, closing_price = row
-    return StockPrice(symbol=symbol, date=parse(date).date(), closing_price=float(closing_price))
+    symbol, date_str, closing_price_str = row
+
+    # Ensure the stock symbol is all capital letters
+    if not re.fullmatch(r"^[A-Z]+$", symbol):
+        raise ValueError(f"Invalid stock symbol: {symbol}")
+
+    # Try parsing the date with multiple possible formats
+    date_formats = ["%Y-%m-%d", "%m/%d/%Y", "%d-%m-%Y"]  # Extend as needed
+    date = None
+    for fmt in date_formats:
+        try:
+            date = datetime.strptime(date_str, fmt).date()
+            break
+        except ValueError:
+            continue
+
+    if date is None:
+        raise ValueError(f"Invalid date format: {date_str}")
+
+    # Convert closing price to float
+    try:
+        closing_price = float(closing_price_str)
+    except ValueError:
+        raise ValueError(f"Invalid closing price: {closing_price_str}")
+
+    return StockPrice(symbol, date, closing_price)
 
 
 def try_parse_row(row: List[str]) -> Optional[StockPrice]:
@@ -30,20 +53,33 @@ def try_parse_row(row: List[str]) -> Optional[StockPrice]:
         Optional[StockPrice]: A StockPrice object if successful, None otherwise.
     """
     try:
-        symbol, date_, closing_price_ = row
+        symbol, date_str, closing_price_str = row
     except ValueError:
         return None
-    # Stock symbol should be all capital letters
-    if not re.match(r"^[A-Z]+$", symbol):
+
+    # Ensure the stock symbol is all capital letters
+    if not re.fullmatch(r"^[A-Z]+$", symbol):
         return None
+
+    # Try parsing the date with multiple possible formats
+    date_formats = ["%Y-%m-%d", "%m/%d/%Y", "%d-%m-%Y"]  # Add more formats if needed
+    date = None
+    for fmt in date_formats:
+        try:
+            date = datetime.strptime(date_str, fmt).date()
+            break  # Stop trying once a valid format is found
+        except ValueError:
+            continue
+
+    if date is None:
+        return None
+
+    # Convert closing price to float
     try:
-        date = parse(date_).date()
+        closing_price = float(closing_price_str)
     except ValueError:
         return None
-    try:
-        closing_price = float(closing_price_)
-    except ValueError:
-        return None
+
     return StockPrice(symbol, date, closing_price)
 
 
