@@ -65,25 +65,25 @@ def matrix_multiply(a_matrix, b_matrix):
     return make_matrix(num_rows_a, num_cols_b, entry_multiply)
 
 
-def make_random_matrix(num_points:int,num_columns:int) -> Matrix:
+def make_random_matrix(num_points: int, num_columns: int) -> Matrix:
     data = []
 
-    def random_entry_fn(i, j):
-        if j == 0 or i == 0:
+    def random_entry_fn(i_inner, j_inner):
+        if j_inner == 0 or i_inner == 0:
             return random_normal()
-        elif j == 1:
-            return -5 * data[i - 1][0] + random_normal()
-        elif j == 2:
-            return data[i - 1][0] + data[i - 1][1] + 5 * random_normal()
-        elif j == 3:
-            return 6 if data[i - 1][2] > -2 else 0
+        elif j_inner == 1:
+            return -5 * data[i_inner - 1][0] + random_normal()
+        elif j_inner == 2:
+            return data[i_inner - 1][0] + data[i_inner - 1][1] + 5 * random_normal()
+        elif j_inner == 3:
+            return 6 if data[i_inner - 1][2] > -2 else 0
         else:
             return random_normal()
 
-    for i in range(num_points):
+    for i_outer in range(num_points):
         rowi = []
-        for j in range(num_columns):
-            make_random_matrix_ij = random_entry_fn(i, j)
+        for j_outer in range(num_columns):
+            make_random_matrix_ij = random_entry_fn(i_outer, j_outer)
             rowi.append(make_random_matrix_ij)
         data.append(rowi)
     return data
