@@ -7,12 +7,13 @@ from typing import List
 
 from dsl.c04_linear_algebra.e0401_vectors import distance
 from dsl.c08_gradient_descent import negate_all, negate
-from dsl.c08_gradient_descent.e0801_estimating_gradient import difference_quotient, partial_difference_quotient, \
+from dsl.c08_gradient_descent.e0801_estimating_gradient import (
+    difference_quotient,
+    partial_difference_quotient,
     estimate_gradient
+)
 from dsl.c08_gradient_descent.e0804_minibatch_gd import maximize_batch
 from dsl.c08_gradient_descent.e0805_stochastic_gd import in_random_order, maximize_stochastic
-from dsl.c10_working_with_data.manipulation import directional_variance, directional_variance_gradient
-from dsl.c15_multiple_regression.multiple_regression import squared_error, squared_error_gradient
 
 current_dir = os.path.dirname(__file__)
 parent_dir = os.path.join(current_dir, os.pardir)
@@ -50,7 +51,6 @@ def test_partial_difference_quotient():
     )
 
     assert math.isclose(output, 2.0)
-
 
 
 def test_distance():
