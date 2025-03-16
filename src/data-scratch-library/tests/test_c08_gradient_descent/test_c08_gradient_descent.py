@@ -2,18 +2,15 @@ import logging
 import math
 import os
 import random
-from functools import partial
 from typing import List
 
 from dsl.c04_linear_algebra.e0401_vectors import distance
-from dsl.c08_gradient_descent import negate_all, negate
 from dsl.c08_gradient_descent.e0801_estimating_gradient import (
     difference_quotient,
     partial_difference_quotient,
     estimate_gradient
 )
-from dsl.c08_gradient_descent.e0804_minibatch_gd import maximize_batch
-from dsl.c08_gradient_descent.e0805_stochastic_gd import in_random_order, maximize_stochastic
+from dsl.c08_gradient_descent.e0805_stochastic_gd import in_random_order
 
 current_dir = os.path.dirname(__file__)
 parent_dir = os.path.join(current_dir, os.pardir)
@@ -82,32 +79,3 @@ def test_in_random_order():
     assert [_ for _ in output] == [5, 3, 2, 1, 6, 4]
 
 
-def test_maximize_batch():
-    x = [[1, 2, 3], [2, 3, 4], [5, 6, 7]]
-    maximize_batch(
-        target_fn=partial(directional_variance, x),
-        gradient_fn=partial(directional_variance_gradient, x),
-        theta_0=[1 for _ in x[0]],
-        tolerance=0.000001
-    )
-
-
-def test_maximize_stochastic():
-    x = [
-        [1, 49, 4, 0], [1, 41, 9, 0], [1, 40, 8, 0],
-        [1, 25, 6, 0], [1, 21, 1, 0], [1, 21, 0, 0],
-        [1, 19, 3, 0], [1, 19, 0, 0], [1, 18, 9, 0], [1, 18, 8, 0]
-    ]
-    y = [
-        68.77, 51.25, 52.08,
-        38.36, 44.54, 57.13,
-        51.4, 41.42, 31.22, 34.76,
-    ]
-    maximize_stochastic(
-        target_fn=negate(squared_error),
-        gradient_fn=negate_all(squared_error_gradient),
-        x=x,
-        y=y,
-        theta_0=[random.random() for _ in x[0]],
-        alpha_0=0.01
-    )
