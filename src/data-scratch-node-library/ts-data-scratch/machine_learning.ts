@@ -1,8 +1,8 @@
 // data splitting
 
-function  split_data(data:Array<Array<number>>, prob:number) {
+export function split_data(data:Array<Array<number>>, prob:number) {
     // split data into fractions [prob, 1 - prob]
-    var results = { "train":[], "test":[] }
+    var results = { "train":[] as Array<Array<number>>, "test":[] as Array<Array<number>> }
     for (var i = 0; i < data.length; i += 1 ) {
         var row=data[i]
         if (Math.random() < prob) {
@@ -14,12 +14,12 @@ function  split_data(data:Array<Array<number>>, prob:number) {
     return results
 }
 
-function train_test_split(x:Array<Array<number>>, y:Array<number>, test_pct:number) {
+export function train_test_split(x:Array<Array<number>>, y:Array<number>, test_pct:number) {
     var results = {
-        "x_train":[],
-        "y_train":[],
-        "x_test":[],
-        "y_test":[]
+        "x_train":[] as Array<Array<number>>,
+        "y_train":[] as Array<number>,
+        "x_test":[] as Array<Array<number>>,
+        "y_test":[] as Array<number>
     }
     for (var i = 0; i < x.length; i += 1 ) {
         var x_i = x[i]
@@ -37,21 +37,21 @@ function train_test_split(x:Array<Array<number>>, y:Array<number>, test_pct:numb
 
 // correctness
 
-function  accuracy(tp:number, fp:number, fn:number, tn:number) {
+export function accuracy(tp:number, fp:number, fn:number, tn:number) {
     var correct = tp + tn
     var total = tp + fp + fn + tn
     return correct / total
 }
 
-function  precision(tp:number, fp:number, fn:number, tn:number) {
+export function precision(tp:number, fp:number, fn:number, tn:number) {
     return tp / (tp + fp)
 }
 
-function  recall(tp:number, fp:number, fn:number, tn:number) {
+export function recall(tp:number, fp:number, fn:number, tn:number) {
     return tp / (tp + fn)
 }
 
-function  f1_score(tp:number, fp:number, fn:number, tn:number) {
+export function f1_score(tp:number, fp:number, fn:number, tn:number) {
     var p = precision(tp, fp, fn, tn)
     var r = recall(tp, fp, fn, tn)
     return 2 * p * r / (p + r)

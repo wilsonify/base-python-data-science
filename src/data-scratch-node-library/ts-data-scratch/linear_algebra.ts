@@ -36,7 +36,23 @@ export function vector_subtract(v: Array<number>, w: Array<number>) {
 }
 
 export function vector_sum(vectors: Array<Array<number>>) {
-  return vector_add(vectors[0], vectors[1]);
+  if (vectors.length === 0) {
+    return [];
+  }
+  
+  if (vectors.length === 1) {
+    return [...vectors[0]];
+  }
+  
+  // Start with the first vector
+  let result = [...vectors[0]];
+  
+  // Add all remaining vectors
+  for (let i = 1; i < vectors.length; i++) {
+    result = vector_add(result, vectors[i]);
+  }
+  
+  return result;
 }
 
 export function scalar_multiply(c: number, v: Array<number>) {
