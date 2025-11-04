@@ -56,11 +56,31 @@ export function feedForward(network: NeuralNetwork, inputs: number[]): {
     const outputs: number[][] = [inputs];
     let currentInput = inputs;
 
-    for (const [weights, bias] of network) {
-        const weightedSum = dot(weights, currentInput) + bias;
-        const output = sigmoid(weightedSum);
-        outputs.push([output]); // Store as array to maintain consistency
-        currentInput = [output]; // Pass as array to next layer
+    for (let layerIdx = 0; layerIdx < network.length; layerIdx++) {
+        const [flattenedWeights, bias] = network[layerIdx];
+        
+        // Determine the matrix dimensions
+        const inputSize = currentInput.length;
+        const outputSize = flattenedWeights.length / inputSize;
+        
+        // Calculate output for each neuron in this layer
+        const layerOutput: number[] = [];
+        for (let neuronIdx = 0; neuronIdx < outputSize; neuronIdx++) {
+            // Calculate weighted sum for this neuron
+            let weightedSum = 0;
+            for (let inputIdx = 0; inputIdx < inputSize; inputIdx++) {
+                const weightIndex = neuronIdx * inputSize + inputIdx;
+                weightedSum += flattenedWeights[weightIndex] * currentInput[inputIdx];
+            }
+            weightedSum += bias;
+            
+            // Apply activation function
+            const output = sigmoid(weightedSum);
+            layerOutput.push(output);
+        }
+        
+        outputs.push(layerOutput);
+        currentInput = layerOutput;
     }
 
     return {
