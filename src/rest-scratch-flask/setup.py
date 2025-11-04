@@ -13,7 +13,7 @@ setup(
     packages=find_packages(),
     install_requires=[
         "Flask==2.3.3",
-        "Flask-CORS==4.0.0",
+        "Flask-CORS==6.0.0",
         "marshmallow==3.20.1",
     ],
     extras_require={
