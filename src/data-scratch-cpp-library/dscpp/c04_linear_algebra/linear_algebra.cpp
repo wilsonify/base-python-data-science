@@ -1,103 +1,168 @@
-// -*- coding: iso-8859-15 -*-
+// Linear Algebra Implementation - C++ Data Science Library
+// Port from TypeScript implementation
 
-import math  // regexes, math functions, random numbers
-from functools import reduce
+#include "linear_algebra.h"
+#include <algorithm>
+#include <numeric>
 
-
-//
-// functions for working with vectors
-//
-
-
-std::vector<double> vector_add(std::vector<double> v, std::vector<double> w) {
-    /* adds two vectors componentwise */
-    return [v_i + w_i for v_i, w_i in zip(v, w)]
+// Scalar operations
+double scalar_add(double a, double b) {
+    return a + b;
 }
 
-std::vector<double> vector_subtract(std::vector<double> v, std::vector<double>w) {
-    /* subtracts two vectors componentwise */
-    return [v_i - w_i for v_i, w_i in zip(v, w)]
-}
-
-std::vector<double> vector_sum(std::vector<std::vector<double>> vectors) {
-    return reduce(vector_add, vectors)
-}
-
-std::vector<double> scalar_multiply(double c, std::vector<double> v) {
-    return [c * v_i for v_i in v]
-}
-
-double vector_mean(std::vector<std::vector<double>> vectors) {
-    /*compute the vector whose i-th element is the mean of the
-    i-th elements of the input vectors*/
-    n = len(vectors)
-    return scalar_multiply(1 / n, vector_sum(vectors))
-}
-
-std::vector<double> dot(std::vector<double> v, std::vector<double> w) {
-    /* v_1 * w_1 + ... + v_n * w_n */
-    return sum(v_i * w_i for v_i, w_i in zip(v, w))
-}
-
-double sum_of_squares(std::vector<double> v) {
-    /* v_1 * v_1 + ... + v_n * v_n */
-    return dot(v, v)
-}
-
-double magnitude(std::vector<double> v) {
-    return math.sqrt(sum_of_squares(v))
-}
-
-double squared_distance(std::vector<double> v, std::vector<double> w) {
-    return sum_of_squares(vector_subtract(v, w))
-}
-
-double distance(std::vector<double> v, std::vector<double>w) {
-    return math.sqrt(squared_distance(v, w))
-}
-
-//
-// functions for working with matrices
-//
-
-
-std::pair<double, double> shape(std::vector<std::vector<double>> a_matrix) {
-    num_rows = len(a_matrix)
-    num_cols = len(a_matrix[0]) if a_matrix else 0
-    return num_rows, num_cols
-}
-
-std::vector<double> get_row(std::vector<std::vector<double>> a_matrix, double i) {
-    return a_matrix[i]
-}
-
-std::vector<double> get_column(std::vector<std::vector<double>> a_matrix, double j) {
-    return [A_i[j] for A_i in a_matrix]
-}
-
-std::vector<std::vector<double>> make_matrix(double num_rows, double num_cols, entry_fn) {
-    // returns a num_rows x num_cols matrix whose (i,j)-th entry is entry_fn(i, j) 
-    return [
-        [entry_fn(i, j) for j in range(num_cols)] for i in range(num_rows);
-        ]
-}
-
-bool is_diagonal(double i, double j) {
-    // 1s on the diagonal, 0s everywhere else
-    return 1 if i == j else 0
-}
-
-identity_matrix = make_matrix(5, 5, is_diagonal)
-
-std::vector<std::vector<double>> matrix_add(std::vector<std::vector<double>> a_matrix, std::vector<std::vector<double>> b_matrix) {
-    if shape(a_matrix) != shape(b_matrix):
-        raise ArithmeticError("cannot add matrices with different shapes")
-
-    num_rows, num_cols = shape(a_matrix)
-
-    double entry_fn(i, j) {
-        return a_matrix[i][j] + b_matrix[i][j]
-
-    return make_matrix(num_rows, num_cols, entry_fn)
+// Vector operations
+std::vector<double> vector_add(const std::vector<double>& v, const std::vector<double>& w) {
+    if (v.size() != w.size()) {
+        throw std::invalid_argument("Vectors must be the same length");
     }
+    
+    std::vector<double> result(v.size());
+    for (size_t i = 0; i < v.size(); ++i) {
+        result[i] = v[i] + w[i];
+    }
+    return result;
+}
+
+std::vector<double> vector_subtract(const std::vector<double>& v, const std::vector<double>& w) {
+    if (v.size() != w.size()) {
+        throw std::invalid_argument("Vectors must be the same length");
+    }
+    
+    std::vector<double> result(v.size());
+    for (size_t i = 0; i < v.size(); ++i) {
+        result[i] = v[i] - w[i];
+    }
+    return result;
+}
+
+std::vector<double> vector_sum(const std::vector<std::vector<double>>& vectors) {
+    if (vectors.empty()) {
+        return {};
+    }
+    
+    if (vectors.size() == 1) {
+        return vectors[0];
+    }
+    
+    // Start with the first vector
+    std::vector<double> result = vectors[0];
+    
+    // Add all remaining vectors
+    for (size_t i = 1; i < vectors.size(); ++i) {
+        result = vector_add(result, vectors[i]);
+    }
+    
+    return result;
+}
+
+std::vector<double> scalar_multiply(double c, const std::vector<double>& v) {
+    std::vector<double> result(v.size());
+    for (size_t i = 0; i < v.size(); ++i) {
+        result[i] = c * v[i];
+    }
+    return result;
+}
+
+std::vector<double> vector_mean(const std::vector<std::vector<double>>& vectors) {
+    // compute the vector whose i-th element is the mean of the i-th elements of the input vectors
+    double n = static_cast<double>(vectors.size());
+    return scalar_multiply(1.0 / n, vector_sum(vectors));
+}
+
+// Vector math operations
+double dot(const std::vector<double>& v, const std::vector<double>& w) {
+    if (v.size() != w.size()) {
+        throw std::invalid_argument("Vectors must be the same length");
+    }
+    
+    double result = 0.0;
+    for (size_t i = 0; i < v.size(); ++i) {
+        result += v[i] * w[i];
+    }
+    return result;
+}
+
+double sum_of_squares(const std::vector<double>& v) {
+    return dot(v, v);
+}
+
+double magnitude(const std::vector<double>& v) {
+    return std::sqrt(sum_of_squares(v));
+}
+
+double squared_distance(const std::vector<double>& v, const std::vector<double>& w) {
+    return sum_of_squares(vector_subtract(v, w));
+}
+
+double distance(const std::vector<double>& v, const std::vector<double>& w) {
+    return std::sqrt(squared_distance(v, w));
+}
+
+// Matrix operations
+std::pair<int, int> shape(const std::vector<std::vector<double>>& a_matrix) {
+    int num_rows = static_cast<int>(a_matrix.size());
+    int num_cols = a_matrix.empty() ? 0 : static_cast<int>(a_matrix[0].size());
+    return {num_rows, num_cols};
+}
+
+std::vector<double> get_row(const std::vector<std::vector<double>>& a_matrix, int i) {
+    if (i < 0 || i >= static_cast<int>(a_matrix.size())) {
+        throw std::out_of_range("Row index out of range");
+    }
+    return a_matrix[i];
+}
+
+std::vector<double> get_column(const std::vector<std::vector<double>>& a_matrix, int j) {
+    if (a_matrix.empty()) {
+        throw std::invalid_argument("Matrix is empty");
+    }
+    if (j < 0 || j >= static_cast<int>(a_matrix[0].size())) {
+        throw std::out_of_range("Column index out of range");
+    }
+    
+    std::vector<double> result;
+    for (const auto& row : a_matrix) {
+        if (j >= static_cast<int>(row.size())) {
+            throw std::out_of_range("Column index out of range");
+        }
+        result.push_back(row[j]);
+    }
+    return result;
+}
+
+std::vector<std::vector<double>> make_matrix(int num_rows, int num_cols, BivariateFunction entry_fn) {
+    std::vector<std::vector<double>> result(num_rows, std::vector<double>(num_cols));
+    for (int i = 0; i < num_rows; ++i) {
+        for (int j = 0; j < num_cols; ++j) {
+            result[i][j] = entry_fn(i, j);
+        }
+    }
+    return result;
+}
+
+double is_diagonal(int i, int j) {
+    // 1's on the 'diagonal', 0's everywhere else
+    return (i == j) ? 1.0 : 0.0;
+}
+
+// Define the identity matrix
+const std::vector<std::vector<double>> identity_matrix = make_matrix(5, 5, is_diagonal);
+
+std::vector<std::vector<double>> matrix_add(const std::vector<std::vector<double>>& a_matrix, 
+                                           const std::vector<std::vector<double>>& b_matrix) {
+    auto shape_a = shape(a_matrix);
+    auto shape_b = shape(b_matrix);
+    
+    if (shape_a != shape_b) {
+        throw std::invalid_argument("cannot add matrices with different shapes");
+    }
+    
+    int num_rows = shape_a.first;
+    int num_cols = shape_a.second;
+    
+    auto entry_fn = [&a_matrix, &b_matrix](int i, int j) {
+        return a_matrix[i][j] + b_matrix[i][j];
+    };
+    
+    return make_matrix(num_rows, num_cols, entry_fn);
 }

@@ -1,11 +1,23 @@
-#include <cmath>
+#pragma once
 
-double random_normal() ;
-double random_kid() ;
-double uniform_pdf(x, a=0, b=1) ;
-double uniform_cdf(x, a=0, b=1) ;
-double normal_pdf(x, mu=0, sigma=1) ;
-double normal_cdf(x, mu=0.0, sigma=1.0) ;
-double inverse_normal_cdf(p, mu=0, sigma=1, tolerance=0.00001) ;
-double bernoulli_trial(p) ;
-double binomial(p, n) ;
+#include <cmath>
+#include <string>
+#include <vector>
+#include <random>
+
+// Error function and normal distribution
+double erf(double x);
+double uniform_pdf(double x, double a = 0, double b = 1);
+double uniform_cdf(double x, double a = 0, double b = 1);
+double normal_pdf(double x, double mu = 0, double sigma = 1);
+double normal_cdf(double x, double mu = 0.0, double sigma = 1.0);
+double inverse_normal_cdf(double p, double mu = 0, double sigma = 1, double tolerance = 1e-05);
+
+// Random functions
+std::string random_choice(const std::vector<std::string>& choices);
+std::string random_kid();
+double random_normal();
+
+// Probability distributions
+int bernoulli_trial(double p);
+int binomial(double p, int n);

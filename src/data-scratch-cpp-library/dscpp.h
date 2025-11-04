@@ -1,26 +1,41 @@
 #pragma once
-#include "c01_intro/introduction.h"
-#include "c01_intro/mysqrt.h"
-#include "c01_intro/strength.h"
-//#include "c04_linear_algebra/linear_algebra.h"
-//#include "c05_statistics/stats.h"
-//#include "c06_probability/probability.h"
-//#include "c07_hypothesis_and_inference/hypothesis_and_inference.h"
-//#include "c08_gradient_descent/gradient_descent.h"
-//#include "c10_working_with_data/manipulation.h"
-//#include "c10_working_with_data/working_with_data.h"
-//#include "c11_machine_learning/machine_learning.h"
-//#include "c12_k_nearest_neighbors/nearest_neighbors.h"
-//#include "c13_naive_bayes/NaiveBayesClassifier.h"
-//#include "c13_naive_bayes/naive_bayes.h"
-//#include "c14_simple_linear_regression/simple_linear_regression.h"
-//#include "c15_multiple_regression/multiple_regression.h"
-//#include "c16_logistic_regression/logistic_regression.h"
-//#include "c17_decision_trees/decision_trees.h"
-//#include "c18_neural_networks/neural_networks.h"
-//#include "c20_clustering/clustering.h"
-//#include "c20_clustering/kmeans.h"
-//#include "c22_network_analysis/network_analysis.h"
-//#include "c23_recommender_systems/recommender_systems.h"
-//#include "c24_databases/Table.h"
-//#include "c25_mapreduce/mapreduce.h"
+
+// Core Data Science Library - C++ Implementation
+// Port from TypeScript Data Science Library
+
+#include <vector>
+#include <map>
+#include <string>
+#include <functional>
+#include <cmath>
+#include <algorithm>
+#include <random>
+#include <unordered_map>
+
+// Linear Algebra
+#include "c04_linear_algebra/linear_algebra.h"
+
+// Statistics  
+#include "c05_statistics/stats.h"
+
+// Probability
+#include "c06_probability/probability.h"
+
+// Machine Learning Utilities
+#include "c11_machine_learning/machine_learning.h"
+
+// K-Nearest Neighbors
+#include "c12_k_nearest_neighbors/nearest_neighbors.h"
+
+// Naive Bayes
+#include "c13_naive_bayes/naive_bayes.h"
+
+// Decision Trees
+#include "c17_decision_trees/decision_trees.h"
+
+// Clustering
+#include "c20_clustering/clustering.h"
+#include "c20_clustering/kmeans.h"
+
+// Neural Networks
+#include "c18_neural_networks/neural_networks.h"

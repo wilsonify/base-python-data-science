@@ -1,81 +1,115 @@
-import math
-import random
+// Probability Implementation - C++ Data Science Library
+// Port from TypeScript implementation
 
+#include "probability.h"
+#include <cmath>
+#include <algorithm>
+#include <random>
+#include <chrono>
+
+// Random number generator
+static std::random_device rd;
+static std::mt19937 gen(rd());
+
+// Error function and normal distribution
+double erf(double x) {
+    double a1 = 0.254829592;
+    double a2 = -0.284496736;
+    double a3 = 1.421413741;
+    double a4 = -1.453152027;
+    double a5 = 1.061405429;
+    double p = 0.3275911;
+    double sign = 1;
+    if (x < 0) { sign = -1; }
+    x = std::abs(x);
+    double t = 1.0 / (1.0 + p * x);
+    double y = 1.0 - (((((a5 * t + a4) * t) + a3) * t + a2) * t + a1) * t * std::exp(-x * x);
+    return sign * y;
+}
+
+double uniform_pdf(double x, double a, double b) {
+    return (a <= x && x < b) ? 1.0 / (b - a) : 0.0;
+}
+
+double uniform_cdf(double x, double a, double b) {
+    /* returns the probability that a uniform random variable is less than x */
+    if (x < a) {
+        return 0.0;
+    }
+    if (a < x && x < b) {
+        return (x - a) / (b - a);
+    }
+    if (b <= x) {
+        return 1.0;
+    }
+    return 0.0; // Should not reach here
+}
+
+double normal_pdf(double x, double mu, double sigma) {
+    double sqrt_two_pi = std::sqrt(2.0 * M_PI);
+    return std::exp(-std::pow(x - mu, 2.0) / 2.0 / std::pow(sigma, 2.0)) / (sqrt_two_pi * sigma);
+}
+
+double normal_cdf(double x, double mu, double sigma) {
+    return (1.0 + erf((x - mu) / std::sqrt(2.0) / sigma)) / 2.0;
+}
+
+double inverse_normal_cdf(double p, double mu, double sigma, double tolerance) {
+    /* find approximate inverse using binary search */
+    double low_z = -10.0;
+    double low_p = 0.0;
+    double hi_z = 10.0;
+    double hi_p = 1.0;
+    double mid_z = (low_z + hi_z) / 2.0;
+
+    while (hi_z - low_z > tolerance) {
+        mid_z = (low_z + hi_z) / 2.0;
+        double mid_p = normal_cdf(mid_z);
+
+        if (mid_p < p) {
+            low_z = mid_z;
+            low_p = mid_p;
+        } else if (mid_p > p) {
+            hi_z = mid_z;
+            hi_p = mid_p;
+        } else {
+            break;
+        }
+    }
+
+    return mid_z;
+}
+
+// Random functions
+std::string random_choice(const std::vector<std::string>& choices) {
+    if (choices.empty()) {
+        return "";
+    }
+    std::uniform_int_distribution<> dis(0, choices.size() - 1);
+    return choices[dis(gen)];
+}
+
+std::string random_kid() {
+    static std::vector<std::string> choices = {"boy", "girl"};
+    return random_choice(choices);
+}
 
 double random_normal() {
-    /* returns a random draw from a standard normal distribution */
-    return inverse_normal_cdf(random.random())
+    // returns a random draw from a standard normal distribution
+    std::uniform_real_distribution<> dis(0.0, 1.0);
+    return inverse_normal_cdf(dis(gen));
 }
 
-double random_kid() {
-    return random.choice(["boy", "girl"])
+// Probability distributions
+int bernoulli_trial(double p) {
+    std::uniform_real_distribution<> dis(0.0, 1.0);
+    return (dis(gen) < p) ? 1 : 0;
 }
 
-double uniform_pdf(x, a=0, b=1) {
-    assert b > a, "maximum,b, must be greater than minimum,a"
-    return 1 / (b - a) if a <= x < b else 0
-}
-
-double uniform_cdf(x, a=0, b=1) {
-    /* returns the probability that a uniform random variable is less than x */
-    if x < a:
-        return 0
-    if a < x < b:
-        return (x - a) / (b - a)  // e.g. P(X < 0.4) = 0.4
-    if b <= x:
-        return 1
-}
-
-double normal_pdf(x, mu=0, sigma=1) {
-    sqrt_two_pi = math.sqrt(2 * math.pi)
-    return math.exp(-(x - mu) ** 2 / 2 / sigma ** 2) / (sqrt_two_pi * sigma)
-}
-
-double normal_cdf(x, mu=0.0, sigma=1.0) {
-    return (1.0 + math.erf((x - mu) / math.sqrt(2.0) / sigma)) / 2.0
-}
-
-double inverse_normal_cdf(p, mu=0, sigma=1, tolerance=0.00001) {
-    /* find approximate inverse using binary search */
-
-    // if not standard, compute standard and rescale
-    if mu != 0 or sigma != 1:
-        return mu + sigma * inverse_normal_cdf(p, tolerance=tolerance)
-
-    low_z, low_p = -10.0, 0  // normal_cdf(-10) is (very close to) 0
-    hi_z, hi_p = 10.0, 1  // normal_cdf(10)  is (very close to) 1
-    mid_z = (low_z + hi_z) / 2
-    while hi_z - low_z > tolerance:
-        mid_z = (low_z + hi_z) / 2  // consider the midpoint
-        mid_p = normal_cdf(mid_z)  // and the cdf's value there
-        if mid_p < p:
-            // midpoint is still too low, search above it
-            low_z, low_p = mid_z, mid_p
-        elif mid_p > p:
-            // midpoint is still too high, search below it
-            hi_z, hi_p = mid_z, mid_p
-        else:
-            break
-
-    return mid_z
-
-}
-double bernoulli_trial(p) {
-    return 1 if random.random() < p else 0
-}
-
-double binomial(p, n) {
-    return sum(bernoulli_trial(p) for _ in range(n))
-}
-
-def mysqrt(x: float) -> float:  // noqa: E501
-    /*  square root  */
-    return math.sqrt(x)
-}
-
-def mystrength(actual: float, expected: float) -> float:  // noqa: E501
-    /*  signal strength  */
-    eps = 0.001
-    strength = actual / (expected + eps)
-    return strength
+int binomial(double p, int n) {
+    int result = 0;
+    for (int i = 0; i < n; ++i) {
+        result += bernoulli_trial(p);
+    }
+    return result;
 }

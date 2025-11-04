@@ -1,52 +1,72 @@
-import logging
-import random
+// Machine Learning Implementation - C++ Data Science Library
+// Port from TypeScript implementation
 
+#include "machine_learning.h"
+#include <random>
+#include <stdexcept>
 
-//
-// data splitting
-//
+// Random number generator
+static std::random_device rd;
+static std::mt19937 gen(rd());
 
-
-double split_data(data, prob) {
-    /* split data into fractions [prob, 1 - prob] */
-    results = [], []
-    for row in data:
-        results[0 if random.random() < prob else 1].append(row)
-    return results
+// Data splitting functions
+SplitData split_data(const std::vector<std::vector<double>>& data, double prob) {
+    // split data into fractions [prob, 1 - prob]
+    SplitData results;
+    std::uniform_real_distribution<> dis(0.0, 1.0);
+    
+    for (const auto& row : data) {
+        if (dis(gen) < prob) {
+            results.test.push_back(row);
+        } else {
+            results.train.push_back(row);
+        }
+    }
+    return results;
 }
 
-double train_test_split(x, y, test_pct) {
-    data = list(zip(x, y))  // pair corresponding values
-    train, test = split_data(data, 1 - test_pct)  // split the dataset of pairs
-    x_train, y_train = list(zip(*train))  // magical un-zip trick
-    x_test, y_test = list(zip(*test))
-    return x_train, x_test, y_train, y_test
+TrainTestSplit train_test_split(const std::vector<std::vector<double>>& x, 
+                               const std::vector<double>& y, 
+                               double test_pct) {
+    if (x.size() != y.size()) {
+        throw std::invalid_argument("x and y must have the same length");
+    }
+    
+    TrainTestSplit results;
+    std::uniform_real_distribution<> dis(0.0, 1.0);
+    
+    for (size_t i = 0; i < x.size(); ++i) {
+        if (dis(gen) < test_pct) {
+            results.x_test.push_back(x[i]);
+            results.y_test.push_back(y[i]);
+        } else {
+            results.x_train.push_back(x[i]);
+            results.y_train.push_back(y[i]);
+        }
+    }
+    return results;
 }
 
-//
-// correctness
-//
-
-
-double accuracy(double tp, double fp, double fn, double tn)
-{
-    double result;
-    double eps = 0.01;
-    result = (tp + tn) / (tp + fp + fn + tn + eps);
-    return result;
+// Performance metrics
+double accuracy(double tp, double fp, double fn, double tn) {
+    double correct = tp + tn;
+    double total = tp + fp + fn + tn;
+    return (total == 0) ? 0.0 : correct / total;
 }
 
-double precision(double tp, double fp, double fn, double tn) {    
-    return tp / (tp + fp)
+double precision(double tp, double fp, double fn, double tn) {
+    double denominator = tp + fp;
+    return (denominator == 0) ? 0.0 : tp / denominator;
 }
 
-double recall(double tp, double fp, double fn, double tn) {    
-    return tp / (tp + fn)
+double recall(double tp, double fp, double fn, double tn) {
+    double denominator = tp + fn;
+    return (denominator == 0) ? 0.0 : tp / denominator;
 }
 
 double f1_score(double tp, double fp, double fn, double tn) {
-    p = precision(tp, fp, fn, tn)
-    r = recall(tp, fp, fn, tn)
-
-    return 2 * p * r / (p + r)
+    double p = precision(tp, fp, fn, tn);
+    double r = recall(tp, fp, fn, tn);
+    double denominator = p + r;
+    return (denominator == 0) ? 0.0 : 2.0 * p * r / denominator;
 }
