@@ -1,6 +1,0 @@
-type: object
-properties:
-  nrows:
-    type: number
-  ncols:
-    type: number

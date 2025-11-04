@@ -1,0 +1,2303 @@
+openapi: 3.0.3
+info:
+  title: Data Scratch Library REST API
+  description: |
+    A comprehensive REST API that exposes the core machine learning functionality of the data-scratch-library. 
+    The API provides endpoints for classification, clustering, and neural network operations with full error handling and validation.
+    
+    ## Features
+    - K-Nearest Neighbors classification
+    - Naive Bayes spam detection
+    - Decision tree algorithms with random forest support
+    - K-means clustering with quality analysis
+    - Neural network functions (activation, feed-forward, backpropagation)
+    
+    ## Usage
+    1. Install dependencies: `pip install -r requirements.txt`
+    2. Run the server: `python run.py`
+    3. Access API at: `http://127.0.0.1:5000`
+  version: 1.0.0
+  contact:
+    name: Data Science Team
+    email: team@example.com
+  license:
+    name: MIT
+
+servers:
+  - url: http://127.0.0.1:5000
+    description: Development server
+  - url: https://api.example.com
+    description: Production server
+
+paths:
+  /:
+    get:
+      tags:
+        - Base
+      summary: Get API information
+      description: Returns overview of the API and available endpoints
+      operationId: getApiInfo
+      responses:
+        '200':
+          description: API information retrieved successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiInfo'
+              example:
+                name: "Data Scratch Library REST API"
+                version: "1.0.0"
+                cors_enabled: true
+                endpoints:
+                  knn: "/api/knn"
+                  naive_bayes: "/api/naive-bayes"
+                  decision_trees: "/api/decision-trees"
+                  clustering: "/api/clustering"
+                  neural_networks: "/api/neural-networks"
+                  health: "/health"
+
+  /health:
+    get:
+      tags:
+        - Base
+      summary: Health check
+      description: Returns the health status of the API
+      operationId: healthCheck
+      responses:
+        '200':
+          description: API is healthy
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HealthCheck'
+              example:
+                status: "healthy"
+                message: "Data Scratch Library API is running"
+                note: "CORS not available - install Flask-CORS for cross-origin support"
+
+  /api/knn/classify:
+    post:
+      tags:
+        - K-Nearest Neighbors
+      summary: Classify a point using KNN
+      description: Classifies a single point using the K-Nearest Neighbors algorithm
+      operationId: knnClassify
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/KnnClassifyRequest'
+            example:
+              k: 3
+              point: [1.0, 2.0]
+              training_data:
+                - point: [1.1, 2.1]
+                  label: "A"
+                - point: [3.0, 4.0]
+                  label: "B"
+      responses:
+        '200':
+          description: Classification successful
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/KnnClassifyResponse'
+        '400':
+          description: Bad request - invalid input data
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+
+  /api/knn/batch_classify:
+    post:
+      tags:
+        - K-Nearest Neighbors
+      summary: Batch classify points using KNN
+      description: Classifies multiple points using the K-Nearest Neighbors algorithm
+      operationId: knnBatchClassify
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/KnnBatchClassifyRequest'
+            example:
+              k: 3
+              points: [[1.0, 2.0], [3.0, 4.0]]
+              training_data:
+                - point: [1.1, 2.1]
+                  label: "A"
+                - point: [3.0, 4.0]
+                  label: "B"
+      responses:
+        '200':
+          description: Batch classification successful
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/KnnBatchClassifyResponse'
+        '400':
+          description: Bad request - invalid input data
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+
+  /api/knn/info:
+    get:
+      tags:
+        - K-Nearest Neighbors
+      summary: Get KNN algorithm information
+      description: Returns information about the KNN algorithm and its parameters
+      operationId: knnInfo
+      responses:
+        '200':
+          description: Algorithm information retrieved
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/KnnInfo'
+
+  /api/naive-bayes/classify:
+    post:
+      tags:
+        - Naive Bayes
+      summary: Classify message as spam/ham
+      description: Classifies a message as spam or ham using Naive Bayes
+      operationId: naiveBayesClassify
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/NaiveBayesClassifyRequest'
+            example:
+              message: "buy viagra now cheap pills"
+              training_data:
+                - message: "buy viagra now"
+                  is_spam: true
+                - message: "hello friend"
+                  is_spam: false
+              smoothing: 0.5
+      responses:
+        '200':
+          description: Classification successful
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/NaiveBayesClassifyResponse'
+        '400':
+          description: Bad request - invalid input data
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+
+  /api/naive-bayes/batch_classify:
+    post:
+      tags:
+        - Naive Bayes
+      summary: Batch classify messages as spam/ham
+      description: Classifies multiple messages as spam or ham using Naive Bayes
+      operationId: naiveBayesBatchClassify
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/NaiveBayesBatchClassifyRequest'
+            example:
+              messages: ["buy viagra", "hello friend"]
+              training_data:
+                - message: "buy viagra now"
+                  is_spam: true
+                - message: "hello friend"
+                  is_spam: false
+              smoothing: 0.5
+      responses:
+        '200':
+          description: Batch classification successful
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/NaiveBayesBatchClassifyResponse'
+        '400':
+          description: Bad request - invalid input data
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+
+  /api/naive-bayes/train:
+    post:
+      tags:
+        - Naive Bayes
+      summary: Train Naive Bayes classifier
+      description: Trains a Naive Bayes classifier for spam detection
+      operationId: naiveBayesTrain
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/NaiveBayesTrainRequest'
+            example:
+              training_data:
+                - message: "buy viagra now"
+                  is_spam: true
+                - message: "hello friend"
+                  is_spam: false
+              smoothing: 0.5
+      responses:
+        '200':
+          description: Training successful
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/NaiveBayesTrainResponse'
+        '400':
+          description: Bad request - invalid input data
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+
+  /api/naive-bayes/info:
+    get:
+      tags:
+        - Naive Bayes
+      summary: Get Naive Bayes algorithm information
+      description: Returns information about the Naive Bayes algorithm and its parameters
+      operationId: naiveBayesInfo
+      responses:
+        '200':
+          description: Algorithm information retrieved
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/NaiveBayesInfo'
+
+  /api/decision-trees/classify:
+    post:
+      tags:
+        - Decision Trees
+      summary: Classify instance using decision tree
+      description: Classifies a single instance using a trained decision tree
+      operationId: decisionTreeClassify
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/DecisionTreeClassifyRequest'
+            example:
+              instance:
+                level: "Senior"
+                lang: "Java"
+              training_data:
+                - features:
+                    level: "Senior"
+                    lang: "Java"
+                  label: true
+                - features:
+                    level: "Junior"
+                    lang: "Python"
+                  label: false
+              split_candidates: ["level", "lang"]
+      responses:
+        '200':
+          description: Classification successful
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/DecisionTreeClassifyResponse'
+        '400':
+          description: Bad request - invalid input data
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+
+  /api/decision-trees/batch_classify:
+    post:
+      tags:
+        - Decision Trees
+      summary: Batch classify instances using decision tree
+      description: Classifies multiple instances using a trained decision tree
+      operationId: decisionTreeBatchClassify
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/DecisionTreeBatchClassifyRequest'
+            example:
+              instances:
+                - level: "Senior"
+                  lang: "Java"
+                - level: "Junior"
+                  lang: "Python"
+              training_data:
+                - features:
+                    level: "Senior"
+                    lang: "Java"
+                  label: true
+                - features:
+                    level: "Junior"
+                    lang: "Python"
+                  label: false
+              split_candidates: ["level", "lang"]
+      responses:
+        '200':
+          description: Batch classification successful
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/DecisionTreeBatchClassifyResponse'
+        '400':
+          description: Bad request - invalid input data
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+
+  /api/decision-trees/forest_classify:
+    post:
+      tags:
+        - Decision Trees
+      summary: Classify using random forest
+      description: Classifies an instance using a random forest (multiple decision trees)
+      operationId: decisionTreeForestClassify
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/DecisionTreeForestClassifyRequest'
+            example:
+              instance:
+                level: "Senior"
+                lang: "Java"
+              num_trees: 5
+              training_data:
+                - features:
+                    level: "Senior"
+                    lang: "Java"
+                  label: true
+                - features:
+                    level: "Junior"
+                    lang: "Python"
+                  label: false
+      responses:
+        '200':
+          description: Forest classification successful
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/DecisionTreeForestClassifyResponse'
+        '400':
+          description: Bad request - invalid input data
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+
+  /api/decision-trees/train:
+    post:
+      tags:
+        - Decision Trees
+      summary: Train decision tree
+      description: Trains a decision tree using the ID3 algorithm
+      operationId: decisionTreeTrain
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/DecisionTreeTrainRequest'
+            example:
+              training_data:
+                - features:
+                    level: "Senior"
+                    lang: "Java"
+                  label: true
+                - features:
+                    level: "Junior"
+                    lang: "Python"
+                  label: false
+              split_candidates: ["level", "lang"]
+      responses:
+        '200':
+          description: Training successful
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/DecisionTreeTrainResponse'
+        '400':
+          description: Bad request - invalid input data
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+
+  /api/decision-trees/info:
+    get:
+      tags:
+        - Decision Trees
+      summary: Get decision tree algorithm information
+      description: Returns information about the decision tree algorithm and its parameters
+      operationId: decisionTreeInfo
+      responses:
+        '200':
+          description: Algorithm information retrieved
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/DecisionTreeInfo'
+
+  /api/clustering/kmeans:
+    post:
+      tags:
+        - Clustering
+      summary: Perform K-means clustering
+      description: Performs K-means clustering on data points
+      operationId: clusteringKmeans
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/KmeansRequest'
+            example:
+              data: [[1.0, 2.0], [3.0, 4.0], [5.0, 6.0], [1.1, 2.1]]
+              k: 2
+              max_iterations: 100
+      responses:
+        '200':
+          description: Clustering successful
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/KmeansResponse'
+        '400':
+          description: Bad request - invalid input data
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+
+  /api/clustering/analyze:
+    post:
+      tags:
+        - Clustering
+      summary: Analyze clustering quality
+      description: Analyzes clustering quality and provides metrics
+      operationId: clusteringAnalyze
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ClusteringAnalyzeRequest'
+            example:
+              data: [[1.0, 2.0], [3.0, 4.0], [5.0, 6.0]]
+              assignments: [0, 1, 0]
+              means: [[1.5, 2.5], [4.0, 5.0]]
+      responses:
+        '200':
+          description: Analysis successful
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ClusteringAnalyzeResponse'
+        '400':
+          description: Bad request - invalid input data
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+
+  /api/clustering/optimal_k:
+    post:
+      tags:
+        - Clustering
+      summary: Find optimal number of clusters
+      description: Finds optimal number of clusters using elbow method
+      operationId: clusteringOptimalK
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/OptimalKRequest'
+            example:
+              data: [[1.0, 2.0], [3.0, 4.0], [5.0, 6.0]]
+              max_k: 5
+              runs_per_k: 3
+      responses:
+        '200':
+          description: Optimal k analysis successful
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/OptimalKResponse'
+        '400':
+          description: Bad request - invalid input data
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+
+  /api/clustering/info:
+    get:
+      tags:
+        - Clustering
+      summary: Get clustering algorithm information
+      description: Returns information about clustering algorithms and parameters
+      operationId: clusteringInfo
+      responses:
+        '200':
+          description: Algorithm information retrieved
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ClusteringInfo'
+
+  /api/neural-networks/sigmoid:
+    post:
+      tags:
+        - Neural Networks
+      summary: Calculate sigmoid activation
+      description: Calculates sigmoid activation function for a given input
+      operationId: neuralNetworksSigmoid
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/SigmoidRequest'
+            example:
+              x: 1.0
+      responses:
+        '200':
+          description: Sigmoid calculation successful
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/SigmoidResponse'
+        '400':
+          description: Bad request - invalid input data
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+
+  /api/neural-networks/step:
+    post:
+      tags:
+        - Neural Networks
+      summary: Calculate step function
+      description: Calculates step activation function for a given input
+      operationId: neuralNetworksStep
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/StepRequest'
+            example:
+              x: 1.0
+      responses:
+        '200':
+          description: Step function calculation successful
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/StepResponse'
+        '400':
+          description: Bad request - invalid input data
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+
+  /api/neural-networks/perceptron:
+    post:
+      tags:
+        - Neural Networks
+      summary: Perceptron prediction
+      description: Makes prediction using a perceptron with step activation
+      operationId: neuralNetworksPerceptron
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/PerceptronRequest'
+            example:
+              weights: [0.5, -0.5]
+              bias: -0.1
+              inputs: [1.0, 0.5]
+      responses:
+        '200':
+          description: Perceptron prediction successful
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PerceptronResponse'
+        '400':
+          description: Bad request - invalid input data
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+
+  /api/neural-networks/neuron:
+    post:
+      tags:
+        - Neural Networks
+      summary: Neuron activation
+      description: Calculates neuron output with sigmoid activation
+      operationId: neuralNetworksNeuron
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/NeuronRequest'
+            example:
+              weights: [0.5, -0.5]
+              inputs: [1.0, 0.5]
+      responses:
+        '200':
+          description: Neuron activation successful
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/NeuronResponse'
+        '400':
+          description: Bad request - invalid input data
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+
+  /api/neural-networks/feed_forward:
+    post:
+      tags:
+        - Neural Networks
+      summary: Feed forward propagation
+      description: Performs feed-forward propagation through a neural network
+      operationId: neuralNetworksFeedForward
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/FeedForwardRequest'
+            example:
+              network:
+                - [[0.5, -0.5], 0.0]
+                - [[1.0, 1.0], 0.0]
+              inputs: [1.0, 1.0]
+      responses:
+        '200':
+          description: Feed-forward propagation successful
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/FeedForwardResponse'
+        '400':
+          description: Bad request - invalid input data
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+
+  /api/neural-networks/backpropagation:
+    post:
+      tags:
+        - Neural Networks
+      summary: Calculate backpropagation gradients
+      description: Calculates gradients using backpropagation algorithm
+      operationId: neuralNetworksBackpropagation
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/BackpropagationRequest'
+            example:
+              network:
+                - [[0.5, -0.5], 0.0]
+                - [[1.0, 1.0], 0.0]
+              inputs: [1.0, 1.0]
+              target: [1.0]
+      responses:
+        '200':
+          description: Backpropagation calculation successful
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/BackpropagationResponse'
+        '400':
+          description: Bad request - invalid input data
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+
+  /api/neural-networks/simple_train:
+    post:
+      tags:
+        - Neural Networks
+      summary: Simple training demonstration
+      description: Demonstrates simple neural network training
+      operationId: neuralNetworksSimpleTrain
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/SimpleTrainRequest'
+            example:
+              training_data:
+                - inputs: [0, 0]
+                  target: [0]
+                - inputs: [0, 1]
+                  target: [1]
+                - inputs: [1, 0]
+                  target: [1]
+                - inputs: [1, 1]
+                  target: [0]
+              hidden_neurons: 2
+              learning_rate: 0.1
+              epochs: 100
+      responses:
+        '200':
+          description: Training demonstration successful
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/SimpleTrainResponse'
+        '400':
+          description: Bad request - invalid input data
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+
+  /api/neural-networks/info:
+    get:
+      tags:
+        - Neural Networks
+      summary: Get neural network algorithm information
+      description: Returns information about neural network algorithms and functions
+      operationId: neuralNetworksInfo
+      responses:
+        '200':
+          description: Algorithm information retrieved
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/NeuralNetworksInfo'
+
+components:
+  schemas:
+    ApiInfo:
+      type: object
+      properties:
+        name:
+          type: string
+          example: "Data Scratch Library REST API"
+        version:
+          type: string
+          example: "1.0.0"
+        cors_enabled:
+          type: boolean
+          description: Whether CORS is enabled
+        endpoints:
+          type: object
+          properties:
+            knn:
+              type: string
+              example: "/api/knn"
+            naive_bayes:
+              type: string
+              example: "/api/naive-bayes"
+            decision_trees:
+              type: string
+              example: "/api/decision-trees"
+            clustering:
+              type: string
+              example: "/api/clustering"
+            neural_networks:
+              type: string
+              example: "/api/neural-networks"
+            health:
+              type: string
+              example: "/health"
+
+    HealthCheck:
+      type: object
+      properties:
+        status:
+          type: string
+          enum: [healthy]
+          example: "healthy"
+        message:
+          type: string
+          example: "Data Scratch Library API is running"
+        note:
+          type: string
+          description: Optional note about CORS availability
+          example: "CORS not available - install Flask-CORS for cross-origin support"
+
+    Error:
+      type: object
+      properties:
+        error:
+          type: string
+          description: Error description
+          example: "Missing required field: k"
+
+    # KNN Schemas
+    KnnClassifyRequest:
+      type: object
+      required:
+        - k
+        - point
+        - training_data
+      properties:
+        k:
+          type: integer
+          minimum: 1
+          description: Number of nearest neighbors to consider
+          example: 3
+        point:
+          type: array
+          items:
+            type: number
+          description: Point to classify
+          example: [1.0, 2.0]
+        training_data:
+          type: array
+          items:
+            $ref: '#/components/schemas/LabeledPoint'
+          description: Labeled training points
+
+    LabeledPoint:
+      type: object
+      required:
+        - point
+        - label
+      properties:
+        point:
+          type: array
+          items:
+            type: number
+          description: Training point coordinates
+        label:
+          description: Point label (can be any type)
+          example: "A"
+
+    KnnClassifyResponse:
+      type: object
+      properties:
+        prediction:
+          description: Predicted label
+          example: "A"
+        k:
+          type: integer
+          example: 3
+        point:
+          type: array
+          items:
+            type: number
+          example: [1.0, 2.0]
+        training_points_count:
+          type: integer
+          example: 10
+
+    KnnBatchClassifyRequest:
+      type: object
+      required:
+        - k
+        - points
+        - training_data
+      properties:
+        k:
+          type: integer
+          minimum: 1
+          description: Number of nearest neighbors to consider
+          example: 3
+        points:
+          type: array
+          items:
+            type: array
+            items:
+              type: number
+          description: Points to classify
+          example: [[1.0, 2.0], [3.0, 4.0]]
+        training_data:
+          type: array
+          items:
+            $ref: '#/components/schemas/LabeledPoint'
+          description: Labeled training points
+
+    KnnBatchClassifyResponse:
+      type: object
+      properties:
+        predictions:
+          type: array
+          items:
+            description: Predicted labels
+          example: ["A", "B"]
+        k:
+          type: integer
+          example: 3
+        points_count:
+          type: integer
+          example: 2
+        training_points_count:
+          type: integer
+          example: 10
+
+    KnnInfo:
+      type: object
+      properties:
+        algorithm:
+          type: string
+          example: "K-Nearest Neighbors"
+        description:
+          type: string
+          example: "Classifies a point based on the majority class of its k nearest neighbors"
+        parameters:
+          type: object
+          properties:
+            k:
+              type: object
+              properties:
+                type:
+                  type: string
+                  example: "integer"
+                description:
+                  type: string
+                  example: "Number of nearest neighbors to consider"
+                recommended:
+                  type: string
+                  example: "Odd numbers to avoid ties, typically 1, 3, or 5"
+            point:
+              type: object
+              properties:
+                type:
+                  type: string
+                  example: "array"
+                description:
+                  type: string
+                  example: "The point to classify"
+                example:
+                  type: string
+                  example: "[1.0, 2.0, 3.0]"
+            training_data:
+              type: object
+              properties:
+                type:
+                  type: string
+                  example: "array"
+                description:
+                  type: string
+                  example: "Labeled training points"
+                example:
+                  type: string
+                  example: "[{"point": [1.0, 2.0], "label": "A"}]"
+        notes:
+          type: array
+          items:
+            type: string
+          example:
+            - "All points should have the same dimensionality"
+            - "Labels can be any hashable type (string, number, etc.)"
+            - "Higher k values can reduce noise but may blur decision boundaries"
+
+    # Naive Bayes Schemas
+    NaiveBayesClassifyRequest:
+      type: object
+      required:
+        - message
+        - training_data
+      properties:
+        message:
+          type: string
+          description: Message to classify
+          example: "buy viagra now cheap pills"
+        training_data:
+          type: array
+          items:
+            $ref: '#/components/schemas/LabeledMessage'
+          description: Labeled training messages
+        smoothing:
+          type: number
+          minimum: 0
+          default: 0.5
+          description: Laplace smoothing parameter
+          example: 0.5
+
+    LabeledMessage:
+      type: object
+      required:
+        - message
+        - is_spam
+      properties:
+        message:
+          type: string
+          description: Training message
+          example: "buy viagra now"
+        is_spam:
+          type: boolean
+          description: Whether message is spam
+          example: true
+
+    NaiveBayesClassifyResponse:
+      type: object
+      properties:
+        message:
+          type: string
+          example: "buy viagra now cheap pills"
+        is_spam:
+          type: boolean
+          example: true
+        spam_probability:
+          type: number
+          minimum: 0
+          maximum: 1
+          example: 0.95
+        ham_probability:
+          type: number
+          minimum: 0
+          maximum: 1
+          example: 0.05
+        training_samples:
+          type: integer
+          example: 100
+        smoothing_parameter:
+          type: number
+          example: 0.5
+
+    NaiveBayesBatchClassifyRequest:
+      type: object
+      required:
+        - messages
+        - training_data
+      properties:
+        messages:
+          type: array
+          items:
+            type: string
+          description: Messages to classify
+          example: ["buy viagra", "hello friend"]
+        training_data:
+          type: array
+          items:
+            $ref: '#/components/schemas/LabeledMessage'
+          description: Labeled training messages
+        smoothing:
+          type: number
+          minimum: 0
+          default: 0.5
+          description: Laplace smoothing parameter
+          example: 0.5
+
+    NaiveBayesBatchClassifyResponse:
+      type: object
+      properties:
+        results:
+          type: array
+          items:
+            $ref: '#/components/schemas/NaiveBayesClassifyResponse'
+          description: Classification results for each message
+        messages_count:
+          type: integer
+          example: 2
+        training_samples:
+          type: integer
+          example: 100
+        smoothing_parameter:
+          type: number
+          example: 0.5
+
+    NaiveBayesTrainRequest:
+      type: object
+      required:
+        - training_data
+      properties:
+        training_data:
+          type: array
+          items:
+            $ref: '#/components/schemas/LabeledMessage'
+          description: Labeled training messages
+        smoothing:
+          type: number
+          minimum: 0
+          default: 0.5
+          description: Laplace smoothing parameter
+          example: 0.5
+
+    NaiveBayesTrainResponse:
+      type: object
+      properties:
+        status:
+          type: string
+          example: "trained"
+        training_samples:
+          type: integer
+          example: 100
+        spam_samples:
+          type: integer
+          example: 40
+        ham_samples:
+          type: integer
+          example: 60
+        smoothing_parameter:
+          type: number
+          example: 0.5
+        message:
+          type: string
+          example: "Classifier trained successfully. Use /classify endpoint with the same training data to classify messages."
+
+    NaiveBayesInfo:
+      type: object
+      properties:
+        algorithm:
+          type: string
+          example: "Naive Bayes Classifier"
+        description:
+          type: string
+          example: "A probabilistic classifier based on Bayes theorem with strong independence assumptions between features"
+        parameters:
+          type: object
+          properties:
+            message:
+              type: object
+              properties:
+                type:
+                  type: string
+                  example: "string"
+                description:
+                  type: string
+                  example: "The message to classify as spam or ham"
+                example:
+                  type: string
+                  example: "buy viagra now cheap pills"
+            training_data:
+              type: object
+              properties:
+                type:
+                  type: string
+                  example: "array"
+                description:
+                  type: string
+                  example: "Labeled training messages"
+                example:
+                  type: string
+                  example: "[{"message": "buy viagra", "is_spam": true}]"
+            smoothing:
+              type: object
+              properties:
+                type:
+                  type: string
+                  example: "number"
+                description:
+                  type: string
+                  example: "Laplace smoothing parameter to handle zero frequency"
+                default:
+                  type: string
+                  example: "0.5"
+                recommended:
+                  type: string
+                  example: "0.5 to 1.0"
+        output:
+          type: object
+          properties:
+            is_spam:
+              type: string
+              example: "boolean"
+            spam_probability:
+              type: string
+              example: "float (0-1)"
+            ham_probability:
+              type: string
+              example: "float (0-1)"
+        notes:
+          type: array
+          items:
+            type: string
+          example:
+            - "Uses bag-of-words model with tokenization"
+            - "Applies Laplace smoothing to handle unknown words"
+            - "Assumes conditional independence between words"
+            - "Works well for text classification tasks"
+
+    # Decision Tree Schemas
+    DecisionTreeClassifyRequest:
+      type: object
+      required:
+        - instance
+        - training_data
+      properties:
+        instance:
+          type: object
+          description: Feature dictionary to classify
+          example:
+            level: "Senior"
+            lang: "Java"
+        training_data:
+          type: array
+          items:
+            $ref: '#/components/schemas/LabeledInstance'
+          description: Labeled training instances
+        split_candidates:
+          type: array
+          items:
+            type: string
+          description: Optional list of features to consider for splitting
+          example: ["level", "lang"]
+
+    LabeledInstance:
+      type: object
+      required:
+        - features
+        - label
+      properties:
+        features:
+          type: object
+          description: Feature dictionary
+          example:
+            level: "Senior"
+            lang: "Java"
+        label:
+          type: boolean
+          description: Instance label
+          example: true
+
+    DecisionTreeClassifyResponse:
+      type: object
+      properties:
+        instance:
+          type: object
+          example:
+            level: "Senior"
+            lang: "Java"
+        prediction:
+          type: boolean
+          example: true
+        training_samples:
+          type: integer
+          example: 100
+        split_candidates:
+          type: array
+          items:
+            type: string
+          example: ["level", "lang"]
+
+    DecisionTreeBatchClassifyRequest:
+      type: object
+      required:
+        - instances
+        - training_data
+      properties:
+        instances:
+          type: array
+          items:
+            type: object
+          description: Feature dictionaries to classify
+          example:
+            - level: "Senior"
+              lang: "Java"
+            - level: "Junior"
+              lang: "Python"
+        training_data:
+          type: array
+          items:
+            $ref: '#/components/schemas/LabeledInstance'
+          description: Labeled training instances
+        split_candidates:
+          type: array
+          items:
+            type: string
+          description: Optional list of features to consider for splitting
+          example: ["level", "lang"]
+
+    DecisionTreeBatchClassifyResponse:
+      type: object
+      properties:
+        results:
+          type: array
+          items:
+            $ref: '#/components/schemas/DecisionTreeClassifyResponse'
+          description: Classification results for each instance
+        instances_count:
+          type: integer
+          example: 2
+        training_samples:
+          type: integer
+          example: 100
+        split_candidates:
+          type: array
+          items:
+            type: string
+          example: ["level", "lang"]
+
+    DecisionTreeForestClassifyRequest:
+      type: object
+      required:
+        - instance
+        - training_data
+      properties:
+        instance:
+          type: object
+          description: Feature dictionary to classify
+          example:
+            level: "Senior"
+            lang: "Java"
+        num_trees:
+          type: integer
+          minimum: 1
+          default: 5
+          description: Number of trees for random forest
+          example: 5
+        training_data:
+          type: array
+          items:
+            $ref: '#/components/schemas/LabeledInstance'
+          description: Labeled training instances
+
+    DecisionTreeForestClassifyResponse:
+      type: object
+      properties:
+        instance:
+          type: object
+          example:
+            level: "Senior"
+            lang: "Java"
+        prediction:
+          type: boolean
+          example: true
+        num_trees:
+          type: integer
+          example: 5
+        training_samples:
+          type: integer
+          example: 100
+
+    DecisionTreeTrainRequest:
+      type: object
+      required:
+        - training_data
+      properties:
+        training_data:
+          type: array
+          items:
+            $ref: '#/components/schemas/LabeledInstance'
+          description: Labeled training instances
+        split_candidates:
+          type: array
+          items:
+            type: string
+          description: Optional list of features to consider for splitting
+          example: ["level", "lang"]
+
+    DecisionTreeTrainResponse:
+      type: object
+      properties:
+        status:
+          type: string
+          example: "trained"
+        tree_type:
+          type: string
+          example: "tuple"
+        training_samples:
+          type: integer
+          example: 100
+        split_candidates:
+          type: array
+          items:
+            type: string
+          example: ["level", "lang"]
+        message:
+          type: string
+          example: "Decision tree trained successfully. Use /classify endpoint with the same training data to classify new instances."
+        note:
+          type: string
+          example: "Tree structure is not serialized in this response. It exists in memory for classification."
+
+    DecisionTreeInfo:
+      type: object
+      properties:
+        algorithm:
+          type: string
+          example: "Decision Trees (ID3)"
+        description:
+          type: string
+          example: "A tree-based model that makes predictions by learning simple decision rules inferred from data features"
+        parameters:
+          type: object
+          properties:
+            training_data:
+              type: object
+              properties:
+                type:
+                  type: string
+                  example: "array"
+                description:
+                  type: string
+                  example: "Labeled training instances with features and boolean labels"
+                example:
+                  type: string
+                  example: "[{"features": {"level": "Senior"}, "label": true}]"
+            split_candidates:
+              type: object
+              properties:
+                type:
+                  type: string
+                  example: "array"
+                description:
+                  type: string
+                  example: "List of features to consider for splitting (optional)"
+                example:
+                  type: string
+                  example: "["level", "lang", "experience"]"
+            instance:
+              type: object
+              properties:
+                type:
+                  type: string
+                  example: "object"
+                description:
+                  type: string
+                  example: "Feature dictionary to classify"
+                example:
+                  type: string
+                  example: "{"level": "Senior", "lang": "Java"}"
+            num_trees:
+              type: object
+              properties:
+                type:
+                  type: string
+                  example: "integer"
+                description:
+                  type: string
+                  example: "Number of trees for random forest (forest_classify only)"
+                default:
+                  type: string
+                  example: "5"
+                recommended:
+                  type: string
+                  example: "5-50"
+        output:
+          type: object
+          properties:
+            prediction:
+              type: string
+              example: "boolean (true/false)"
+        notes:
+          type: array
+          items:
+            type: string
+          example:
+            - "Uses ID3 algorithm with information gain for splitting"
+            - "Handles categorical features automatically"
+            - "Creates human-interpretable decision rules"
+            - "Random forest combines multiple trees for better accuracy"
+
+    # Clustering Schemas
+    KmeansRequest:
+      type: object
+      required:
+        - data
+        - k
+      properties:
+        data:
+          type: array
+          items:
+            type: array
+            items:
+              type: number
+          description: Data points to cluster
+          example: [[1.0, 2.0], [3.0, 4.0], [5.0, 6.0]]
+        k:
+          type: integer
+          minimum: 1
+          description: Number of clusters to create
+          example: 2
+        max_iterations:
+          type: integer
+          minimum: 1
+          default: 100
+          description: Maximum number of iterations for convergence
+          example: 100
+        initial_assignments:
+          type: array
+          items:
+            type: integer
+          description: Optional initial cluster assignments
+          example: [0, 1, 0]
+
+    KmeansResponse:
+      type: object
+      properties:
+        clusters:
+          type: object
+          description: Cluster assignments organized by cluster ID
+          example:
+            "0":
+              - index: 0
+                point: [1.0, 2.0]
+              - index: 2
+                point: [1.1, 2.1]
+            "1":
+              - index: 1
+                point: [3.0, 4.0]
+        assignments:
+          type: array
+          items:
+            type: integer
+          description: Cluster assignment for each data point
+          example: [0, 1, 0]
+        means:
+          type: array
+          items:
+            type: array
+            items:
+              type: number
+          description: Cluster centroids
+          example: [[1.05, 2.05], [3.0, 4.0]]
+        k:
+          type: integer
+          example: 2
+        total_squared_error:
+          type: number
+          description: Total squared error of clustering
+          example: 0.5
+        iterations_used:
+          type: integer
+          description: Number of iterations used
+          example: 100
+        data_points:
+          type: integer
+          example: 3
+
+    ClusteringAnalyzeRequest:
+      type: object
+      required:
+        - data
+        - assignments
+        - means
+      properties:
+        data:
+          type: array
+          items:
+            type: array
+            items:
+              type: number
+          description: Data points
+          example: [[1.0, 2.0], [3.0, 4.0], [5.0, 6.0]]
+        assignments:
+          type: array
+          items:
+            type: integer
+          description: Cluster assignments
+          example: [0, 1, 0]
+        means:
+          type: array
+          items:
+            type: array
+            items:
+              type: number
+          description: Cluster centroids
+          example: [[1.5, 2.5], [4.0, 5.0]]
+
+    ClusteringAnalyzeResponse:
+      type: object
+      properties:
+        total_squared_error:
+          type: number
+          example: 2.5
+        average_squared_error:
+          type: number
+          example: 0.83
+        cluster_sizes:
+          type: object
+          description: Size of each cluster
+          example:
+            "0": 2
+            "1": 1
+        cluster_errors:
+          type: object
+          description: Error metrics for each cluster
+          example:
+            "0":
+              total_error: 1.0
+              average_error: 0.5
+              size: 2
+            "1":
+              total_error: 1.5
+              average_error: 1.5
+              size: 1
+        num_clusters:
+          type: integer
+          example: 2
+        data_points:
+          type: integer
+          example: 3
+
+    OptimalKRequest:
+      type: object
+      required:
+        - data
+      properties:
+        data:
+          type: array
+          items:
+            type: array
+            items:
+              type: number
+          description: Data points to analyze
+          example: [[1.0, 2.0], [3.0, 4.0], [5.0, 6.0]]
+        max_k:
+          type: integer
+          minimum: 2
+          default: 10
+          description: Maximum number of clusters to test
+          example: 5
+        runs_per_k:
+          type: integer
+          minimum: 1
+          default: 3
+          description: Number of runs per k value
+          example: 3
+
+    OptimalKResponse:
+      type: object
+      properties:
+        results:
+          type: array
+          items:
+            type: object
+            properties:
+              k:
+                type: integer
+                example: 2
+              average_squared_error:
+                type: number
+                example: 2.5
+              min_error:
+                type: number
+                example: 2.0
+              max_error:
+                type: number
+                example: 3.0
+          description: Error analysis for each k value
+        recommended_k:
+          type: integer
+          description: Recommended number of clusters based on elbow method
+          example: 2
+        max_k_tested:
+          type: integer
+          example: 5
+        runs_per_k:
+          type: integer
+          example: 3
+        data_points:
+          type: integer
+          example: 3
+
+    ClusteringInfo:
+      type: object
+      properties:
+        algorithms:
+          type: array
+          items:
+            type: string
+          example: ["K-means"]
+        description:
+          type: string
+          example: "Partition data into k clusters based on feature similarity"
+        parameters:
+          type: object
+          properties:
+            data:
+              type: object
+              properties:
+                type:
+                  type: string
+                  example: "array"
+                description:
+                  type: string
+                  example: "List of data points to cluster"
+                example:
+                  type: string
+                  example: "[[1.0, 2.0], [3.0, 4.0], [5.0, 6.0]]"
+            k:
+              type: object
+              properties:
+                type:
+                  type: string
+                  example: "integer"
+                description:
+                  type: string
+                  example: "Number of clusters to create"
+                recommended:
+                  type: string
+                  example: "Use elbow method or domain knowledge"
+            max_iterations:
+              type: object
+              properties:
+                type:
+                  type: string
+                  example: "integer"
+                description:
+                  type: string
+                  example: "Maximum number of iterations for convergence"
+                default:
+                  type: string
+                  example: "100"
+            initial_assignments:
+              type: object
+              properties:
+                type:
+                  type: string
+                  example: "array"
+                description:
+                  type: string
+                  example: "Optional initial cluster assignments"
+                example:
+                  type: string
+                  example: "[0, 1, 0]"
+        output:
+          type: object
+          properties:
+            clusters:
+              type: string
+              example: "object with cluster assignments"
+            means:
+              type: string
+              example: "array of cluster centroids"
+            total_squared_error:
+              type: string
+              example: "float measuring clustering quality"
+        endpoints:
+          type: object
+          properties:
+            kmeans:
+              type: string
+              example: "POST /api/clustering/kmeans - Perform K-means clustering"
+            analyze:
+              type: string
+              example: "POST /api/clustering/analyze - Analyze clustering quality"
+            optimal_k:
+              type: string
+              example: "POST /api/clustering/optimal_k - Find optimal number of clusters"
+        notes:
+          type: array
+          items:
+            type: string
+          example:
+            - "All points must have the same dimensionality"
+            - "K-means converges to local optima - multiple runs may give different results"
+            - "Lower squared error generally indicates better clustering"
+            - "Elbow method helps determine optimal k value"
+
+    # Neural Network Schemas
+    SigmoidRequest:
+      type: object
+      required:
+        - x
+      properties:
+        x:
+          type: number
+          description: Input value for sigmoid function
+          example: 1.0
+
+    SigmoidResponse:
+      type: object
+      properties:
+        input:
+          type: number
+          example: 1.0
+        sigmoid:
+          type: number
+          minimum: 0
+          maximum: 1
+          example: 0.7310585786300049
+        function:
+          type: string
+          example: "sigmoid(x) = 1 / (1 + e^(-x))"
+
+    StepRequest:
+      type: object
+      required:
+        - x
+      properties:
+        x:
+          type: number
+          description: Input value for step function
+          example: 1.0
+
+    StepResponse:
+      type: object
+      properties:
+        input:
+          type: number
+          example: 1.0
+        step:
+          type: integer
+          enum: [0, 1]
+          example: 1
+        function:
+          type: string
+          example: "step(x) = 1 if x >= 0 else 0"
+
+    PerceptronRequest:
+      type: object
+      required:
+        - weights
+        - bias
+        - inputs
+      properties:
+        weights:
+          type: array
+          items:
+            type: number
+          description: Perceptron weights
+          example: [0.5, -0.5]
+        bias:
+          type: number
+          description: Perceptron bias
+          example: -0.1
+        inputs:
+          type: array
+          items:
+            type: number
+          description: Input values
+          example: [1.0, 0.5]
+
+    PerceptronResponse:
+      type: object
+      properties:
+        inputs:
+          type: array
+          items:
+            type: number
+          example: [1.0, 0.5]
+        weights:
+          type: array
+          items:
+            type: number
+          example: [0.5, -0.5]
+        bias:
+          type: number
+          example: -0.1
+        weighted_sum:
+          type: number
+          example: 0.4
+        output:
+          type: integer
+          enum: [0, 1]
+          example: 1
+        activation:
+          type: string
+          example: "step_function"
+
+    NeuronRequest:
+      type: object
+      required:
+        - weights
+        - inputs
+      properties:
+        weights:
+          type: array
+          items:
+            type: number
+          description: Neuron weights
+          example: [0.5, -0.5]
+        inputs:
+          type: array
+          items:
+            type: number
+          description: Input values
+          example: [1.0, 0.5]
+
+    NeuronResponse:
+      type: object
+      properties:
+        inputs:
+          type: array
+          items:
+            type: number
+          example: [1.0, 0.5]
+        weights:
+          type: array
+          items:
+            type: number
+          example: [0.5, -0.5]
+        weighted_sum:
+          type: number
+          example: 0.0
+        output:
+          type: number
+          minimum: 0
+          maximum: 1
+          example: 0.5
+        activation:
+          type: string
+          example: "sigmoid"
+
+    FeedForwardRequest:
+      type: object
+      required:
+        - network
+        - inputs
+      properties:
+        network:
+          type: array
+          items:
+            type: array
+            items:
+              oneOf:
+                - type: array
+                  items:
+                    type: number
+                - type: number
+          description: Neural network layers as [weights, bias] pairs
+          example:
+            - [[0.5, -0.5], 0.0]
+            - [[1.0, 1.0], 0.0]
+        inputs:
+          type: array
+          items:
+            type: number
+          description: Input values for the network
+          example: [1.0, 1.0]
+
+    FeedForwardResponse:
+      type: object
+      properties:
+        inputs:
+          type: array
+          items:
+            type: number
+          example: [1.0, 1.0]
+        network_structure:
+          type: array
+          items:
+            type: integer
+          description: Number of neurons per layer
+          example: [2, 1]
+        layer_outputs:
+          type: array
+          items:
+            type: array
+            items:
+              type: number
+          description: Output values for each layer
+          example: [[0.5, 0.5], [0.73]]
+        final_output:
+          type: array
+          items:
+            type: number
+          description: Final network output
+          example: [0.73]
+        num_layers:
+          type: integer
+          example: 2
+
+    BackpropagationRequest:
+      type: object
+      required:
+        - network
+        - inputs
+        - target
+      properties:
+        network:
+          type: array
+          items:
+            type: array
+            items:
+              oneOf:
+                - type: array
+                  items:
+                    type: number
+                - type: number
+          description: Neural network layers as [weights, bias] pairs
+          example:
+            - [[0.5, -0.5], 0.0]
+            - [[1.0, 1.0], 0.0]
+        inputs:
+          type: array
+          items:
+            type: number
+          description: Input values for the network
+          example: [1.0, 1.0]
+        target:
+          type: array
+          items:
+            type: number
+          description: Target output values
+          example: [1.0]
+
+    BackpropagationResponse:
+      type: object
+      properties:
+        inputs:
+          type: array
+          items:
+            type: number
+          example: [1.0, 1.0]
+        target:
+          type: array
+          items:
+            type: number
+          example: [1.0]
+        network_output:
+          type: array
+          items:
+            type: number
+          description: Actual network output
+          example: [0.73]
+        gradients:
+          type: array
+          items:
+            type: array
+            items:
+              oneOf:
+                - type: array
+                  items:
+                    type: number
+                - type: number
+          description: Gradients for each layer [weight_gradients, bias_gradient]
+          example:
+            - [[[0.1, 0.1], 0.05]]
+            - [[[0.2], 0.1]]
+        num_layers:
+          type: integer
+          example: 2
+        note:
+          type: string
+          example: "Gradients are returned as [weight_gradients, bias_gradient] for each layer"
+
+    SimpleTrainRequest:
+      type: object
+      required:
+        - training_data
+      properties:
+        training_data:
+          type: array
+          items:
+            type: object
+            properties:
+              inputs:
+                type: array
+                items:
+                  type: number
+                example: [0, 0]
+              target:
+                type: array
+                items:
+                  type: number
+                example: [0]
+          description: Training data with inputs and targets
+          example:
+            - inputs: [0, 0]
+              target: [0]
+            - inputs: [0, 1]
+              target: [1]
+        hidden_neurons:
+          type: integer
+          minimum: 1
+          default: 2
+          description: Number of hidden neurons
+          example: 2
+        learning_rate:
+          type: number
+          minimum: 0
+          default: 0.1
+          description: Learning rate for training
+          example: 0.1
+        epochs:
+          type: integer
+          minimum: 1
+          default: 100
+          description: Number of training epochs
+          example: 100
+
+    SimpleTrainResponse:
+      type: object
+      properties:
+        status:
+          type: string
+          example: "training_completed"
+        network_structure:
+          type: object
+          properties:
+            input_dim:
+              type: integer
+              example: 2
+            hidden_neurons:
+              type: integer
+              example: 2
+            output_dim:
+              type: integer
+              example: 1
+        training_parameters:
+          type: object
+          properties:
+            learning_rate:
+              type: number
+              example: 0.1
+            epochs:
+              type: integer
+              example: 100
+        training_samples:
+          type: integer
+          example: 4
+        final_error:
+          type: number
+          example: 0.25
+        note:
+          type: string
+          example: "This is a demonstration. Actual weight updates not implemented in this simple version."
+
+    NeuralNetworksInfo:
+      type: object
+      properties:
+        algorithms:
+          type: array
+          items:
+            type: string
+          example: ["Feed-forward Neural Networks", "Backpropagation", "Perceptron"]
+        description:
+          type: string
+          example: "Neural networks are computational models inspired by biological neural networks"
+        functions:
+          type: object
+          properties:
+            sigmoid:
+              type: object
+              properties:
+                description:
+                  type: string
+                  example: "S-shaped activation function"
+                formula:
+                  type: string
+                  example: "sigmoid(x) = 1 / (1 + e^(-x))"
+                range:
+                  type: string
+                  example: "(0, 1)"
+            step_function:
+              type: object
+              properties:
+                description:
+                  type: string
+                  example: "Binary activation function"
+                formula:
+                  type: string
+                  example: "step(x) = 1 if x >= 0 else 0"
+                range:
+                  type: string
+                  example: "{0, 1}"
+            perceptron:
+              type: object
+              properties:
+                description:
+                  type: string
+                  example: "Linear classifier with step activation"
+                parameters:
+                  type: string
+                  example: "weights, bias, inputs"
+            neuron_output:
+              type: object
+              properties:
+                description:
+                  type: string
+                  example: "Neuron with sigmoid activation"
+                parameters:
+                  type: string
+                  example: "weights, inputs"
+            feed_forward:
+              type: object
+              properties:
+                description:
+                  type: string
+                  example: "Forward propagation through neural network"
+                parameters:
+                  type: string
+                  example: "network, inputs"
+            backpropagation:
+              type: object
+              properties:
+                description:
+                  type: string
+                  example: "Gradient calculation for training"
+                parameters:
+                  type: string
+                  example: "network, inputs, target"
+        endpoints:
+          type: object
+          properties:
+            sigmoid:
+              type: string
+              example: "POST /api/neural-networks/sigmoid"
+            step:
+              type: string
+              example: "POST /api/neural-networks/step"
+            perceptron:
+              type: string
+              example: "POST /api/neural-networks/perceptron"
+            neuron:
+              type: string
+              example: "POST /api/neural-networks/neuron"
+            feed_forward:
+              type: string
+              example: "POST /api/neural-networks/feed_forward"
+            backpropagation:
+              type: string
+              example: "POST /api/neural-networks/backpropagation"
+            simple_train:
+              type: string
+              example: "POST /api/neural-networks/simple_train"
+        notes:
+          type: array
+          items:
+            type: string
+          example:
+            - "Network format: [[weights, bias], [weights, bias], ...]"
+            - "Weights and inputs must have matching dimensions"
+            - "Backpropagation returns gradients for each layer"
+            - "Training requires iterative weight updates with gradients"
+
+  securitySchemes:
+    ApiKeyAuth:
+      type: apiKey
+      in: header
+      name: X-API-Key
+      description: API key for authentication (optional for this demo)
+
+security:
+  - ApiKeyAuth: []
+
+tags:
+  - name: Base
+    description: Base API endpoints for health checks and information
+  - name: K-Nearest Neighbors
+    description: K-Nearest Neighbors classification algorithms
+  - name: Naive Bayes
+    description: Naive Bayes spam detection and classification
+  - name: Decision Trees
+    description: Decision tree algorithms including random forest
+  - name: Clustering
+    description: K-means clustering and analysis
+  - name: Neural Networks
+    description: Neural network functions and training
