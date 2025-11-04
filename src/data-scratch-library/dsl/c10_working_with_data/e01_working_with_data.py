@@ -9,7 +9,11 @@ from os.path import abspath, dirname
 
 from dsl.c05_statistics.e0503_correlation import correlation
 from dsl.c06_probability.e0603_normal import random_normal
-from dsl.c10_working_with_data.e1007_manipulation import day_over_day_changes
+from dsl.c10_working_with_data.e1007_manipulation import (
+    day_over_day_changes, max_stock_price, max_prices_by_symbol, 
+    find_largest_and_smallest_changes, average_daily_change_by_month
+)
+from dsl.c10_working_with_data.e1004_named_tuples import StockPrice
 from dsl.c10_working_with_data.e1008_rescaling import scale, rescale
 
 
@@ -113,7 +117,7 @@ def principal_component_analysis(matrix, num_components):
         demeaned = [[row[i] - mean_vector[i] for i in range(len(row))] for row in matrix]
         demeaned_covariance = covariance_matrix(demeaned)
         eigenvalues, eigenvectors = eig(demeaned_covariance)
-        principal_component = eigenvectors[:, argmax(eigenvalues)]
+        principal_component = [eigenvectors[i][argmax(eigenvalues)] for i in range(len(eigenvectors))]
         components.append(principal_component)
 
         # Remove the component from the matrix
@@ -193,19 +197,39 @@ def group_by(key_fn, rows, value_transform):
 
 
 def picker(field_name):
-    """Returns a function that picks a specific field from a dictionary."""
-    return lambda row: row[field_name]
+    """Returns a function that picks a specific field from a dictionary or object."""
+    if field_name == "change":
+        return lambda obj: getattr(obj, "pct_change", None)
+    return lambda row: getattr(row, field_name, None) if hasattr(row, field_name) else row.get(field_name, None)
 
 
 def overall_change(changes):
-    """Computes the overall change for a set of stock changes."""
-    return sum(change["change"] for change in changes)
+    """Computes the overall change for a set of DailyChange objects."""
+    if hasattr(changes, 'pct_change'):
+        # Single DailyChange object
+        return changes.pct_change
+    return sum(change.pct_change for change in changes)
 
 
 def main1(path_to_csv_data):
     """Main function for reading CSV stock data."""
     logging.info("Safe parsing of stock data")
     _data = read_comma_delimited_stock_prices(path_to_csv_data)
+
+
+def dict_to_stock_price(row_dict):
+    """Convert a dictionary to StockPrice object."""
+    return StockPrice(
+        symbol=row_dict["symbol"],
+        date=row_dict["date"], 
+        closing_price=row_dict["closing_price"]
+    )
+
+
+def day_over_day_changes_from_dicts(prices_dict):
+    """Convert dict data to StockPrice objects and compute day-over-day changes."""
+    stock_prices = [dict_to_stock_price(row) for row in prices_dict]
+    return day_over_day_changes(stock_prices)
 
 
 def main2(path_to_stocks):
@@ -233,9 +257,12 @@ def main2(path_to_stocks):
     }
     logging.info("Max price by symbol: %s", max_price_by_symbol)
 
-    changes_by_symbol = group_by(picker("symbol"), _data, day_over_day_changes)
-
-    all_changes = [change for changes in changes_by_symbol.values() for change in changes]
+    changes_by_symbol = group_by_symbol(_data)
+    
+    all_changes = []
+    for symbol, rows in changes_by_symbol.items():
+        changes = day_over_day_changes_from_dicts(rows)
+        all_changes.extend(changes)
 
     max_all_changes = max(all_changes, key=picker("change"))
     min_all_changes = min(all_changes, key=picker("change"))
@@ -244,7 +271,7 @@ def main2(path_to_stocks):
     logging.info("Min change: %s", min_all_changes)
 
     overall_change_by_month = group_by(
-        lambda row: row["date"].month, all_changes, overall_change
+        lambda row: getattr(row, "date").month, all_changes, overall_change
     )
     logging.info("Overall change by month: %s", overall_change_by_month)
 

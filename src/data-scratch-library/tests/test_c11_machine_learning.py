@@ -64,13 +64,14 @@ def test_recall(tp, fp, fn, tn, expected):
 
 
 def test_split_data():
-    result = split_data(make_random_matrix(), 0.5)
+    result = split_data(make_random_matrix(100, 3), 0.5)
     assert len(result[0]) == pytest.approx(50, abs=10)
     assert len(result[1]) == pytest.approx(50, abs=10)
 
 
 def test_train_test_split():
-    x_train, x_test, y_train, y_test = machine_learning.train_test_split(make_random_matrix(), make_random_matrix(), 0.5)
+    x_train, x_test, y_train, y_test = machine_learning.train_test_split(
+        make_random_matrix(100, 3), make_random_matrix(100, 2), 0.5)
     assert len(x_train) == pytest.approx(50, abs=10)
     assert len(x_test) == pytest.approx(50, abs=10)
     assert len(y_train) == pytest.approx(50, abs=10)

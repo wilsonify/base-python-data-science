@@ -2,8 +2,7 @@ import random
 
 from dsl.c08_gradient_descent import negate, negate_all
 from dsl.c08_gradient_descent.e0805_stochastic_gd import maximize_stochastic
-from dsl.c14_simple_linear_regression.simple_linear_regression import squared_error
-from dsl.c15_multiple_regression.multiple_regression import squared_error_gradient
+from dsl.c15_multiple_regression.multiple_regression import squared_error, squared_error_gradient
 
 
 def test_maximize_stochastic_squared_error():
