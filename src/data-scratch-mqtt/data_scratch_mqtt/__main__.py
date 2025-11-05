@@ -21,60 +21,20 @@ logging_config_dict = dict(
     root={"handlers": ["console"], "level": logging.DEBUG},
 )
 
-available_strategies = dict(
-    echo=echo_strategy,
-    sqrt=mysqrt_strategy,
-    strength=mystrength_strategy,
-    difference_quotient=difference_quotient,
-    estimate_gradient=estimate_gradient,
-    in_random_order=in_random_order,
-    maximize_batch=maximize_batch,
-    maximize_stochastic=maximize_stochastic,
-    minimize_batch=minimize_batch,
-    minimize_stochastic=minimize_stochastic,
-    partial_difference_quotient=partial_difference_quotient,
-    distance=distance,
-    dot=dot,
-    get_column=get_column,
-    get_row=get_row,
-    magnitude=magnitude,
-    matrix_add=matrix_add,
-    scalar_multiply=scalar_multiply,
-    shape=shape,
-    squared_distance=squared_distance,
-    sum_of_squares=sum_of_squares,
-    vector_add=vector_add,
-    vector_mean=vector_mean,
-    vector_subtract=vector_subtract,
-    vector_sum=vector_sum,
-    accuracy=accuracy,
-    precision=precision,
-    recall=recall,
-    f1_score=f1_score,
-    split_data=split_data,
-    train_test_split=train_test_split,
-    bucketize=bucketize,
-    correlation=correlation,
-    correlation_matrix=correlation_matrix,
-    covariance=covariance,
-    data_range=data_range,
-    de_mean=de_mean,
-    interquartile_range=interquartile_range,
-    mean=mean,
-    median=median,
-    mode=mode,
-    quantile=quantile,
-    standard_deviation=standard_deviation,
-    variance=variance,
-    bernoulli_trial=bernoulli_trial,
-    binomial=binomial,
-    inverse_normal_cdf=inverse_normal_cdf,
-    normal_cdf=normal_cdf,
-    normal_pdf=normal_pdf,
-    random_kid=random_kid,
-    uniform_cdf=uniform_cdf,
-    uniform_pdf=uniform_pdf,
-)
+# Build available strategies dynamically
+available_strategies = {}
+
+# Add core strategies
+available_strategies["echo"] = echo_strategy
+if mysqrt_strategy is not None:
+    available_strategies["sqrt"] = mysqrt_strategy
+if mystrength_strategy is not None:
+    available_strategies["strength"] = mystrength_strategy
+
+# Add all dynamic strategies
+available_strategies.update(dynamic_strategies)
+
+logging.info(f"Available strategies: {len(available_strategies)} strategies loaded")
 
 
 def on_connect(client, userdata, flags, rc):
@@ -93,24 +53,60 @@ def on_message(client, userdata, msg):
     logging.info(f"Message received")
     logging.debug(f"msg.topic = {msg.topic}")
     logging.debug(f"msg.payload {msg.payload}")
-    payload_bytes = msg.payload
-    payload_str = payload_bytes.decode("utf-8")
-    payload = json.loads(payload_str)
-    logging.debug("%r", "payload = {}".format(payload))
-    logging.debug("%r", "payload has type {}".format(type(payload)))
-    strategy_str = payload.get("strategy", "echo")
-    selected_strategy = available_strategies.get(strategy_str, echo_strategy)
-    current_strategy = Strategy(selected_strategy, client, userdata, msg)
+    
     try:
-        current_strategy.execute(payload)  # pylint:disable=not-callable
-        logging.info("done")
-        # ACK on done_exchange
-    except:  # pylint:disable=bare-except # noqa
-        payload["status_code"] = 400
-        logging.exception("failed to consume message")
-        # NACK on fail_exchange
-        # if properties.reply_to is not None: ACK correlation_id
-        # body=json.dumps(payload).encode("utf-8")
+        payload_bytes = msg.payload
+        payload_str = payload_bytes.decode("utf-8")
+        payload = json.loads(payload_str)
+        logging.debug("%r", "payload = {}".format(payload))
+        logging.debug("%r", "payload has type {}".format(type(payload)))
+        
+        strategy_str = payload.get("strategy", "echo")
+        
+        if strategy_str in available_strategies:
+            selected_strategy = available_strategies[strategy_str]
+            current_strategy = Strategy(selected_strategy, client, userdata, msg)
+            current_strategy.execute()  # pylint:disable=not-callable
+            logging.info(f"Successfully executed strategy: {strategy_str}")
+        else:
+            # Strategy not found - send error response
+            error_response = {
+                "error": f"Strategy '{strategy_str}' not found",
+                "available_strategies": list(available_strategies.keys())
+            }
+            client.publish(
+                topic=f"{MQTT_TOPIC}_reply",
+                payload=json.dumps(error_response).encode("utf-8"),
+                qos=0
+            )
+            logging.warning(f"Unknown strategy requested: {strategy_str}")
+            
+    except json.JSONDecodeError as e:
+        # Handle JSON parsing errors
+        error_response = {
+            "error": f"Invalid JSON in message: {str(e)}",
+            "original_payload": msg.payload.decode("utf-8", errors='ignore')
+        }
+        client.publish(
+            topic=f"{MQTT_TOPIC}_reply",
+            payload=json.dumps(error_response).encode("utf-8"),
+            qos=0
+        )
+        logging.error(f"JSON decode error: {e}")
+        
+    except Exception as e:
+        # Handle any other errors
+        error_response = {
+            "error": f"Message processing failed: {str(e)}",
+            "original_payload": payload_str if 'payload_str' in locals() else "unknown"
+        }
+        client.publish(
+            topic=f"{MQTT_TOPIC}_reply",
+            payload=json.dumps(error_response).encode("utf-8"),
+            qos=0
+        )
+        logging.exception(f"Failed to consume message: {e}")
+    
     logging.info("waiting for more messages")
 
 
