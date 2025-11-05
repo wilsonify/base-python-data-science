@@ -4,8 +4,6 @@ from types import MethodType
 
 import pika
 
-from data_scratch_amqp import routing_key
-
 
 class Strategy:
     """The Strategy Pattern class"""
@@ -19,6 +17,7 @@ class Strategy:
         self.props = props
 
     def publish(self, payload):
+        from data_scratch_amqp import routing_key
         self.channel.basic_publish(
             exchange=self.props.reply_to,
             routing_key=routing_key,

@@ -2,57 +2,25 @@ import os
 
 from data_scratch_amqp.strategies_library import Strategy
 from data_scratch_amqp.strategies_library import echo_strategy
-from data_scratch_amqp.strategies_library import difference_quotient
-from data_scratch_amqp.strategies_library import estimate_gradient
-from data_scratch_amqp.strategies_library import in_random_order
-from data_scratch_amqp.strategies_library import maximize_batch
-from data_scratch_amqp.strategies_library import maximize_stochastic
-from data_scratch_amqp.strategies_library import minimize_batch
-from data_scratch_amqp.strategies_library import minimize_stochastic
-from data_scratch_amqp.strategies_library import partial_difference_quotient
-from data_scratch_amqp.strategies_library import distance
-from data_scratch_amqp.strategies_library import dot
-from data_scratch_amqp.strategies_library import get_column
-from data_scratch_amqp.strategies_library import get_row
-from data_scratch_amqp.strategies_library import magnitude
-from data_scratch_amqp.strategies_library import matrix_add
-from data_scratch_amqp.strategies_library import scalar_multiply
-from data_scratch_amqp.strategies_library import shape
-from data_scratch_amqp.strategies_library import squared_distance
-from data_scratch_amqp.strategies_library import sum_of_squares
-from data_scratch_amqp.strategies_library import vector_add
-from data_scratch_amqp.strategies_library import vector_mean
-from data_scratch_amqp.strategies_library import vector_subtract
-from data_scratch_amqp.strategies_library import vector_sum
-from data_scratch_amqp.strategies_library import accuracy
-from data_scratch_amqp.strategies_library import f1_score
-from data_scratch_amqp.strategies_library import precision
-from data_scratch_amqp.strategies_library import recall
-from data_scratch_amqp.strategies_library import split_data
-from data_scratch_amqp.strategies_library import train_test_split
-from data_scratch_amqp.strategies_library import mysqrt_strategy
-from data_scratch_amqp.strategies_library import mystrength_strategy
-from data_scratch_amqp.strategies_library import bernoulli_trial
-from data_scratch_amqp.strategies_library import binomial
-from data_scratch_amqp.strategies_library import inverse_normal_cdf
-from data_scratch_amqp.strategies_library import normal_cdf
-from data_scratch_amqp.strategies_library import normal_pdf
-from data_scratch_amqp.strategies_library import random_kid
-from data_scratch_amqp.strategies_library import uniform_cdf
-from data_scratch_amqp.strategies_library import uniform_pdf
-from data_scratch_amqp.strategies_library import bucketize
-from data_scratch_amqp.strategies_library import correlation
-from data_scratch_amqp.strategies_library import correlation_matrix
-from data_scratch_amqp.strategies_library import covariance
-from data_scratch_amqp.strategies_library import data_range
-from data_scratch_amqp.strategies_library import de_mean
-from data_scratch_amqp.strategies_library import interquartile_range
-from data_scratch_amqp.strategies_library import mean
-from data_scratch_amqp.strategies_library import median
-from data_scratch_amqp.strategies_library import mode
-from data_scratch_amqp.strategies_library import quantile
-from data_scratch_amqp.strategies_library import standard_deviation
-from data_scratch_amqp.strategies_library import variance
+
+# Try to import optional strategies that may have missing dependencies
+try:
+    from data_scratch_amqp.strategies_library import mysqrt_strategy
+except ImportError:
+    mysqrt_strategy = None
+
+try:
+    from data_scratch_amqp.strategies_library import mystrength_strategy
+except ImportError:
+    mystrength_strategy = None
+
+# Import all dynamic strategies
+try:
+    from data_scratch_amqp.strategies_library.dynamic_strategy import dynamic_strategies
+    # Add all dynamic strategies to the module namespace
+    globals().update(dynamic_strategies)
+except ImportError:
+    dynamic_strategies = {}
 
 amqp_host = os.getenv("AMQP_HOST", "localhost")
 amqp_port = os.getenv("AMQP_PORT", "5672")
