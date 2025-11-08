@@ -1,4 +1,4 @@
-import pytest
+from test_runner import parametrize, Approx
 from collections import deque
 
 from dsl.c10_working_with_data.e1000_circular_buffer import demo_deque
@@ -31,4 +31,6 @@ def test_demo_deque_equal_maxlen_iterations():
     assert final_contents == list(range(maxlen))  # Should contain 0 to 9
 
 if __name__ == "__main__":
-    pytest.main()
+    from test_runner import TestRunner
+    runner = TestRunner()
+    runner.run_file(__file__)

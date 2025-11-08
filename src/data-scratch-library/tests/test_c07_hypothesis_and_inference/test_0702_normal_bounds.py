@@ -1,7 +1,5 @@
 import math
 
-import pytest
-
 from dsl.c07_hypothesis_and_inference.e0701_coin_flip import normal_approximation_to_binomial
 from dsl.c07_hypothesis_and_inference.e0702_normal_bounds import (
     normal_upper_bound,
@@ -56,4 +54,6 @@ def test_normal_two_sided_bounds_binomial():
 
 
 if __name__ == "__main__":
-    pytest.main()
+    from test_runner import TestRunner
+    runner = TestRunner()
+    runner.run_file(__file__)

@@ -18,5 +18,6 @@ def test_slice_assignment():
     assert tensor == [[0, 0], [0, 0]], "but slice assignment does"
 
 if __name__ == "__main__":
-    test_slice_assignment()
-    print("All metrics tests passed!")
+    from test_runner import TestRunner
+    runner = TestRunner()
+    runner.run_file(__file__)

@@ -23,5 +23,6 @@ def test_weight_loading_consistency():
                    for param, weight in zip(mock_params, wrong_weights))
 
 if __name__ == "__main__":
-    test_weight_loading_consistency()
-    print("All I/O tests passed!")
+    from test_runner import TestRunner
+    runner = TestRunner()
+    runner.run_file(__file__)

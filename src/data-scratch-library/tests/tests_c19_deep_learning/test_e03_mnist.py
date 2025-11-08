@@ -52,9 +52,6 @@ def test_centering():
     assert -0.0001 < test_sum < 0.0001
 
 if __name__ == "__main__":
-    test_one_hot_encode()
-    test_mnist_data_shapes()
-    test_image_flattening()
-    test_label_encoding()
-    test_centering()
-    print("All MNIST tests passed!")
+    from test_runner import TestRunner
+    runner = TestRunner()
+    runner.run_file(__file__)

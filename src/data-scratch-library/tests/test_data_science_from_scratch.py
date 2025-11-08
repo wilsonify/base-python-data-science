@@ -1,7 +1,8 @@
 import logging
 from os.path import abspath, dirname
 
-import pytest
+# Import our test runner utilities
+from test_runner import skip
 
 from dsl.c01_intro import e01_introduction
 from dsl.c07_hypothesis_and_inference import e01_hypothesis_and_inference
@@ -51,7 +52,7 @@ def test_mapreduce():
     e01_mapreduce.main()
 
 
-@pytest.mark.skip(reason="takes ~2min")
+@skip(reason="takes ~2min")
 def test_multiple_regression():
     e01_multiple_regression.main()
 
@@ -85,3 +86,9 @@ def test_working_with_data():
     e01_working_with_data.main2(path_to_stocks=f"{data_dir}/stocks.txt")
     e01_working_with_data.main3()
     e01_working_with_data.main4()
+
+
+if __name__ == "__main__":
+    from test_runner import TestRunner
+    runner = TestRunner()
+    runner.run_file(__file__)

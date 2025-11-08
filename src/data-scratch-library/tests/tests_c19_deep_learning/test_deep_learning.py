@@ -44,11 +44,6 @@ def test_random_tensors():
     assert shape(random_normal(5, 6, mean=10)) == [5, 6]
 
 if __name__ == "__main__":
-    test_shape()
-    test_is_1d()
-    test_tensor_sum()
-    test_tensor_apply()
-    test_zeros_like()
-    test_tensor_combine()
-    test_random_tensors()
-    print("All deep learning tests passed!")
+    from test_runner import TestRunner
+    runner = TestRunner()
+    runner.run_file(__file__)

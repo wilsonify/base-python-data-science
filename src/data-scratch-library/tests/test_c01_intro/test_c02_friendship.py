@@ -20,3 +20,9 @@ def test_friendship_equality():
 
     # Test that friendships with different user IDs are not equal
     assert friendship1 != friendship3
+
+
+if __name__ == "__main__":
+    from test_runner import TestRunner
+    runner = TestRunner()
+    runner.run_file(__file__)

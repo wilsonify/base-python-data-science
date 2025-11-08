@@ -9,10 +9,12 @@
     "NORMALIZE_MEAN": 127.5,
     "NORMALIZE_STD": 127.5,
     "SHUFFLE_BUFFER_SIZE": 1000,
-    "EPOCHS": 5,
+    "EPOCHS": 3,
     "STEPS_PER_EPOCH": null,
     "VALIDATION_SPLIT": 0.2,
     "SHUFFLE": true,
-    "CLASS_WEIGHT": null
+    "CLASS_WEIGHT": null,
+    "LEARNING_RATE": 0.01,
+    "HIDDEN_SIZE": 64
 }
 

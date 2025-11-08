@@ -2,14 +2,12 @@ from collections import Counter
 from os import remove
 from os.path import abspath, dirname
 
-import pytest
-
 from dsl.c01_intro import User, Friendship, Interest, Network
 from dsl.c01_intro.c04_salary_from_tenure import SalaryTenure
 
 
-@pytest.fixture(name="network01")
-def network01_fixture():
+def network01():
+    """Create a test network for use in tests"""
     return Network(
         users=[User(id=i, name=f"User {i}") for i in range(3)],
         friendships=[
@@ -30,55 +28,61 @@ def network01_fixture():
     )
 
 
-def test_populate_friendships(network01):
-    network01.populate_friendships()
+def test_populate_friendships():
+    network = network01()
+    network.populate_friendships()
     # Check that friends have been populated correctly
-    assert len(network01.users[0].friends) == 1  # User 0 has one friend (User 1)
-    assert len(network01.users[1].friends) == 2  # User 1 has two friends (User 0 and User 2)
-    assert len(network01.users[2].friends) == 1  # User 2 has one friend (User 1)
+    assert len(network.users[0].friends) == 1  # User 0 has one friend (User 1)
+    assert len(network.users[1].friends) == 2  # User 1 has two friends (User 0 and User 2)
+    assert len(network.users[2].friends) == 1  # User 2 has one friend (User 1)
 
 
-def test_read_avg_connections(network01):
-    network01.populate_friendships()
-    network01.read_avg_connections()
+def test_read_avg_connections():
+    network = network01()
+    network.populate_friendships()
+    network.read_avg_connections()
 
 
-def test_create_users_by_interest(network01):
+def test_create_users_by_interest():
+    network = network01()
     # Check user_ids_by_interest
-    network01.create_users_by_interest()
+    network.create_users_by_interest()
     expected = {
         "Python": [0, 1],
         "Data Science": [1],
         "Machine Learning": [2],
     }
-    assert network01.user_ids_by_interest == expected
+    assert network.user_ids_by_interest == expected
 
 
-def test_create_interests_by_user(network01):
+def test_create_interests_by_user():
+    network = network01()
     # Check interests_by_user_id
-    network01.create_interests_by_user()
+    network.create_interests_by_user()
     expected = {
         0: ["Python"],
         1: ["Data Science", "Python"],
         2: ["Machine Learning"],
     }
-    assert network01.interests_by_user_id == expected
+    assert network.interests_by_user_id == expected
 
 
-def test_create_salary_by_tenure(network01):
-    network01.create_salary_by_tenure()
+def test_create_salary_by_tenure():
+    network = network01()
+    network.create_salary_by_tenure()
     expected = {
         2.5: [50000],
         3.0: [70000],
         8.0: [90000],
     }
-    assert dict(network01.salary_by_tenure) == expected
+    assert dict(network.salary_by_tenure) == expected
 
 
-def test_create_average_salary_by_tenure(network01):
+def test_create_average_salary_by_tenure():
+    network = network01()
     # Check average salary by tenure
-    network01.create_salary_by_tenure()
-    avg_salary = network01.create_average_salary_by_tenure()
+    network.create_salary_by_tenure()
+    avg_salary = network.create_average_salary_by_tenure()
     expected = {
         2.5: 50000.0,
         3.0: 70000.0,
@@ -87,25 +91,28 @@ def test_create_average_salary_by_tenure(network01):
     assert avg_salary == expected
 
 
-def test_data_scientists_who_like(network01):
-    result = network01.data_scientists_who_like("Python")
+def test_data_scientists_who_like():
+    network = network01()
+    result = network.data_scientists_who_like("Python")
     # User 0 and User 1 like Python
     assert result == [0, 1]
 
 
-def test_most_common_interests_with(network01):
+def test_most_common_interests_with():
+    network = network01()
     # Check common interests excluding User 1
     # User 0 has "Python", User 2 has "Machine Learning"
-    network01.create_interests_by_user()
-    network01.create_users_by_interest()
-    result = network01.most_common_interests_with(user_id=1)
+    network.create_interests_by_user()
+    network.create_users_by_interest()
+    result = network.most_common_interests_with(user_id=1)
     expected = Counter({0: 1, 2: 0})
     assert result == expected
 
 
-def test_create_words_and_counts(network01):
+def test_create_words_and_counts():
+    network = network01()
     # Check word counts from interests
-    network01.create_words_and_counts()
+    network.create_words_and_counts()
     expected = Counter({
         "python": 2,
         "data": 1,
@@ -113,32 +120,36 @@ def test_create_words_and_counts(network01):
         "machine": 1,
         "learning": 1
     })
-    assert network01.words_and_counts == expected
+    assert network.words_and_counts == expected
 
 
-def test_read_most_common_words(network01):
-    network01.create_words_and_counts()
-    network01.read_most_common_words()
+def test_read_most_common_words():
+    network = network01()
+    network.create_words_and_counts()
+    network.read_most_common_words()
 
 
-def test_create_average_salary_by_bucket(network01):
-    avg_salary_by_bucket = network01.create_average_salary_by_bucket()
+def test_create_average_salary_by_bucket():
+    network = network01()
+    avg_salary_by_bucket = network.create_average_salary_by_bucket()
     expected = {'between two and five': 60000.0, 'more than five': 90000.0}
     assert avg_salary_by_bucket == expected
 
 
-def test_read_num_friends_by_id(network01):
-    network01.populate_friendships()
-    network01.read_num_friends_by_id()
+def test_read_num_friends_by_id():
+    network = network01()
+    network.populate_friendships()
+    network.read_num_friends_by_id()
 
 
-def test_read_user_connections(network01):
-    network01.populate_friendships()
-    network01.read_user_connections(uid=1)
+def test_read_user_connections():
+    network = network01()
+    network.populate_friendships()
+    network.read_user_connections(uid=1)
 
 
-def test_from_json(network01):
-
+def test_from_json():
+    network = network01()
     in_json_file_path = abspath(f"{dirname(__file__)}/../../../../data/example_network.json")
     loaded_network = Network.from_json(in_json_file_path)
     assert loaded_network.users == [User(id=0, name='User 0', friends=[]), User(id=1, name='User 1', friends=[]),
@@ -153,6 +164,13 @@ def test_from_json(network01):
                                                    SalaryTenure(salary=90000, tenure=8.0)]
 
 
-def test_to_json(network01):
-    network01.to_json("network.out.json")
+def test_to_json():
+    network = network01()
+    network.to_json("network.out.json")
     remove("network.out.json")
+
+
+if __name__ == "__main__":
+    from test_runner import TestRunner
+    runner = TestRunner()
+    runner.run_file(__file__)

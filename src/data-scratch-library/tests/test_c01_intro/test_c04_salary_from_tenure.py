@@ -32,3 +32,9 @@ def test_predict_paid_or_unpaid():
 
     salary_tenure5 = SalaryTenure(salary=90000, tenure=10.0)
     assert salary_tenure5.predict_paid_or_unpaid() == "paid"
+
+
+if __name__ == "__main__":
+    from test_runner import TestRunner
+    runner = TestRunner()
+    runner.run_file(__file__)

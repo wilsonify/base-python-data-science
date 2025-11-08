@@ -24,3 +24,9 @@ def test_interest_equality():
 
     # Test that interests with different interests are not equal
     assert interest1 != interest4
+
+
+if __name__ == "__main__":
+    from test_runner import TestRunner
+    runner = TestRunner()
+    runner.run_file(__file__)
