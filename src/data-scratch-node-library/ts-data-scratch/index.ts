@@ -76,3 +76,9 @@ export * from './type-helpers';
 
 // Default Map
 export * from './defaultmap';
+
+// Deep Learning
+export * from './deep_learning/index';
+export * from './deep_learning/layer';
+export * from './deep_learning/metrics';
+export * from './deep_learning/io';

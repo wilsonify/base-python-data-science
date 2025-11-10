@@ -316,6 +316,43 @@ npm test
 npm run dev
 ```
 
+### Using Makefile
+
+For convenience, you can use the provided Makefile for common development tasks:
+
+```bash
+# Complete build and test (default target)
+make all
+
+# Build the project
+make build
+
+# Run all tests
+make test
+
+# Run only deep learning tests
+make test-deep-learning
+
+# Run examples
+make examples
+
+# Start development mode (watch)
+make dev
+
+# Clean build artifacts
+make clean
+
+# Show all available commands
+make help
+```
+
+The Makefile provides convenient targets for:
+- **Building**: `make build`, `make build-verbose`
+- **Testing**: `make test`, `make test-coverage`, `make test-deep-learning`
+- **Development**: `make dev`, `make dev-cycle`
+- **Examples**: `make examples`, `make example-xor`, `make example-fizzbuzz`
+- **Utilities**: `make clean`, `make type-check`, `make info`
+
 ## Type Safety
 
 This library is written entirely in TypeScript with comprehensive type definitions:
