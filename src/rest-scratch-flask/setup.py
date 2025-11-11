@@ -15,6 +15,7 @@ setup(
         "Flask==2.3.3",
         "Flask-CORS==6.0.0",
         "marshmallow==3.20.1",
+        "dsl>=1.0.0",
     ],
     extras_require={
         "dev": [

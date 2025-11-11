@@ -3,11 +3,6 @@ Test to ensure the circular import issue is resolved
 """
 
 import unittest
-import sys
-import os
-
-# Add the src directory to the path for testing
-sys.path.insert(0, os.path.dirname(__file__))
 
 class TestCircularImportFix(unittest.TestCase):
     """Test that the circular import issue is completely resolved"""

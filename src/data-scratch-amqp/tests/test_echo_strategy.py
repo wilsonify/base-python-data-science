@@ -3,12 +3,7 @@ Test for the basic echo strategy
 """
 
 import unittest
-import sys
-import os
 from unittest.mock import Mock
-
-# Add the src directory to the path for testing
-sys.path.insert(0, os.path.dirname(__file__))
 
 class TestEchoStrategy(unittest.TestCase):
     """Test the echo strategy functionality"""
