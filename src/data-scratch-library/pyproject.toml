@@ -14,3 +14,7 @@ homepage = "https://github.com/wilsonify/base-python-data-science"
 [tool.setuptools]
 packages = ["dsl"]
 
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+pythonpath = [".", "tests"]
+
