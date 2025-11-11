@@ -78,7 +78,7 @@ def test_group_by():
         ({'level': 'Mid', 'outcome': True})
     ]
     
-    groups = group_by(items, lambda x: x[0]['level'])
+    groups = group_by(items, lambda x: x['level'])
     
     assert 'Senior' in groups
     assert 'Junior' in groups
@@ -108,15 +108,15 @@ def test_partition_by():
 def test_partition_entropy_by():
     """Test the partition_entropy_by function."""
     inputs = [
-        ({'level': 'Senior', 'outcome': False}),
-        ({'level': 'Senior', 'outcome': False}),
-        ({'level': 'Mid', 'outcome': True}),
-        ({'level': 'Junior', 'outcome': True}),
+        ({'level': 'Senior'}, False),
+        ({'level': 'Senior'}, True),  # Changed to True to create impurity
+        ({'level': 'Mid'}, True),
+        ({'level': 'Junior'}, True),
     ]
     
     entropy_val = partition_entropy_by(inputs, 'level')
     
-    # Should be a positive number
+    # Should be a positive number (because Senior partition has mixed labels)
     assert entropy_val > 0
     # Maximum entropy for 4 items would be log2(2) = 1
     assert entropy_val <= 1
@@ -130,8 +130,8 @@ def test_classify():
     
     input_data = {'level': 'Senior', 'lang': 'Java'}
     
-    assert classify(input_data, leaf_true) is True
-    assert classify(input_data, leaf_false) is False
+    assert classify(leaf_true, input_data) is True
+    assert classify(leaf_false, input_data) is False
     
     # Test with tree structure
     # Tree: if level == 'Senior' -> False, else -> True
@@ -140,12 +140,12 @@ def test_classify():
     senior_input = {'level': 'Senior', 'lang': 'Java'}
     junior_input = {'level': 'Junior', 'lang': 'Python'}
     
-    assert classify(senior_input, tree) is False
-    assert classify(junior_input, tree) is True
+    assert classify(tree, senior_input) is False
+    assert classify(tree, junior_input) is True
     
     # Test with unknown attribute value
     unknown_input = {'level': 'Mid', 'lang': 'Python'}
-    result_unknown = classify(unknown_input, tree)
+    result_unknown = classify(tree, unknown_input)
     assert result_unknown is True  # Should use None subtree
 
 
@@ -178,7 +178,7 @@ def test_build_tree_id3():
     
     # Test classification with the tree
     test_input = {'level': 'Junior', 'lang': 'Python', 'tweets': 'no', 'phd': 'no'}
-    prediction = classify(test_input, tree)
+    prediction = classify(tree, test_input)
     assert prediction in [True, False]
 
 
@@ -279,5 +279,5 @@ def test_tree_depth():
     
     # Test classification
     test_input = {'a1': 'x', 'a2': 'y'}
-    prediction = classify(test_input, tree)
+    prediction = classify(tree, test_input)
     assert prediction in [True, False]
