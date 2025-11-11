@@ -25,8 +25,14 @@ class Approx:
         self.abs_tol = abs
     
     def __eq__(self, actual):
+        # Handle scalar comparison
         if isinstance(self.expected, (int, float)) and isinstance(actual, (int, float)):
             return abs(actual - self.expected) <= self.abs_tol
+        # Handle list/tuple comparison
+        if isinstance(self.expected, (list, tuple)) and isinstance(actual, (list, tuple)):
+            if len(self.expected) != len(actual):
+                return False
+            return all(abs(a - e) <= self.abs_tol for a, e in zip(actual, self.expected))
         return False
     
     def __repr__(self):
