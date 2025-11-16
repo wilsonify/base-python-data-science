@@ -1,8 +1,0 @@
-FROM rest-scratch-pistache-base:1.0.0
-RUN apt-get install -y \
-git \
-cmake \
-g++ \
-ninja-build \
-meson \
-rapidjson-dev
