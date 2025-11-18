@@ -10,8 +10,8 @@ export function bucketize(point: number, bucket_size: number): number {
 
 export function Counter(array: Array<number>) {
     let count = new Map<string, number>();
-    for (let i = 0; i < array.length; i += 1) {
-        const val = array[i].toString();
+    for (const v of array) {
+        const val = v.toString();
         const prev = count.get(val) || 0;
         count.set(val, prev + 1);
     }
@@ -98,8 +98,7 @@ export function de_mean(x: Array<number>) {
     // translate x by subtracting its mean (so the result has mean 0)
     const x_bar = mean(x);
     const result: number[] = [];
-    for (let i = 0; i < x.length; i += 1) {
-        const x_i = x[i];
+    for (const x_i of x) {
         result.push(x_i - x_bar);
     }
     return result

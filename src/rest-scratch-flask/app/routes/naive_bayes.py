@@ -98,7 +98,7 @@ def train_classifier():
             'message': 'Classifier trained successfully. Use /classify endpoint with the same training data to classify messages.'
         })
         
-    except Exception as e:
+    except Exception:
         logger.exception('Training failed')
         return jsonify({'error': 'Training failed due to an internal error'}), 500
 
@@ -165,7 +165,7 @@ def classify_message():
             'smoothing_parameter': smoothing
         })
         
-    except Exception as e:
+    except Exception:
         # Log full exception server-side but return a generic error to client
         logger.exception('Classification failed')
         return jsonify({'error': 'Classification failed due to an internal error'}), 500
@@ -240,7 +240,7 @@ def batch_classify():
             'smoothing_parameter': smoothing
         })
         
-    except Exception as e:
+    except Exception:
         logger.exception('Batch classification failed')
         return jsonify({'error': 'Batch classification failed due to an internal error'}), 500
 

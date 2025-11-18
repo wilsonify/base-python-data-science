@@ -238,8 +238,8 @@ def main2(path_to_stocks):
     ys1 = [x + random_normal() / 2 for x in xs]
     ys2 = [-x + random_normal() / 2 for x in xs]
 
-    logging.info("Correlation(xs, ys1) = %", correlation(xs, ys1))
-    logging.info("Correlation(xs, ys2) = %", correlation(xs, ys2))
+    logging.info("Correlation(xs, ys1) = %s", correlation(xs, ys1))
+    logging.info("Correlation(xs, ys2) = %s", correlation(xs, ys2))
 
     logging.info("Analyzing stocks...")
     _data = read_stocks_txt(path_to_stocks)

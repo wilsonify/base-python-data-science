@@ -11,8 +11,7 @@ export function vector_add(v: Array<number>, w: Array<number>) {
 
   const result: number[] = [];
 
-  for (let i = 0; i < v.length; i += 1) {
-    const v_i = v[i];
+  for (const [i, v_i] of v.entries()) {
     const w_i = w[i];
     result.push(v_i + w_i);
   }
@@ -23,8 +22,7 @@ export function vector_add(v: Array<number>, w: Array<number>) {
 export function vector_subtract(v: Array<number>, w: Array<number>) {
   //"""subtracts two vectors componentwise"""
   const result: number[] = [];
-  for (let i = 0; i < v.length; i += 1) {
-    const v_i = v[i];
+  for (const [i, v_i] of v.entries()) {
     const w_i = w[i];
     result.push(v_i - w_i);
   }
@@ -69,8 +67,7 @@ export function vector_mean(vectors: Array<Array<number>>) {
 export function dot(v: Array<number>, w: Array<number>): number {
   //"""v_1 * w_1 + ... + v_n * w_n"""
   let result = 0;
-  for (let i = 0; i < v.length; i += 1) {
-    const v_i = v[i];
+  for (const [i, v_i] of v.entries()) {
     const w_i = w[i];
     result += v_i * w_i;
   }

@@ -225,7 +225,7 @@ def analyze_clustering():
         
         # Validate data types
         if not isinstance(points, list):
-            return jsonify({'error': 'data must be a list of points'}), 400
+            return jsonify({'error': ERR_DATA_MUST_BE_LIST}), 400
         
         if not isinstance(assignments, list):
             return jsonify({'error': 'assignments must be a list'}), 400
@@ -318,7 +318,7 @@ def find_optimal_k():
         for k in range(1, max_k + 1):
             k_errors = []
             
-            for run in range(runs_per_k):
+            for _ in range(runs_per_k):
                 assignments, means = k_means(points, k)
                 error = squared_clustering_errors(points, assignments, means)
                 k_errors.append(error)

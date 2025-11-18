@@ -56,7 +56,7 @@ def get_all_library_functions():
         MATRICES_MODULE: ['shape', 'get_row', 'get_column', 'make_matrix', 'is_diagonal', 'make_identity_matrix', 'matrix_add', 'matrix_multiply', 'make_random_matrix'],
         CENTRAL_TENDENCY_MODULE: ['mean', 'median', 'quantile', 'mode'],
         DISPERSION_MODULE: ['data_range', 'de_mean', 'variance', 'standard_deviation', 'interquartile_range'],
-        CORRELATION_MODULE: ['covariance', 'correlation', 'correlation_matrix'],
+    CORRELATION_MODULE: ['covariance', 'correlation'],
         UNIFORM_MODULE: ['uniform_pd', 'uniform_cd'],
         NORMAL_MODULE: ['normal_pd', 'normal_cd', 'inverse_normal_cd'],
         BINOM_MODULE: ['bernoulli_trial', 'binomial', 'binom_pd', 'binom_cd', 'binom_pp'],
@@ -70,21 +70,25 @@ def get_all_library_functions():
 
     # Simple helper modules for other grouped functions
     ML_MODULE = 'dsl.c11_machine_learning.machine_learning'
-    WORKING_DATA_MODULE = 'dsl.c10_working_with_data'
-
-    # Common working-data suffixes used multiple times — extract to constants
-    E1004 = '.e1004_named_tuples'
-    E1006 = '.e1006_cleaning'
-    E1007 = '.e1007_manipulation'
-    E1008 = '.e1008_rescaling'
-    E1009 = '.e1009_dimensionality_reduction'
-
-    # Fully qualified working-data module constants to avoid repeated concatenations
-    WORKING_E1004 = WORKING_DATA_MODULE + E1004
-    WORKING_E1006 = WORKING_DATA_MODULE + E1006
-    WORKING_E1007 = WORKING_DATA_MODULE + E1007
-    WORKING_E1008 = WORKING_DATA_MODULE + E1008
-    WORKING_E1009 = WORKING_DATA_MODULE + E1009
+    try:
+        # Prefer shared constants module to reduce duplicated literals across files
+        from common.constants import (
+            WORKING_DATA_MODULE,
+            WORKING_E1004,
+            WORKING_E1006,
+            WORKING_E1007,
+            WORKING_E1008,
+            WORKING_E1009,
+        )
+    except Exception:
+        # Fallback to local definitions if the shared module isn't available in the
+        # runtime environment (keeps this file robust for standalone use).
+        WORKING_DATA_MODULE = 'dsl.c10_working_with_data'
+        WORKING_E1004 = WORKING_DATA_MODULE + '.e1004_named_tuples'
+        WORKING_E1006 = WORKING_DATA_MODULE + '.e1006_cleaning'
+        WORKING_E1007 = WORKING_DATA_MODULE + '.e1007_manipulation'
+        WORKING_E1008 = WORKING_DATA_MODULE + '.e1008_rescaling'
+        WORKING_E1009 = WORKING_DATA_MODULE + '.e1009_dimensionality_reduction'
 
     for module_const, fnames in grouped.items():
         for fn in fnames:
