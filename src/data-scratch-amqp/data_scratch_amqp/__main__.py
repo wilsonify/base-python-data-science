@@ -4,10 +4,23 @@ amqp consumer
 import json
 import logging
 from logging.config import dictConfig
+import os
 
 import pika
 
-from data_scratch_amqp import *
+# Import only the names we use from the package to avoid star imports
+from data_scratch_amqp import (
+    routing_key,
+    echo_strategy,
+    mysqrt_strategy,
+    mystrength_strategy,
+    Strategy,
+    amqp_host,
+    amqp_port,
+    heartbeat,
+    timeout,
+    dynamic_strategies,
+)
 
 cred = pika.PlainCredentials(
     os.getenv("AMQP_USER", "guest"),
@@ -17,22 +30,19 @@ try_exchange = f"try_{routing_key}"
 done_exchange = f"done_{routing_key}"
 fail_exchange = f"fail_{routing_key}"
 
-logging_config_dict = dict(
-    version=1,
-    formatters={"simple": {"format": """%(asctime)s | %(filename)s | %(lineno)d | %(levelname)s | %(message)s"""}},
-    handlers={"console": {"class": "logging.StreamHandler", "formatter": "simple"}},
-    root={"handlers": ["console"], "level": logging.DEBUG},
-)
-
-# Import all dynamic strategies
-from data_scratch_amqp.strategies_library.dynamic_strategy import dynamic_strategies
+logging_config_dict = {
+    "version": 1,
+    "formatters": {"simple": {"format": """%(asctime)s | %(filename)s | %(lineno)d | %(levelname)s | %(message)s"""}},
+    "handlers": {"console": {"class": "logging.StreamHandler", "formatter": "simple"}},
+    "root": {"handlers": ["console"], "level": logging.DEBUG},
+}
 
 # Start with basic strategies
-available_strategies = dict(
-    echo=echo_strategy,
-    sqrt=mysqrt_strategy,
-    strength=mystrength_strategy,
-)
+available_strategies = {
+    "echo": echo_strategy,
+    "sqrt": mysqrt_strategy,
+    "strength": mystrength_strategy,
+}
 
 # Add all dynamic strategies
 available_strategies.update(dynamic_strategies)

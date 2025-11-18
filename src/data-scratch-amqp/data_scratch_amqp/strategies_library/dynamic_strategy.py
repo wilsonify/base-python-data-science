@@ -7,6 +7,22 @@ current_dir = os.path.dirname(__file__)
 parent_dir = os.path.join(current_dir, os.pardir)
 
 
+def _build_kwargs(sig: inspect.Signature, body: Dict[str, Any]) -> Dict[str, Any]:
+    """Construct kwargs dict for a function signature given the incoming body.
+
+    This helper centralizes default handling and reduces nesting in the
+    dynamically-generated strategy wrapper.
+    """
+    kwargs: Dict[str, Any] = {}
+    for param, param_obj in sig.parameters.items():
+        if param in body:
+            kwargs[param] = body[param]
+        else:
+            if param_obj.default != inspect.Parameter.empty:
+                kwargs[param] = param_obj.default
+    return kwargs
+
+
 def create_dynamic_strategy(module_path: str, function_name: str):
     """Dynamically create a strategy function that wraps a library function"""
     
@@ -15,32 +31,31 @@ def create_dynamic_strategy(module_path: str, function_name: str):
             # Import the module and get the function
             module = importlib.import_module(module_path)
             func = getattr(module, function_name)
-            
-            # Get function signature to extract parameters
+
+            # Build kwargs for the function call (extracted to helper to reduce complexity)
             sig = inspect.signature(func)
-            parameters = list(sig.parameters.keys())
-            
-            # Extract arguments from body, handling defaults
-            kwargs = {}
-            for param in parameters:
-                if param in body:
-                    kwargs[param] = body[param]
-                else:
-                    # Check if parameter has a default value
-                    param_obj = sig.parameters[param]
-                    if param_obj.default != inspect.Parameter.empty:
-                        kwargs[param] = param_obj.default
-            
-            # Call the function
+            kwargs = _build_kwargs(sig, body)
+
+            # Call the function and publish result
             result = func(**kwargs)
             self.publish(result)
-            
+
         except Exception as e:
             _publish_error(self, e, function_name, module_path)
     
     # Set a proper name for the function
     dynamic_strategy.__name__ = f"{function_name}_strategy"
     return dynamic_strategy
+
+
+# Global error publisher so dynamic strategies can report import/call errors
+def _publish_error(publisher, exc: Exception, fn: str, mod: str):
+    """Publish a consistent error payload for failed dynamic strategies."""
+    try:
+        publisher.publish({"error": str(exc), "function": fn, "module": mod})
+    except Exception:
+        # Ensure exceptions during error reporting don't bubble up
+        print("Failed to publish error", exc)
 
 
 def get_all_library_functions():
@@ -95,6 +110,13 @@ def get_all_library_functions():
     E1008 = '.e1008_rescaling'
     E1009 = '.e1009_dimensionality_reduction'
 
+    # Fully qualified working-data module constants to avoid repeated concatenations
+    WORKING_E1004 = WORKING_DATA_MODULE + E1004
+    WORKING_E1006 = WORKING_DATA_MODULE + E1006
+    WORKING_E1007 = WORKING_DATA_MODULE + E1007
+    WORKING_E1008 = WORKING_DATA_MODULE + E1008
+    WORKING_E1009 = WORKING_DATA_MODULE + E1009
+
     for module_const, fnames in grouped.items():
         for fn in fnames:
             module_mappings[fn] = module_const
@@ -110,36 +132,88 @@ def get_all_library_functions():
     'correlation_matrix': WORKING_DATA_MODULE + '.e1003_multivariate',
     'random_normal': WORKING_DATA_MODULE + '.e1002_bivariate',
     'demo_deque': WORKING_DATA_MODULE + '.e1000_circular_buffer',
-    'create_stock_price_namedtuple': WORKING_DATA_MODULE + E1004,
-    'create_stock_price': WORKING_DATA_MODULE + E1004,
-    'create_price_dict': WORKING_DATA_MODULE + E1004,
-    'parse_row': WORKING_DATA_MODULE + E1006,
-    'try_parse_row': WORKING_DATA_MODULE + E1006,
-    'process_csv': WORKING_DATA_MODULE + E1006,
-    'max_stock_price': WORKING_DATA_MODULE + E1007,
-    'max_prices_by_symbol': WORKING_DATA_MODULE + E1007,
-    'pct_change': WORKING_DATA_MODULE + E1007,
-    'day_over_day_changes': WORKING_DATA_MODULE + E1007,
-    'group_prices_by_symbol': WORKING_DATA_MODULE + E1007,
-    'find_largest_and_smallest_changes': WORKING_DATA_MODULE + E1007,
-    'average_daily_change_by_month': WORKING_DATA_MODULE + E1007,
+    'create_stock_price_namedtuple': WORKING_E1004,
+    'create_stock_price': WORKING_E1004,
+    'create_price_dict': WORKING_E1004,
+    'parse_row': WORKING_E1006,
+    'try_parse_row': WORKING_E1006,
+    'process_csv': WORKING_E1006,
+    'max_stock_price': WORKING_E1007,
+    'max_prices_by_symbol': WORKING_E1007,
+    'pct_change': WORKING_E1007,
+    'day_over_day_changes': WORKING_E1007,
+    'group_prices_by_symbol': WORKING_E1007,
+    'find_largest_and_smallest_changes': WORKING_E1007,
+    'average_daily_change_by_month': WORKING_E1007,
     'create_stock_price_dataclass': WORKING_DATA_MODULE + '.e1005_dataclass',
-    'vector_mean': WORKING_DATA_MODULE + E1008,
-    'standard_deviation': WORKING_DATA_MODULE + E1008,
-    'scale': WORKING_DATA_MODULE + E1008,
-    'rescale': WORKING_DATA_MODULE + E1008,
-    'simple_trange': WORKING_DATA_MODULE + E1009,
-    'de_mean': WORKING_DATA_MODULE + E1009,
-    'direction': WORKING_DATA_MODULE + E1009,
-    'directional_variance': WORKING_DATA_MODULE + E1009,
-    'directional_variance_gradient': WORKING_DATA_MODULE + E1009,
-    'first_principal_component': WORKING_DATA_MODULE + E1009,
-    'project': WORKING_DATA_MODULE + E1009,
-    'remove_projection_from_vector': WORKING_DATA_MODULE + E1009,
-    'remove_projection': WORKING_DATA_MODULE + E1009,
+    'vector_mean': WORKING_E1008,
+    'standard_deviation': WORKING_E1008,
+    'scale': WORKING_E1008,
+    'rescale': WORKING_E1008,
+    'simple_trange': WORKING_E1009,
+    'de_mean': WORKING_E1009,
+    'direction': WORKING_E1009,
+    'directional_variance': WORKING_E1009,
+    'directional_variance_gradient': WORKING_E1009,
+    'first_principal_component': WORKING_E1009,
+    'project': WORKING_E1009,
+    'remove_projection_from_vector': WORKING_E1009,
+    'remove_projection': WORKING_E1009,
     }
 
     module_mappings.update(working_map)
+
+    # Dynamic discovery: scan the 'dsl' package for additional functions that should
+    # be exposed as dynamic strategies. This adds any top-level functions found
+    # under the dsl package to module_mappings if not already present.
+    try:
+        import pkgutil
+        import dsl
+
+        for finder, mod_name, ispkg in pkgutil.walk_packages(dsl.__path__, dsl.__name__ + '.'):
+            try:
+                mod = importlib.import_module(mod_name)
+            except Exception:
+                # Ignore individual import failures for optional modules
+                continue
+
+            for obj_name, obj in inspect.getmembers(mod, inspect.isfunction):
+                # Only add if not already explicitly mapped
+                if obj_name not in module_mappings:
+                    module_mappings[obj_name] = mod_name
+    except ImportError:
+        # dsl package not available in this environment; try a filesystem
+        # fallback to discover functions from the repository's dsl folder.
+        try:
+            import ast
+            # Candidate path relative to this module: go up to project src and
+            # then into data-scratch-library/dsl
+            candidate = os.path.join(current_dir, os.pardir, os.pardir, os.pardir, 'data-scratch-library', 'dsl')
+            candidate = os.path.normpath(candidate)
+            if os.path.isdir(candidate):
+                for root, _, files in os.walk(candidate):
+                    for fname in files:
+                        if not fname.endswith('.py'):
+                            continue
+                        fpath = os.path.join(root, fname)
+                        try:
+                            with open(fpath, 'r', encoding='utf-8') as fh:
+                                src = fh.read()
+                            parsed = ast.parse(src)
+                        except Exception:
+                            continue
+
+                        # derive module name from file path relative to candidate
+                        rel = os.path.relpath(fpath, candidate)
+                        mod_name = 'dsl.' + rel.replace(os.sep, '.')[:-3]  # strip .py
+
+                        for node in parsed.body:
+                            if isinstance(node, ast.FunctionDef):
+                                if node.name not in module_mappings:
+                                    module_mappings[node.name] = mod_name
+        except Exception:
+            # If filesystem fallback fails, continue silently — discovery is best-effort
+            pass
 
     # Utility functions from crash course
     module_mappings['mysqrt'] = 'dsl.c02_crash_course.e0203_functions'
@@ -148,9 +222,6 @@ def get_all_library_functions():
     # Helper: consistent warning and error publishing to reduce duplicated
     # string literals across the module (reduces S1192 findings)
     WARNING_IMPORT_FMT = 'Warning: Could not import {} from {}: {}'
-
-    def _publish_error(publisher, exc: Exception, fn: str, mod: str):
-        publisher.publish({"error": str(exc), "function": fn, "module": mod})
 
     # Create dynamic strategies for all functions
     for func_name, module_path in module_mappings.items():

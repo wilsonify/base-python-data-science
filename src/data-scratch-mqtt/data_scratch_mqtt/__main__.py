@@ -4,22 +4,33 @@ mqtt consumer
 import json
 import logging
 from logging.config import dictConfig
+import os
 
 import paho.mqtt.client as mqtt
 
-from data_scratch_mqtt import *
+# Import only used names from package instead of star import
+from data_scratch_mqtt import (
+    echo_strategy,
+    mysqrt_strategy,
+    mystrength_strategy,
+    Strategy,
+    dynamic_strategies,
+    MQTT_HOST,
+    MQTT_PORT,
+    MQTT_KEEPALIVE,
+)
 from data_scratch_mqtt.config import MQTT_USER, MQTT_PASS, MQTT_TOPIC
 
-logging_config_dict = dict(
-    version=1,
-    formatters={
+logging_config_dict = {
+    "version": 1,
+    "formatters": {
         "simple": {
             "format": """%(asctime)s | %(filename)s | %(lineno)d | %(levelname)s | %(message)s"""
         }
     },
-    handlers={"console": {"class": "logging.StreamHandler", "formatter": "simple"}},
-    root={"handlers": ["console"], "level": logging.DEBUG},
-)
+    "handlers": {"console": {"class": "logging.StreamHandler", "formatter": "simple"}},
+    "root": {"handlers": ["console"], "level": logging.DEBUG},
+}
 
 # Build available strategies dynamically
 available_strategies = {}

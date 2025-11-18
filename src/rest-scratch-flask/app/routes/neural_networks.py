@@ -196,6 +196,48 @@ def neuron_activate():
         return jsonify({'error': f'Neuron activation failed: {str(e)}'}), 500
 
 
+def _validate_and_convert_network_payload(data, require_target=False):
+    """Validate network payload and return converted network and inputs (and target if required)."""
+    if not data:
+        raise ValueError(ERR_NO_JSON)
+
+    if 'network' not in data or 'inputs' not in data:
+        raise ValueError('Missing required fields: network, inputs')
+
+    network = data['network']
+    inputs = data['inputs']
+
+    if not isinstance(network, list):
+        raise ValueError('network must be a list')
+
+    if not isinstance(inputs, list):
+        raise ValueError('inputs must be a list')
+
+    if require_target and 'target' not in data:
+        raise ValueError('Missing required field: target')
+
+    # Validate structure and types; convert to internal format
+    converted_network = []
+    for i, layer in enumerate(network):
+        if not isinstance(layer, list) or len(layer) != 2:
+            raise ValueError(f'Layer {i} must be [weights, bias]')
+
+        weights, bias = layer
+        if not isinstance(weights, list):
+            raise ValueError(f'Weights in layer {i} must be a list')
+
+        if not isinstance(bias, (int, float)):
+            raise ValueError(f'Bias in layer {i} must be a number')
+
+        neuron_weights = list(weights) + [bias]
+        converted_network.append([neuron_weights])
+
+    if require_target:
+        return converted_network, inputs, data['target']
+
+    return converted_network, inputs
+
+
 @neural_networks_bp.route('/feed_forward', methods=['POST'])
 def network_feed_forward():
     """
@@ -212,58 +254,21 @@ def network_feed_forward():
     """
     try:
         data = request.get_json()
-        
-        if not data:
-            return jsonify({'error': ERR_NO_JSON}), 400
-        
-        if 'network' not in data or 'inputs' not in data:
-            return jsonify({'error': 'Missing required fields: network, inputs'}), 400
-        
-        network = data['network']
-        inputs = data['inputs']
-        
-        # Validate data types
-        if not isinstance(network, list):
-            return jsonify({'error': 'network must be a list'}), 400
-        
-        if not isinstance(inputs, list):
-            return jsonify({'error': 'inputs must be a list'}), 400
-        
-        # Validate network structure
-        for i, layer in enumerate(network):
-            if not isinstance(layer, list) or len(layer) != 2:
-                return jsonify({'error': f'Layer {i} must be [weights, bias]'}), 400
-            
-            weights, bias = layer
-            if not isinstance(weights, list):
-                return jsonify({'error': f'Weights in layer {i} must be a list'}), 400
-            
-            if not isinstance(bias, (int, float)):
-                return jsonify({'error': f'Bias in layer {i} must be a number'}), 400
-        
-        # Convert incoming network format ([weights, bias] per neuron) to
-        # the internal representation expected by feed_forward: a list of
-        # layers where each layer is a list of neurons, and each neuron is
-        # a list of weights including the bias as the last weight.
-        converted_network = []
-        for layer in network:
-            # If layer is a single neuron represented as [weights, bias]
-            if isinstance(layer, list) and len(layer) == 2 and isinstance(layer[0], list) and isinstance(layer[1], (int, float)):
-                neuron_weights = list(layer[0]) + [layer[1]]
-                converted_network.append([neuron_weights])
-            else:
-                # assume it's already a list of neurons with full weight lists
-                converted_network.append(layer)
+
+        try:
+            converted_network, inputs = _validate_and_convert_network_payload(data)
+        except ValueError as e:
+            return jsonify({'error': str(e)}), 400
 
         # Perform feed-forward propagation
         outputs = feed_forward(converted_network, inputs)
         
         return jsonify({
             'inputs': inputs,
-            'network_structure': [len(layer[0]) for layer in network],  # Number of neurons per layer
+            'network_structure': [len(layer) for layer in converted_network],  # Number of neurons per layer
             'layer_outputs': outputs,
             'final_output': outputs[-1] if outputs else [],
-            'num_layers': len(network)
+            'num_layers': len(converted_network)
         })
         
     except Exception as e:
@@ -294,33 +299,14 @@ def calculate_backpropagation():
         if 'network' not in data or 'inputs' not in data or 'target' not in data:
             return jsonify({'error': 'Missing required fields: network, inputs, target'}), 400
         
-        network = data['network']
-        inputs = data['inputs']
-        target = data['target']
+        try:
+            converted_network, inputs, target = _validate_and_convert_network_payload(data, require_target=True)
+        except ValueError as e:
+            return jsonify({'error': str(e)}), 400
         
-        # Validate data types
-        if not isinstance(network, list):
-            return jsonify({'error': 'network must be a list'}), 400
+        # 'converted_network' is already a validated internal representation
         
-        if not isinstance(inputs, list):
-            return jsonify({'error': 'inputs must be a list'}), 400
-        
-        if not isinstance(target, list):
-            return jsonify({'error': 'target must be a list'}), 400
-        
-        # Validate network structure
-        for i, layer in enumerate(network):
-            if not isinstance(layer, list) or len(layer) != 2:
-                return jsonify({'error': f'Layer {i} must be [weights, bias]'}), 400
-        
-        # Convert network to internal representation for backpropagation
-        converted_network = []
-        for layer in network:
-            if isinstance(layer, list) and len(layer) == 2 and isinstance(layer[0], list) and isinstance(layer[1], (int, float)):
-                neuron_weights = list(layer[0]) + [layer[1]]
-                converted_network.append([neuron_weights])
-            else:
-                converted_network.append(layer)
+        # 'converted_network' is already produced by helper
 
         # Perform backpropagation
         gradients = backpropagation(converted_network, inputs, target)
@@ -333,7 +319,7 @@ def calculate_backpropagation():
             'target': target,
             'network_output': outputs[-1] if outputs else [],
             'gradients': gradients,
-            'num_layers': len(network),
+            'num_layers': len(converted_network),
             'note': 'Gradients are returned as [weight_gradients, bias_gradient] for each layer'
         })
         

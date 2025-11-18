@@ -222,13 +222,13 @@ export function trainSimpleNetwork(
     const outputSize = trainingData[0].target.length;
     
     // Initialize network with random weights
-    const network: NeuralNetwork = [
+        const network: NeuralNetwork = [
         [
-            Array(hiddenNeurons).fill(0).map(() => Math.random() * 2 - 1),
+            new Array(hiddenNeurons).fill(0).map(() => Math.random() * 2 - 1),
             Math.random() * 2 - 1
         ],
         [
-            Array(outputSize).fill(0).map(() => Math.random() * 2 - 1),
+            new Array(outputSize).fill(0).map(() => Math.random() * 2 - 1),
             Math.random() * 2 - 1
         ]
     ];
@@ -305,8 +305,8 @@ export function createNetwork(layerSizes: number[]): NeuralNetwork {
         const inputSize = layerSizes[i - 1];
         const outputSize = layerSizes[i];
         
-        const weights = Array(outputSize).fill(0).map(() =>
-            Array(inputSize).fill(0).map(() => Math.random() * 2 - 1)
+        const weights = new Array(outputSize).fill(0).map(() =>
+            new Array(inputSize).fill(0).map(() => Math.random() * 2 - 1)
         );
         
         // Flatten weights array for our network format

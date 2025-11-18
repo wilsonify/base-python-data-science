@@ -26,6 +26,24 @@ def classify(point, means):
     distances = [squared_distance(point, mean) for mean in means]
     return distances.index(min(distances))
 
+
+def _validate_points_list(points):
+    """Validate that 'points' is a non-empty list of lists with consistent dimensionality."""
+    if not isinstance(points, list):
+        raise ValueError(ERR_DATA_MUST_BE_LIST)
+
+    if not points:
+        raise ValueError('data cannot be empty')
+
+    for point in points:
+        if not isinstance(point, list):
+            raise ValueError(ERR_ALL_POINTS_LISTS)
+
+        if len(point) != len(points[0]):
+            raise ValueError(ERR_SAME_DIMENSION)
+
+
+
 def cluster_means(data, assignments, k):
     """Calculate cluster means."""
     clusters = [[] for _ in range(k)]
@@ -131,26 +149,30 @@ def perform_kmeans():
         if initial_assignments is not None and not isinstance(initial_assignments, list):
             return jsonify({'error': 'initial_assignments must be a list'}), 400
         
-        # Validate points
-        if not points:
-            return jsonify({'error': 'data cannot be empty'}), 400
-        
-        for point in points:
-            if not isinstance(point, list):
-                return jsonify({'error': ERR_ALL_POINTS_LISTS}), 400
-            
-            if len(point) != len(points[0]):
-                return jsonify({'error': ERR_SAME_DIMENSION}), 400
-        
+        # Validate types and content
+        try:
+            _validate_points_list(points)
+        except ValueError as e:
+            return jsonify({'error': str(e)}), 400
+
+        if not isinstance(k, int) or k <= 0:
+            return jsonify({'error': 'k must be a positive integer'}), 400
+
+        if not isinstance(max_iterations, int) or max_iterations <= 0:
+            return jsonify({'error': 'max_iterations must be a positive integer'}), 400
+
+        if initial_assignments is not None and not isinstance(initial_assignments, list):
+            return jsonify({'error': 'initial_assignments must be a list'}), 400
+
         if k > len(points):
             return jsonify({'error': ERR_K_GT_POINTS}), 400
-        
+
         # Perform K-means clustering
         assignments, means = k_means(points, k, initial_assignments, max_iterations)
-        
+
         # Calculate error metrics
         total_error = squared_clustering_errors(points, assignments, means)
-        
+
         # Organize results by cluster
         clusters = {}
         for i, (point, assignment) in enumerate(zip(points, assignments)):

@@ -10,6 +10,6 @@ def mysqrt_strategy(self, body: dict):  # noqa: E501
     x = body["x"]
     result = mysqrt(x)
     result = round(result, 4)
-    sqrt_output = dict(x=x, result=result)
+    sqrt_output = {"x": x, "result": result}
     logging.debug(f"sqrt_output = {sqrt_output}")
     self.publish(sqrt_output)

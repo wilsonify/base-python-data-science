@@ -39,7 +39,7 @@ function assignPointsToClusters(points: Point[], means: Point[]): number[] {
 
 // Calculate new cluster means based on current assignments
 function calculateNewMeans(points: Point[], assignments: number[], k: number): Point[] {
-    const clusters: Point[][] = Array(k).fill(null).map(() => []);
+    const clusters: Point[][] = new Array(k).fill(null).map(() => []);
     
     // Group points by cluster assignment
     for (let i = 0; i < points.length; i++) {
@@ -55,7 +55,7 @@ function calculateNewMeans(points: Point[], assignments: number[], k: number): P
             newMeans.push(mean);
         } else {
             // If no points assigned to cluster, keep the old mean or reinitialize
-            newMeans.push(Array(points[0].length).fill(0));
+            newMeans.push(new Array(points[0].length).fill(0));
         }
     }
     
@@ -140,7 +140,7 @@ export function kMeans(
     const totalSquaredError = calculateTotalSquaredError(points, assignments, means);
     
     // Organize results into clusters
-    const clusters: Cluster[] = Array(k).fill(null).map((_, i) => ({
+    const clusters: Cluster[] = new Array(k).fill(null).map((_, i) => ({
         centroid: means[i],
         points: [],
         id: i
