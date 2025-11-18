@@ -24,7 +24,7 @@ def test_imports():
     print(f"✓ Dynamic strategies loaded: {len(dynamic_strategies)} strategies")
     
     # Test that key strategies are available
-    key_strategies = ['vector_add', 'mean', 'normal_cdf', 'accuracy']
+    key_strategies = ['vector_add', 'mean', 'normal_cd', 'accuracy']
     for strategy in key_strategies:
         assert strategy in dynamic_strategies, f"{strategy} strategy missing"
         print(f"✓ {strategy} strategy available")

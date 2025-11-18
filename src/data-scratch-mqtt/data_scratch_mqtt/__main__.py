@@ -50,7 +50,7 @@ def on_subscribe(client, userdata, mid, granted_qos):
 
 
 def on_message(client, userdata, msg):
-    logging.info(f"Message received")
+    logging.info("Message received")
     logging.debug(f"msg.topic = {msg.topic}")
     logging.debug(f"msg.payload {msg.payload}")
     

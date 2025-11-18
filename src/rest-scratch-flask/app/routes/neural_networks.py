@@ -13,6 +13,9 @@ from dsl.c18_neural_networks.neural_networks import (
 
 neural_networks_bp = Blueprint('neural_networks', __name__)
 
+# Common response messages
+ERR_NO_JSON = 'No JSON data provided'
+
 @neural_networks_bp.route('/sigmoid', methods=['POST'])
 def calculate_sigmoid():
     """
@@ -24,10 +27,10 @@ def calculate_sigmoid():
     }
     """
     try:
-        data = request.get_json()
+        data = request.get_json(silent=True)
         
         if not data:
-            return jsonify({'error': 'No JSON data provided'}), 400
+            return jsonify({'error': ERR_NO_JSON}), 400
         
         if 'x' not in data:
             return jsonify({'error': 'Missing required field: x'}), 400
@@ -60,10 +63,10 @@ def calculate_step():
     }
     """
     try:
-        data = request.get_json()
+        data = request.get_json(silent=True)
         
         if not data:
-            return jsonify({'error': 'No JSON data provided'}), 400
+            return jsonify({'error': ERR_NO_JSON}), 400
         
         if 'x' not in data:
             return jsonify({'error': 'Missing required field: x'}), 400
@@ -98,10 +101,10 @@ def perceptron_predict():
     }
     """
     try:
-        data = request.get_json()
+        data = request.get_json(silent=True)
         
         if not data:
-            return jsonify({'error': 'No JSON data provided'}), 400
+            return jsonify({'error': ERR_NO_JSON}), 400
         
         if 'weights' not in data or 'bias' not in data or 'inputs' not in data:
             return jsonify({'error': 'Missing required fields: weights, bias, inputs'}), 400
@@ -157,7 +160,7 @@ def neuron_activate():
         data = request.get_json()
         
         if not data:
-            return jsonify({'error': 'No JSON data provided'}), 400
+            return jsonify({'error': ERR_NO_JSON}), 400
         
         if 'weights' not in data or 'inputs' not in data:
             return jsonify({'error': 'Missing required fields: weights, inputs'}), 400
@@ -211,7 +214,7 @@ def network_feed_forward():
         data = request.get_json()
         
         if not data:
-            return jsonify({'error': 'No JSON data provided'}), 400
+            return jsonify({'error': ERR_NO_JSON}), 400
         
         if 'network' not in data or 'inputs' not in data:
             return jsonify({'error': 'Missing required fields: network, inputs'}), 400
@@ -238,8 +241,22 @@ def network_feed_forward():
             if not isinstance(bias, (int, float)):
                 return jsonify({'error': f'Bias in layer {i} must be a number'}), 400
         
+        # Convert incoming network format ([weights, bias] per neuron) to
+        # the internal representation expected by feed_forward: a list of
+        # layers where each layer is a list of neurons, and each neuron is
+        # a list of weights including the bias as the last weight.
+        converted_network = []
+        for layer in network:
+            # If layer is a single neuron represented as [weights, bias]
+            if isinstance(layer, list) and len(layer) == 2 and isinstance(layer[0], list) and isinstance(layer[1], (int, float)):
+                neuron_weights = list(layer[0]) + [layer[1]]
+                converted_network.append([neuron_weights])
+            else:
+                # assume it's already a list of neurons with full weight lists
+                converted_network.append(layer)
+
         # Perform feed-forward propagation
-        outputs = feed_forward(network, inputs)
+        outputs = feed_forward(converted_network, inputs)
         
         return jsonify({
             'inputs': inputs,
@@ -272,7 +289,7 @@ def calculate_backpropagation():
         data = request.get_json()
         
         if not data:
-            return jsonify({'error': 'No JSON data provided'}), 400
+            return jsonify({'error': ERR_NO_JSON}), 400
         
         if 'network' not in data or 'inputs' not in data or 'target' not in data:
             return jsonify({'error': 'Missing required fields: network, inputs, target'}), 400
@@ -296,11 +313,20 @@ def calculate_backpropagation():
             if not isinstance(layer, list) or len(layer) != 2:
                 return jsonify({'error': f'Layer {i} must be [weights, bias]'}), 400
         
+        # Convert network to internal representation for backpropagation
+        converted_network = []
+        for layer in network:
+            if isinstance(layer, list) and len(layer) == 2 and isinstance(layer[0], list) and isinstance(layer[1], (int, float)):
+                neuron_weights = list(layer[0]) + [layer[1]]
+                converted_network.append([neuron_weights])
+            else:
+                converted_network.append(layer)
+
         # Perform backpropagation
-        gradients = backpropagation(network, inputs, target)
-        
+        gradients = backpropagation(converted_network, inputs, target)
+
         # Calculate feed-forward output for reference
-        outputs = feed_forward(network, inputs)
+        outputs = feed_forward(converted_network, inputs)
         
         return jsonify({
             'inputs': inputs,

@@ -32,7 +32,7 @@ def create_dynamic_strategy(module_path: str, function_name: str):
             self.publish(result)
             
         except Exception as e:
-            self.publish({"error": str(e), "function": function_name, "module": module_path})
+            _publish_error(self, e, function_name, module_path)
     
     # Set a proper name for the function
     dynamic_strategy.__name__ = f"{function_name}_strategy"
@@ -43,124 +43,117 @@ def get_all_library_functions():
     """Discover all functions in the data-scratch-library"""
     functions = {}
     
-    # Define the module mappings (same as AMQP version)
-    module_mappings = {
-        # Linear Algebra
-        'vector_add': 'dsl.c04_linear_algebra.e0401_vectors',
-        'vector_subtract': 'dsl.c04_linear_algebra.e0401_vectors',
-        'vector_sum': 'dsl.c04_linear_algebra.e0401_vectors',
-        'scalar_multiply': 'dsl.c04_linear_algebra.e0401_vectors',
-        'vector_mean': 'dsl.c04_linear_algebra.e0401_vectors',
-        'dot': 'dsl.c04_linear_algebra.e0401_vectors',
-        'sum_of_squares': 'dsl.c04_linear_algebra.e0401_vectors',
-        'magnitude': 'dsl.c04_linear_algebra.e0401_vectors',
-        'squared_distance': 'dsl.c04_linear_algebra.e0401_vectors',
-        'distance': 'dsl.c04_linear_algebra.e0401_vectors',
-        'distance2': 'dsl.c04_linear_algebra.e0401_vectors',
-        'shape': 'dsl.c04_linear_algebra.e0402_matrices',
-        'get_row': 'dsl.c04_linear_algebra.e0402_matrices',
-        'get_column': 'dsl.c04_linear_algebra.e0402_matrices',
-        'make_matrix': 'dsl.c04_linear_algebra.e0402_matrices',
-        'is_diagonal': 'dsl.c04_linear_algebra.e0402_matrices',
-        'make_identity_matrix': 'dsl.c04_linear_algebra.e0402_matrices',
-        'matrix_add': 'dsl.c04_linear_algebra.e0402_matrices',
-        'matrix_multiply': 'dsl.c04_linear_algebra.e0402_matrices',
-        'make_random_matrix': 'dsl.c04_linear_algebra.e0402_matrices',
-        
-        # Statistics
-        'mean': 'dsl.c05_statistics.e0501_central_tendancy',
-        'median': 'dsl.c05_statistics.e0501_central_tendancy',
-        'quantile': 'dsl.c05_statistics.e0501_central_tendancy',
-        'mode': 'dsl.c05_statistics.e0501_central_tendancy',
-        'data_range': 'dsl.c05_statistics.e0502_dispersion',
-        'de_mean': 'dsl.c05_statistics.e0502_dispersion',
-        'variance': 'dsl.c05_statistics.e0502_dispersion',
-        'standard_deviation': 'dsl.c05_statistics.e0502_dispersion',
-        'interquartile_range': 'dsl.c05_statistics.e0502_dispersion',
-        'covariance': 'dsl.c05_statistics.e0503_correlation',
-        'correlation': 'dsl.c05_statistics.e0503_correlation',
-        'correlation_matrix': 'dsl.c05_statistics.e0503_correlation',
-        
-        # Probability
-        'uniform_pdf': 'dsl.c06_probability.e0602_uniform',
-        'uniform_cdf': 'dsl.c06_probability.e0602_uniform',
-        'normal_pdf': 'dsl.c06_probability.e0603_normal',
-        'normal_cdf': 'dsl.c06_probability.e0603_normal',
-        'inverse_normal_cdf': 'dsl.c06_probability.e0603_normal',
-        'bernoulli_trial': 'dsl.c06_probability.e0604_binom',
-        'binomial': 'dsl.c06_probability.e0604_binom',
-        'binom_pdf': 'dsl.c06_probability.e0604_binom',
-        'binom_cdf': 'dsl.c06_probability.e0604_binom',
-        'binom_ppf': 'dsl.c06_probability.e0604_binom',
-        'random_kid': 'dsl.c06_probability.e0601_conditional',
-        
-        # Gradient Descent
-        'difference_quotient': 'dsl.c08_gradient_descent.e0801_estimating_gradient',
-        'partial_difference_quotient': 'dsl.c08_gradient_descent.e0801_estimating_gradient',
-        'estimate_gradient': 'dsl.c08_gradient_descent.e0801_estimating_gradient',
-        'gradient_step': 'dsl.c08_gradient_descent.e0802_using_gradient',
-        'sum_of_squares_gradient': 'dsl.c08_gradient_descent.e0802_using_gradient',
-        'linear_gradient': 'dsl.c08_gradient_descent.e0803_fitting_models',
-        'minibatches': 'dsl.c08_gradient_descent.e0804_minibatch_gd',
-        'minimize_batch': 'dsl.c08_gradient_descent.e0804_minibatch_gd',
-        'maximize_batch': 'dsl.c08_gradient_descent.e0804_minibatch_gd',
-        'in_random_order': 'dsl.c08_gradient_descent.e0805_stochastic_gd',
-        'minimize_stochastic': 'dsl.c08_gradient_descent.e0805_stochastic_gd',
-        'maximize_stochastic': 'dsl.c08_gradient_descent.e0805_stochastic_gd',
-        
-        # Machine Learning
-        'split_data': 'dsl.c11_machine_learning.machine_learning',
-        'train_test_split': 'dsl.c11_machine_learning.machine_learning',
-        'accuracy': 'dsl.c11_machine_learning.machine_learning',
-        'precision': 'dsl.c11_machine_learning.machine_learning',
-        'recall': 'dsl.c11_machine_learning.machine_learning',
-        'f1_score': 'dsl.c11_machine_learning.machine_learning',
-        
-        # Working with Data
-        'bucketize': 'dsl.c10_working_with_data.e1001_univariate',
-        'make_histogram': 'dsl.c10_working_with_data.e1001_univariate',
-        'correlation_matrix': 'dsl.c10_working_with_data.e1003_multivariate',
-        'random_normal': 'dsl.c10_working_with_data.e1002_bivariate',
-        'demo_deque': 'dsl.c10_working_with_data.e1000_circular_buffer',
-        'create_stock_price_namedtuple': 'dsl.c10_working_with_data.e1004_named_tuples',
-        'create_stock_price': 'dsl.c10_working_with_data.e1004_named_tuples',
-        'create_price_dict': 'dsl.c10_working_with_data.e1004_named_tuples',
-        'parse_row': 'dsl.c10_working_with_data.e1006_cleaning',
-        'try_parse_row': 'dsl.c10_working_with_data.e1006_cleaning',
-        'process_csv': 'dsl.c10_working_with_data.e1006_cleaning',
-        'max_stock_price': 'dsl.c10_working_with_data.e1007_manipulation',
-        'max_prices_by_symbol': 'dsl.c10_working_with_data.e1007_manipulation',
-        'pct_change': 'dsl.c10_working_with_data.e1007_manipulation',
-        'day_over_day_changes': 'dsl.c10_working_with_data.e1007_manipulation',
-        'group_prices_by_symbol': 'dsl.c10_working_with_data.e1007_manipulation',
-        'find_largest_and_smallest_changes': 'dsl.c10_working_with_data.e1007_manipulation',
-        'average_daily_change_by_month': 'dsl.c10_working_with_data.e1007_manipulation',
-        'create_stock_price_dataclass': 'dsl.c10_working_with_data.e1005_dataclass',
-        'vector_mean': 'dsl.c10_working_with_data.e1008_rescaling',
-        'standard_deviation': 'dsl.c10_working_with_data.e1008_rescaling',
-        'scale': 'dsl.c10_working_with_data.e1008_rescaling',
-        'rescale': 'dsl.c10_working_with_data.e1008_rescaling',
-        'simple_trange': 'dsl.c10_working_with_data.e1009_dimensionality_reduction',
-        'de_mean': 'dsl.c10_working_with_data.e1009_dimensionality_reduction',
-        'direction': 'dsl.c10_working_with_data.e1009_dimensionality_reduction',
-        'directional_variance': 'dsl.c10_working_with_data.e1009_dimensionality_reduction',
-        'directional_variance_gradient': 'dsl.c10_working_with_data.e1009_dimensionality_reduction',
-        'first_principal_component': 'dsl.c10_working_with_data.e1009_dimensionality_reduction',
-        'project': 'dsl.c10_working_with_data.e1009_dimensionality_reduction',
-        'remove_projection_from_vector': 'dsl.c10_working_with_data.e1009_dimensionality_reduction',
-        'remove_projection': 'dsl.c10_working_with_data.e1009_dimensionality_reduction',
-        
-        # Utility functions from crash course
-        'mysqrt': 'dsl.c02_crash_course.e0203_functions',
-        'strength': 'dsl.c06_probability.e0604_binom',
-    }
+    # Define constants for commonly used modules
+    VECTORS_MODULE = 'dsl.c04_linear_algebra.e0401_vectors'
+    MATRICES_MODULE = 'dsl.c04_linear_algebra.e0402_matrices'
+    CENTRAL_TENDENCY_MODULE = 'dsl.c05_statistics.e0501_central_tendancy'
+    DISPERSION_MODULE = 'dsl.c05_statistics.e0502_dispersion'
+    CORRELATION_MODULE = 'dsl.c05_statistics.e0503_correlation'
+    UNIFORM_MODULE = 'dsl.c06_probability.e0602_uniform'
+    NORMAL_MODULE = 'dsl.c06_probability.e0603_normal'
+    BINOM_MODULE = 'dsl.c06_probability.e0604_binom'
+    CONDITIONAL_MODULE = 'dsl.c06_probability.e0601_conditional'
+    ESTIMATING_GRADIENT_MODULE = 'dsl.c08_gradient_descent.e0801_estimating_gradient'
+    USING_GRADIENT_MODULE = 'dsl.c08_gradient_descent.e0802_using_gradient'
+    FITTING_MODELS_MODULE = 'dsl.c08_gradient_descent.e0803_fitting_models'
+    MINIBATCH_GD_MODULE = 'dsl.c08_gradient_descent.e0804_minibatch_gd'
+    STOCHASTIC_GD_MODULE = 'dsl.c08_gradient_descent.e0805_stochastic_gd'
     
+    # Build module_mappings by grouping function names to module constants to
+    # avoid large numbers of duplicated string literals (reduces S1192 findings)
+    module_mappings = {}
+
+    grouped = {
+        VECTORS_MODULE: ['vector_add', 'vector_subtract', 'vector_sum', 'scalar_multiply', 'vector_mean', 'dot', 'sum_of_squares', 'magnitude', 'squared_distance', 'distance', 'distance2'],
+        MATRICES_MODULE: ['shape', 'get_row', 'get_column', 'make_matrix', 'is_diagonal', 'make_identity_matrix', 'matrix_add', 'matrix_multiply', 'make_random_matrix'],
+        CENTRAL_TENDENCY_MODULE: ['mean', 'median', 'quantile', 'mode'],
+        DISPERSION_MODULE: ['data_range', 'de_mean', 'variance', 'standard_deviation', 'interquartile_range'],
+        CORRELATION_MODULE: ['covariance', 'correlation', 'correlation_matrix'],
+        UNIFORM_MODULE: ['uniform_pd', 'uniform_cd'],
+        NORMAL_MODULE: ['normal_pd', 'normal_cd', 'inverse_normal_cd'],
+        BINOM_MODULE: ['bernoulli_trial', 'binomial', 'binom_pd', 'binom_cd', 'binom_pp'],
+        CONDITIONAL_MODULE: ['random_kid'],
+        ESTIMATING_GRADIENT_MODULE: ['difference_quotient', 'partial_difference_quotient', 'estimate_gradient'],
+        USING_GRADIENT_MODULE: ['gradient_step', 'sum_of_squares_gradient'],
+        FITTING_MODELS_MODULE: ['linear_gradient'],
+        MINIBATCH_GD_MODULE: ['minibatches', 'minimize_batch', 'maximize_batch'],
+        STOCHASTIC_GD_MODULE: ['in_random_order', 'minimize_stochastic', 'maximize_stochastic'],
+    }
+
+    # Simple helper modules for other grouped functions
+    ML_MODULE = 'dsl.c11_machine_learning.machine_learning'
+    WORKING_DATA_MODULE = 'dsl.c10_working_with_data'
+
+    # Common working-data suffixes used multiple times — extract to constants
+    E1004 = '.e1004_named_tuples'
+    E1006 = '.e1006_cleaning'
+    E1007 = '.e1007_manipulation'
+    E1008 = '.e1008_rescaling'
+    E1009 = '.e1009_dimensionality_reduction'
+
+    for module_const, fnames in grouped.items():
+        for fn in fnames:
+            module_mappings[fn] = module_const
+
+    # Machine learning group
+    for fn in ['split_data', 'train_test_split', 'accuracy', 'precision', 'recall', 'f1_score']:
+        module_mappings[fn] = ML_MODULE
+
+    # Working-with-data mappings (use fully qualified names where functions live)
+    working_map = {
+    'bucketize': WORKING_DATA_MODULE + '.e1001_univariate',
+    'make_histogram': WORKING_DATA_MODULE + '.e1001_univariate',
+    'correlation_matrix': WORKING_DATA_MODULE + '.e1003_multivariate',
+    'random_normal': WORKING_DATA_MODULE + '.e1002_bivariate',
+    'demo_deque': WORKING_DATA_MODULE + '.e1000_circular_buffer',
+    'create_stock_price_namedtuple': WORKING_DATA_MODULE + E1004,
+    'create_stock_price': WORKING_DATA_MODULE + E1004,
+    'create_price_dict': WORKING_DATA_MODULE + E1004,
+    'parse_row': WORKING_DATA_MODULE + E1006,
+    'try_parse_row': WORKING_DATA_MODULE + E1006,
+    'process_csv': WORKING_DATA_MODULE + E1006,
+    'max_stock_price': WORKING_DATA_MODULE + E1007,
+    'max_prices_by_symbol': WORKING_DATA_MODULE + E1007,
+    'pct_change': WORKING_DATA_MODULE + E1007,
+    'day_over_day_changes': WORKING_DATA_MODULE + E1007,
+    'group_prices_by_symbol': WORKING_DATA_MODULE + E1007,
+    'find_largest_and_smallest_changes': WORKING_DATA_MODULE + E1007,
+    'average_daily_change_by_month': WORKING_DATA_MODULE + E1007,
+    'create_stock_price_dataclass': WORKING_DATA_MODULE + '.e1005_dataclass',
+    'vector_mean': WORKING_DATA_MODULE + E1008,
+    'standard_deviation': WORKING_DATA_MODULE + E1008,
+    'scale': WORKING_DATA_MODULE + E1008,
+    'rescale': WORKING_DATA_MODULE + E1008,
+    'simple_trange': WORKING_DATA_MODULE + E1009,
+    'de_mean': WORKING_DATA_MODULE + E1009,
+    'direction': WORKING_DATA_MODULE + E1009,
+    'directional_variance': WORKING_DATA_MODULE + E1009,
+    'directional_variance_gradient': WORKING_DATA_MODULE + E1009,
+    'first_principal_component': WORKING_DATA_MODULE + E1009,
+    'project': WORKING_DATA_MODULE + E1009,
+    'remove_projection_from_vector': WORKING_DATA_MODULE + E1009,
+    'remove_projection': WORKING_DATA_MODULE + E1009,
+    }
+
+    module_mappings.update(working_map)
+
+    # Utility functions from crash course
+    module_mappings['mysqrt'] = 'dsl.c02_crash_course.e0203_functions'
+    module_mappings['strength'] = 'dsl.c06_probability.e0604_binom'
+    
+    # Helper: consistent warning and error publishing to reduce duplicated
+    # string literals across the module (reduces S1192 findings)
+    WARNING_IMPORT_FMT = 'Warning: Could not import {} from {}: {}'
+
+    def _publish_error(publisher, exc: Exception, fn: str, mod: str):
+        publisher.publish({"error": str(exc), "function": fn, "module": mod})
+
     # Create dynamic strategies for all functions
     for func_name, module_path in module_mappings.items():
         try:
             functions[func_name] = create_dynamic_strategy(module_path, func_name)
         except ImportError as e:
-            print(f"Warning: Could not import {func_name} from {module_path}: {e}")
+            print(WARNING_IMPORT_FMT.format(func_name, module_path, e))
     
     return functions
 

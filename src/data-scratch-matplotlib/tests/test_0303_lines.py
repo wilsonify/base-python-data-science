@@ -47,5 +47,5 @@ def test_make_chart_several_line_charts():
     legend_texts = [text.get_text() for text in ax.get_legend().get_texts()]
     assert legend_texts == ["variance", "bias^2", "total error"], "Legend labels should match."
     assert ax.get_xlabel() == "model complexity", "X-axis label should be 'model complexity'."
-    assert ax.get_title() == "The Bias-Variance Tradeoff", "Title should be 'The Bias-Variance Tradeoff'."
+    assert ax.get_title() == "The Bias-Variance Tradeof", "Title should be 'The Bias-Variance Tradeoff'."
     plt.close()

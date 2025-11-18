@@ -46,7 +46,7 @@ def recolor_image(path_to_png_file, k=5):
     new_img = [[recolor(pixel) for pixel in row] for row in img]
 
     plt.imshow(new_img)
-    plt.axis("off")
+    plt.axis("of")
     plt.show()
 
 
@@ -73,8 +73,9 @@ def plot_estimated_derivative():
     # plot to show they're basically the same
 
     x = range(-10, 10)
-    plt.plot(x, map(derivative, x), "rx")  # red  x
-    plt.plot(x, map(derivative_estimate, x), "b+")  # blue +
+    # map returns an iterator in Python 3; replace with list comprehensions for compatibility and clarity
+    plt.plot(x, [derivative(i) for i in x], "rx")  # red  x
+    plt.plot(x, [derivative_estimate(i) for i in x], "b+")  # blue +
     plt.show()
 
 
@@ -290,7 +291,7 @@ def make_scatterplot_matrix():
     # then plot it
 
     _, num_columns = shape(data)
-    fig, ax = plt.subplots(num_columns, num_columns)
+    _, ax = plt.subplots(num_columns, num_columns)
 
     for i in range(num_columns):
         for j in range(num_columns):
@@ -326,7 +327,7 @@ def make_scatterplot_matrix():
 def make_chart_scatter_plot():
     friends = [70, 65, 72, 63, 71, 64, 60, 64, 67]
     minutes = [175, 170, 205, 120, 220, 130, 105, 145, 190]
-    labels = ["a", "b", "c", "d", "e", "f", "g", "h", "i"]
+    labels = ["a", "b", "c", "d", "e", "", "g", "h", "i"]
 
     plt.scatter(friends, minutes)
 

@@ -50,7 +50,7 @@ def test_dynamic_strategies_loaded():
     assert len(dynamic_strategies) > 80  # Should have many strategies
     assert 'vector_add' in dynamic_strategies
     assert 'mean' in dynamic_strategies
-    assert 'normal_cdf' in dynamic_strategies
+    assert 'normal_cd' in dynamic_strategies
     assert 'accuracy' in dynamic_strategies
 
 

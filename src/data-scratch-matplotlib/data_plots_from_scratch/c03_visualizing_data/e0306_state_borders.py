@@ -8,7 +8,8 @@ from data_plots_from_scratch import initialize_plot
 
 def read_lines(file_path):
     with open(file_path, "r") as f:
-        lines = [line for line in f]
+        # use list(f) instead of a comprehension for clarity and performance
+        lines = list(f)
     return lines
 
 

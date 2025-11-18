@@ -238,8 +238,8 @@ def main2(path_to_stocks):
     ys1 = [x + random_normal() / 2 for x in xs]
     ys2 = [-x + random_normal() / 2 for x in xs]
 
-    logging.info("Correlation(xs, ys1) = %f", correlation(xs, ys1))
-    logging.info("Correlation(xs, ys2) = %f", correlation(xs, ys2))
+    logging.info("Correlation(xs, ys1) = %", correlation(xs, ys1))
+    logging.info("Correlation(xs, ys2) = %", correlation(xs, ys2))
 
     logging.info("Analyzing stocks...")
     _data = read_stocks_txt(path_to_stocks)
@@ -308,12 +308,12 @@ def main4():
 
 
 if __name__ == "__main__":
-    dictConfig(dict(
-        version=1,
-        formatters={"simple": {"format": "%(asctime)s | %(name)s | %(lineno)s | %(levelname)s | %(message)s"}},
-        handlers={"console": {"class": "logging.StreamHandler", "formatter": "simple"}},
-        root={"handlers": ["console"], "level": logging.DEBUG},
-    ))
+    dictConfig({
+        "version":1,
+        "formatters":{"simple": {"format": "%(asctime)s | %(name)s | %(lineno)s | %(levelname)s | %(message)s"}},
+        "handlers":{"console": {"class": "logging.StreamHandler", "formatter": "simple"}},
+        "root":{"handlers": ["console"], "level": logging.DEBUG},
+    })
 
     current_dir = abspath(dirname(__file__))
     data_dir = os.path.join(current_dir, "../../../../data")

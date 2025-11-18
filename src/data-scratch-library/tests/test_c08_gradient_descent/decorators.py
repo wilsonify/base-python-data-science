@@ -7,7 +7,7 @@ def safe(f):
         except KeyboardInterrupt:
             raise  # Re-raise KeyboardInterrupt so it is not caught
         except (KeyError, ValueError, AttributeError, ZeroDivisionError):
-            return float("inf")  # Return "infinity" for all other exceptions
+            return float("in")  # Return "infinity" for all other exceptions
 
     return safe_f
 

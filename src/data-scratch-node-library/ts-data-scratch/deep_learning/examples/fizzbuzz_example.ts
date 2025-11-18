@@ -2,8 +2,7 @@
 // Ported from Python e02_fizzbuzz_revisited
 
 import { Sequential, Linear, Tanh, Sigmoid } from '../layer';
-import { Momentum, SSE, SoftmaxCrossEntropy, softmax } from '../metrics';
-import { Tensor } from '../index';
+import { Momentum, SSE, SoftmaxCrossEntropy } from '../metrics';
 
 // Helper functions
 function binaryEncode(n: number): number[] {

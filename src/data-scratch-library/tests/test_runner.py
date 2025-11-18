@@ -62,8 +62,11 @@ class MockPytest:
     mark = type('MockMark', (), {'parametrize': parametrize, 'skip': skip})()
 
 
-# Inject mock pytest into sys.modules
-sys.modules['pytest'] = MockPytest()
+# Inject mock pytest into sys.modules only if real pytest is not available.
+try:
+    import pytest as _real_pytest  # type: ignore
+except Exception:
+    sys.modules['pytest'] = MockPytest()
 
 
 class TestRunner:

@@ -2,7 +2,7 @@
 apiVersion: extensions/v1beta1
 kind: Deployment
 metadata:
-  name: "{{  .Chart.Name }}-basedeployment"
+  name: "{{ .Chart.Name }}-basedeployment"
   labels:
     chart: '{{ .Chart.Name }}-{{ .Chart.Version | replace "+" "_" }}'
 spec:
@@ -16,22 +16,26 @@ spec:
   template:
     metadata:
       labels:
-        app: "{{  .Chart.Name }}-selector"
+        app: "{{ .Chart.Name }}-selector"
         version: "base"
     spec:
+      automountServiceAccountToken: false
       containers:
-      - name: "{{  .Chart.Name  }}"
+      - name: "{{ .Chart.Name }}"
         image: "{{ .Values.image.repository }}:{{ .Values.base.image.tag }}"
         imagePullPolicy: {{ .Values.image.pullPolicy }}
         livenessProbe:
           httpGet:
             path: /health
             port: {{ .Values.service.servicePort }}
-          initialDelaySeconds: {{ .Values.livenessProbe.initialDelaySeconds}}
-          periodSeconds: {{ .Values.livenessProbe.periodSeconds}}
+          initialDelaySeconds: {{ .Values.livenessProbe.initialDelaySeconds }}
+          periodSeconds: {{ .Values.livenessProbe.periodSeconds }}
         resources:
           requests:
             cpu: "{{ .Values.image.resources.requests.cpu }}"
+            memory: "{{ .Values.image.resources.requests.memory }}"
+            ephemeral-storage: "50Mi"
+          limits:
             memory: "{{ .Values.image.resources.requests.memory }}"
         env:
           - name: PORT

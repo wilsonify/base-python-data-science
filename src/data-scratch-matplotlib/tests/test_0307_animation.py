@@ -34,7 +34,7 @@ def test_line_tracker_animate():
     """Test the animate method."""
     years = [1950, 1960, 1970]
     gdp = [300.2, 543.3, 1075.9]
-    output_file = "animated_line_chart.gif"
+    output_file = "animated_line_chart.gi"
     lt = LineTracker(title="Nominal GDP", ylabel="Billions of $")
     lt.animate(x=years, y=gdp, output_path=output_file)
     assert len(lt.artists_list) == len(years), "The animation should have the same number of frames as data points."

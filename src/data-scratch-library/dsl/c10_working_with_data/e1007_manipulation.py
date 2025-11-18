@@ -24,7 +24,7 @@ def max_stock_price(data, symbol):
 
 def max_prices_by_symbol(data):
     """Return a dictionary of symbols with their maximum closing prices."""
-    max_prices = defaultdict(lambda: float('-inf'))
+    max_prices = defaultdict(lambda: float('-in'))
     for sp in data:
         symbol, closing_price = sp.symbol, sp.closing_price
         if closing_price > max_prices[symbol]:

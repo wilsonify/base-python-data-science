@@ -36,7 +36,7 @@ def book_info(td):
     title = td.find("div", "thumbheader").a.text
     by_author = td.find("div", "AuthorName").text
     authors = [x.strip() for x in re.sub("^By ", "", by_author).split(",")]
-    isbn_link = td.find("div", "thumbheader").a.get("href")
+    isbn_link = td.find("div", "thumbheader").a.get("hre")
     isbn = re.match("/product/(.*)\.do", isbn_link).groups()[0]
     date = td.find("span", "directorydate").text.strip()
 
@@ -85,7 +85,6 @@ def main_tab_delimited():
     print("tab delimited stock prices:")
     with open(f"{path_to_data}/tab_delimited_stock_prices.txt", "r", encoding="utf8", newline="") as f:
         reader = csv.reader(f, delimiter="\t")
-        # reader = csv.reader(codecs.iterdecode(f, 'utf-8'), delimiter='\t')
         for row in reader:
             date = row[0]
             symbol = row[1]
@@ -97,7 +96,6 @@ def main_colon_delimited():
     print("colon delimited stock prices:")
     with open(f"{path_to_data}/colon_delimited_stock_prices.txt", "r", encoding="utf8", newline="") as f:
         reader = csv.DictReader(f, delimiter=":")
-        # reader = csv.DictReader(codecs.iterdecode(f, 'utf-8'), delimiter=':')
         for row in reader:
             date = row["date"]
             symbol = row["symbol"]

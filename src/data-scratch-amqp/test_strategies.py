@@ -101,7 +101,7 @@ def main():
         else:
             print(f"\n⚠ {strategy_name} not found in dynamic strategies")
     
-    print(f"\n" + "=" * 50)
+    print("\n" + "=" * 50)
     print(f"Test Results: {passed}/{total} strategies passed")
     
     if passed == total:

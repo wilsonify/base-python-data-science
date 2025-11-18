@@ -10,7 +10,7 @@ from data_plots_from_scratch.c03_visualizing_data.e0304_scatter import (
 def test_make_chart_scatter_plot():
     friends = [70, 65, 72, 63, 71, 64, 60, 64, 67]
     minutes = [175, 170, 205, 120, 220, 130, 105, 145, 190]
-    labels = ["a", "b", "c", "d", "e", "f", "g", "h", "i"]
+    labels = ["a", "b", "c", "d", "e", "", "g", "h", "i"]
 
     fig, ax = make_chart_scatter_plot(friends, minutes, labels)
 

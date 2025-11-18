@@ -60,12 +60,10 @@ def step1_create_dataset(config: Config, logger: logging.Logger) -> Dict[str, st
     )
     
     # Save validation split
-    val_data = {'x_val': x_val, 'y_val': y_val}
     save_local_file(x_val, f"{output_dir}/val/x_val.json")
     save_local_file(y_val, f"{output_dir}/val/y_val.json")
     
     # Update training data without validation samples
-    train_data = {'x_train': x_train, 'y_train': y_train}
     save_local_file(x_train, f"{output_dir}/train/x_train.json")
     save_local_file(y_train, f"{output_dir}/train/y_train.json")
     
@@ -157,7 +155,7 @@ def step3_train_model(config: Config, processed_dir: str, logger: logging.Logger
     return {"model_path": model_path, "history_path": history_path}
 
 
-def step4_evaluate_model(config: Config, processed_dir: str, model_path: str, logger: logging.Logger) -> Dict[str, Any]:
+def step4_evaluate_model(processed_dir: str, model_path: str, logger: logging.Logger) -> Dict[str, Any]:
     """Step 4: Evaluate the model."""
     logger.info("Step 4: Evaluating model...")
     
@@ -205,20 +203,20 @@ def run_complete_pipeline(config_path: str = "config.json") -> Dict[str, Any]:
         
         # Step 2: Preprocess data
         step2_result = step2_preprocess_data(config, step1_result['data_dir'], logger)
-        
+
         # Step 3: Train model
         step3_result = step3_train_model(config, step2_result['processed_dir'], logger)
-        
+
         # Step 4: Evaluate model
-        step4_result = step4_evaluate_model(config, step2_result['processed_dir'], 
-                                          step3_result['model_path'], logger)
-        
+        step4_result = step4_evaluate_model(step2_result['processed_dir'],
+                                            step3_result['model_path'], logger)
+
         # Final results
         final_results = {
             'pipeline_status': 'completed',
             'test_accuracy': step4_result['accuracy'],
             'model_path': step3_result['model_path'],
-            'results_path': f"data/mnist/results/evaluation_results.json"
+            'results_path': "data/mnist/results/evaluation_results.json"
         }
         
         logger.info("Pipeline completed successfully!")

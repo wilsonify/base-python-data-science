@@ -3,7 +3,7 @@ def conditional_message(x):
     if 1 > 2:
         return "if only 1 were greater than two..."
     elif 1 > 3:
-        return "elif stands for 'else if'"
+        return "elif stands for 'else i'"
     else:
         return "when all else fails use else (if you want to)"
 

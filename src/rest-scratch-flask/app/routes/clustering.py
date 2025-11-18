@@ -83,6 +83,13 @@ def k_means(data, k, initial_assignments=None, max_iterations=100):
 
 clustering_bp = Blueprint('clustering', __name__)
 
+# Common response messages
+ERR_NO_JSON = 'No JSON data provided'
+ERR_DATA_MUST_BE_LIST = 'data must be a list of points'
+ERR_ALL_POINTS_LISTS = 'All points must be lists of numbers'
+ERR_SAME_DIMENSION = 'All points must have the same dimensionality'
+ERR_K_GT_POINTS = 'k cannot be greater than the number of data points'
+
 @clustering_bp.route('/kmeans', methods=['POST'])
 def perform_kmeans():
     """
@@ -97,11 +104,11 @@ def perform_kmeans():
     }
     """
     try:
-        data = request.get_json()
+        data = request.get_json(silent=True)
         
         # Validate required fields
         if not data:
-            return jsonify({'error': 'No JSON data provided'}), 400
+            return jsonify({'error': ERR_NO_JSON}), 400
         
         if 'data' not in data or 'k' not in data:
             return jsonify({'error': 'Missing required fields: data, k'}), 400
@@ -113,7 +120,7 @@ def perform_kmeans():
         
         # Validate data types
         if not isinstance(points, list):
-            return jsonify({'error': 'data must be a list of points'}), 400
+            return jsonify({'error': ERR_DATA_MUST_BE_LIST}), 400
         
         if not isinstance(k, int) or k <= 0:
             return jsonify({'error': 'k must be a positive integer'}), 400
@@ -130,13 +137,13 @@ def perform_kmeans():
         
         for point in points:
             if not isinstance(point, list):
-                return jsonify({'error': 'All points must be lists of numbers'}), 400
+                return jsonify({'error': ERR_ALL_POINTS_LISTS}), 400
             
             if len(point) != len(points[0]):
-                return jsonify({'error': 'All points must have the same dimensionality'}), 400
+                return jsonify({'error': ERR_SAME_DIMENSION}), 400
         
         if k > len(points):
-            return jsonify({'error': 'k cannot be greater than the number of data points'}), 400
+            return jsonify({'error': ERR_K_GT_POINTS}), 400
         
         # Perform K-means clustering
         assignments, means = k_means(points, k, initial_assignments, max_iterations)
@@ -181,11 +188,11 @@ def analyze_clustering():
     }
     """
     try:
-        data = request.get_json()
+        data = request.get_json(silent=True)
         
         # Validate required fields
         if not data:
-            return jsonify({'error': 'No JSON data provided'}), 400
+            return jsonify({'error': ERR_NO_JSON}), 400
         
         if 'data' not in data or 'assignments' not in data or 'means' not in data:
             return jsonify({'error': 'Missing required fields: data, assignments, means'}), 400
@@ -258,11 +265,11 @@ def find_optimal_k():
     }
     """
     try:
-        data = request.get_json()
+        data = request.get_json(silent=True)
         
         # Validate required fields
         if not data:
-            return jsonify({'error': 'No JSON data provided'}), 400
+            return jsonify({'error': ERR_NO_JSON}), 400
         
         if 'data' not in data:
             return jsonify({'error': 'Missing required field: data'}), 400
@@ -273,7 +280,7 @@ def find_optimal_k():
         
         # Validate data types
         if not isinstance(points, list):
-            return jsonify({'error': 'data must be a list of points'}), 400
+            return jsonify({'error': ERR_DATA_MUST_BE_LIST}), 400
         
         if not isinstance(max_k, int) or max_k <= 1:
             return jsonify({'error': 'max_k must be an integer greater than 1'}), 400
