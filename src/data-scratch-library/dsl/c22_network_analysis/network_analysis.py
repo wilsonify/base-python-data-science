@@ -186,7 +186,7 @@ def shortest_paths_from(from_user_graph):
         if old_paths_to_here:
             min_path_length = len(old_paths_to_here[0])
         else:
-            min_path_length = float("in")
+            min_path_length = float("inf")
 
         # any new paths to here that aren't too long
         # noinspection PyPep8

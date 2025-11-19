@@ -10,7 +10,9 @@ type ClassificationResult = {
 // Tokenize a message into words
 function tokenize(message: string): string[] {
     return message.toLowerCase()
-        .replace(/[^\w\s]/g, ' ') // Replace punctuation with spaces
+           .split('')
+           .map(ch => (/\w|\s/.test(ch) ? ch : ' '))
+           .join('')
         .split(/\s+/) // Split on whitespace
         .filter(word => word.length > 0); // Remove empty strings
 }

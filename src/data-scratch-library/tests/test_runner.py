@@ -40,12 +40,22 @@ class Approx:
 
 
 def parametrize(*args):
-    """Replacement for pytest.mark.parametrize decorator"""
-    def decorator(func):
-        # Store parametrize data on the function
-        func._parametrize_args = args
-        return func
-    return decorator
+    """Replacement for pytest.mark.parametrize decorator.
+
+    When running under pytest, delegate to pytest.mark.parametrize so that
+    tests written with this project's lightweight runner still work under
+    pytest collection. Otherwise, store parametrize metadata for the
+    TestRunner to execute.
+    """
+    try:
+        import pytest as _real_pytest
+        return _real_pytest.mark.parametrize(*args)
+    except Exception:
+        def decorator(func):
+            # Store parametrize data on the function for the custom TestRunner
+            func._parametrize_args = args
+            return func
+        return decorator
 
 
 def skip(reason):

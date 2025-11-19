@@ -54,8 +54,8 @@ def test_write_bad_csv_file():
     # Bad CSV data with commas in fields
     results = [
         ["test1", "success", "Monday"],
-        ["test2", "success, kind o", "Tuesday"],
-        ["test3", "failure, kind o", "Wednesday"],
+    ["test2", "success, kind of", "Tuesday"],
+    ["test3", "failure, kind of", "Wednesday"],
         ["test4", "failure, utter", "Thursday"]
     ]
 

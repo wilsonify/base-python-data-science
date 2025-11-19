@@ -97,8 +97,11 @@ export function distance(v: Array<number>, w: Array<number>) {
 
 export function shape(a_matrix: Array<Array<number>>) {
   let num_cols: number, num_rows: number;
+  if (!a_matrix || a_matrix.length === 0) {
+    return [0, 0];
+  }
   num_rows = a_matrix.length;
-  num_cols = a_matrix ? a_matrix[0].length : 0;
+  num_cols = a_matrix[0] ? a_matrix[0].length : 0;
   return [num_rows, num_cols];
 }
 
@@ -139,10 +142,12 @@ const identity_matrix = make_matrix(5, 5, is_diagonal)
 
 export function matrix_add(a_matrix: Array<Array<number>>, b_matrix: Array<Array<number>>): Array<Array<number>> {
   let num_cols: number, num_rows: number;
-  if (shape(a_matrix) !== shape(b_matrix)) {
+  const [a_rows, a_cols] = shape(a_matrix);
+  const [b_rows, b_cols] = shape(b_matrix);
+  if (a_rows !== b_rows || a_cols !== b_cols) {
     throw new Error("cannot add matrices with different shapes");
   }
-  [num_rows, num_cols] = shape(a_matrix);
+  [num_rows, num_cols] = [a_rows, a_cols];
   function entry_fn(i: number, j: number) {
     return a_matrix[i][j] + b_matrix[i][j];
   }

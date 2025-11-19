@@ -116,7 +116,7 @@ def objective(trial: Trial, base_config: Config, study_id: str) -> float:
         return val_loss
     except Exception as e:
         logging.error(f"Trial failed [{run_id}]: {e}")
-        return float("in")
+        return float("inf")
 
 
 def main():
