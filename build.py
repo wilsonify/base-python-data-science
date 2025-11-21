@@ -88,6 +88,23 @@ class BuildPipeline:
             print(f"❌ Error building shared library: {e}")
             return False
 
+    def get_service_type(self, service_name: str) -> str:
+        """Determine the type of service based on its name
+        
+        Returns: 'node', 'rust', 'python', or 'unknown'
+        """
+        # Check Node.js services first (more specific)
+        if service_name in ["data-scratch-node-library", "rest-scratch-node-express"] or service_name.startswith("rest-client"):
+            return 'node'
+        # Check Rust/C++ services
+        elif service_name in ["rest-scratch-rust", "rest-scratch-pistache"]:
+            return 'rust'
+        # Default to Python services (data-scratch-*, rest-scratch-flask)
+        elif any(service_name.startswith(prefix) for prefix in ["data-scratch", "rest-scratch-flask"]):
+            return 'python'
+        else:
+            return 'unknown'
+
     def build_python_service(self, service_name: str) -> bool:
         """Build a Python service"""
         print(f"🐍 Building Python service: {service_name}")
@@ -155,7 +172,7 @@ class BuildPipeline:
             # Check if npm is available
             npm_check = subprocess.run(["npm", "--version"], capture_output=True, text=True)
             if npm_check.returncode != 0:
-                print("⚠️  npm not available, skipping Node.js build")
+                print(f"⚠️  npm not available for {service_name}, skipping")
                 return False
 
             # Install dependencies
@@ -199,7 +216,7 @@ class BuildPipeline:
             # Check if cargo is available
             cargo_check = subprocess.run(["cargo", "--version"], capture_output=True, text=True)
             if cargo_check.returncode != 0:
-                print("⚠️  cargo not available, skipping Rust build")
+                print(f"⚠️  cargo not available for {service_name}, skipping")
                 return False
 
             # Build the service
@@ -308,16 +325,15 @@ class BuildPipeline:
                 continue
             
             # Determine service type and build accordingly
-            # Check Node.js services first (more specific)
-            if service_name in ["data-scratch-node-library", "rest-scratch-node-express"] or service_name.startswith("rest-client"):
+            service_type = self.get_service_type(service_name)
+            
+            if service_type == 'node':
                 if self.build_node_service(service_name):
                     success_count += 1
-            # Check Rust/C++ services
-            elif service_name in ["rest-scratch-rust", "rest-scratch-pistache"]:
+            elif service_type == 'rust':
                 if self.build_rust_service(service_name):
                     success_count += 1
-            # Default to Python services (data-scratch-*, rest-scratch-flask)
-            elif any(service_name.startswith(prefix) for prefix in ["data-scratch", "rest-scratch-flask"]):
+            elif service_type == 'python':
                 if self.build_python_service(service_name):
                     success_count += 1
             else:
@@ -327,7 +343,8 @@ class BuildPipeline:
         
         # Success if shared library built and at least half of the other services built
         # This is lenient to handle optional services that may not have full implementation
-        min_required = max(1 + (total_count - 1) // 2, 1)  # At least shared library + half of others
+        # or may require tools not available in all environments (npm, cargo, etc.)
+        min_required = max(1 + (total_count - 1) // 2, 1)  # Shared library + 50% of other services
         success = success_count >= min_required
         
         if not success:
@@ -350,15 +367,14 @@ class BuildPipeline:
             print("❌ Shared library build failed")
             return False
         
-        # Build the specific service
-        # Check Node.js services first (more specific)
-        if service_name in ["data-scratch-node-library", "rest-scratch-node-express"] or service_name.startswith("rest-client"):
+        # Build the specific service based on its type
+        service_type = self.get_service_type(service_name)
+        
+        if service_type == 'node':
             return self.build_node_service(service_name)
-        # Check Rust/C++ services
-        elif service_name in ["rest-scratch-rust", "rest-scratch-pistache"]:
+        elif service_type == 'rust':
             return self.build_rust_service(service_name)
-        # Default to Python services (data-scratch-*, rest-scratch-flask)
-        elif any(service_name.startswith(prefix) for prefix in ["data-scratch", "rest-scratch-flask"]):
+        elif service_type == 'python':
             return self.build_python_service(service_name)
         else:
             print(f"❌ Unknown service type for {service_name}")
