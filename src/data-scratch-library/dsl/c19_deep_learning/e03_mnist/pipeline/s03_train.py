@@ -175,7 +175,7 @@ def train_one_model(run_id: str, logger: logging.Logger):
     )
 
     logger.info(
-        f"Training completed successfully:\n"
+        "Training completed successfully:\n"
         f"  - Accuracy: {scores.accuracy_numpy:.4f}\n"
         f"  - Loss: {scores.cross_loss:.4f}\n"
         f"  - AUC: {scores.auc}\n"

@@ -1,6 +1,6 @@
 def zip_lists(list1, list2):
     """Zips two lists together."""
-    return [pair for pair in zip(list1, list2)]
+    return list(zip(list1, list2))
 
 
 def unzip_pairs(pairs):

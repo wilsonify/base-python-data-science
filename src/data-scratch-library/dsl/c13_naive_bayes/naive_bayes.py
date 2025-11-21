@@ -72,6 +72,8 @@ class NaiveBayesClassifier:
         )
 
     def classify(self, message):
+        if not self.word_probs:
+            raise ValueError("Classifier has not been trained yet")
         return get_spam_probability(self.word_probs, message)
 
 

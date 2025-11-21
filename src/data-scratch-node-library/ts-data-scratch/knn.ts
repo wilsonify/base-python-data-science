@@ -68,7 +68,11 @@ export function knnClassify<T>(
     newPoint: number[]
 ): T {
     // each labeled point should be a pair (point, label)
-    
+    // Validate k and inputs
+    if (k < 1) throw new Error('k must be >= 1');
+    if (!labeledPoints || labeledPoints.length === 0) throw new Error('labeledPoints must not be empty');
+    if (k > labeledPoints.length) throw new Error('k is larger than the dataset size');
+
     // order the labeled points from nearest to farthest
     const byDistance = [...labeledPoints].sort((a, b) => 
         distance(a.point, newPoint) - distance(b.point, newPoint)
@@ -89,6 +93,10 @@ export function knnClassifyWithDistance<T>(
     labeledPoints: LabeledPoint<T>[],
     newPoint: number[]
 ): { prediction: T; distances: number[]; neighbors: LabeledPoint<T>[] } {
+    if (k < 1) throw new Error('k must be >= 1');
+    if (!labeledPoints || labeledPoints.length === 0) throw new Error('labeledPoints must not be empty');
+    if (k > labeledPoints.length) throw new Error('k is larger than the dataset size');
+
     // order the labeled points from nearest to farthest
     const byDistance = [...labeledPoints].sort((a, b) => 
         distance(a.point, newPoint) - distance(b.point, newPoint)
@@ -114,6 +122,10 @@ export function weightedKnnClassify<T>(
     labeledPoints: LabeledPoint<T>[],
     newPoint: number[]
 ): T {
+    if (k < 1) throw new Error('k must be >= 1');
+    if (!labeledPoints || labeledPoints.length === 0) throw new Error('labeledPoints must not be empty');
+    if (k > labeledPoints.length) throw new Error('k is larger than the dataset size');
+
     // order the labeled points from nearest to farthest
     const byDistance = [...labeledPoints].sort((a, b) => 
         distance(a.point, newPoint) - distance(b.point, newPoint)

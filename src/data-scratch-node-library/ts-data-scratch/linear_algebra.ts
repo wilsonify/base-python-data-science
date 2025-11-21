@@ -9,13 +9,10 @@ export function scalar_add(a: number, b: number): number {
 export function vector_add(v: Array<number>, w: Array<number>) {
   //"""adds two vectors componentwise"""
 
-  var v_i: number;
-  var w_i: number;
-  var result = [];
+  const result: number[] = [];
 
-  for (var i = 0; i < v.length; i += 1) {
-    v_i = v[i];
-    w_i = w[i];
+  for (const [i, v_i] of v.entries()) {
+    const w_i = w[i];
     result.push(v_i + w_i);
   }
 
@@ -24,12 +21,9 @@ export function vector_add(v: Array<number>, w: Array<number>) {
 
 export function vector_subtract(v: Array<number>, w: Array<number>) {
   //"""subtracts two vectors componentwise"""
-  var v_i: number;
-  var w_i: number;
-  var result = [];
-  for (var i = 0; i < v.length; i += 1) {
-    v_i = v[i];
-    w_i = w[i];
+  const result: number[] = [];
+  for (const [i, v_i] of v.entries()) {
+    const w_i = w[i];
     result.push(v_i - w_i);
   }
   return result;
@@ -56,10 +50,8 @@ export function vector_sum(vectors: Array<Array<number>>) {
 }
 
 export function scalar_multiply(c: number, v: Array<number>) {
-  var v_i: number;
-  var result = [];
-  for (var i = 0; i < v.length; i += 1) {
-    v_i = v[i];
+  const result: number[] = [];
+  for (const v_i of v) {
     result.push(c * v_i);
   }
 
@@ -68,16 +60,15 @@ export function scalar_multiply(c: number, v: Array<number>) {
 
 export function vector_mean(vectors: Array<Array<number>>) {
   //"""compute the vector whose i-th element is the mean of the i-th elements of the input vectors"""
-  var n = vectors.length
+  const n = vectors.length
   return scalar_multiply(1 / n, vector_sum(vectors))
 }
 
 export function dot(v: Array<number>, w: Array<number>): number {
   //"""v_1 * w_1 + ... + v_n * w_n"""
-  var result = 0;
-  for (var i = 0; i < v.length; i += 1) {
-    var v_i = v[i];
-    var w_i = w[i];
+  let result = 0;
+  for (const [i, v_i] of v.entries()) {
+    const w_i = w[i];
     result += v_i * w_i;
   }
   return result;
@@ -105,9 +96,12 @@ export function distance(v: Array<number>, w: Array<number>) {
 //functions for working with matrices
 
 export function shape(a_matrix: Array<Array<number>>) {
-  var num_cols, num_rows;
+  let num_cols: number, num_rows: number;
+  if (!a_matrix || a_matrix.length === 0) {
+    return [0, 0];
+  }
   num_rows = a_matrix.length;
-  num_cols = a_matrix ? a_matrix[0].length : 0;
+  num_cols = a_matrix[0] ? a_matrix[0].length : 0;
   return [num_rows, num_cols];
 }
 
@@ -116,21 +110,20 @@ export function get_row(a_matrix: Array<Array<number>>, i: number) {
 }
 
 export function get_column(a_matrix: Array<Array<number>>, j: number) {
-  var result = [];
-  for (var i = 0; i < a_matrix.length; i += 1) {
-    var A_i = a_matrix[i]
-    result.push(A_i[j])
+  const result: number[] = [];
+  for (const A_i of a_matrix) {
+    result.push(A_i[j]);
   }
-  return result
+  return result;
 }
 
 
 export function make_matrix(num_rows: number, num_cols: number, entry_fn: BivaritateFunction) {
   //"""returns a num_rows x num_cols matrix whose (i,j)-th entry is entry_fn(i, j)"""
-  var result = [];
-  for (var i = 0, _pj_a = num_rows; i < _pj_a; i += 1) {
-    var row = [];
-    for (var j = 0, _pj_b = num_cols; j < _pj_b; j += 1) {
+  const result: number[][] = [];
+  for (let i = 0, _pj_a = num_rows; i < _pj_a; i += 1) {
+    const row: number[] = [];
+    for (let j = 0, _pj_b = num_cols; j < _pj_b; j += 1) {
       row.push(entry_fn(i, j));
     }
     result.push(row);
@@ -148,11 +141,13 @@ export function is_diagonal(i: number, j: number) {
 const identity_matrix = make_matrix(5, 5, is_diagonal)
 
 export function matrix_add(a_matrix: Array<Array<number>>, b_matrix: Array<Array<number>>): Array<Array<number>> {
-  var num_cols, num_rows;
-  if (shape(a_matrix) !== shape(b_matrix)) {
+  let num_cols: number, num_rows: number;
+  const [a_rows, a_cols] = shape(a_matrix);
+  const [b_rows, b_cols] = shape(b_matrix);
+  if (a_rows !== b_rows || a_cols !== b_cols) {
     throw new Error("cannot add matrices with different shapes");
   }
-  [num_rows, num_cols] = shape(a_matrix);
+  [num_rows, num_cols] = [a_rows, a_cols];
   function entry_fn(i: number, j: number) {
     return a_matrix[i][j] + b_matrix[i][j];
   }

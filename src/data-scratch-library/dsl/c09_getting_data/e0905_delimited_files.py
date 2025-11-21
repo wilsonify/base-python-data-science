@@ -27,7 +27,7 @@ def write_bad_csv_file(file_name: str, data: List[List[str]]) -> None:
     """Writes a list of rows to a CSV file incorrectly, risking errors with extra commas."""
     with open(file_name, 'w') as f:
         for row in data:
-            f.write(",".join(map(str, row)))
+            f.write(",".join(str(x) for x in row))
             f.write("\n")
 
 

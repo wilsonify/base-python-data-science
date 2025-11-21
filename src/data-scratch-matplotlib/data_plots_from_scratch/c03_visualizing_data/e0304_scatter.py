@@ -44,7 +44,7 @@ def make_chart_scatterplot_unequal_axes(x, y):
 if __name__ == "__main__":
     friends = [70, 65, 72, 63, 71, 64, 60, 64, 67]
     minutes = [175, 170, 205, 120, 220, 130, 105, 145, 190]
-    labels = ["a", "b", "c", "d", "e", "f", "g", "h", "i"]
+    labels = ["a", "b", "c", "d", "e", "", "g", "h", "i"]
     make_chart_scatter_plot(friends, minutes, labels)
     plt.savefig("e030401_chart_scatter_plot.png")
     plt.close()

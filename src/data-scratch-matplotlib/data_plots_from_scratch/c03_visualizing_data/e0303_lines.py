@@ -30,7 +30,7 @@ def make_chart_several_line_charts(variance, bias_squared):
     # loc=9 means "top center"
     ax.legend(loc=9)
     ax.set_xlabel("model complexity")
-    ax.set_title("The Bias-Variance Tradeoff")
+    ax.set_title("The Bias-Variance Tradeof")
     return fig, ax
 
 

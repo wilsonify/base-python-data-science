@@ -64,10 +64,10 @@ def main(path):
 
 if __name__ == "__main__":
     random.seed(0)  # just so you get repeatable answers
-    dictConfig(dict(
-        version=1,
-        formatters={"simple": {"format": """%(asctime)s | %(name)s | %(lineno)s | %(levelname)s | %(message)s"""}},
-        handlers={"console": {"class": "logging.StreamHandler", "formatter": "simple"}},
-        root={"handlers": ["console"], "level": logging.DEBUG},
-    ))  # train_and_test_model(r"c:\spam\*\*")
+    dictConfig({
+        "version":1,
+        "formatters":{"simple": {"format": """%(asctime)s | %(name)s | %(lineno)s | %(levelname)s | %(message)s"""}},
+        "handlers":{"console": {"class": "logging.StreamHandler", "formatter": "simple"}},
+        "root":{"handlers": ["console"], "level": logging.DEBUG},
+    })  # train_and_test_model(r"c:\spam\*\*")
     main(r"/home/thom/repos/base-python-data-science/tests/data/spam/*")

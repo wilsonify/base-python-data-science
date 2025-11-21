@@ -1,8 +1,32 @@
 from flask import Blueprint, request, jsonify
-
+import sys
+import os
+import logging
 from dsl.c13_naive_bayes.naive_bayes import NaiveBayesClassifier
 
 naive_bayes_bp = Blueprint('naive_bayes', __name__)
+
+# Common response messages (reduce duplicated string literals)
+ERR_NO_JSON = 'No JSON data provided'
+ERR_MISSING_TRAINING = 'Missing required field: training_data'
+ERR_TRAINING_NOT_LIST = 'training_data must be a list'
+ERR_SMOOTHING_NON_NEG = 'smoothing must be a non-negative number'
+ERR_EACH_TRAIN_ITEM = 'Each training item must have message and is_spam fields'
+ERR_MESSAGE_STR = 'Message must be a string'
+ERR_IS_SPAM_BOOL = 'is_spam must be a boolean'
+ERR_MISSING_MESSAGE_TRAINING = 'Missing required fields: message, training_data'
+ERR_MESSAGES_MISSING = 'Missing required fields: messages, training_data'
+ERR_MESSAGES_NOT_LIST = 'messages must be a list'
+ERR_TRAINING_EMPTY = 'training_data must contain at least one item'
+
+# configure a module logger
+logger = logging.getLogger(__name__)
+if not logger.handlers:
+    # default to console logging if not configured by app
+    handler = logging.StreamHandler()
+    handler.setFormatter(logging.Formatter('%(asctime)s %(levelname)s %(message)s'))
+    logger.addHandler(handler)
+    logger.setLevel(logging.INFO)
 
 @naive_bayes_bp.route('/train', methods=['POST'])
 def train_classifier():
@@ -19,36 +43,36 @@ def train_classifier():
     }
     """
     try:
-        data = request.get_json()
+        data = request.get_json(silent=True)
         
         # Validate required fields
         if not data:
-            return jsonify({'error': 'No JSON data provided'}), 400
+            return jsonify({'error': ERR_NO_JSON}), 400
         
         if 'training_data' not in data:
-            return jsonify({'error': 'Missing required field: training_data'}), 400
+            return jsonify({'error': ERR_MISSING_TRAINING}), 400
         
         training_data = data['training_data']
         smoothing = data.get('smoothing', 0.5)
         
         # Validate data types
         if not isinstance(training_data, list):
-            return jsonify({'error': 'training_data must be a list'}), 400
+            return jsonify({'error': ERR_TRAINING_NOT_LIST}), 400
         
         if not isinstance(smoothing, (int, float)) or smoothing < 0:
-            return jsonify({'error': 'smoothing must be a non-negative number'}), 400
+            return jsonify({'error': ERR_SMOOTHING_NON_NEG}), 400
         
         # Convert training data to the format expected by NaiveBayesClassifier
         training_set = []
         for item in training_data:
             if 'message' not in item or 'is_spam' not in item:
-                return jsonify({'error': 'Each training item must have message and is_spam fields'}), 400
+                return jsonify({'error': ERR_EACH_TRAIN_ITEM}), 400
             
             if not isinstance(item['message'], str):
-                return jsonify({'error': 'Message must be a string'}), 400
+                return jsonify({'error': ERR_MESSAGE_STR}), 400
             
             if not isinstance(item['is_spam'], bool):
-                return jsonify({'error': 'is_spam must be a boolean'}), 400
+                return jsonify({'error': ERR_IS_SPAM_BOOL}), 400
             
             training_set.append((item['message'], item['is_spam']))
         
@@ -70,8 +94,9 @@ def train_classifier():
             'message': 'Classifier trained successfully. Use /classify endpoint with the same training data to classify messages.'
         })
         
-    except Exception as e:
-        return jsonify({'error': f'Training failed: {str(e)}'}), 500
+    except Exception:
+        logger.exception('Training failed')
+        return jsonify({'error': 'Training failed due to an internal error'}), 500
 
 
 @naive_bayes_bp.route('/classify', methods=['POST'])
@@ -90,14 +115,14 @@ def classify_message():
     }
     """
     try:
-        data = request.get_json()
+        data = request.get_json(silent=True)
         
         # Validate required fields
         if not data:
-            return jsonify({'error': 'No JSON data provided'}), 400
+            return jsonify({'error': ERR_NO_JSON}), 400
         
         if 'message' not in data or 'training_data' not in data:
-            return jsonify({'error': 'Missing required fields: message, training_data'}), 400
+            return jsonify({'error': ERR_MISSING_MESSAGE_TRAINING}), 400
         
         message = data['message']
         training_data = data['training_data']
@@ -105,20 +130,22 @@ def classify_message():
         
         # Validate data types
         if not isinstance(message, str):
-            return jsonify({'error': 'message must be a string'}), 400
+            return jsonify({'error': ERR_MESSAGE_STR}), 400
         
         if not isinstance(training_data, list):
-            return jsonify({'error': 'training_data must be a list'}), 400
+            return jsonify({'error': ERR_TRAINING_NOT_LIST}), 400
         
         # Convert training data to the format expected by NaiveBayesClassifier
         training_set = []
         for item in training_data:
             if 'message' not in item or 'is_spam' not in item:
-                return jsonify({'error': 'Each training item must have message and is_spam fields'}), 400
+                return jsonify({'error': ERR_EACH_TRAIN_ITEM}), 400
             
             training_set.append((item['message'], item['is_spam']))
         
         # Train the classifier and classify
+        if not training_set:
+            return jsonify({'error': ERR_TRAINING_EMPTY}), 400
         classifier = NaiveBayesClassifier(k=smoothing)
         classifier.train(training_set)
         
@@ -134,8 +161,10 @@ def classify_message():
             'smoothing_parameter': smoothing
         })
         
-    except Exception as e:
-        return jsonify({'error': f'Classification failed: {str(e)}'}), 500
+    except Exception:
+        # Log full exception server-side but return a generic error to client
+        logger.exception('Classification failed')
+        return jsonify({'error': 'Classification failed due to an internal error'}), 500
 
 
 @naive_bayes_bp.route('/batch_classify', methods=['POST'])
@@ -154,14 +183,14 @@ def batch_classify():
     }
     """
     try:
-        data = request.get_json()
+        data = request.get_json(silent=True)
         
         # Validate required fields
         if not data:
-            return jsonify({'error': 'No JSON data provided'}), 400
+            return jsonify({'error': ERR_NO_JSON}), 400
         
         if 'messages' not in data or 'training_data' not in data:
-            return jsonify({'error': 'Missing required fields: messages, training_data'}), 400
+            return jsonify({'error': ERR_MESSAGES_MISSING}), 400
         
         messages = data['messages']
         training_data = data['training_data']
@@ -169,23 +198,25 @@ def batch_classify():
         
         # Validate data types
         if not isinstance(messages, list):
-            return jsonify({'error': 'messages must be a list'}), 400
+            return jsonify({'error': ERR_MESSAGES_NOT_LIST}), 400
         
         if not isinstance(training_data, list):
-            return jsonify({'error': 'training_data must be a list'}), 400
+            return jsonify({'error': ERR_TRAINING_NOT_LIST}), 400
         
         # Convert training data to the format expected by NaiveBayesClassifier
         training_set = []
         for item in training_data:
             if 'message' not in item or 'is_spam' not in item:
-                return jsonify({'error': 'Each training item must have message and is_spam fields'}), 400
+                return jsonify({'error': ERR_EACH_TRAIN_ITEM}), 400
             
             training_set.append((item['message'], item['is_spam']))
         
         # Train the classifier and classify
+        if not training_set:
+            return jsonify({'error': ERR_TRAINING_EMPTY}), 400
         classifier = NaiveBayesClassifier(k=smoothing)
         classifier.train(training_set)
-        
+
         results = []
         for message in messages:
             spam_probability = classifier.classify(message)
@@ -205,8 +236,9 @@ def batch_classify():
             'smoothing_parameter': smoothing
         })
         
-    except Exception as e:
-        return jsonify({'error': f'Batch classification failed: {str(e)}'}), 500
+    except Exception:
+        logger.exception('Batch classification failed')
+        return jsonify({'error': 'Batch classification failed due to an internal error'}), 500
 
 
 @naive_bayes_bp.route('/info', methods=['GET'])

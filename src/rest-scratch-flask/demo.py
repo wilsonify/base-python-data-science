@@ -39,12 +39,12 @@ def demo_api():
             print(f"  - Swagger UI: {api_info['endpoints']['swagger_ui']}")
         print(f"  - OpenAPI Spec: {api_info['endpoints']['openapi_spec']}")
         
-        print(f"\nAvailable Routes:")
+        print("\nAvailable Routes:")
         for rule in app.url_map.iter_rules():
             if rule.endpoint != 'static':
                 print(f"  {rule.methods} {rule.rule}")
         
-        print(f"\n=== Testing ML Endpoints:")
+        print("\n=== Testing ML Endpoints:")
         
         # Test KNN classification
         knn_data = {

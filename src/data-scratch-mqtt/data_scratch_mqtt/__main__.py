@@ -4,22 +4,33 @@ mqtt consumer
 import json
 import logging
 from logging.config import dictConfig
+import os
 
 import paho.mqtt.client as mqtt
 
-from data_scratch_mqtt import *
+# Import only used names from package instead of star import
+from data_scratch_mqtt import (
+    echo_strategy,
+    mysqrt_strategy,
+    mystrength_strategy,
+    Strategy,
+    dynamic_strategies,
+    MQTT_HOST,
+    MQTT_PORT,
+    MQTT_KEEPALIVE,
+)
 from data_scratch_mqtt.config import MQTT_USER, MQTT_PASS, MQTT_TOPIC
 
-logging_config_dict = dict(
-    version=1,
-    formatters={
+logging_config_dict = {
+    "version": 1,
+    "formatters": {
         "simple": {
             "format": """%(asctime)s | %(filename)s | %(lineno)d | %(levelname)s | %(message)s"""
         }
     },
-    handlers={"console": {"class": "logging.StreamHandler", "formatter": "simple"}},
-    root={"handlers": ["console"], "level": logging.DEBUG},
-)
+    "handlers": {"console": {"class": "logging.StreamHandler", "formatter": "simple"}},
+    "root": {"handlers": ["console"], "level": logging.DEBUG},
+}
 
 # Build available strategies dynamically
 available_strategies = {}
@@ -50,7 +61,7 @@ def on_subscribe(client, userdata, mid, granted_qos):
 
 
 def on_message(client, userdata, msg):
-    logging.info(f"Message received")
+    logging.info("Message received")
     logging.debug(f"msg.topic = {msg.topic}")
     logging.debug(f"msg.payload {msg.payload}")
     
@@ -125,8 +136,8 @@ def main():
     client.on_message = on_message
     logging.info("done setting callback")
     logging.info("start opening channel")
-    # client.tls_set()
-    # client.tls_set(ca_certs=ca_certificate, certfile=client_certificate, keyfile=client_key )
+    # TLS setup intentionally omitted here. If you need TLS, call
+    # client.tls_set(...) with the appropriate certificates before connect.
     client.username_pw_set(username=MQTT_USER, password=MQTT_PASS)
     client.connect(
         host=MQTT_HOST,

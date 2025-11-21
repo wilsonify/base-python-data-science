@@ -26,7 +26,7 @@ def demo_single_prediction():
     
     # Load a test sample
     try:
-        x_test, y_test = load_local_data("data/mnist/raw", "test")
+        _, y_test = load_local_data("data/mnist/raw", "test")
         x_test_processed = load_local_file("data/mnist/processed/test/x_test_processed.json")
         
         # Make prediction on first test sample
@@ -64,7 +64,7 @@ def demo_data_inspection():
         flat_pixels = [pixel for row in first_image for pixel in row]
         non_zero_pixels = [p for p in flat_pixels if p > 0]
         
-        print(f"First image stats:")
+        print("First image stats:")
         print(f"  - Non-zero pixels: {len(non_zero_pixels)}")
         print(f"  - Min pixel value: {min(flat_pixels)}")
         print(f"  - Max pixel value: {max(flat_pixels)}")

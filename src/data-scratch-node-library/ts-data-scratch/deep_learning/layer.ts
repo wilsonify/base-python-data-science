@@ -1,7 +1,7 @@
 // Layer implementations for deep learning framework
 // Ported from Python layer module
 
-import { Tensor, randomTensorWithInit, tensorApply, tensorCombine, Sigmoid as BaseSigmoid } from './index';
+import { Tensor, randomTensorWithInit, tensorApply, tensorCombine } from './index';
 import { dot } from '../linear_algebra';
 
 export abstract class Layer {
@@ -18,8 +18,8 @@ export abstract class Layer {
 }
 
 export class Linear extends Layer {
-    private inputDim: number;
-    private outputDim: number;
+    private readonly inputDim: number;
+    private readonly outputDim: number;
     public w: Tensor;
     public b: Tensor;
     private input: Tensor = [];
@@ -84,7 +84,7 @@ export class Linear extends Layer {
 }
 
 export class Sequential extends Layer {
-    private layers: Layer[];
+    private readonly layers: Layer[];
 
     constructor(layers: Layer[]) {
         super();
@@ -166,7 +166,7 @@ export class Relu extends Layer {
 }
 
 export class Dropout extends Layer {
-    private p: number;
+    private readonly p: number;
     private train: boolean = true;
     private mask: Tensor = [];
 
@@ -202,4 +202,4 @@ export class Dropout extends Layer {
 }
 
 // Re-export Sigmoid from index module for convenience
-export { BaseSigmoid as Sigmoid };
+export { Sigmoid } from './index';

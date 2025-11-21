@@ -13,12 +13,12 @@ from dsl.c05_statistics.e0501_central_tendancy import mean, median, quantile, mo
 
 
 def test_main():
-    dictConfig(dict(
-        version=1,
-        formatters={"simple": {"format": """%(asctime)s | %(name)s | %(lineno)s | %(levelname)s | %(message)s"""}},
-        handlers={"console": {"class": "logging.StreamHandler", "formatter": "simple"}},
-        root={"handlers": ["console"], "level": logging.DEBUG},
-    ))
+    dictConfig({
+        "version":1,
+        "formatters":{"simple": {"format": """%(asctime)s | %(name)s | %(lineno)s | %(levelname)s | %(message)s"""}},
+        "handlers":{"console": {"class": "logging.StreamHandler", "formatter": "simple"}},
+        "root":{"handlers": ["console"], "level": logging.DEBUG},
+    })
 
     user_data = UserData.from_json(abspath(f"{dirname(__file__)}/../../../../data/user_minutes_and_friends.json"))
     num_points = len(user_data.num_friends)  # 204

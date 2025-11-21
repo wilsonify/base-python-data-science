@@ -8,7 +8,7 @@ class Table:
 
     def __repr__(self):
         """pretty representation of the table: columns then rows"""
-        return str(self.columns) + "\n" + "\n".join(map(str, self.rows))
+        return str(self.columns) + "\n" + "\n".join(str(r) for r in self.rows)
 
     def insert(self, row_values):
         if len(row_values) != len(self.columns):
@@ -98,8 +98,8 @@ class Table:
 
         for row in self.rows:
 
-            def is_join(other_row):
-                return all(other_row[c] == row[c] for c in join_on_columns)
+            def is_join(other_row, _row=row):
+                return all(other_row[c] == _row[c] for c in join_on_columns)
 
             other_rows = other_table.where(is_join).rows
 

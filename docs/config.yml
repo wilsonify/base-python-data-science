@@ -1,0 +1,29 @@
+title: Base Python Data Science
+description: Data Science Without the Dependencies
+author: Tom Wilson
+email: tom.andrew.wilson@gmail.com
+baseurl: "/base-python-data-science"
+url: "https://wilsonify.github.io"
+
+# Use the Minima theme (default for GitHub Pages)
+theme: minima
+
+# Build settings
+markdown: kramdown
+plugins:
+  - jekyll-feed
+  - jekyll-seo-tag
+
+# Social links
+github_username: wilsonify
+linkedin_username: tom-andrew-wilson
+
+# Exclude from processing
+exclude:
+  - Gemfile
+  - Gemfile.lock
+  - node_modules
+  - vendor/bundle/
+  - vendor/cache/
+  - vendor/gems/
+  - vendor/ruby/

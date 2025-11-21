@@ -4,6 +4,20 @@ from dsl.c17_decision_trees.decision_trees import build_tree_id3, classify, fore
 
 decision_trees_bp = Blueprint('decision_trees', __name__)
 
+# Common response messages (reduce duplicated string literals)
+ERR_NO_JSON = 'No JSON data provided'
+ERR_MISSING_TRAINING = 'Missing required field: training_data'
+ERR_TRAINING_NOT_LIST = 'training_data must be a list'
+ERR_SPLIT_CANDIDATES_LIST = 'split_candidates must be a list'
+ERR_FEATURES_LABEL_FIELDS = 'Each training item must have features and label fields'
+ERR_FEATURES_DICT = 'Features must be a dictionary'
+ERR_LABEL_BOOL = 'Label must be a boolean'
+ERR_MISSING_INSTANCE_TRAINING = 'Missing required fields: instance, training_data'
+ERR_INSTANCE_DICT = 'instance must be a dictionary'
+ERR_MISSING_INSTANCES_TRAINING = 'Missing required fields: instances, training_data'
+ERR_INSTANCES_LIST = 'instances must be a list'
+ERR_NUM_TREES_POSITIVE = 'num_trees must be a positive integer'
+
 @decision_trees_bp.route('/train', methods=['POST'])
 def train_tree():
     """
@@ -19,36 +33,36 @@ def train_tree():
     }
     """
     try:
-        data = request.get_json()
+        data = request.get_json(silent=True)
         
         # Validate required fields
         if not data:
-            return jsonify({'error': 'No JSON data provided'}), 400
+            return jsonify({'error': ERR_NO_JSON}), 400
         
         if 'training_data' not in data:
-            return jsonify({'error': 'Missing required field: training_data'}), 400
+            return jsonify({'error': ERR_MISSING_TRAINING}), 400
         
         training_data = data['training_data']
         split_candidates = data.get('split_candidates')
         
         # Validate data types
         if not isinstance(training_data, list):
-            return jsonify({'error': 'training_data must be a list'}), 400
+            return jsonify({'error': ERR_TRAINING_NOT_LIST}), 400
         
         if split_candidates is not None and not isinstance(split_candidates, list):
-            return jsonify({'error': 'split_candidates must be a list'}), 400
+            return jsonify({'error': ERR_SPLIT_CANDIDATES_LIST}), 400
         
         # Convert training data to the format expected by build_tree_id3
         formatted_data = []
         for item in training_data:
             if 'features' not in item or 'label' not in item:
-                return jsonify({'error': 'Each training item must have features and label fields'}), 400
+                return jsonify({'error': ERR_FEATURES_LABEL_FIELDS}), 400
             
             if not isinstance(item['features'], dict):
-                return jsonify({'error': 'Features must be a dictionary'}), 400
+                return jsonify({'error': ERR_FEATURES_DICT}), 400
             
             if not isinstance(item['label'], bool):
-                return jsonify({'error': 'Label must be a boolean'}), 400
+                return jsonify({'error': ERR_LABEL_BOOL}), 400
             
             formatted_data.append((item['features'], item['label']))
         
@@ -85,14 +99,14 @@ def classify_instance():
     }
     """
     try:
-        data = request.get_json()
+        data = request.get_json(silent=True)
         
         # Validate required fields
         if not data:
-            return jsonify({'error': 'No JSON data provided'}), 400
+            return jsonify({'error': ERR_NO_JSON}), 400
         
         if 'instance' not in data or 'training_data' not in data:
-            return jsonify({'error': 'Missing required fields: instance, training_data'}), 400
+            return jsonify({'error': ERR_MISSING_INSTANCE_TRAINING}), 400
         
         instance = data['instance']
         training_data = data['training_data']
@@ -100,23 +114,24 @@ def classify_instance():
         
         # Validate data types
         if not isinstance(instance, dict):
-            return jsonify({'error': 'instance must be a dictionary'}), 400
+            return jsonify({'error': ERR_INSTANCE_DICT}), 400
         
         if not isinstance(training_data, list):
-            return jsonify({'error': 'training_data must be a list'}), 400
+            return jsonify({'error': ERR_TRAINING_NOT_LIST}), 400
         
         # Convert training data to the format expected by build_tree_id3
         formatted_data = []
         for item in training_data:
             if 'features' not in item or 'label' not in item:
-                return jsonify({'error': 'Each training item must have features and label fields'}), 400
-            
+                return jsonify({'error': ERR_FEATURES_LABEL_FIELDS}), 400
+
             formatted_data.append((item['features'], item['label']))
-        
+
         # Train the decision tree and classify
         tree = build_tree_id3(formatted_data, split_candidates=split_candidates)
-        prediction = classify(instance, tree)
-        
+        # DSL classify signature is classify(tree, inputs)
+        prediction = classify(tree, instance)
+
         return jsonify({
             'instance': instance,
             'prediction': prediction,
@@ -147,14 +162,14 @@ def batch_classify():
     }
     """
     try:
-        data = request.get_json()
+        data = request.get_json(silent=True)
         
         # Validate required fields
         if not data:
-            return jsonify({'error': 'No JSON data provided'}), 400
+            return jsonify({'error': ERR_NO_JSON}), 400
         
         if 'instances' not in data or 'training_data' not in data:
-            return jsonify({'error': 'Missing required fields: instances, training_data'}), 400
+            return jsonify({'error': ERR_MISSING_INSTANCES_TRAINING}), 400
         
         instances = data['instances']
         training_data = data['training_data']
@@ -162,25 +177,26 @@ def batch_classify():
         
         # Validate data types
         if not isinstance(instances, list):
-            return jsonify({'error': 'instances must be a list'}), 400
+            return jsonify({'error': ERR_INSTANCES_LIST}), 400
         
         if not isinstance(training_data, list):
-            return jsonify({'error': 'training_data must be a list'}), 400
+            return jsonify({'error': ERR_TRAINING_NOT_LIST}), 400
         
         # Convert training data to the format expected by build_tree_id3
         formatted_data = []
         for item in training_data:
             if 'features' not in item or 'label' not in item:
-                return jsonify({'error': 'Each training item must have features and label fields'}), 400
+                return jsonify({'error': ERR_FEATURES_LABEL_FIELDS}), 400
             
             formatted_data.append((item['features'], item['label']))
         
         # Train the decision tree and classify
         tree = build_tree_id3(formatted_data, split_candidates=split_candidates)
-        
+
         results = []
         for instance in instances:
-            prediction = classify(instance, tree)
+            # DSL classify signature is classify(tree, inputs)
+            prediction = classify(tree, instance)
             results.append({
                 'instance': instance,
                 'prediction': prediction
@@ -217,10 +233,10 @@ def forest_classify_endpoint():
         
         # Validate required fields
         if not data:
-            return jsonify({'error': 'No JSON data provided'}), 400
+            return jsonify({'error': ERR_NO_JSON}), 400
         
         if 'instance' not in data or 'training_data' not in data:
-            return jsonify({'error': 'Missing required fields: instance, training_data'}), 400
+            return jsonify({'error': ERR_MISSING_INSTANCE_TRAINING}), 400
         
         instance = data['instance']
         training_data = data['training_data']
@@ -228,19 +244,19 @@ def forest_classify_endpoint():
         
         # Validate data types
         if not isinstance(instance, dict):
-            return jsonify({'error': 'instance must be a dictionary'}), 400
+            return jsonify({'error': ERR_INSTANCE_DICT}), 400
         
         if not isinstance(training_data, list):
-            return jsonify({'error': 'training_data must be a list'}), 400
+            return jsonify({'error': ERR_TRAINING_NOT_LIST}), 400
         
         if not isinstance(num_trees, int) or num_trees <= 0:
-            return jsonify({'error': 'num_trees must be a positive integer'}), 400
+            return jsonify({'error': ERR_NUM_TREES_POSITIVE}), 400
         
         # Convert training data to the format expected by build_tree_id3
         formatted_data = []
         for item in training_data:
             if 'features' not in item or 'label' not in item:
-                return jsonify({'error': 'Each training item must have features and label fields'}), 400
+                return jsonify({'error': ERR_FEATURES_LABEL_FIELDS}), 400
             
             formatted_data.append((item['features'], item['label']))
         

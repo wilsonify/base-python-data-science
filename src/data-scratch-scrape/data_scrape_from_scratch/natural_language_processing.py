@@ -7,6 +7,9 @@ from logging.config import dictConfig
 import requests
 from bs4 import BeautifulSoup
 
+# Constants for frequently used strings
+MACHINE_LEARNING = "machine learning"
+
 
 def plot_resumes(plt):
     data = [
@@ -14,7 +17,7 @@ def plot_resumes(plt):
         ("Hadoop", 95, 25),
         ("Python", 75, 50),
         ("R", 50, 40),
-        ("machine learning", 80, 20),
+        (MACHINE_LEARNING, 80, 20),
         ("statistics", 20, 60),
         ("data science", 60, 70),
         ("analytics", 90, 3),
@@ -62,7 +65,7 @@ def get_document():
     soup = BeautifulSoup(html, "html5lib")
 
     content = soup.find("div", "article-body")  # find article-body div
-    regex = r"[\w']+|[\.]"  # matches a word or a period
+    regex = r"[\w']+|\."  # matches a word or a period
 
     document = []
 
@@ -194,10 +197,10 @@ documents = [
     ["NoSQL", "MongoDB", "Cassandra", "HBase", "Postgres"],
     ["Python", "scikit-learn", "scipy", "numpy", "statsmodels", "pandas"],
     ["R", "Python", "statistics", "regression", "probability"],
-    ["machine learning", "regression", "decision trees", "libsvm"],
+    [MACHINE_LEARNING, "regression", "decision trees", "libsvm"],
     ["Python", "R", "Java", "C++", "Haskell", "programming languages"],
     ["statistics", "probability", "mathematics", "theory"],
-    ["machine learning", "scikit-learn", "Mahout", "neural networks"],
+    [MACHINE_LEARNING, "scikit-learn", "Mahout", "neural networks"],
     ["neural networks", "deep learning", big_data_str, "artificial intelligence"],
     ["Hadoop", "Java", "MapReduce", big_data_str],
     ["statistics", "R", "statsmodels"],
@@ -217,7 +220,8 @@ topic_counts = [0 for _ in range(K)]
 
 document_lengths = [len(d) for d in documents]
 
-distinct_words = set(word for document in documents for word in document)
+# use set comprehension instead of set(generator) for clarity
+distinct_words = {word for document in documents for word in document}
 W = len(distinct_words)
 
 D = len(documents)
@@ -249,7 +253,7 @@ def choose_new_topic(d, word):
 
 
 random.seed(0)
-document_topics = [[random.randrange(K) for word in document] for document in documents]
+document_topics = [[random.randrange(K) for _ in document] for document in documents]
 
 for d in range(D):
     for word, _topic in zip(documents[d], document_topics[d]):
@@ -278,12 +282,12 @@ for iteration in range(1000):
             document_lengths[d] += 1
 
 if __name__ == "__main__":
-    dictConfig(dict(
-        version=1,
-        formatters={"simple": {"format": """%(asctime)s | %(name)s | %(lineno)s | %(levelname)s | %(message)s"""}},
-        handlers={"console": {"class": "logging.StreamHandler", "formatter": "simple"}},
-        root={"handlers": ["console"], "level": logging.DEBUG},
-    ))
+    dictConfig({
+        "version": 1,
+        "formatters": {"simple": {"format": """%(asctime)s | %(name)s | %(lineno)s | %(levelname)s | %(message)s"""}},
+        "handlers": {"console": {"class": "logging.StreamHandler", "formatter": "simple"}},
+        "root": {"handlers": ["console"], "level": logging.DEBUG},
+    })
     document = get_document()
 
     bigrams = list(zip(document, document[1:]))
@@ -350,7 +354,7 @@ if __name__ == "__main__":
     topic_names = [
         "Big Data and programming languages",
         "databases",
-        "machine learning",
+        MACHINE_LEARNING,
         "statistics",
     ]
 

@@ -1,6 +1,3 @@
-from test_runner import parametrize, Approx
-from collections import deque
-
 from dsl.c10_working_with_data.e1000_circular_buffer import demo_deque
 
 

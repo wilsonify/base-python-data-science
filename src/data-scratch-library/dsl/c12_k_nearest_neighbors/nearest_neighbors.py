@@ -142,7 +142,7 @@ def get_distances():
         distances = random_distances(_dim, 10000)  # 10,000 random pairs
         avg_distances.append(mean(distances))  # track the average
         min_distances.append(min(distances))  # track the minimum
-        msg = f"""
+        msg = """
 _dim {_dim},
 min(distances) {min(distances)}, 
 mean(distances) {mean(distances)}, 

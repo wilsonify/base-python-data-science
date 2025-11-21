@@ -15,10 +15,10 @@ if __name__ == '__main__':
     port = int(os.environ.get('FLASK_PORT', 5000))
     debug = os.environ.get('FLASK_DEBUG', 'False').lower() == 'true'
     
-    print(f"Starting Data Scratch Library REST API...")
+    print("Starting Data Scratch Library REST API...")
     print(f"Server: http://{host}:{port}")
     print(f"Debug mode: {debug}")
-    print(f"API endpoints available at:")
+    print("API endpoints available at:")
     print(f"  - KNN: http://{host}:{port}/api/knn")
     print(f"  - Naive Bayes: http://{host}:{port}/api/naive-bayes")
     print(f"  - Decision Trees: http://{host}:{port}/api/decision-trees")

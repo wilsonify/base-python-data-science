@@ -9,7 +9,7 @@ from dsl.c05_statistics.e0501_central_tendancy import mean
 def vector_mean(vectors):
     """Simple implementation of vector mean for testing."""
     if not vectors:
-        return []
+        raise ValueError("Cannot compute mean of empty list")
     
     num_components = len(vectors[0])
     return [sum(vector[i] for vector in vectors) / len(vectors) for i in range(num_components)]

@@ -6,10 +6,10 @@ def mystrength_strategy(self, body: dict):  # noqa: E501
     actual = body["actual"]
     expected = body["expected"]
     strength = mystrength(actual, expected)
-    out_dict = dict(
-        actual=actual,
-        expected=expected,
-        strength=strength,
-        status_code="200"
-    )
+    out_dict = {
+        "actual": actual,
+        "expected": expected,
+        "strength": strength,
+        "status_code": "200",
+    }
     self.publish(out_dict)

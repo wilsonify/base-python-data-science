@@ -36,7 +36,7 @@ def print_numbers():
     """
     This function returns the numbers 1 to 5 as a list.
     """
-    return [i for i in [1, 2, 3, 4, 5]]
+    return list(range(1, 6))
 
 
 if __name__ == "__main__":

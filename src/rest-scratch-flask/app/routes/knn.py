@@ -4,6 +4,9 @@ from dsl.c12_k_nearest_neighbors.nearest_neighbors import knn_classify
 
 knn_bp = Blueprint('knn', __name__)
 
+# Common response messages (reduce duplicated string literals)
+ERR_NO_JSON = 'No JSON data provided'
+
 @knn_bp.route('/classify', methods=['POST'])
 def classify_point():
     """
@@ -20,11 +23,11 @@ def classify_point():
     }
     """
     try:
-        data = request.get_json()
+        data = request.get_json(silent=True)
         
         # Validate required fields
         if not data:
-            return jsonify({'error': 'No JSON data provided'}), 400
+            return jsonify({'error': ERR_NO_JSON}), 400
         
         if 'k' not in data or 'point' not in data or 'training_data' not in data:
             return jsonify({'error': 'Missing required fields: k, point, training_data'}), 400
@@ -84,11 +87,11 @@ def batch_classify():
     }
     """
     try:
-        data = request.get_json()
+        data = request.get_json(silent=True)
         
         # Validate required fields
         if not data:
-            return jsonify({'error': 'No JSON data provided'}), 400
+            return jsonify({'error': ERR_NO_JSON}), 400
         
         if 'k' not in data or 'points' not in data or 'training_data' not in data:
             return jsonify({'error': 'Missing required fields: k, points, training_data'}), 400

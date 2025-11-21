@@ -145,6 +145,12 @@ dmypy.json
 #sonarqube
 .scannerwork/
 
-node_modules/
+# Generated code from OpenAPI specs
+generated/
 external/
+
+# Node.js
+node_modules/
+
+# Misc
 *.pdf

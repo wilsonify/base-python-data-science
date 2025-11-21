@@ -25,7 +25,7 @@ class KMeans:
 
         while True:
             # Find new assignments
-            new_assignments = list(map(self.classify, inputs))
+            new_assignments = [self.classify(x) for x in inputs]
 
             # If no assignments have changed, we're done.
             if assignments == new_assignments:
@@ -46,7 +46,7 @@ def squared_clustering_errors(inputs, k):
     clusterer = KMeans(k)
     clusterer.train(inputs)
     means = clusterer.means
-    assignments = list(map(clusterer.classify, inputs))
+    assignments = [clusterer.classify(x) for x in inputs]
 
     return sum(
         squared_distance(inputs, means[cluster_])

@@ -14,8 +14,10 @@ def difference_quotient(f: Callable[[float], float | list[float]], x: float, h: 
     try:
         return (f(x + h) - f(x)) / h
     except TypeError:
-        diff = map(operator.sub, f(x + h), f(x))
-        return [_ / h for _ in diff]
+        a_vals = f(x + h)
+        b_vals = f(x)
+        diff = [a - b for a, b in zip(a_vals, b_vals)]
+        return [d / h for d in diff]
 
 
 def partial_difference_quotient(
@@ -33,8 +35,10 @@ def partial_difference_quotient(
     try:
         return (f(w) - f(v)) / h
     except TypeError:
-        diff = map(operator.sub, f(w), f(v))
-        return [_ / h for _ in diff]
+        a_vals = f(w)
+        b_vals = f(v)
+        diff = [a - b for a, b in zip(a_vals, b_vals)]
+        return [d / h for d in diff]
 
 
 def estimate_gradient(

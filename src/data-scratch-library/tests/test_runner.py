@@ -25,8 +25,14 @@ class Approx:
         self.abs_tol = abs
     
     def __eq__(self, actual):
+        # Handle scalar comparison
         if isinstance(self.expected, (int, float)) and isinstance(actual, (int, float)):
             return abs(actual - self.expected) <= self.abs_tol
+        # Handle list/tuple comparison
+        if isinstance(self.expected, (list, tuple)) and isinstance(actual, (list, tuple)):
+            if len(self.expected) != len(actual):
+                return False
+            return all(abs(a - e) <= self.abs_tol for a, e in zip(actual, self.expected))
         return False
     
     def __repr__(self):
@@ -34,12 +40,22 @@ class Approx:
 
 
 def parametrize(*args):
-    """Replacement for pytest.mark.parametrize decorator"""
-    def decorator(func):
-        # Store parametrize data on the function
-        func._parametrize_args = args
-        return func
-    return decorator
+    """Replacement for pytest.mark.parametrize decorator.
+
+    When running under pytest, delegate to pytest.mark.parametrize so that
+    tests written with this project's lightweight runner still work under
+    pytest collection. Otherwise, store parametrize metadata for the
+    TestRunner to execute.
+    """
+    try:
+        import pytest as _real_pytest
+        return _real_pytest.mark.parametrize(*args)
+    except Exception:
+        def decorator(func):
+            # Store parametrize data on the function for the custom TestRunner
+            func._parametrize_args = args
+            return func
+        return decorator
 
 
 def skip(reason):
@@ -56,8 +72,11 @@ class MockPytest:
     mark = type('MockMark', (), {'parametrize': parametrize, 'skip': skip})()
 
 
-# Inject mock pytest into sys.modules
-sys.modules['pytest'] = MockPytest()
+# Inject mock pytest into sys.modules only if real pytest is not available.
+try:
+    import pytest as _real_pytest  # type: ignore
+except Exception:
+    sys.modules['pytest'] = MockPytest()
 
 
 class TestRunner:

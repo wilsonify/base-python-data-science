@@ -13,7 +13,12 @@ def perceptron_output(weights, bias, x):
 
 
 def sigmoid(t):
-    return 1 / (1 + math.exp(-t))
+    try:
+        return 1 / (1 + math.exp(-t))
+    except OverflowError:
+        # For very large negative values, exp(-t) overflows
+        # In this case, sigmoid approaches 0
+        return 0.0 if t < 0 else 1.0
 
 
 def neuron_output(weights, inputs):

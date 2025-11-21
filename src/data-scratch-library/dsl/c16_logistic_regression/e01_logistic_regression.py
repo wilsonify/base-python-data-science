@@ -79,15 +79,14 @@ def get_x_from_data(data):
 
 def tuples_to_lists(data):
     # change tuples to lists
-    data = list(map(list, data))
-    return data
+    return [list(x) for x in data]
 
 
 if __name__ == "__main__":
-    dictConfig(dict(
-        version=1,
-        formatters={"simple": {"format": """%(asctime)s | %(name)s | %(lineno)s | %(levelname)s | %(message)s"""}},
-        handlers={"console": {"class": "logging.StreamHandler", "formatter": "simple"}},
-        root={"handlers": ["console"], "level": logging.DEBUG},
-    ))
+    dictConfig({
+        "version":1,
+        "formatters":{"simple": {"format": """%(asctime)s | %(name)s | %(lineno)s | %(levelname)s | %(message)s"""}},
+        "handlers":{"console": {"class": "logging.StreamHandler", "formatter": "simple"}},
+        "root":{"handlers": ["console"], "level": logging.DEBUG},
+    })
     main()

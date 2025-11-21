@@ -104,7 +104,7 @@ def predict_batch(network, input_batch):
 
 def main():
     logging.info("main")
-    inputs_ = list(map(make_digit, raw_digits))
+    inputs_ = [make_digit(raw) for raw in raw_digits]
     targets_ = [[1 if i == j else 0 for i in range(10)] for j in range(10)]
     _network = create_network()
     fit_network(_network, inputs_, targets_)
@@ -121,10 +121,10 @@ def main():
 
 
 if __name__ == "__main__":
-    dictConfig(dict(
-        version=1,
-        formatters={"simple": {"format": """%(asctime)s | %(name)s | %(lineno)s | %(levelname)s | %(message)s"""}},
-        handlers={"console": {"class": "logging.StreamHandler", "formatter": "simple"}},
-        root={"handlers": ["console"], "level": logging.DEBUG},
-    ))
+    dictConfig({
+        "version":1,
+        "formatters":{"simple": {"format": """%(asctime)s | %(name)s | %(lineno)s | %(levelname)s | %(message)s"""}},
+        "handlers":{"console": {"class": "logging.StreamHandler", "formatter": "simple"}},
+        "root":{"handlers": ["console"], "level": logging.DEBUG},
+    })
     main()
