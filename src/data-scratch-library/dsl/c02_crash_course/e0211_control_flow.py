@@ -1,4 +1,4 @@
-def conditional_message(x):
+def conditional_message(_):
     """Returns a message based on conditional checks."""
     if 1 > 2:
         return "if only 1 were greater than two..."

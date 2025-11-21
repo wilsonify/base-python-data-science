@@ -15,6 +15,25 @@ neural_networks_bp = Blueprint('neural_networks', __name__)
 
 # Common response messages
 ERR_NO_JSON = 'No JSON data provided'
+INPUTS_MUST_BE_LIST = 'inputs must be a list'
+
+
+def _validate_layer(i, layer):
+    """Validate a single layer description and return flattened neuron weights with bias.
+
+    Expected layer format: [weights, bias]
+    """
+    if not isinstance(layer, list) or len(layer) != 2:
+        raise ValueError(f'Layer {i} must be [weights, bias]')
+
+    weights, bias = layer
+    if not isinstance(weights, list):
+        raise ValueError(f'Weights in layer {i} must be a list')
+
+    if not isinstance(bias, (int, float)):
+        raise ValueError(f'Bias in layer {i} must be a number')
+
+    return list(weights) + [bias]
 
 @neural_networks_bp.route('/sigmoid', methods=['POST'])
 def calculate_sigmoid():
@@ -121,7 +140,7 @@ def perceptron_predict():
             return jsonify({'error': 'bias must be a number'}), 400
         
         if not isinstance(inputs, list):
-            return jsonify({'error': 'inputs must be a list'}), 400
+            return jsonify({'error': INPUTS_MUST_BE_LIST}), 400
         
         if len(weights) != len(inputs):
             return jsonify({'error': 'weights and inputs must have the same length'}), 400
@@ -173,7 +192,7 @@ def neuron_activate():
             return jsonify({'error': 'weights must be a list'}), 400
         
         if not isinstance(inputs, list):
-            return jsonify({'error': 'inputs must be a list'}), 400
+            return jsonify({'error': INPUTS_MUST_BE_LIST}), 400
         
         if len(weights) != len(inputs):
             return jsonify({'error': 'weights and inputs must have the same length'}), 400
@@ -211,7 +230,7 @@ def _validate_and_convert_network_payload(data, require_target=False):
         raise ValueError('network must be a list')
 
     if not isinstance(inputs, list):
-        raise ValueError('inputs must be a list')
+        raise ValueError(INPUTS_MUST_BE_LIST)
 
     if require_target and 'target' not in data:
         raise ValueError('Missing required field: target')
@@ -219,17 +238,7 @@ def _validate_and_convert_network_payload(data, require_target=False):
     # Validate structure and types; convert to internal format
     converted_network = []
     for i, layer in enumerate(network):
-        if not isinstance(layer, list) or len(layer) != 2:
-            raise ValueError(f'Layer {i} must be [weights, bias]')
-
-        weights, bias = layer
-        if not isinstance(weights, list):
-            raise ValueError(f'Weights in layer {i} must be a list')
-
-        if not isinstance(bias, (int, float)):
-            raise ValueError(f'Bias in layer {i} must be a number')
-
-        neuron_weights = list(weights) + [bias]
+        neuron_weights = _validate_layer(i, layer)
         converted_network.append([neuron_weights])
 
     if require_target:
@@ -252,27 +261,30 @@ def network_feed_forward():
         "inputs": [1.0, 1.0]
     }
     """
+    data = request.get_json()
     try:
-        data = request.get_json()
-
-        try:
-            converted_network, inputs = _validate_and_convert_network_payload(data)
-        except ValueError as e:
-            return jsonify({'error': str(e)}), 400
-
-        # Perform feed-forward propagation
-        outputs = feed_forward(converted_network, inputs)
-        
-        return jsonify({
-            'inputs': inputs,
-            'network_structure': [len(layer) for layer in converted_network],  # Number of neurons per layer
-            'layer_outputs': outputs,
-            'final_output': outputs[-1] if outputs else [],
-            'num_layers': len(converted_network)
-        })
-        
+        result = _feed_forward_route(data)
+        return jsonify(result)
+    except ValueError as e:
+        return jsonify({'error': str(e)}), 400
     except Exception as e:
         return jsonify({'error': f'Feed-forward propagation failed: {str(e)}'}), 500
+
+
+def _feed_forward_route(data):
+    if not data:
+        raise ValueError(ERR_NO_JSON)
+
+    converted_network, inputs = _validate_and_convert_network_payload(data)
+    outputs = feed_forward(converted_network, inputs)
+
+    return {
+        'inputs': inputs,
+        'network_structure': [len(layer) for layer in converted_network],
+        'layer_outputs': outputs,
+        'final_output': outputs[-1] if outputs else [],
+        'num_layers': len(converted_network)
+    }
 
 
 @neural_networks_bp.route('/backpropagation', methods=['POST'])
@@ -290,41 +302,78 @@ def calculate_backpropagation():
         "target": [1.0]
     }
     """
+    data = request.get_json()
     try:
-        data = request.get_json()
-        
-        if not data:
-            return jsonify({'error': ERR_NO_JSON}), 400
-        
-        if 'network' not in data or 'inputs' not in data or 'target' not in data:
-            return jsonify({'error': 'Missing required fields: network, inputs, target'}), 400
-        
-        try:
-            converted_network, inputs, target = _validate_and_convert_network_payload(data, require_target=True)
-        except ValueError as e:
-            return jsonify({'error': str(e)}), 400
-        
-        # 'converted_network' is already a validated internal representation
-        
-        # 'converted_network' is already produced by helper
-
-        # Perform backpropagation
-        gradients = backpropagation(converted_network, inputs, target)
-
-        # Calculate feed-forward output for reference
-        outputs = feed_forward(converted_network, inputs)
-        
-        return jsonify({
-            'inputs': inputs,
-            'target': target,
-            'network_output': outputs[-1] if outputs else [],
-            'gradients': gradients,
-            'num_layers': len(converted_network),
-            'note': 'Gradients are returned as [weight_gradients, bias_gradient] for each layer'
-        })
-        
+        result = _backprop_route(data)
+        return jsonify(result)
+    except ValueError as e:
+        return jsonify({'error': str(e)}), 400
     except Exception as e:
         return jsonify({'error': f'Backpropagation failed: {str(e)}'}), 500
+
+
+def _backprop_route(data):
+    if not data:
+        raise ValueError(ERR_NO_JSON)
+
+    converted_network, inputs, target = _validate_and_convert_network_payload(data, require_target=True)
+
+    gradients = backpropagation(converted_network, inputs, target)
+    outputs = feed_forward(converted_network, inputs)
+
+    return {
+        'inputs': inputs,
+        'target': target,
+        'network_output': outputs[-1] if outputs else [],
+        'gradients': gradients,
+        'num_layers': len(converted_network),
+        'note': 'Gradients are returned as [weight_gradients, bias_gradient] for each layer'
+    }
+
+
+def _init_network(input_dim: int, hidden_neurons: int, output_dim: int):
+    """Initialize a simple random network: hidden neurons followed by output neurons.
+
+    Returns a list of [weights, bias] for each neuron.
+    """
+    net = []
+    for _ in range(hidden_neurons):
+        weights = [random.uniform(-1, 1) for _ in range(input_dim)]
+        bias = random.uniform(-1, 1)
+        net.append([weights, bias])
+    for _ in range(output_dim):
+        weights = [random.uniform(-1, 1) for _ in range(hidden_neurons)]
+        bias = random.uniform(-1, 1)
+        net.append([weights, bias])
+    return net
+
+
+def _run_simple_training(net, data, epochs_count):
+    """Run the simplified training loop used for the demo.
+
+    For each epoch compute per-sample squared error and return list of epoch-average errors.
+    This intentionally does not update weights (keeps original demo behaviour).
+    """
+    errs = []
+    for _ in range(epochs_count):
+        epoch_error = _compute_epoch_error(net, data)
+        errs.append(epoch_error / len(data) if data else 0)
+
+    return errs
+
+
+def _compute_epoch_error(net, data):
+    """Compute total squared error for a single epoch (helper to reduce nesting)."""
+    epoch_error = 0
+    for sample in data:
+        inputs = sample.get('inputs')
+        target = sample.get('target')
+
+        outputs = feed_forward(net, inputs)
+        if outputs and target:
+            epoch_error += sum((o - t) ** 2 for o, t in zip(outputs[-1], target))
+
+    return epoch_error
 
 
 @neural_networks_bp.route('/simple_train', methods=['POST'])
@@ -345,100 +394,95 @@ def simple_training():
         "epochs": 100
     }
     """
+    data = request.get_json()
+
+    if not data:
+        return jsonify({'error': ERR_NO_JSON}), 400
+
+    if 'training_data' not in data:
+        return jsonify({'error': 'Missing required field: training_data'}), 400
+
+    training_data = data['training_data']
+    hidden_neurons = data.get('hidden_neurons', 2)
+    learning_rate = data.get('learning_rate', 0.1)
+    epochs = data.get('epochs', 100)
+
+    # Validate data types
+    if not isinstance(training_data, list):
+        return jsonify({'error': 'training_data must be a list'}), 400
+
+    if not isinstance(hidden_neurons, int) or hidden_neurons <= 0:
+        return jsonify({'error': 'hidden_neurons must be a positive integer'}), 400
+
+    if not isinstance(learning_rate, (int, float)) or learning_rate <= 0:
+        return jsonify({'error': 'learning_rate must be a positive number'}), 400
+
+    if not isinstance(epochs, int) or epochs <= 0:
+        return jsonify({'error': 'epochs must be a positive integer'}), 400
+
+    # Validate training data
+    if not training_data:
+        return jsonify({'error': 'training_data cannot be empty'}), 400
+    
+    # Get input dimension from first sample
+    input_dim = len(training_data[0]['inputs'])
+    output_dim = len(training_data[0]['target'])
+    
+    # Delegate to a route-level helper to reduce complexity
+    payload = {
+        'training_data': training_data,
+        'hidden_neurons': hidden_neurons,
+        'learning_rate': learning_rate,
+        'epochs': epochs
+    }
     try:
-        data = request.get_json()
-        
-        if not data:
-            return jsonify({'error': 'No JSON data provided'}), 400
-        
-        if 'training_data' not in data:
-            return jsonify({'error': 'Missing required field: training_data'}), 400
-        
-        training_data = data['training_data']
-        hidden_neurons = data.get('hidden_neurons', 2)
-        learning_rate = data.get('learning_rate', 0.1)
-        epochs = data.get('epochs', 100)
-        
-        # Validate data types
-        if not isinstance(training_data, list):
-            return jsonify({'error': 'training_data must be a list'}), 400
-        
-        if not isinstance(hidden_neurons, int) or hidden_neurons <= 0:
-            return jsonify({'error': 'hidden_neurons must be a positive integer'}), 400
-        
-        if not isinstance(learning_rate, (int, float)) or learning_rate <= 0:
-            return jsonify({'error': 'learning_rate must be a positive number'}), 400
-        
-        if not isinstance(epochs, int) or epochs <= 0:
-            return jsonify({'error': 'epochs must be a positive integer'}), 400
-        
-        # Validate training data
-        if not training_data:
-            return jsonify({'error': 'training_data cannot be empty'}), 400
-        
-        # Get input dimension from first sample
-        input_dim = len(training_data[0]['inputs'])
-        output_dim = len(training_data[0]['target'])
-        
-        # Initialize random network
-        # Simple network: input -> hidden -> output
-        network = []
-        
-        # Hidden layer
-        for _ in range(hidden_neurons):
-            weights = [random.uniform(-1, 1) for _ in range(input_dim)]
-            bias = random.uniform(-1, 1)
-            network.append([weights, bias])
-        
-        # Output layer
-        for _ in range(output_dim):
-            weights = [random.uniform(-1, 1) for _ in range(hidden_neurons)]
-            bias = random.uniform(-1, 1)
-            network.append([weights, bias])
-        
-        # Simple training loop (simplified - doesn't actually update weights)
-        # In a real implementation, you would use the gradients to update weights
-        training_errors = []
-        
-        for epoch in range(epochs):
-            epoch_error = 0
-            for sample in training_data:
-                inputs = sample['inputs']
-                target = sample['target']
-                
-                # Forward pass
-                outputs = feed_forward(network, inputs)
-                
-                # Calculate error (simplified)
-                if outputs and target:
-                    error = sum((o - t) ** 2 for o, t in zip(outputs[-1], target))
-                    epoch_error += error
-            
-            training_errors.append(epoch_error / len(training_data))
-            
-            # In a real implementation, you would:
-            # 1. Calculate gradients using backpropagation
-            # 2. Update weights using gradients and learning rate
-            # 3. Continue for all epochs
-        
-        return jsonify({
-            'status': 'training_completed',
-            'network_structure': {
-                'input_dim': input_dim,
-                'hidden_neurons': hidden_neurons,
-                'output_dim': output_dim
-            },
-            'training_parameters': {
-                'learning_rate': learning_rate,
-                'epochs': epochs
-            },
-            'training_samples': len(training_data),
-            'final_error': training_errors[-1] if training_errors else 0,
-            'note': 'This is a demonstration. Actual weight updates not implemented in this simple version.'
-        })
-        
+        result = _simple_training_route(payload, input_dim, output_dim)
+        return jsonify(result)
+    except ValueError as e:
+        return jsonify({'error': str(e)}), 400
     except Exception as e:
         return jsonify({'error': f'Training failed: {str(e)}'}), 500
+
+
+def _simple_training_route(data, input_dim, output_dim):
+    training_data = data.get('training_data')
+    hidden_neurons = data.get('hidden_neurons', 2)
+    learning_rate = data.get('learning_rate', 0.1)
+    epochs = data.get('epochs', 100)
+
+    if not isinstance(training_data, list):
+        raise ValueError('training_data must be a list')
+
+    if not isinstance(hidden_neurons, int) or hidden_neurons <= 0:
+        raise ValueError('hidden_neurons must be a positive integer')
+
+    if not isinstance(learning_rate, (int, float)) or learning_rate <= 0:
+        raise ValueError('learning_rate must be a positive number')
+
+    if not isinstance(epochs, int) or epochs <= 0:
+        raise ValueError('epochs must be a positive integer')
+
+    if not training_data:
+        raise ValueError('training_data cannot be empty')
+
+    network = _init_network(input_dim, hidden_neurons, output_dim)
+    training_errors = _run_simple_training(network, training_data, epochs)
+
+    return {
+        'status': 'training_completed',
+        'network_structure': {
+            'input_dim': input_dim,
+            'hidden_neurons': hidden_neurons,
+            'output_dim': output_dim
+        },
+        'training_parameters': {
+            'learning_rate': learning_rate,
+            'epochs': epochs
+        },
+        'training_samples': len(training_data),
+        'final_error': training_errors[-1] if training_errors else 0,
+        'note': 'This is a demonstration. Actual weight updates not implemented in this simple version.'
+    }
 
 
 @neural_networks_bp.route('/info', methods=['GET'])

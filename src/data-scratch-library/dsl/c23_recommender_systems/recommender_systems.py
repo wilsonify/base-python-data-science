@@ -46,9 +46,7 @@ def cosine_similarity(v, w):
 
 
 unique_interests = sorted(
-    list(
-        {interest for user_interests in users_interests for interest in user_interests}
-    )
+    {interest for user_interests in users_interests for interest in user_interests}
 )
 
 
@@ -58,7 +56,7 @@ def make_user_interest_vector(user_interests):
     return [1 if interest in user_interests else 0 for interest in unique_interests]
 
 
-user_interest_matrix = list(map(make_user_interest_vector, users_interests))
+user_interest_matrix = [make_user_interest_vector(user_interests) for user_interests in users_interests]
 
 user_similarities = [
     [

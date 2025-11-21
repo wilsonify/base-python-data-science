@@ -3,8 +3,7 @@
 export function split_data(data:Array<Array<number>>, prob:number) {
     // split data into fractions [prob, 1 - prob]
     const results = { "train":[] as Array<Array<number>>, "test":[] as Array<Array<number>> }
-    for (let i = 0; i < data.length; i += 1 ) {
-        const row = data[i]
+    for (const row of data) {
         if (Math.random() < prob) {
             results["test"].push(row)
         } else {
@@ -21,8 +20,7 @@ export function train_test_split(x:Array<Array<number>>, y:Array<number>, test_p
         "x_test":[] as Array<Array<number>>,
         "y_test":[] as Array<number>
     }
-    for (let i = 0; i < x.length; i += 1 ) {
-        const x_i = x[i]
+    for (const [i, x_i] of x.entries()) {
         const y_i = y[i]
         if (Math.random() < test_pct) {
             results["x_test"].push(x_i)
@@ -30,7 +28,7 @@ export function train_test_split(x:Array<Array<number>>, y:Array<number>, test_p
         } else {
             results["x_train"].push(x_i)
             results["y_train"].push(y_i)
-        }        
+        }
     }
     return results
 }

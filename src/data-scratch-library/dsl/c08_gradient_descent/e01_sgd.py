@@ -12,8 +12,9 @@ def main():
     _v = [random.randint(-10, 10) for _ in range(3)]
     _tolerance = 0.0000001
     max_iter = 1000
-    for i in range(max_iter):
-        # print v, sum_of_squares(v)
+    for _ in range(max_iter):
+        # Log debugging information instead of keeping commented-out code
+        logging.debug("v=%r sum=%r", _v, sum_of_squares(_v))
         _gradient = sum_of_squares_gradient(_v)  # compute the gradient at v
         next_v = gradient_step(_v, _gradient, -0.01)  # take a negative gradient step
         if distance(next_v, _v) < _tolerance:  # stop if we're converging

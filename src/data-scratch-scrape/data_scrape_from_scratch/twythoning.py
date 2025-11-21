@@ -32,8 +32,7 @@ class MyStreamer(TwythonStreamer):
 def call_twitter_search_api():
     CONSUMER_KEY = ""
     CONSUMER_SECRET = ""
-    ACCESS_TOKEN = ""
-    ACCESS_TOKEN_SECRET = ""
+    # ACCESS_TOKEN and ACCESS_TOKEN_SECRET intentionally unused for search API
     twitter = Twython(CONSUMER_KEY, CONSUMER_SECRET)
     # search for tweets containing the phrase "data science"
     for status in twitter.search(q='"data science"')["statuses"]:

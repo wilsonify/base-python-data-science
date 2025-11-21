@@ -45,10 +45,10 @@ export function normal_cdf(x: number, mu = 0, sigma = 1) {
 
 export function inverse_normal_cdf(p: number, mu = 0, sigma = 1, tolerance = 1e-5) {
     /* find approximate inverse using binary search */
-    let hi_p: number, hi_z: number, low_p: number, low_z: number, mid_p: number, mid_z: number;
+    let hi_z: number, low_z: number, mid_z: number, mid_p: number;
 
-    [low_z, low_p] = [-10, 0];
-    [hi_z, hi_p] = [10, 1];
+    low_z = -10;
+    hi_z = 10;
     mid_z = (low_z + hi_z) / 2;
 
     while (hi_z - low_z > tolerance) {
@@ -56,13 +56,11 @@ export function inverse_normal_cdf(p: number, mu = 0, sigma = 1, tolerance = 1e-
         mid_p = normal_cdf(mid_z);
 
         if (mid_p < p) {
-            [low_z, low_p] = [mid_z, mid_p];
+            low_z = mid_z;
+        } else if (mid_p > p) {
+            hi_z = mid_z;
         } else {
-            if (mid_p > p) {
-                [hi_z, hi_p] = [mid_z, mid_p];
-            } else {
-                break;
-            }
+            break;
         }
     }
 

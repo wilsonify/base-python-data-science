@@ -136,8 +136,8 @@ def main():
     client.on_message = on_message
     logging.info("done setting callback")
     logging.info("start opening channel")
-    # client.tls_set()
-    # client.tls_set(ca_certs=ca_certificate, certfile=client_certificate, keyfile=client_key )
+    # TLS setup intentionally omitted here. If you need TLS, call
+    # client.tls_set(...) with the appropriate certificates before connect.
     client.username_pw_set(username=MQTT_USER, password=MQTT_PASS)
     client.connect(
         host=MQTT_HOST,

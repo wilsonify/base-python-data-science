@@ -15,50 +15,105 @@ export type KMeansResult = {
     iterations: number;
 };
 
+// Helper: initialize means by choosing k distinct random points
+function initializeRandomMeans(points: Point[], k: number): Point[] {
+    const out: Point[] = [];
+    const used = new Set<number>();
+    while (out.length < k) {
+        const idx = Math.floor(Math.random() * points.length);
+        if (!used.has(idx)) {
+            out.push([...points[idx]]);
+            used.add(idx);
+        }
+    }
+    return out;
+}
+
+// Helper: check convergence between two mean sets
+function hasConverged(oldMeans: Point[], newMeans: Point[], tol = 0.0001): boolean {
+    for (let i = 0; i < oldMeans.length; i++) {
+        if (distance(oldMeans[i], newMeans[i]) > tol) return false;
+    }
+    return true;
+}
+
+// Helpers for silhouette computations moved to top-level to reduce nesting
+function averageDistanceToCluster(point: Point, clusterId: number, points: Point[], assignments: number[]): number {
+    let total = 0;
+    let count = 0;
+    for (let j = 0; j < points.length; j++) {
+        if (assignments[j] === clusterId) {
+            total += distance(point, points[j]);
+            count++;
+        }
+    }
+    return count > 0 ? total / count : 0;
+}
+
+function minAverageDistanceToOtherClusters(point: Point, clusterId: number, points: Point[], assignments: number[], means: Point[]): number {
+    let minAvg = Infinity;
+    for (let k = 0; k < means.length; k++) {
+        if (k === clusterId) continue;
+        const avg = averageDistanceToCluster(point, k, points, assignments);
+        if (avg < minAvg) minAvg = avg;
+    }
+    return minAvg;
+}
+
 // Assign each point to the nearest cluster centroid
 function assignPointsToClusters(points: Point[], means: Point[]): number[] {
     const assignments: number[] = [];
     
     for (const point of points) {
-        let minDistance = Infinity;
-        let closestCluster = 0;
-        
-        for (let i = 0; i < means.length; i++) {
-            const dist = distance(point, means[i]);
-            if (dist < minDistance) {
-                minDistance = dist;
-                closestCluster = i;
-            }
-        }
-        
-        assignments.push(closestCluster);
+        assignments.push(_closestClusterIndex(point, means));
     }
     
     return assignments;
 }
 
+
+// Helper: return index of closest mean for a single point
+function _closestClusterIndex(point: Point, means: Point[]): number {
+    let minDistance = Infinity;
+    let closestCluster = 0;
+    for (let i = 0; i < means.length; i++) {
+        const dist = distance(point, means[i]);
+        if (dist < minDistance) {
+            minDistance = dist;
+            closestCluster = i;
+        }
+    }
+    return closestCluster;
+}
+
 // Calculate new cluster means based on current assignments
-function calculateNewMeans(points: Point[], assignments: number[], k: number): Point[] {
+// Group points by cluster assignment
+function buildClusters(points: Point[], assignments: number[], k: number): Point[][] {
     const clusters: Point[][] = new Array(k).fill(null).map(() => []);
-    
-    // Group points by cluster assignment
     for (let i = 0; i < points.length; i++) {
         const clusterId = assignments[i];
         clusters[clusterId].push(points[i]);
     }
-    
-    // Calculate mean for each cluster
+    return clusters;
+}
+
+// Calculate new cluster means based on current assignments. If a cluster has no
+// points assigned, preserve the old mean when provided (reduces oscillation and
+// keeps behaviour predictable while avoiding large nested conditionals).
+function calculateNewMeans(points: Point[], assignments: number[], k: number, oldMeans?: Point[]): Point[] {
+    const clusters = buildClusters(points, assignments, k);
     const newMeans: Point[] = [];
+
     for (let i = 0; i < k; i++) {
         if (clusters[i].length > 0) {
-            const mean = vector_mean(clusters[i]);
-            newMeans.push(mean);
+            newMeans.push(vector_mean(clusters[i]));
+        } else if (oldMeans && oldMeans[i]) {
+            newMeans.push(oldMeans[i]);
         } else {
-            // If no points assigned to cluster, keep the old mean or reinitialize
             newMeans.push(new Array(points[0].length).fill(0));
         }
     }
-    
+
     return newMeans;
 }
 
@@ -96,45 +151,16 @@ export function kMeans(
     const dimensions = points[0].length;
     
     // Initialize means (randomly select k points as initial centroids)
-    let means: Point[] = [];
-    const usedIndices = new Set<number>();
-    
-    while (means.length < k) {
-        const randomIndex = Math.floor(Math.random() * points.length);
-        if (!usedIndices.has(randomIndex)) {
-            means.push([...points[randomIndex]]);
-            usedIndices.add(randomIndex);
-        }
-    }
-    
+    let means: Point[] = initializeRandomMeans(points, k);
+
     // Initialize assignments if provided, otherwise assign to nearest
     let assignments = initialAssignments || assignPointsToClusters(points, means);
-    
-    let iterations = 0;
-    let converged = false;
-    
-    while (!converged && iterations < maxIterations) {
-        // Calculate new means based on current assignments
-        const newMeans = calculateNewMeans(points, assignments, k);
-        
-        // Check for convergence (means don't change significantly)
-        let meansChanged = false;
-        for (let i = 0; i < k; i++) {
-            const dist = distance(means[i], newMeans[i]);
-            if (dist > 0.0001) { // Threshold for convergence
-                meansChanged = true;
-                break;
-            }
-        }
-        
-        if (!meansChanged) {
-            converged = true;
-        } else {
-            means = newMeans;
-            assignments = assignPointsToClusters(points, means);
-            iterations++;
-        }
-    }
+
+    // Run k-means iterations in a helper to reduce cognitive complexity of kMeans
+    const loopResult = runKMeansLoop(points, k, maxIterations, means, assignments);
+    assignments = loopResult.assignments;
+    means = loopResult.means;
+    const iterations = loopResult.iterations;
     
     // Calculate final error
     const totalSquaredError = calculateTotalSquaredError(points, assignments, means);
@@ -158,6 +184,32 @@ export function kMeans(
         totalSquaredError,
         iterations
     };
+}
+
+
+// Run the main K-means iteration loop. Extracted to keep `kMeans` small.
+function runKMeansLoop(points: Point[], k: number, maxIterations: number, means: Point[], assignments: number[]) {
+    let iterations = 0;
+    for (let iter = 0; iter < maxIterations; iter++) {
+        const step = _kMeansIterationStep(points, k, means, assignments);
+        means = step.means;
+        assignments = step.assignments;
+        iterations = step.iterations;
+
+        if (step.converged) break;
+    }
+
+    return { assignments, means, iterations };
+}
+
+
+// Helper: perform one iteration step for k-means (compute new means, assignments and whether converged)
+function _kMeansIterationStep(points: Point[], k: number, means: Point[], assignments: number[]) {
+    const newMeans = calculateNewMeans(points, assignments, k, means);
+    const newAssignments = assignPointsToClusters(points, newMeans);
+    const converged = hasConverged(means, newMeans);
+    const iterations = converged ? 0 : 1; // single-step iteration indicator; caller accumulates
+    return { means: newMeans, assignments: newAssignments, converged, iterations };
 }
 
 // Run k-means multiple times and return the best result
@@ -192,36 +244,14 @@ export function findOptimalK(
     elbowPoint: number;
 } {
     const errors: number[] = [];
-    
+
     for (let k = 1; k <= maxK; k++) {
-        let minError = Infinity;
-        
-        // Run k-means multiple times and take the best error
-        for (let run = 0; run < runsPerK; run++) {
-            const result = kMeans(points, k);
-            if (result.totalSquaredError < minError) {
-                minError = result.totalSquaredError;
-            }
-        }
-        
+        const minError = _runKAndReturnBestError(points, k, runsPerK);
         errors.push(minError);
     }
-    
-    // Find elbow point using simple heuristic
-    let elbowPoint = 1;
-    let maxImprovement = 0;
-    
-    for (let i = 1; i < errors.length - 1; i++) {
-        const improvement1 = errors[i - 1] - errors[i];
-        const improvement2 = errors[i] - errors[i + 1];
-        const relativeImprovement = improvement1 / improvement2;
-        
-        if (relativeImprovement > maxImprovement) {
-            maxImprovement = relativeImprovement;
-            elbowPoint = i + 1; // +1 because k starts at 1
-        }
-    }
-    
+
+    const elbowPoint = _detectElbowPoint(errors);
+
     return {
         optimalK: elbowPoint,
         errors,
@@ -229,58 +259,55 @@ export function findOptimalK(
     };
 }
 
+
+// Helper: run k-means multiple times for a single k and return the best (minimum) error
+function _runKAndReturnBestError(points: Point[], k: number, runsPerK: number): number {
+    let minError = Infinity;
+    for (let run = 0; run < runsPerK; run++) {
+        const result = kMeans(points, k);
+        if (result.totalSquaredError < minError) {
+            minError = result.totalSquaredError;
+        }
+    }
+    return minError === Infinity ? 0 : minError;
+}
+
+
+// Helper: detect elbow point from errors array using the existing heuristic
+function _detectElbowPoint(errors: number[]): number {
+    if (errors.length === 0) return 1;
+    let elbowPoint = 1;
+    let maxImprovement = 0;
+
+    for (let i = 1; i < errors.length - 1; i++) {
+        const improvement1 = errors[i - 1] - errors[i];
+        const improvement2 = errors[i] - errors[i + 1];
+        // protect against division by zero
+        const relativeImprovement = improvement2 !== 0 ? improvement1 / improvement2 : improvement1;
+
+        if (relativeImprovement > maxImprovement) {
+            maxImprovement = relativeImprovement;
+            elbowPoint = i + 1; // +1 because k starts at 1
+        }
+    }
+
+    return elbowPoint;
+}
+
 // Calculate silhouette score for clustering quality
 export function silhouetteScore(points: Point[], assignments: number[], means: Point[]): number {
     let totalScore = 0;
-    
     for (let i = 0; i < points.length; i++) {
         const point = points[i];
         const clusterId = assignments[i];
-        
-        // Calculate a: average distance to points in same cluster
-        let sameClusterDistances = 0;
-        let sameClusterCount = 0;
-        
-        for (let j = 0; j < points.length; j++) {
-            if (i !== j && assignments[j] === clusterId) {
-                sameClusterDistances += distance(point, points[j]);
-                sameClusterCount++;
-            }
-        }
-        
-        const a = sameClusterCount > 0 ? sameClusterDistances / sameClusterCount : 0;
-        
-        // Calculate b: minimum average distance to points in other clusters
-        let minOtherClusterDistance = Infinity;
-        
-        for (let k = 0; k < means.length; k++) {
-            if (k !== clusterId) {
-                let otherClusterDistances = 0;
-                let otherClusterCount = 0;
-                
-                for (let j = 0; j < points.length; j++) {
-                    if (assignments[j] === k) {
-                        otherClusterDistances += distance(point, points[j]);
-                        otherClusterCount++;
-                    }
-                }
-                
-                if (otherClusterCount > 0) {
-                    const avgDistance = otherClusterDistances / otherClusterCount;
-                    if (avgDistance < minOtherClusterDistance) {
-                        minOtherClusterDistance = avgDistance;
-                    }
-                }
-            }
-        }
-        
-        const b = minOtherClusterDistance;
-        
-        // Calculate silhouette score for this point
+
+        const a = averageDistanceToCluster(point, clusterId, points, assignments);
+        const b = minAverageDistanceToOtherClusters(point, clusterId, points, assignments, means);
+
         const silhouette = b > a ? (b - a) / Math.max(a, b) : 0;
         totalScore += silhouette;
     }
-    
+
     return totalScore / points.length;
 }
 
@@ -298,12 +325,7 @@ export function analyzeClustering(result: KMeansResult): {
     const clusterErrors: number[] = [];
     for (let i = 0; i < result.clusters.length; i++) {
         const cluster = result.clusters[i];
-        let clusterError = 0;
-        
-        for (const point of cluster.points) {
-            clusterError += squared_distance(point, cluster.centroid);
-        }
-        
+        const clusterError = _computeClusterError(cluster);
         clusterErrors.push(clusterError);
     }
     
@@ -321,6 +343,16 @@ export function analyzeClustering(result: KMeansResult): {
         clusterErrors,
         silhouetteScore: silhouetteValue
     };
+}
+
+
+// Helper: compute total squared error for a single cluster
+function _computeClusterError(cluster: Cluster): number {
+    let clusterError = 0;
+    for (const point of cluster.points) {
+        clusterError += squared_distance(point, cluster.centroid);
+    }
+    return clusterError;
 }
 
 // Example usage data

@@ -87,35 +87,24 @@ def populate_closeness(users_dict):
 
 
 def populate_shortest_paths(users_dict):
-    for user in users_dict:
+    users_iter = users_dict if isinstance(users_dict, list) else users_dict.values()
+    for user in users_iter:
         user["shortest_paths"] = shortest_paths_from(user)
     return users_dict
 
 
 def populate_betweeness_v1(users_dict):
-    for user in users_dict:
-        user["betweenness_centrality"] = 0.0
-    for source in users_dict:
-        source_id = source["id"]
-        for target_id, paths_item in source["shortest_paths"].items():
-            if source_id < target_id:  # don't double count
-                num_paths = len(paths_item)  # how many shortest paths?
-                contrib = 1 / num_paths  # contribution to centrality
-                for path in paths_item:
-                    for identification in path:
-                        if identification not in [source_id, target_id]:
-                            users_dict[identification]["betweenness_centrality"] += contrib
-    return users_dict
+    # Legacy compatibility wrapper: delegate to the refactored implementation.
+    # The original v1 implementation was kept historically but the current
+    # `populate_betweeness` is clearer, tested, and less complex.
+    return populate_betweeness(users_dict)
 
 
 def initialize_centrality(users_dict):
     """Initialize betweenness centrality for all users."""
-    if isinstance(users_dict, list):
-        for user in users_dict:
-            user["betweenness_centrality"] = 0.0
-    else:
-        for user in users_dict.values():
-            user["betweenness_centrality"] = 0.0
+    users_iter = users_dict if isinstance(users_dict, list) else users_dict.values()
+    for user in users_iter:
+        user["betweenness_centrality"] = 0.0
 
 
 def process_shortest_paths(source, users_dict):
@@ -138,18 +127,16 @@ def update_centrality(path, contrib, source_id, target_id, users_dict):
 def populate_betweeness(users_dict):
     """Calculate and populate betweenness centrality for users."""
     initialize_centrality(users_dict)
-    if isinstance(users_dict, list):
-        for source in users_dict:
-            process_shortest_paths(source, users_dict)
-    else:
-        for source in users_dict.values():
-            process_shortest_paths(source, users_dict)
+    users_iter = users_dict if isinstance(users_dict, list) else users_dict.values()
+    for source in users_iter:
+        process_shortest_paths(source, users_dict)
     return users_dict
 
 
 def populate_friends(users_dict, friendships):
     # initialize friends list
-    for user in users_dict:
+    users_iter = users_dict if isinstance(users_dict, list) else users_dict.values()
+    for user in users_iter:
         user["friends"] = []
 
     # populate friends list
@@ -165,45 +152,37 @@ def shortest_paths_from(from_user_graph):
     shortest_paths_to = {from_user_graph["id"]: [[]]}
 
     # a queue of (previous user, next user) that we need to check.
-    # starts out with all pairs (from_user, friend_of_from_user)
     frontier = deque((from_user_graph, friend) for friend in from_user_graph["friends"])
+
+    def _min_path_length(existing_paths):
+        return len(existing_paths[0]) if existing_paths else float("inf")
+
+    def _compute_new_paths(paths_to_prev, user_id, old_paths_to_here):
+        """Return new shortest paths to `user_id` via previous node."""
+        paths_via_prev = [p + [user_id] for p in paths_to_prev]
+        min_len = _min_path_length(old_paths_to_here)
+        # keep only non-duplicate paths not longer than the current minimum
+        return [p for p in paths_via_prev if len(p) <= min_len and p not in old_paths_to_here]
+
+    def _enqueue_new_neighbors(queue, user, known_paths):
+        # add new neighbors to the frontier if we haven't seen them yet
+        for friend in user["friends"]:
+            if friend["id"] not in known_paths:
+                queue.append((user, friend))
 
     # keep going until we empty the queue
     while frontier:
-
-        prev_user, user = frontier.popleft()  # take from the beginning
+        prev_user, user = frontier.popleft()
         user_id = user["id"]
 
-        # the fact that we're pulling from our queue means that
-        # necessarily we already know the shortest path to prev_user
+        # we already know the shortest path(s) to prev_user
         paths_to_prev = shortest_paths_to[prev_user["id"]]
-        paths_via_prev = [_ + [user_id] for _ in paths_to_prev]
-
-        # it's possible we already know the shortest path to here as well
         old_paths_to_here = shortest_paths_to.get(user_id, [])
 
-        # what's the shortest path to here that we've seen so far?
-        if old_paths_to_here:
-            min_path_length = len(old_paths_to_here[0])
-        else:
-            min_path_length = float("inf")
-
-        # any new paths to here that aren't too long
-        # noinspection PyPep8
-        new_paths_to_here = [
-            path_via_prev
-            for path_via_prev in paths_via_prev
-            if len(path_via_prev) <= min_path_length and path_via_prev not in old_paths_to_here
-        ]
-
+        new_paths_to_here = _compute_new_paths(paths_to_prev, user_id, old_paths_to_here)
         shortest_paths_to[user_id] = old_paths_to_here + new_paths_to_here
 
-        # add new neighbors to the frontier
-        frontier.extend(
-            (user, friend)
-            for friend in user["friends"]
-            if friend["id"] not in shortest_paths_to
-        )
+        _enqueue_new_neighbors(frontier, user, shortest_paths_to)
 
     return shortest_paths_to
 

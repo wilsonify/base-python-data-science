@@ -10,6 +10,144 @@ from typing import Tuple, Dict, Any
 import random
 
 
+def _rand_bright() -> int:
+    """Return a bright pixel value for synthetic digit strokes."""
+    return random.randint(180, 255)
+
+
+def create_digit_image(digit: int, size: Tuple[int, int]) -> list:
+    """Create a simple synthetic digit image."""
+    height, width = size
+    image = [[0 for _ in range(width)] for _ in range(height)]
+    center_h, center_w = height // 2, width // 2
+
+    # Dispatch to per-digit drawing helpers to keep this function simple
+    digit_drawers = {
+        0: _draw_digit_0,
+        1: _draw_digit_1,
+        2: _draw_digit_2,
+        3: _draw_digit_3,
+        4: _draw_digit_4,
+        5: _draw_digit_5,
+        6: _draw_digit_6,
+        7: _draw_digit_7,
+        8: _draw_digit_8,
+        9: _draw_digit_9,
+    }
+
+    drawer = digit_drawers.get(digit)
+    if drawer:
+        drawer(image, height, width, center_h, center_w)
+
+    _add_noise(image, height, width)
+    return image
+
+
+def _add_noise(image: list, height: int, width: int) -> None:
+    """Apply small random noise to an image in-place."""
+    for i in range(height):
+        for j in range(width):
+            if image[i][j] > 0:
+                image[i][j] = max(0, image[i][j] + random.randint(-30, 30))
+            else:
+                if random.random() < 0.05:  # 5% noise
+                    image[i][j] = random.randint(0, 50)
+
+
+def _draw_digit_0(image: list, height: int, width: int, center_h: int, center_w: int) -> None:
+    for i in range(height):
+        for j in range(width):
+            if 6 <= i <= 21 and 6 <= j <= 21:
+                dist = ((i - center_h) ** 2 + (j - center_w) ** 2) ** 0.5
+                if 6 <= dist <= 8:
+                    image[i][j] = _rand_bright()
+
+
+def _draw_digit_1(image: list, height: int, width: int, center_h: int, center_w: int) -> None:
+    for i in range(5, 23):
+        for j in range(center_w - 2, center_w + 3):
+            if 0 <= i < height and 0 <= j < width:
+                image[i][j] = _rand_bright()
+
+
+def _draw_digit_2(image: list, height: int, width: int, center_h: int, center_w: int) -> None:
+    for j in range(6, 22):
+        image[6][j] = _rand_bright()
+        image[21][j] = _rand_bright()
+    for i in range(6, 14):
+        image[i][21] = _rand_bright()
+    for i in range(14, 22):
+        image[i][6] = _rand_bright()
+
+
+def _draw_digit_3(image: list, height: int, width: int, center_h: int, center_w: int) -> None:
+    for j in range(6, 22):
+        image[6][j] = _rand_bright()
+        image[14][j] = _rand_bright()
+        image[21][j] = _rand_bright()
+    for i in range(6, 22):
+        image[i][21] = _rand_bright()
+
+
+def _draw_digit_4(image: list, height: int, width: int, center_h: int, center_w: int) -> None:
+    for i in range(6, 14):
+        for j in range(6, 22):
+            if j == center_w or j == 21:
+                image[i][j] = _rand_bright()
+    for j in range(6, 22):
+        image[14][j] = _rand_bright()
+
+
+def _draw_digit_5(image: list, height: int, width: int, center_h: int, center_w: int) -> None:
+    for j in range(6, 22):
+        image[6][j] = _rand_bright()
+        image[14][j] = _rand_bright()
+        image[21][j] = _rand_bright()
+    for i in range(6, 14):
+        image[i][6] = _rand_bright()
+    for i in range(14, 22):
+        image[i][21] = _rand_bright()
+
+
+def _draw_digit_6(image: list, height: int, width: int, center_h: int, center_w: int) -> None:
+    for j in range(6, 22):
+        image[14][j] = _rand_bright()
+        image[21][j] = _rand_bright()
+    for i in range(6, 22):
+        image[i][6] = _rand_bright()
+    for i in range(14, 22):
+        image[i][21] = _rand_bright()
+
+
+def _draw_digit_7(image: list, height: int, width: int, center_h: int, center_w: int) -> None:
+    for j in range(6, 22):
+        image[6][j] = _rand_bright()
+    for i in range(6, 22):
+        col = i - 6 + 6
+        if col < width:
+            image[i][col] = _rand_bright()
+
+
+def _draw_digit_8(image: list, height: int, width: int, center_h: int, center_w: int) -> None:
+    for i in range(6, 14):
+        for j in range(6, 22):
+            dist1 = ((i - 10) ** 2 + ((j - center_w) ** 2)) ** 0.5
+            dist2 = ((i - 18) ** 2 + ((j - center_w) ** 2)) ** 0.5
+            if 3 <= dist1 <= 5 or 3 <= dist2 <= 5:
+                image[i][j] = _rand_bright()
+    for j in range(6, 22):
+        image[14][j] = _rand_bright()
+
+
+def _draw_digit_9(image: list, height: int, width: int, center_h: int, center_w: int) -> None:
+    for j in range(6, 22):
+        image[6][j] = _rand_bright()
+        image[14][j] = _rand_bright()
+    for i in range(6, 22):
+        image[i][21] = _rand_bright()
+    for i in range(6, 14):
+        image[i][6] = _rand_bright()
+
 def generate_synthetic_mnist(num_train: int = 60000, num_test: int = 10000, 
                            img_size: Tuple[int, int] = (28, 28), 
                            num_classes: int = 10, seed: int = 42) -> Dict[str, Any]:
@@ -27,136 +165,19 @@ def generate_synthetic_mnist(num_train: int = 60000, num_test: int = 10000,
         Dictionary containing train and test data/labels
     """
     random.seed(seed)
-    
-    def create_digit_image(digit: int, size: Tuple[int, int]) -> list:
-        """Create a simple synthetic digit image."""
-        height, width = size
-        image = [[0 for _ in range(width)] for _ in range(height)]
-        
-        # Simple patterns for each digit
-        center_h, center_w = height // 2, width // 2
-        
-        if digit == 0:
-            # Draw a circle-ish shape
-            for i in range(height):
-                for j in range(width):
-                    if 6 <= i <= 21 and 6 <= j <= 21:
-                        dist = ((i - center_h) ** 2 + (j - center_w) ** 2) ** 0.5
-                        if 6 <= dist <= 8:
-                            image[i][j] = random.randint(180, 255)
-                            
-        elif digit == 1:
-            # Draw a vertical line
-            for i in range(5, 23):
-                for j in range(center_w - 2, center_w + 3):
-                    if 0 <= i < height and 0 <= j < width:
-                        image[i][j] = random.randint(180, 255)
-                        
-        elif digit == 2:
-            # Draw a '2' shape
-            for j in range(6, 22):
-                image[6][j] = random.randint(180, 255)
-                image[21][j] = random.randint(180, 255)
-            for i in range(6, 14):
-                image[i][21] = random.randint(180, 255)
-            for i in range(14, 22):
-                image[i][6] = random.randint(180, 255)
-                
-        elif digit == 3:
-            # Draw a '3' shape
-            for j in range(6, 22):
-                image[6][j] = random.randint(180, 255)
-                image[14][j] = random.randint(180, 255)
-                image[21][j] = random.randint(180, 255)
-            for i in range(6, 22):
-                image[i][21] = random.randint(180, 255)
-                
-        elif digit == 4:
-            # Draw a '4' shape
-            for i in range(6, 14):
-                for j in range(6, 22):
-                    if j == center_w or j == 21:
-                        image[i][j] = random.randint(180, 255)
-            for j in range(6, 22):
-                image[14][j] = random.randint(180, 255)
-                
-        elif digit == 5:
-            # Draw a '5' shape
-            for j in range(6, 22):
-                image[6][j] = random.randint(180, 255)
-                image[14][j] = random.randint(180, 255)
-                image[21][j] = random.randint(180, 255)
-            for i in range(6, 14):
-                image[i][6] = random.randint(180, 255)
-            for i in range(14, 22):
-                image[i][21] = random.randint(180, 255)
-                
-        elif digit == 6:
-            # Draw a '6' shape
-            for j in range(6, 22):
-                image[14][j] = random.randint(180, 255)
-                image[21][j] = random.randint(180, 255)
-            for i in range(6, 22):
-                image[i][6] = random.randint(180, 255)
-            for i in range(14, 22):
-                image[i][21] = random.randint(180, 255)
-                
-        elif digit == 7:
-            # Draw a '7' shape
-            for j in range(6, 22):
-                image[6][j] = random.randint(180, 255)
-            for i in range(6, 22):
-                image[i][i - 6 + 6] = random.randint(180, 255) if i - 6 + 6 < 28 else 0
-                
-        elif digit == 8:
-            # Draw an '8' shape (two circles)
-            for i in range(6, 14):
-                for j in range(6, 22):
-                    dist1 = ((i - 10) ** 2 + ((j - center_w) ** 2)) ** 0.5
-                    dist2 = ((i - 18) ** 2 + ((j - center_w) ** 2)) ** 0.5
-                    if 3 <= dist1 <= 5 or 3 <= dist2 <= 5:
-                        image[i][j] = random.randint(180, 255)
-            for j in range(6, 22):
-                image[14][j] = random.randint(180, 255)
-                
-        elif digit == 9:
-            # Draw a '9' shape
-            for j in range(6, 22):
-                image[6][j] = random.randint(180, 255)
-                image[14][j] = random.randint(180, 255)
-            for i in range(6, 22):
-                image[i][21] = random.randint(180, 255)
-            for i in range(6, 14):
-                image[i][6] = random.randint(180, 255)
-        
-        # Add some noise
-        for i in range(height):
-            for j in range(width):
-                if image[i][j] > 0:
-                    image[i][j] = max(0, image[i][j] + random.randint(-30, 30))
-                else:
-                    if random.random() < 0.05:  # 5% noise
-                        image[i][j] = random.randint(0, 50)
-        
-        return image
-    
-    # Generate training data
-    x_train = []
-    y_train = []
-    for i in range(num_train):
-        digit = random.randint(0, num_classes - 1)
-        image = create_digit_image(digit, img_size)
-        x_train.append(image)
-        y_train.append(digit)
-    
-    # Generate test data
-    x_test = []
-    y_test = []
-    for i in range(num_test):
-        digit = random.randint(0, num_classes - 1)
-        image = create_digit_image(digit, img_size)
-        x_test.append(image)
-        y_test.append(digit)
+
+    def _generate_split(n: int):
+        x = []
+        y = []
+        for _ in range(n):
+            digit = random.randint(0, num_classes - 1)
+            image = create_digit_image(digit, img_size)
+            x.append(image)
+            y.append(digit)
+        return x, y
+
+    x_train, y_train = _generate_split(num_train)
+    x_test, y_test = _generate_split(num_test)
     
     return {
         'x_train': x_train,

@@ -79,8 +79,7 @@ def get_x_from_data(data):
 
 def tuples_to_lists(data):
     # change tuples to lists
-    data = list(map(list, data))
-    return data
+    return [list(x) for x in data]
 
 
 if __name__ == "__main__":

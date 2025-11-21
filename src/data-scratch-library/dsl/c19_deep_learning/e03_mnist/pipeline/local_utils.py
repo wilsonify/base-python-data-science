@@ -186,12 +186,8 @@ def train_simple_model(model: Dict[str, Any], x_train: List[List[float]], y_trai
                 correct_predictions += 1
             
             # Very simple weight update (gradient approximation)
-            if i % 100 == 0:  # Update every 100 samples for speed
-                for j in range(len(model['weights2'])):
-                    for k in range(len(model['weights2'][j])):
-                        # Simple gradient approximation
-                        gradient = (output[j] - y_one_hot[j]) * hidden[k] * learning_rate
-                        model['weights2'][j][k] -= gradient
+            # Very simple weight update (gradient approximation)
+            _maybe_update_output_weights(model, output, hidden, y_one_hot, learning_rate, i)
         
         # Calculate metrics
         accuracy = correct_predictions / len(x_train)
@@ -203,6 +199,21 @@ def train_simple_model(model: Dict[str, Any], x_train: List[List[float]], y_trai
         logging.info(f"Epoch {epoch + 1}/{epochs} - Loss: {avg_loss:.4f}, Accuracy: {accuracy:.4f}")
     
     return history
+
+
+def _maybe_update_output_weights(model: Dict[str, Any], output: List[float], hidden: List[float], y_one_hot: List[float], learning_rate: float, sample_index: int) -> None:
+    """Apply a very simple gradient-based update to output-layer weights periodically.
+
+    This keeps the training loop readable by moving update logic out of the hot path.
+    """
+    if sample_index % 100 != 0:
+        return
+
+    for j in range(len(model['weights2'])):
+        for k in range(len(model['weights2'][j])):
+            # Simple gradient approximation
+            gradient = (output[j] - y_one_hot[j]) * hidden[k] * learning_rate
+            model['weights2'][j][k] -= gradient
 
 
 def save_model(model: Dict[str, Any], filepath: str) -> None:
