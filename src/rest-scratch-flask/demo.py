@@ -4,12 +4,6 @@ Demo script for Data Scratch Library REST API.
 This script demonstrates the API functionality without requiring external dependencies.
 """
 
-import sys
-import os
-
-# Add the current directory to Python path
-sys.path.insert(0, os.path.dirname(__file__))
-
 # Import the Flask app
 from app import create_app, SWAGGER_AVAILABLE
 

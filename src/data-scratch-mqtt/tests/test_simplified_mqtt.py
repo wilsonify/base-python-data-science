@@ -3,13 +3,9 @@
 Simple test to verify the simplified MQTT system works correctly
 """
 
-import sys
 import os
 import json
 import pytest
-
-# Add the src directory to the path
-sys.path.insert(0, os.path.dirname(__file__))
 
 def test_imports():
     """Test that all imports work correctly"""

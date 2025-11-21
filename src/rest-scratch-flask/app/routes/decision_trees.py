@@ -1,9 +1,4 @@
 from flask import Blueprint, request, jsonify
-import sys
-import os
-
-# Add the data-scratch-library to the Python path
-sys.path.append(os.path.join(os.path.dirname(__file__), '../../..', 'data-scratch-library'))
 
 from dsl.c17_decision_trees.decision_trees import build_tree_id3, classify, forest_classify
 

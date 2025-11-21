@@ -93,11 +93,6 @@ class TestRunner:
     
     def load_module_from_file(self, file_path):
         """Load a Python module from a file path"""
-        # Add the parent directory to Python path so imports work
-        parent_dir = Path(__file__).parent.parent
-        if str(parent_dir) not in sys.path:
-            sys.path.insert(0, str(parent_dir))
-        
         spec = importlib.util.spec_from_file_location("test_module", file_path)
         module = importlib.util.module_from_spec(spec)
         spec.loader.exec_module(module)

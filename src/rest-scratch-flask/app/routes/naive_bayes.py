@@ -2,10 +2,6 @@ from flask import Blueprint, request, jsonify
 import sys
 import os
 import logging
-
-# Add the data-scratch-library to the Python path
-sys.path.append(os.path.join(os.path.dirname(__file__), '../../..', 'data-scratch-library'))
-
 from dsl.c13_naive_bayes.naive_bayes import NaiveBayesClassifier
 
 naive_bayes_bp = Blueprint('naive_bayes', __name__)

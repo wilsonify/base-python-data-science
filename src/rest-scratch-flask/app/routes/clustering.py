@@ -1,10 +1,5 @@
 from flask import Blueprint, request, jsonify
-import sys
-import os
 import random
-
-# Add the data-scratch-library to the Python path
-sys.path.append(os.path.join(os.path.dirname(__file__), '../../..', 'data-scratch-library'))
 
 from dsl.c04_linear_algebra.e0401_vectors import distance, squared_distance
 from dsl.c05_statistics.e0501_central_tendancy import mean
