@@ -336,16 +336,7 @@ def _analyze_clustering_core(points, assignments, means):
     cluster_sizes = dict(Counter(assignments))
 
     cluster_errors = {}
-    for cluster_id, size in cluster_sizes.items():
-        if cluster_id < len(means):
-            cluster_points = [p for p, a in zip(points, assignments) if a == cluster_id]
-            if cluster_points:
-                cluster_error = _compute_cluster_error(cluster_points, means[cluster_id])
-                cluster_errors[cluster_id] = {
-                    'total_error': cluster_error,
-                    'average_error': cluster_error / len(cluster_points),
-                    'size': len(cluster_points)
-                }
+    cluster_errors = _compute_cluster_errors_dict(points, assignments, means, cluster_sizes)
 
     return {
         'total_squared_error': total_error,
@@ -355,6 +346,22 @@ def _analyze_clustering_core(points, assignments, means):
         'num_clusters': len(means),
         'data_points': len(points)
     }
+
+
+def _compute_cluster_errors_dict(points, assignments, means, cluster_sizes):
+    """Return a dict of cluster_id -> {total_error, average_error, size}."""
+    out = {}
+    for cluster_id, size in cluster_sizes.items():
+        if cluster_id < len(means):
+            cluster_points = [p for p, a in zip(points, assignments) if a == cluster_id]
+            if cluster_points:
+                cluster_error = _compute_cluster_error(cluster_points, means[cluster_id])
+                out[cluster_id] = {
+                    'total_error': cluster_error,
+                    'average_error': cluster_error / len(cluster_points),
+                    'size': len(cluster_points)
+                }
+    return out
 
 
 @clustering_bp.route('/optimal_k', methods=['POST'])

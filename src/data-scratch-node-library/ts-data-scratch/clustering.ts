@@ -166,16 +166,7 @@ export function kMeans(
     const totalSquaredError = calculateTotalSquaredError(points, assignments, means);
     
     // Organize results into clusters
-    const clusters: Cluster[] = new Array(k).fill(null).map((_, i) => ({
-        centroid: means[i],
-        points: [],
-        id: i
-    }));
-    
-    for (let i = 0; i < points.length; i++) {
-        const clusterId = assignments[i];
-        clusters[clusterId].points.push(points[i]);
-    }
+    const clusters = _buildResultClusters(points, assignments, means);
     
     return {
         clusters,
@@ -184,6 +175,23 @@ export function kMeans(
         totalSquaredError,
         iterations
     };
+}
+
+// Helper: build Cluster[] from points, assignments and means (used by kMeans)
+function _buildResultClusters(points: Point[], assignments: number[], means: Point[]): Cluster[] {
+    const k = means.length;
+    const clusters: Cluster[] = new Array(k).fill(null).map((_, i) => ({
+        centroid: means[i],
+        points: [],
+        id: i
+    }));
+
+    for (let i = 0; i < points.length; i++) {
+        const clusterId = assignments[i];
+        clusters[clusterId].points.push(points[i]);
+    }
+
+    return clusters;
 }
 
 
@@ -322,19 +330,11 @@ export function analyzeClustering(result: KMeansResult): {
     const averageClusterSize = clusterSizes.reduce((a, b) => a + b, 0) / clusterSizes.length;
     
     // Calculate error for each cluster
-    const clusterErrors: number[] = [];
-    for (let i = 0; i < result.clusters.length; i++) {
-        const cluster = result.clusters[i];
-        const clusterError = _computeClusterError(cluster);
-        clusterErrors.push(clusterError);
-    }
-    
+    const clusterErrors = _computeAllClusterErrors(result);
+
     // Calculate all points for silhouette score
-    const allPoints: Point[] = [];
-    for (const cluster of result.clusters) {
-        allPoints.push(...cluster.points);
-    }
-    
+    const allPoints = _flattenClusterPoints(result);
+
     const silhouetteValue = silhouetteScore(allPoints, result.assignments, result.means);
     
     return {
@@ -355,6 +355,24 @@ function _computeClusterError(cluster: Cluster): number {
     return clusterError;
 }
 
+// Helper: compute errors for all clusters in a result
+function _computeAllClusterErrors(result: KMeansResult): number[] {
+    const errors: number[] = [];
+    for (let i = 0; i < result.clusters.length; i++) {
+        errors.push(_computeClusterError(result.clusters[i]));
+    }
+    return errors;
+}
+
+// Helper: flatten cluster points into a single array (preserves order)
+function _flattenClusterPoints(result: KMeansResult): Point[] {
+    const allPoints: Point[] = [];
+    for (const cluster of result.clusters) {
+        allPoints.push(...cluster.points);
+    }
+    return allPoints;
+}
+
 // Example usage data
 export const examplePoints: Point[] = [
     [1, 2], [1, 4], [1, 0],
@@ -369,6 +387,21 @@ export function exampleUsage(): void {
     // Basic k-means
     const result = kMeans(examplePoints, 3);
     console.log('\nClustering Results:');
+    printBasicClusteringResults(result);
+
+    // Find optimal k
+    console.log('\nFinding Optimal K:');
+    const optimalKResult = findOptimalK(examplePoints, 6, 3);
+    printOptimalKResults(optimalKResult);
+
+    // Cluster analysis
+    console.log('\nCluster Analysis:');
+    const analysis = analyzeClustering(result);
+    printAnalysisResults(analysis);
+}
+
+// Printing helpers to keep exampleUsage small and reduce complexity
+function printBasicClusteringResults(result: KMeansResult): void {
     console.log(`Total Squared Error: ${result.totalSquaredError.toFixed(4)}`);
     console.log(`Iterations: ${result.iterations}`);
     
@@ -378,16 +411,14 @@ export function exampleUsage(): void {
         console.log(`  Size: ${cluster.points.length}`);
         console.log(`  Points: [${cluster.points.map(p => `[${p.join(', ')}]`).join(', ')}]`);
     });
-    
-    // Find optimal k
-    console.log('\nFinding Optimal K:');
-    const optimalKResult = findOptimalK(examplePoints, 6, 3);
-    console.log(`Optimal K: ${optimalKResult.optimalK}`);
-    console.log(`Errors by K: ${optimalKResult.errors.map(e => e.toFixed(2)).join(', ')}`);
-    
-    // Cluster analysis
-    console.log('\nCluster Analysis:');
-    const analysis = analyzeClustering(result);
+}
+
+function printOptimalKResults(opt: { optimalK: number; errors: number[]; elbowPoint: number; }): void {
+    console.log(`Optimal K: ${opt.optimalK}`);
+    console.log(`Errors by K: ${opt.errors.map(e => e.toFixed(2)).join(', ')}`);
+}
+
+function printAnalysisResults(analysis: { clusterSizes: number[]; averageClusterSize: number; clusterErrors: number[]; silhouetteScore: number; }): void {
     console.log(`Cluster Sizes: ${analysis.clusterSizes.join(', ')}`);
     console.log(`Average Cluster Size: ${analysis.averageClusterSize.toFixed(2)}`);
     console.log(`Silhouette Score: ${analysis.silhouetteScore.toFixed(4)}`);

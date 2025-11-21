@@ -391,48 +391,23 @@ def simple_training():
     """
     data = request.get_json()
 
-    if not data:
-        return jsonify({'error': ERR_NO_JSON}), 400
-
-    if 'training_data' not in data:
-        return jsonify({'error': 'Missing required field: training_data'}), 400
-
-    training_data = data['training_data']
-    hidden_neurons = data.get('hidden_neurons', 2)
-    learning_rate = data.get('learning_rate', 0.1)
-    epochs = data.get('epochs', 100)
-
-    # Validate data types
-    if not isinstance(training_data, list):
-        return jsonify({'error': 'training_data must be a list'}), 400
-
-    if not isinstance(hidden_neurons, int) or hidden_neurons <= 0:
-        return jsonify({'error': 'hidden_neurons must be a positive integer'}), 400
-
-    if not isinstance(learning_rate, (int, float)) or learning_rate <= 0:
-        return jsonify({'error': 'learning_rate must be a positive number'}), 400
-
-    if not isinstance(epochs, int) or epochs <= 0:
-        return jsonify({'error': 'epochs must be a positive integer'}), 400
-
-    # Validate training data
-    if not training_data:
-        return jsonify({'error': 'training_data cannot be empty'}), 400
-    
-    # Get input dimension from first sample
-    input_dim = len(training_data[0]['inputs'])
-    output_dim = len(training_data[0]['target'])
-    
-    # Delegate to a route-level helper to reduce complexity
-    payload = {
-        'training_data': training_data,
-        'hidden_neurons': hidden_neurons,
-        'learning_rate': learning_rate,
-        'epochs': epochs
-    }
     try:
+        training_data, hidden_neurons, learning_rate, epochs = _validate_simple_training_payload(data)
+
+        # Get input/output dimensions
+        input_dim = len(training_data[0]['inputs'])
+        output_dim = len(training_data[0]['target'])
+
+        payload = {
+            'training_data': training_data,
+            'hidden_neurons': hidden_neurons,
+            'learning_rate': learning_rate,
+            'epochs': epochs
+        }
+
         result = _simple_training_route(payload, input_dim, output_dim)
         return jsonify(result)
+
     except ValueError as e:
         return jsonify({'error': str(e)}), 400
     except Exception as e:
@@ -478,6 +453,41 @@ def _simple_training_route(data, input_dim, output_dim):
         'final_error': training_errors[-1] if training_errors else 0,
         'note': 'This is a demonstration. Actual weight updates not implemented in this simple version.'
     }
+
+
+def _validate_simple_training_payload(data):
+    """Validate payload for /simple_train and return validated values.
+
+    Raises ValueError on invalid input.
+    """
+    if not data:
+        raise ValueError(ERR_NO_JSON)
+
+    if 'training_data' not in data:
+        raise ValueError('Missing required field: training_data')
+
+    training_data = data['training_data']
+    hidden_neurons = data.get('hidden_neurons', 2)
+    learning_rate = data.get('learning_rate', 0.1)
+    epochs = data.get('epochs', 100)
+
+    # Validate data types
+    if not isinstance(training_data, list):
+        raise ValueError('training_data must be a list')
+
+    if not isinstance(hidden_neurons, int) or hidden_neurons <= 0:
+        raise ValueError('hidden_neurons must be a positive integer')
+
+    if not isinstance(learning_rate, (int, float)) or learning_rate <= 0:
+        raise ValueError('learning_rate must be a positive number')
+
+    if not isinstance(epochs, int) or epochs <= 0:
+        raise ValueError('epochs must be a positive integer')
+
+    if not training_data:
+        raise ValueError('training_data cannot be empty')
+
+    return training_data, hidden_neurons, learning_rate, epochs
 
 
 @neural_networks_bp.route('/info', methods=['GET'])
