@@ -12,7 +12,7 @@ setup(
     author="Data Science Team",
     packages=find_packages(),
     install_requires=[
-        "Flask==2.3.3",
+        "Flask==3.1.3",
         "Flask-CORS==6.0.0",
         "marshmallow==3.26.2",
         "dsl>=1.0.0",
