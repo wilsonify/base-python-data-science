@@ -17,4 +17,20 @@ packages = ["dsl"]
 [tool.pytest.ini_options]
 testpaths = ["tests"]
 pythonpath = [".", "tests"]
+addopts = "--cov=dsl --cov-report=term-missing --cov-report=html --cov-branch --cov-fail-under=90"
+
+[tool.coverage.run]
+branch = true
+source = ["dsl"]
+omit = [
+    "*/tests/*",
+    "*/__init__.py",
+    "*/e01_*.py",  # Example/main files
+]
+
+[tool.coverage.report]
+precision = 2
+show_missing = true
+skip_covered = false
+fail_under = 90
 
