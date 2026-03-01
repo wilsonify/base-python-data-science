@@ -18,7 +18,7 @@ ment with much more general structures:
 
 from typing import Iterable, Tuple, List, Union, Any
 from .deep_learning import Tensor, random_tensor, tensor_apply, tensor_combine
-from scratch.linear_algebra import dot
+from dsl.c04_linear_algebra.e0401_vectors import dot
 import random
 import operator
 import math
@@ -59,7 +59,6 @@ class Layer:
         return ()
 
 
-from scratch.linear_algebra import dot
 class Linear(Layer):
     def __init__(self,
                  input_dim: int,
