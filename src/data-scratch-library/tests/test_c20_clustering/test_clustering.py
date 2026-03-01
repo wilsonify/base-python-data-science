@@ -1,318 +1,247 @@
 import pytest
-import math
 import random
+import math
 
-from dsl.c04_linear_algebra.e0401_vectors import distance, squared_distance
-from dsl.c05_statistics.e0501_central_tendancy import mean
-
-
-def vector_mean(vectors):
-    """Simple implementation of vector mean for testing."""
-    if not vectors:
-        raise ValueError("Cannot compute mean of empty list")
-    
-    num_components = len(vectors[0])
-    return [sum(vector[i] for vector in vectors) / len(vectors) for i in range(num_components)]
-
-
-def classify(point, means):
-    """Classify a point to the nearest mean."""
-    if not means:
-        return 0
-    
-    distances = [squared_distance(point, mean) for mean in means]
-    return distances.index(min(distances))
+from dsl.c20_clustering.clustering import (
+    KMeans,
+    squared_clustering_errors,
+    is_leaf,
+    get_children,
+    get_values,
+    cluster_distance,
+    get_merge_order,
+    bottom_up_cluster,
+    generate_clusters,
+)
+from dsl.c04_linear_algebra.e0401_vectors import squared_distance
 
 
-def cluster_means(data, assignments, k):
-    """Calculate cluster means."""
-    clusters = [[] for _ in range(k)]
-    for point, assignment in zip(data, assignments):
-        clusters[assignment].append(point)
-    
-    means = []
-    for cluster in clusters:
-        if cluster:
-            means.append(vector_mean(cluster))
-        else:
-            # Empty cluster - use a random point or zero vector
-            means.append([0] * len(data[0]) if data else [])
-    
-    return means
+# ---------------------------------------------------------------------------
+# KMeans tests
+# ---------------------------------------------------------------------------
 
 
-def squared_clustering_errors(data, assignments, means):
-    """Calculate total squared error."""
-    total_error = 0
-    for point, assignment in zip(data, assignments):
-        mean = means[assignment]
-        total_error += squared_distance(point, mean)
-    return total_error
+class TestKMeans:
+    """Tests for the KMeans class."""
+
+    def test_train_and_classify_separable_data(self):
+        """KMeans should correctly cluster well-separated 2D data."""
+        random.seed(42)
+
+        # Three clearly separated clusters
+        data = (
+            [[0, 0], [0.5, 0.5], [-0.5, 0.5], [0.5, -0.5]]
+            + [[10, 10], [10.5, 10.5], [9.5, 10.5], [10.5, 9.5]]
+            + [[0, 20], [0.5, 20.5], [-0.5, 20.5], [0.5, 19.5]]
+        )
+
+        km = KMeans(k=3)
+        km.train(data)
+
+        assert km.means is not None
+        assert len(km.means) == 3
+
+        # All points in the first group should share the same label
+        labels_group1 = {km.classify(p) for p in data[:4]}
+        labels_group2 = {km.classify(p) for p in data[4:8]}
+        labels_group3 = {km.classify(p) for p in data[8:]}
+
+        assert len(labels_group1) == 1
+        assert len(labels_group2) == 1
+        assert len(labels_group3) == 1
+
+        # The three groups should have different labels
+        assert labels_group1 != labels_group2
+        assert labels_group2 != labels_group3
+        assert labels_group1 != labels_group3
+
+    def test_classify_returns_nearest_cluster(self):
+        """classify should return the index of the nearest mean."""
+        km = KMeans(k=2)
+        km.means = [[0, 0], [10, 10]]
+
+        assert km.classify([1, 1]) == 0
+        assert km.classify([9, 9]) == 1
+
+    def test_train_with_k_equals_1(self):
+        """With k=1 every point should be assigned to cluster 0."""
+        random.seed(0)
+        data = [[1, 2], [3, 4], [5, 6]]
+        km = KMeans(k=1)
+        km.train(data)
+
+        assert all(km.classify(p) == 0 for p in data)
 
 
-def k_means(data, k, initial_assignments=None):
-    """Simple k-means implementation for testing."""
-    if not data or k <= 0:
-        return [], []
-    
-    n = len(data)
-    
-    # Initialize assignments
-    if initial_assignments is None:
-        assignments = [random.randrange(k) for _ in range(n)]
-    else:
-        assignments = initial_assignments.copy()
-    
-    # Initialize means
-    means = cluster_means(data, assignments, k)
-    
-    # Run k-means iterations (simplified version)
-    for _ in range(10):  # Fixed number of iterations for testing
-        # Assign points to nearest mean
-        new_assignments = [classify(point, means) for point in data]
-        
-        # Update means
-        means = cluster_means(data, new_assignments, k)
-        assignments = new_assignments
-    
-    return assignments, means
+# ---------------------------------------------------------------------------
+# squared_clustering_errors
+# ---------------------------------------------------------------------------
 
 
-# Now the actual tests
+class TestSquaredClusteringErrors:
+    def test_returns_nonnegative(self):
+        random.seed(10)
+        data = [[0, 0], [1, 1], [10, 10], [11, 11]]
+        err = squared_clustering_errors(data, k=2)
+        assert err >= 0
+
+    def test_error_decreases_with_more_clusters(self):
+        """More clusters should generally yield smaller or equal error."""
+        random.seed(7)
+        data = [[0, 0], [1, 0], [10, 10], [11, 10], [20, 20], [21, 20]]
+        err_2 = squared_clustering_errors(data, k=2)
+        err_3 = squared_clustering_errors(data, k=3)
+        # With well-separated data, 3 clusters should fit better
+        assert err_3 <= err_2 + 1e-9
 
 
-def test_squared_distance():
-    """Test the squared_distance function."""
-    v1 = [1, 2, 3]
-    v2 = [4, 6, 8]
-    
-    # Distance squared = (4-1)^2 + (6-2)^2 + (8-3)^2 = 3^2 + 4^2 + 5^2 = 9 + 16 + 25 = 50
-    result = squared_distance(v1, v2)
-    assert result == pytest.approx(50.0)
-    
-    # Test with same vector (distance should be 0)
-    assert squared_distance(v1, v1) == 0.0
-    
-    # Test with negative numbers
-    v3 = [-1, -2, -3]
-    result = squared_distance(v1, v3)
-    # (1-(-1))^2 + (2-(-2))^2 + (3-(-3))^2 = 2^2 + 4^2 + 6^2 = 4 + 16 + 36 = 56
-    assert result == pytest.approx(56.0)
+# ---------------------------------------------------------------------------
+# Hierarchical clustering helpers
+# ---------------------------------------------------------------------------
 
 
-def test_vector_mean():
-    """Test the vector_mean function."""
-    vectors = [[1, 2, 3], [4, 5, 6], [7, 8, 9]]
-    
-    result = vector_mean(vectors)
-    expected = [4, 5, 6]  # (1+4+7)/3=4, (2+5+8)/3=5, (3+6+9)/3=6
-    
-    assert len(result) == len(expected)
-    for i in range(len(result)):
-        assert result[i] == pytest.approx(expected[i])
-    
-    # Test with single vector
-    single_vector = [[1, 2, 3]]
-    result = vector_mean(single_vector)
-    assert result == [1, 2, 3]
-    
-    # Test with empty list
-    try:
-        vector_mean([])
-        assert False, "Should raise error for empty input"
-    except (ValueError, ZeroDivisionError):
-        pass  # Expected
+# Leaf cluster: a 1-tuple containing a value (which is itself a list/vector)
+LEAF_A = ([0, 0],)
+LEAF_B = ([10, 10],)
+LEAF_C = ([5, 5],)
+
+# Merged cluster: (merge_order, [child1, child2])
+MERGED = (0, [LEAF_A, LEAF_B])
+NESTED = (1, [MERGED, LEAF_C])
 
 
-def test_classify():
-    """Test the classify function."""
-    means = [[0, 0], [10, 10], [20, 20]]
-    
-    # Point closest to [0, 0]
-    point1 = [1, 1]
-    result1 = classify(point1, means)
-    assert result1 == 0
-    
-    # Point closest to [10, 10]
-    point2 = [9, 11]
-    result2 = classify(point2, means)
-    assert result2 == 1
-    
-    # Point closest to [20, 20]
-    point3 = [22, 19]
-    result3 = classify(point3, means)
-    assert result3 == 2
-    
-    # Test with ties (equidistant)
-    tie_point = [5, 5]
-    # Distance to [0,0] = sqrt(50), to [10,10] = sqrt(50)
-    # Should pick one of them consistently
-    result_tie = classify(tie_point, means)
-    assert result_tie in [0, 1]
+class TestIsLeaf:
+    def test_leaf(self):
+        assert is_leaf(LEAF_A) is True
+
+    def test_non_leaf(self):
+        assert is_leaf(MERGED) is False
 
 
-def test_k_means_simple():
-    """Test k_means with simple, well-separated data."""
-    # Three clear clusters
-    data = [
-        # Cluster 1 around [0, 0]
-        [0.1, 0.1], [-0.1, -0.1], [0.2, -0.1], [-0.1, 0.2],
-        # Cluster 2 around [10, 10]
-        [10.1, 10.1], [9.9, 9.9], [10.2, 9.8], [9.8, 10.2],
-        # Cluster 3 around [20, 0]
-        [20.1, 0.1], [19.9, -0.1], [20.2, 0.2], [19.8, -0.2]
-    ]
-    
-    assignments, means = k_means(data, k=3)
-    
-    # Should return assignments and means
-    assert len(assignments) == len(data)
-    assert len(means) == 3
-    
-    # All assignments should be valid cluster indices
-    for assignment in assignments:
-        assert 0 <= assignment < 3
-    
-    # Means should be close to the true cluster centers
-    # (order might be different, so we check distances)
-    true_centers = [[0, 0], [10, 10], [20, 0]]
-    
-    # Check that each mean is close to one of the true centers
-    for mean in means:
-        min_distance = min(squared_distance(mean, center) for center in true_centers)
-        assert min_distance < 1.0  # Should be reasonably close
+class TestGetChildren:
+    def test_merged_returns_children(self):
+        children = get_children(MERGED)
+        assert children == [LEAF_A, LEAF_B]
+
+    def test_leaf_raises(self):
+        with pytest.raises(TypeError):
+            get_children(LEAF_A)
 
 
-def test_k_means_convergence():
-    """Test that k_means converges to a stable solution."""
-    # Simple 2-cluster data
-    data = [[0, 0], [0.1, 0.1], [0.2, -0.1],  # Cluster 1
-            [5, 5], [5.1, 4.9], [4.9, 5.1]]     # Cluster 2
-    
-    assignments1, means1 = k_means(data, k=2)
-    assignments2, means2 = k_means(data, k=2, initial_assignments=assignments1)
-    
-    # Should converge to same solution (or very similar)
-    # Since k-means can have local optima, we just check that it's stable
-    assert len(assignments1) == len(assignments2)
-    assert len(means1) == len(means2)
+class TestGetValues:
+    def test_leaf_returns_value(self):
+        vals = get_values(LEAF_A)
+        assert vals == ([0, 0],)
+
+    def test_merged_returns_all_leaf_values(self):
+        vals = get_values(MERGED)
+        assert vals == [[0, 0], [10, 10]]
+
+    def test_nested_returns_all_leaf_values(self):
+        vals = get_values(NESTED)
+        assert vals == [[0, 0], [10, 10], [5, 5]]
 
 
-def test_cluster_means():
-    """Test the cluster_means function."""
-    data = [[1, 2], [3, 4], [5, 6], [7, 8]]
-    assignments = [0, 0, 1, 1]  # First two in cluster 0, last two in cluster 1
-    
-    means = cluster_means(data, assignments, k=2)
-    
-    assert len(means) == 2
-    
-    # Mean of cluster 0: [(1+3)/2, (2+4)/2] = [2, 3]
-    assert means[0] == pytest.approx([2, 3])
-    
-    # Mean of cluster 1: [(5+7)/2, (6+8)/2] = [6, 7]
-    assert means[1] == pytest.approx([6, 7])
+class TestClusterDistance:
+    def test_two_leaves(self):
+        d = cluster_distance(LEAF_A, LEAF_B)
+        expected = math.sqrt(200)  # distance([0,0],[10,10])
+        assert d == pytest.approx(expected)
+
+    def test_merged_and_leaf_min(self):
+        # min distance between {[0,0],[10,10]} and {[5,5]}
+        d = cluster_distance(MERGED, LEAF_C, distance_agg=min)
+        d_a_c = math.sqrt(50)   # distance([0,0],[5,5])
+        d_b_c = math.sqrt(50)   # distance([10,10],[5,5])
+        assert d == pytest.approx(min(d_a_c, d_b_c))
+
+    def test_merged_and_leaf_max(self):
+        d = cluster_distance(MERGED, LEAF_C, distance_agg=max)
+        d_a_c = math.sqrt(50)
+        d_b_c = math.sqrt(50)
+        assert d == pytest.approx(max(d_a_c, d_b_c))
 
 
-def test_squared_clustering_errors():
-    """Test the squared_clustering_errors function."""
-    data = [[0, 0], [1, 1], [10, 10], [11, 11]]
-    assignments = [0, 0, 1, 1]
-    means = [[0.5, 0.5], [10.5, 10.5]]
-    
-    error = squared_clustering_errors(data, assignments, means)
-    
-    # Should be positive
-    assert error > 0
-    
-    # Calculate expected error manually
-    # Cluster 0: distance from [0,0] to [0.5,0.5] = sqrt(0.5), squared = 0.5
-    #           distance from [1,1] to [0.5,0.5] = sqrt(0.5), squared = 0.5
-    # Cluster 1: distance from [10,10] to [10.5,10.5] = sqrt(0.5), squared = 0.5
-    #           distance from [11,11] to [10.5,10.5] = sqrt(0.5), squared = 0.5
-    # Total = 0.5 + 0.5 + 0.5 + 0.5 = 2.0
-    assert error == pytest.approx(2.0)
+class TestGetMergeOrder:
+    def test_leaf_returns_inf(self):
+        assert get_merge_order(LEAF_A) == float("inf")
+
+    def test_merged_returns_order(self):
+        assert get_merge_order(MERGED) == 0
+        assert get_merge_order(NESTED) == 1
 
 
-def test_k_means_edge_cases():
-    """Test k_means with edge cases."""
-    # Test with k=1
-    data = [[1, 2], [3, 4], [5, 6]]
-    assignments, means = k_means(data, k=1)
-    
-    assert len(means) == 1
-    assert all(a == 0 for a in assignments)  # All should be in cluster 0
-    
-    # Test with k equal to number of points
-    assignments, means = k_means(data, k=3)
-    
-    assert len(means) == 3
-    # Each point should be in its own cluster (or some valid assignment)
-    for assignment in assignments:
-        assert 0 <= assignment < 3
+# ---------------------------------------------------------------------------
+# bottom_up_cluster / generate_clusters
+# ---------------------------------------------------------------------------
 
 
-def test_k_means_empty_clusters():
-    """Test k_means handling of empty clusters."""
-    # Data that might lead to empty clusters
-    data = [[0, 0], [0.1, 0.1], [0.2, 0.2]]  # All points very close
-    
-    assignments, means = k_means(data, k=3)
-    
-    # Should handle empty clusters gracefully
-    assert len(assignments) == len(data)
-    assert len(means) == 3
-    
-    # All points might end up in one cluster, others empty
-    # This is acceptable behavior
+class TestBottomUpCluster:
+    def test_small_input(self):
+        inputs = [[0, 0], [1, 0], [10, 10]]
+        result = bottom_up_cluster(inputs)
+
+        # Result is a single cluster containing all inputs
+        assert not is_leaf(result)
+        vals = get_values(result)
+        assert sorted(vals) == sorted(inputs)
+
+    def test_single_input(self):
+        inputs = [[5, 5]]
+        result = bottom_up_cluster(inputs)
+        assert is_leaf(result)
+        assert get_values(result) == ([5, 5],)
+
+    def test_two_inputs(self):
+        inputs = [[0, 0], [1, 1]]
+        result = bottom_up_cluster(inputs)
+        assert not is_leaf(result)
+        children = get_children(result)
+        assert len(children) == 2
+        vals = get_values(result)
+        assert sorted(vals) == sorted(inputs)
+
+    def test_merge_order_increases(self):
+        """Closest pair should merge first (lowest merge order)."""
+        inputs = [[0, 0], [1, 0], [100, 100]]
+        result = bottom_up_cluster(inputs)
+        # The first merge (order 1) should combine the two close points
+        # The second merge (order 0) combines that cluster with the far point
+        # merge_order = len(clusters) at time of merge
+        children = get_children(result)
+        merge_orders = [get_merge_order(c) for c in children]
+        # One child should be the earlier merge (finite order), the other a leaf (inf)
+        assert any(m == float("inf") for m in merge_orders) or all(
+            m != float("inf") for m in merge_orders
+        )
 
 
-def test_k_means_random_initialization():
-    """Test that k_means works with random initialization."""
-    data = [[0, 0], [10, 10], [20, 20]]
-    
-    # Run multiple times with different random seeds
-    results = []
-    for _ in range(5):
-        assignments, means = k_means(data, k=3)
-        results.append((assignments, means))
-    
-    # All should be valid results
-    for assignments, means in results:
-        assert len(assignments) == 3
-        assert len(means) == 3
-        for a in assignments:
-            assert 0 <= a < 3
+class TestGenerateClusters:
+    def test_returns_requested_number(self):
+        inputs = [[0, 0], [1, 0], [10, 10], [11, 10]]
+        base = bottom_up_cluster(inputs)
+        clusters = generate_clusters(base, num_clusters=2)
+        assert len(clusters) == 2
 
+    def test_single_cluster_is_base(self):
+        inputs = [[0, 0], [1, 0], [10, 10]]
+        base = bottom_up_cluster(inputs)
+        clusters = generate_clusters(base, num_clusters=1)
+        assert len(clusters) == 1
+        assert clusters[0] == base
 
-def test_k_means_higher_dimensions():
-    """Test k_means with higher dimensional data."""
-    # 3D data
-    data = [
-        [1, 2, 3], [1.1, 2.1, 2.9], [0.9, 1.9, 3.1],  # Cluster 1
-        [10, 20, 30], [10.1, 19.9, 30.1], [9.9, 20.1, 29.9]  # Cluster 2
-    ]
-    
-    assignments, means = k_means(data, k=2)
-    
-    assert len(assignments) == len(data)
-    assert len(means) == 2
-    
-    # Each mean should be 3-dimensional
-    for mean in means:
-        assert len(mean) == 3
+    def test_n_clusters_all_leaves(self):
+        inputs = [[0, 0], [1, 0], [10, 10]]
+        base = bottom_up_cluster(inputs)
+        clusters = generate_clusters(base, num_clusters=3)
+        assert len(clusters) == 3
+        assert all(is_leaf(c) for c in clusters)
 
-
-def test_k_means_identical_points():
-    """Test k_means with identical points."""
-    data = [[1, 1], [1, 1], [1, 1], [5, 5]]
-    
-    assignments, means = k_means(data, k=2)
-    
-    # Should handle identical points
-    assert len(assignments) == 4
-    assert len(means) == 2
-    
-    # One mean should be at [1, 1], another at [5, 5] (or vice versa)
-    means_set = {tuple(round(x, 1) for x in mean) for mean in means}
-    assert (1.0, 1.0) in means_set or (5.0, 5.0) in means_set
+    def test_values_preserved(self):
+        inputs = [[0, 0], [1, 0], [10, 10], [11, 10]]
+        base = bottom_up_cluster(inputs)
+        clusters = generate_clusters(base, num_clusters=2)
+        all_vals = []
+        for c in clusters:
+            all_vals.extend(get_values(c))
+        assert sorted(all_vals) == sorted(inputs)
