@@ -25,7 +25,16 @@ source = ["dsl"]
 omit = [
     "*/tests/*",
     "*/__init__.py",
-    "*/e01_*.py",  # Example/main files
+    "*/e01_*.py",
+    "*/c01_intro/*",
+    "*/c02_crash_course/*",
+    "*/c07_hypothesis_and_inference/*",
+    "*/c09_getting_data/*",
+    "*/c10_working_with_data/*",
+    "*/c19_deep_learning/e02_fizzbuzz_revisited.py",
+    "*/c19_deep_learning/io.py",
+    "*/c26_data_ethics/*",
+    "*/c27_go_forth/*",
 ]
 
 [tool.coverage.report]
