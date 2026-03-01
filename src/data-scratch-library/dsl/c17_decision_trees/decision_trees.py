@@ -1,115 +1,107 @@
 """
-A decision tree uses a tree structure to represent a number of possible decision paths and an outcome for each path.
-
+Decision-tree construction (ID3) and random-forest classification.
 """
 
 import math
 from collections import Counter, defaultdict
 from functools import partial
+from typing import Any, Callable, Dict, List, Sequence, Tuple, TypeVar, Union
+
+# A decision tree is either a leaf (True/False) or a (attribute, subtree_dict) pair.
+DecisionTree = Union[bool, Tuple[str, Dict[Any, "DecisionTree"]]]
+
+T = TypeVar("T")
 
 
-def entropy(class_probabilities):
-    """given a list of class probabilities, compute the entropy"""
+def entropy(class_probabilities: Sequence[float]) -> float:
+    """Compute Shannon entropy from a list of class probabilities."""
     return sum(-p * math.log(p, 2) for p in class_probabilities if p)
 
 
-def get_class_probabilities(labels):
-    total_count = len(labels)
-    return [count / total_count for count in Counter(labels).values()]
+def get_class_probabilities(labels: List[Any]) -> List[float]:
+    """Return the list of class probabilities for the given labels."""
+    total = len(labels)
+    return [count / total for count in Counter(labels).values()]
 
 
-def data_entropy(labeled_data):
+def data_entropy(labeled_data: List[Tuple[Any, Any]]) -> float:
+    """Entropy of a labeled data set (list of (features, label) pairs)."""
     labels = [label for _, label in labeled_data]
-    probabilities = get_class_probabilities(labels)
-    return entropy(probabilities)
+    return entropy(get_class_probabilities(labels))
 
 
-def partition_entropy(subsets):
-    """find the entropy from this partition of data into subsets"""
-    total_count = sum(len(subset) for subset in subsets)
+def partition_entropy(subsets: List[List[Tuple[Any, Any]]]) -> float:
+    """Weighted entropy of a partition of labeled data into subsets."""
+    total = sum(len(s) for s in subsets)
+    return sum(data_entropy(s) * len(s) / total for s in subsets)
 
-    return sum(data_entropy(subset) * len(subset) / total_count for subset in subsets)
 
-
-def group_by(items, key_fn):
-    """returns a defaultdict(list), where each input item
-    is in the list whose key is key_fn(item)"""
-    groups = defaultdict(list)
+def group_by(items: List[T], key_fn: Callable[[T], Any]) -> Dict[Any, List[T]]:
+    """Group *items* into a defaultdict(list) keyed by *key_fn*."""
+    groups: Dict[Any, List[T]] = defaultdict(list)
     for item in items:
-        key = key_fn(item)
-        groups[key].append(item)
+        groups[key_fn(item)].append(item)
     return groups
 
 
-def partition_by(inputs, attribute):
-    """returns a dict of inputs partitioned by the attribute
-    each input is a pair (attribute_dict, label)"""
+def partition_by(
+    inputs: List[Tuple[Dict[str, Any], Any]], attribute: str
+) -> Dict[Any, List[Tuple[Dict[str, Any], Any]]]:
+    """Partition inputs by the value of *attribute*."""
     return group_by(inputs, lambda x: x[0][attribute])
 
 
-def partition_entropy_by(inputs, attribute):
-    """computes the entropy corresponding to the given partition"""
+def partition_entropy_by(
+    inputs: List[Tuple[Dict[str, Any], Any]], attribute: str
+) -> float:
+    """Compute the partition entropy when splitting on *attribute*."""
     partitions = partition_by(inputs, attribute)
-    return partition_entropy(partitions.values())
+    return partition_entropy(list(partitions.values()))
 
 
-def classify(tree, inputs):
-    """classify the input using the given decision tree"""
-
-    # if this is a leaf node, return its value
-    if tree in [True, False]:
+def classify(tree: DecisionTree, inputs: Dict[str, Any]) -> bool:
+    """Classify *inputs* using the given decision *tree*."""
+    if tree in (True, False):
         return tree
 
-    # otherwise find the correct subtree
     attribute, subtree_dict = tree
-
-    subtree_key = inputs.get(attribute)  # None if input is missing attribute
-
-    if subtree_key not in subtree_dict:  # if no subtree for key,
-        subtree_key = None  # we'll use the None subtree
-
-    subtree = subtree_dict[subtree_key]  # choose the appropriate subtree
-    return classify(subtree, inputs)  # and use it to classify the input
+    subtree_key = inputs.get(attribute)
+    if subtree_key not in subtree_dict:
+        subtree_key = None
+    return classify(subtree_dict[subtree_key], inputs)
 
 
-def build_tree_id3(inputs, split_candidates=None):
-    # if this is our first pass,
-    # all keys of the first input are split candidates
+def build_tree_id3(
+    inputs: List[Tuple[Dict[str, Any], bool]],
+    split_candidates: List[str] = None,
+) -> DecisionTree:
+    """Build a decision tree using the ID3 algorithm."""
     if split_candidates is None:
-        split_candidates = inputs[0][0].keys()
+        split_candidates = list(inputs[0][0].keys())
 
-    # count Trues and Falses in the inputs
-    num_inputs = len(inputs)
-    num_trues = len([label for item, label in inputs if label])
-    num_falses = num_inputs - num_trues
+    num_trues = sum(1 for _, label in inputs if label)
+    num_falses = len(inputs) - num_trues
 
-    if num_trues == 0:  # if only Falses are left
-        return False  # return a "False" leaf
+    if num_trues == 0:
+        return False
+    if num_falses == 0:
+        return True
+    if not split_candidates:
+        return num_trues >= num_falses
 
-    if num_falses == 0:  # if only Trues are left
-        return True  # return a "True" leaf
+    best = min(split_candidates, key=partial(partition_entropy_by, inputs))
+    partitions = partition_by(inputs, best)
+    new_candidates = [a for a in split_candidates if a != best]
 
-    if not split_candidates:  # if no split candidates left
-        return num_trues >= num_falses  # return the majority leaf
-
-    # otherwise, split on the best attribute
-    best_attribute = min(split_candidates, key=partial(partition_entropy_by, inputs))
-
-    partitions = partition_by(inputs, best_attribute)
-    new_candidates = [a for a in split_candidates if a != best_attribute]
-
-    # recursively build the subtrees
     subtrees = {
-        attribute: build_tree_id3(subset, new_candidates)
-        for attribute, subset in partitions.items()
+        val: build_tree_id3(subset, new_candidates)
+        for val, subset in partitions.items()
     }
-
-    subtrees[None] = num_trues > num_falses  # default case
-
-    return best_attribute, subtrees
+    subtrees[None] = num_trues > num_falses
+    return (best, subtrees)
 
 
-def forest_classify(trees, inputs):
+def forest_classify(trees: List[DecisionTree], inputs: Dict[str, Any]) -> bool:
+    """Classify by majority vote of several decision trees."""
     votes = [classify(tree, inputs) for tree in trees]
-    vote_counts = Counter(votes)
-    return vote_counts.most_common(1)[0][0]
+    return Counter(votes).most_common(1)[0][0]

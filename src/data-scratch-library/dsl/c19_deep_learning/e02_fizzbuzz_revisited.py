@@ -1,58 +1,66 @@
 """
-FizzBuzz example using the deep learning framework.
-
-This demonstrates how to train a neural network to solve the FizzBuzz problem
-using our layer-based architecture.
+Example: train a network to play FizzBuzz using the deep-learning framework.
 """
 
+import logging
 import random
-import tqdm
-import math
+from logging.config import dictConfig
 from typing import List
-from .layer import Sequential, Linear, Tanh, Sigmoid
-from .metrics import Momentum, SSE, SoftmaxCrossEntropy
-from .deep_learning import Tensor
 
-# Import helper functions from scratch
-from scratch.neural_networks import binary_encode, fizz_buzz_encode, argmax
+from dsl.c19_deep_learning.layer import Sequential, Linear, Tanh, Sigmoid
+from dsl.c19_deep_learning.metrics import Momentum, SSE, SoftmaxCrossEntropy
+from dsl.c19_deep_learning.deep_learning import Tensor
 
-"""
-We can now use our "deep learning" framework to reproduce our solution from
-"Example: Fizz Buzz" on page 229. Let's set up the data:
-"""
-xs = [binary_encode(n) for n in range(101, 1024)]
-ys = [fizz_buzz_encode(n) for n in range(101, 1024)]
 
-"""
-and create the network:
-"""
-NUM_HIDDEN = 25
-random.seed(0)
-net = Sequential([
-    Linear(input_dim=10, output_dim=NUM_HIDDEN, init='uniform'),
-    Tanh(),
-    Linear(input_dim=NUM_HIDDEN, output_dim=4, init='uniform'),
-    Sigmoid()
-])
+def binary_encode(n: int) -> List[float]:
+    """Encode *n* as a 10-bit binary vector."""
+    return [float(n >> i & 1) for i in range(10)]
 
-"""
-As we're training, let's also track our accuracy on the training set:
-"""
+
+def fizz_buzz_encode(n: int) -> List[float]:
+    """One-hot encode the FizzBuzz answer for *n*."""
+    if n % 15 == 0:
+        return [0.0, 0, 0, 1]
+    if n % 5 == 0:
+        return [0.0, 0, 1, 0]
+    if n % 3 == 0:
+        return [0.0, 1, 0, 0]
+    return [1.0, 0, 0, 0]
+
+
+def argmax(xs: List[float]) -> int:
+    """Return the index of the largest element."""
+    return max(range(len(xs)), key=lambda i: xs[i])
+
+
 def fizzbuzz_accuracy(low: int, hi: int, net) -> float:
-    num_correct = 0
-    for n in range(low, hi):
-        x = binary_encode(n)
-        predicted = argmax(net.forward(x))
-        actual = argmax(fizz_buzz_encode(n))
-        if predicted == actual:
-            num_correct += 1
-    return num_correct / (hi - low)
+    """Fraction of correct FizzBuzz predictions in [low, hi)."""
+    correct = sum(
+        1
+        for n in range(low, hi)
+        if argmax(net.forward(binary_encode(n))) == argmax(fizz_buzz_encode(n))
+    )
+    return correct / (hi - low)
 
-optimizer = Momentum(learning_rate=0.1, momentum=0.9)
-loss = SSE()
 
-with tqdm.trange(1000) as t:
-    for epoch in t:
+def main() -> None:
+    xs = [binary_encode(n) for n in range(101, 1024)]
+    ys = [fizz_buzz_encode(n) for n in range(101, 1024)]
+
+    NUM_HIDDEN = 25
+    random.seed(0)
+
+    # -- SSE training --
+    net = Sequential([
+        Linear(input_dim=10, output_dim=NUM_HIDDEN, init="uniform"),
+        Tanh(),
+        Linear(input_dim=NUM_HIDDEN, output_dim=4, init="uniform"),
+        Sigmoid(),
+    ])
+    optimizer = Momentum(learning_rate=0.1, momentum=0.9)
+    loss = SSE()
+
+    for epoch in range(1000):
         epoch_loss = 0.0
         for x, y in zip(xs, ys):
             predicted = net.forward(x)
@@ -60,54 +68,53 @@ with tqdm.trange(1000) as t:
             gradient = loss.gradient(predicted, y)
             net.backward(gradient)
             optimizer.step(net)
-        accuracy = fizzbuzz_accuracy(101, 1024, net)
-        t.set_description(f"fb loss: {epoch_loss:.2f} acc: {accuracy:.2f}")
+        if epoch % 100 == 0:
+            acc = fizzbuzz_accuracy(101, 1024, net)
+            logging.info("SSE  epoch %d  loss %.2f  acc %.2f", epoch, epoch_loss, acc)
 
-# Now check results on the test set
-print("test results", fizzbuzz_accuracy(1, 101, net))
+    logging.info("SSE test accuracy: %.2f", fizzbuzz_accuracy(1, 101, net))
 
-"""
-Now let's try using softmax cross-entropy loss instead, which should work better
-for classification tasks:
-"""
-def softmax(tensor: Tensor) -> Tensor:
-    """Softmax along the last dimension"""
-    from .deep_learning import is_1d
-    if is_1d(tensor):
-        # Subtract largest value for numerical stability.
-        largest = max(tensor)
-        exps = [math.exp(x - largest) for x in tensor]
-        sum_of_exps = sum(exps)
-        # This is the total "weight."
-        return [exp_i / sum_of_exps
-                # Probability is the fraction
-                for exp_i in exps]
-    # of the total weight.
-    else:
-        return [softmax(tensor_i) for tensor_i in tensor]
+    # -- Softmax cross-entropy training --
+    random.seed(0)
+    net2 = Sequential([
+        Linear(input_dim=10, output_dim=NUM_HIDDEN, init="uniform"),
+        Tanh(),
+        Linear(input_dim=NUM_HIDDEN, output_dim=4, init="uniform"),
+    ])
+    optimizer2 = Momentum(learning_rate=0.1, momentum=0.9)
+    loss2 = SoftmaxCrossEntropy()
 
-random.seed(0)
-net = Sequential([
-    Linear(input_dim=10, output_dim=NUM_HIDDEN, init='uniform'),
-    Tanh(),
-    Linear(input_dim=NUM_HIDDEN, output_dim=4, init='uniform')
-    # No final sigmoid layer now
-])
-
-optimizer = Momentum(learning_rate=0.1, momentum=0.9)
-loss = SoftmaxCrossEntropy()
-
-with tqdm.trange(100) as t:
-    for epoch in t:
+    for epoch in range(100):
         epoch_loss = 0.0
         for x, y in zip(xs, ys):
-            predicted = net.forward(x)
-            epoch_loss += loss.loss(predicted, y)
-            gradient = loss.gradient(predicted, y)
-            net.backward(gradient)
-            optimizer.step(net)
-        accuracy = fizzbuzz_accuracy(101, 1024, net)
-        t.set_description(f"fb loss: {epoch_loss:.3f} acc: {accuracy:.2f}")
+            predicted = net2.forward(x)
+            epoch_loss += loss2.loss(predicted, y)
+            gradient = loss2.gradient(predicted, y)
+            net2.backward(gradient)
+            optimizer2.step(net2)
+        if epoch % 10 == 0:
+            acc = fizzbuzz_accuracy(101, 1024, net2)
+            logging.info("CE   epoch %d  loss %.3f  acc %.2f", epoch, epoch_loss, acc)
 
-# Again check results on the test set
-print("test results", fizzbuzz_accuracy(1, 101, net))
+    logging.info("CE test accuracy: %.2f", fizzbuzz_accuracy(1, 101, net2))
+
+
+if __name__ == "__main__":
+    dictConfig(
+        {
+            "version": 1,
+            "formatters": {
+                "simple": {
+                    "format": "%(asctime)s | %(name)s | %(lineno)s | %(levelname)s | %(message)s"
+                }
+            },
+            "handlers": {
+                "console": {
+                    "class": "logging.StreamHandler",
+                    "formatter": "simple",
+                }
+            },
+            "root": {"handlers": ["console"], "level": logging.DEBUG},
+        }
+    )
+    main()

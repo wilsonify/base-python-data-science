@@ -1,3 +1,7 @@
+"""
+Example: k-means and hierarchical clustering on 2-D data.
+"""
+
 import logging
 import random
 from logging.config import dictConfig
@@ -9,80 +13,53 @@ from dsl.c20_clustering.clustering import (
     generate_clusters,
     get_values,
 )
-
-inputs_list = [
-    [-14, -5],
-    [13, 13],
-    [20, 23],
-    [-19, -11],
-    [-9, -16],
-    [21, 27],
-    [-49, 15],
-    [26, 13],
-    [-46, 5],
-    [-34, -1],
-    [11, 15],
-    [-49, 0],
-    [-22, -16],
-    [19, 28],
-    [-12, -8],
-    [-13, -19],
-    [-41, 8],
-    [-11, -6],
-    [-25, -9],
-    [-18, -3],
-]
+from dsl.c20_clustering.data import inputs_list
 
 
-def main():
-    random.seed(0)  # so you get the same results as me
-    _clusterer = KMeans(3)
-    _clusterer.train(inputs_list)
-    logging.info("%r", "3-means: {}".format(_clusterer.means))
+def main() -> None:
+    random.seed(0)
+
+    clusterer = KMeans(3)
+    clusterer.train(inputs_list)
+    logging.info("3-means: %s", clusterer.means)
 
     random.seed(0)
-    _clusterer = KMeans(2)
-    _clusterer.train(inputs_list)
-    logging.info("%r", "2-means: {}".format(_clusterer.means))
+    clusterer2 = KMeans(2)
+    clusterer2.train(inputs_list)
+    logging.info("2-means: %s", clusterer2.means)
 
-    logging.info("compute errors as a function of k")
-    for _k in range(1, len(inputs_list) + 1):
-        logging.info("%r", "k = {}".format(_k))
-        logging.info(
-            "%r",
-            "squared_clustering_errors = {}".format(
-                squared_clustering_errors(inputs_list, _k)
-            ),
-        )
-    logging.info("done with errors as a function of k")
+    logging.info("squared errors by k")
+    for k in range(1, len(inputs_list) + 1):
+        err = squared_clustering_errors(inputs_list, k)
+        logging.info("k=%d  error=%s", k, err)
 
-    logging.info("start bottom up hierarchical clustering")
-    _base_cluster = bottom_up_cluster(inputs_list)
-    logging.info("%r", "base_cluster = {}".format(_base_cluster))
+    logging.info("bottom-up hierarchical clustering (min linkage)")
+    base = bottom_up_cluster(inputs_list)
+    for cluster in generate_clusters(base, 3):
+        logging.info("cluster: %s", get_values(cluster))
 
-    logging.info("three clusters, min")
-    for cluster in generate_clusters(_base_cluster, 3):
-        logging.debug("%r", "cluster = {}".format(cluster))
-        logging.info("%r", "get_values(cluster) = {}".format(get_values(cluster)))
-
-    logging.info("three clusters, max:")
-    _base_cluster = bottom_up_cluster(inputs_list, max)
-    for cluster in generate_clusters(_base_cluster, 3):
-        logging.debug("%r", "cluster = {}".format(cluster))
-        logging.info("%r", "get_values(cluster) = {}".format(get_values(cluster)))
-    logging.info("done with bottom up hierarchical clustering")
+    logging.info("bottom-up hierarchical clustering (max linkage)")
+    base_max = bottom_up_cluster(inputs_list, max)
+    for cluster in generate_clusters(base_max, 3):
+        logging.info("cluster: %s", get_values(cluster))
 
 
 if __name__ == "__main__":
-    LOGGING_CONFIG_DICT = dict(
-        version=1,
-        formatters={
-            "simple": {
-                "format": """%(asctime)s | %(name)s | %(lineno)s | %(levelname)s | %(message)s"""
-            }
-        },
-        handlers={"console": {"class": "logging.StreamHandler", "formatter": "simple"}},
-        root={"handlers": ["console"], "level": logging.DEBUG},
+    dictConfig(
+        {
+            "version": 1,
+            "formatters": {
+                "simple": {
+                    "format": "%(asctime)s | %(name)s | %(lineno)s | %(levelname)s | %(message)s"
+                }
+            },
+            "handlers": {
+                "console": {
+                    "class": "logging.StreamHandler",
+                    "formatter": "simple",
+                }
+            },
+            "root": {"handlers": ["console"], "level": logging.DEBUG},
+        }
     )
-    dictConfig(LOGGING_CONFIG_DICT)
     main()
