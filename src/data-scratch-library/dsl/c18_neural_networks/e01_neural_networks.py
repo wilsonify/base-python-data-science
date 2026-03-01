@@ -79,9 +79,9 @@ def create_network():
     return network
 
 
-def fit_network(network, inputs, targets):
-    logging.info("fit_network backpropagate 10,000 iterations; should converge")
-    for _ in range(10000):
+def fit_network(network, inputs, targets, num_epochs=10000):
+    logging.info("fit_network backpropagate %d iterations; should converge", num_epochs)
+    for _ in range(num_epochs):
         for input_vector, target_vector in zip(inputs, targets):
             backpropagation(network, input_vector, target_vector)
 
