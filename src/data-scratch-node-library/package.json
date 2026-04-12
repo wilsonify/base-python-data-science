@@ -23,6 +23,9 @@
         "ts-jest": "^29.1.0",
         "typescript": "^4.9.5"
     },
+    "overrides": {
+        "handlebars": "^4.7.9"
+    },
     "files": [
         "dist/**/*",
         "README.md"
