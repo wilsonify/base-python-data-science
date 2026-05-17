@@ -313,16 +313,16 @@ def _backprop_route(data):
 
     converted_network, inputs, target = _validate_and_convert_network_payload(data, require_target=True)
 
-    gradients = backpropagation(converted_network, inputs, target)
+    backpropagation(converted_network, inputs, target)
     outputs = feed_forward(converted_network, inputs)
 
     return {
         'inputs': inputs,
         'target': target,
         'network_output': outputs[-1] if outputs else [],
-        'gradients': gradients,
+        'gradients': converted_network,
         'num_layers': len(converted_network),
-        'note': 'Gradients are returned as [weight_gradients, bias_gradient] for each layer'
+        'note': 'Backpropagation updates network weights in place; returned values are updated neuron weights with bias'
     }
 
 
