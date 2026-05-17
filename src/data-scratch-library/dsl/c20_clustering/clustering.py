@@ -1,154 +1,119 @@
-import random
+"""
+K-means and hierarchical (agglomerative) clustering.
+"""
 
-from dsl.c04_linear_algebra.linear_algebra import (
+import random
+from typing import Any, Callable, List, Tuple, Union
+
+from dsl.c04_linear_algebra.e0401_vectors import (
+    distance,
     squared_distance,
     vector_mean,
-    distance,
 )
+
+# Type alias for a hierarchical cluster (recursive).
+Cluster = Union[Tuple[Any, ...], Tuple[int, List["Cluster"]]]
 
 
 class KMeans:
-    """performs k-means clustering"""
+    """K-means clustering."""
 
-    def __init__(self, k):
-        self.k = k  # number of clusters
-        self.means = None  # means of clusters
+    def __init__(self, k: int) -> None:
+        self.k = k
+        self.means: List[List[float]] = []
 
-    def classify(self, inputs):
-        """return the index of the cluster closest to the input"""
-        return min(range(self.k), key=lambda i: squared_distance(inputs, self.means[i]))
+    def classify(self, point: List[float]) -> int:
+        """Return the index of the nearest cluster centre."""
+        return min(range(self.k), key=lambda i: squared_distance(point, self.means[i]))
 
-    def train(self, inputs):
-
+    def train(self, inputs: List[List[float]]) -> None:
+        """Run Lloyd's algorithm until convergence."""
         self.means = random.sample(inputs, self.k)
         assignments = None
-
         while True:
-            # Find new assignments
             new_assignments = [self.classify(x) for x in inputs]
-
-            # If no assignments have changed, we're done.
             if assignments == new_assignments:
                 return
-
-            # Otherwise keep the new assignments,
             assignments = new_assignments
-
             for i in range(self.k):
-                i_points = [p for p, a in zip(inputs, assignments) if a == i]
-                # avoid divide-by-zero if i_points is empty
-                if i_points:
-                    self.means[i] = vector_mean(i_points)
+                cluster_points = [p for p, a in zip(inputs, assignments) if a == i]
+                if cluster_points:
+                    self.means[i] = vector_mean(cluster_points)
 
 
-def squared_clustering_errors(inputs, k):
-    """finds the total squared error from k-means clustering the inputs"""
+def squared_clustering_errors(inputs: List[List[float]], k: int) -> float:
+    """Total squared error from k-means clustering."""
     clusterer = KMeans(k)
     clusterer.train(inputs)
-    means = clusterer.means
     assignments = [clusterer.classify(x) for x in inputs]
-
     return sum(
-        squared_distance(inputs, means[cluster_])
-        for inputs, cluster_ in zip(inputs, assignments)
+        squared_distance(x, clusterer.means[a])
+        for x, a in zip(inputs, assignments)
     )
 
 
-#
-# using clustering to recolor an image
-#
+# -- Hierarchical clustering ---------------------------------------------------
+
+def is_leaf(cluster: Cluster) -> bool:
+    """A cluster is a leaf if it has length 1."""
+    return len(cluster) == 1
 
 
-#
-# hierarchical clustering
-#
-
-
-def is_leaf(cluster_):
-    """a cluster is a leaf if it has length 1"""
-    return len(cluster_) == 1
-
-
-def get_children(cluster_):
-    """returns the two children of this cluster if it's a merged cluster;
-    raises an exception if this is a leaf cluster"""
-    if is_leaf(cluster_):
+def get_children(cluster: Cluster) -> List[Cluster]:
+    """Return the two children of a merged cluster."""
+    if is_leaf(cluster):
         raise TypeError("a leaf cluster has no children")
-    else:
-        return cluster_[1]
+    return cluster[1]
 
 
-def get_values(cluster_):
-    """returns the value in this cluster (if it's a leaf cluster)
-    or all the values in the leaf clusters below it (if it's not)"""
-    if is_leaf(cluster_):
-        return cluster_  # is already a 1-tuple containing value
-    else:
-        return [
-            value for child in get_children(cluster_) for value in get_values(child)
-        ]
+def get_values(cluster: Cluster) -> Union[Tuple[Any, ...], List[Any]]:
+    """Return all leaf values below *cluster*."""
+    if is_leaf(cluster):
+        return cluster
+    return [v for child in get_children(cluster) for v in get_values(child)]
 
 
-def cluster_distance(cluster1, cluster2, distance_agg=min):
-    """finds the aggregate distance between elements of cluster1
-    and elements of cluster2"""
+def cluster_distance(
+    c1: Cluster, c2: Cluster, distance_agg: Callable = min
+) -> float:
+    """Aggregate distance between all pairs of leaf values."""
     return distance_agg(
-        [
-            distance(input1, input2)
-            for input1 in get_values(cluster1)
-            for input2 in get_values(cluster2)
-        ]
+        distance(v1, v2) for v1 in get_values(c1) for v2 in get_values(c2)
     )
 
 
-def get_merge_order(cluster_):
-    if is_leaf(cluster_):
+def get_merge_order(cluster: Cluster) -> float:
+    """Return the merge order of a cluster (inf for leaves)."""
+    if is_leaf(cluster):
         return float("inf")
-    else:
-        return cluster_[0]  # merge_order is first element of 2-tuple
+    return cluster[0]
 
 
-def bottom_up_cluster(inputs, distance_agg=min):
-    # start with every in_put a leaf cluster / 1-tuple
-    clusters = [(in_put,) for in_put in inputs]
-
-    # as long as we have more than one cluster left...
+def bottom_up_cluster(
+    inputs: List[List[float]], distance_agg: Callable = min
+) -> Cluster:
+    """Agglomerative clustering (bottom-up, single/complete linkage)."""
+    clusters: List[Cluster] = [(inp,) for inp in inputs]
     while len(clusters) > 1:
-        # find the two closest clusters
         c1, c2 = min(
-            [
-                (cluster1, cluster2)
-                for i, cluster1 in enumerate(clusters)
-                for cluster2 in clusters[:i]
-            ],
-            key=lambda p: cluster_distance(p[0], p[1], distance_agg),
+            (
+                (ci, cj)
+                for i, ci in enumerate(clusters)
+                for cj in clusters[:i]
+            ),
+            key=lambda pair: cluster_distance(pair[0], pair[1], distance_agg),
         )
-
-        # remove them from the list of clusters
         clusters = [c for c in clusters if c != c1 and c != c2]
-
-        # merge them, using merge_order = # of clusters left
-        merged_cluster = (len(clusters), [c1, c2])
-
-        # and add their merge
-        clusters.append(merged_cluster)
-
-    # when there's only one cluster left, return it
+        merged: Cluster = (len(clusters), [c1, c2])
+        clusters.append(merged)
     return clusters[0]
 
 
-def generate_clusters(base_cluster, num_clusters):
-    # start with a list with just the base cluster
+def generate_clusters(base_cluster: Cluster, num_clusters: int) -> List[Cluster]:
+    """Unmerge *base_cluster* until we have *num_clusters* clusters."""
     clusters = [base_cluster]
-
-    # as long as we don't have enough clusters yet...
     while len(clusters) < num_clusters:
-        # choose the last-merged of our clusters
-        next_cluster = min(clusters, key=get_merge_order)
-        # remove it from the list
-        clusters = [c for c in clusters if c != next_cluster]
-        # and add its children to the list (i.e., unmerge it)
-        clusters.extend(get_children(next_cluster))
-
-    # once we have enough clusters...
+        next_c = min(clusters, key=get_merge_order)
+        clusters = [c for c in clusters if c != next_c]
+        clusters.extend(get_children(next_c))
     return clusters

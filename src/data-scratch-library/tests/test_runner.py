@@ -60,10 +60,14 @@ def parametrize(*args):
 
 def skip(reason):
     """Replacement for pytest.mark.skip decorator"""
-    def decorator(func):
-        func._skip_reason = reason
-        return func
-    return decorator
+    try:
+        import pytest as _real_pytest
+        return _real_pytest.mark.skip(reason=reason)
+    except Exception:
+        def decorator(func):
+            func._skip_reason = reason
+            return func
+        return decorator
 
 
 # Create a mock pytest module

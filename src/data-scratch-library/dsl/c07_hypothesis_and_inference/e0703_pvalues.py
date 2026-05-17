@@ -14,16 +14,16 @@ def two_sided_p_value(x, mu=0.0, sigma=1.0):
         return 2 * normal_probability_below(x, mu, sigma)
 
 
-def count_extreme_values():
+def count_extreme_values(num_trials=100000):
     extreme_value_count = 0
-    for _ in range(100000):
+    for _ in range(num_trials):
         num_heads = sum(
             1 if random.random() < 0.5 else 0 for _ in range(1000)  # count # of heads
         )  # in 1000 flips
         if num_heads >= 530 or num_heads <= 470:  # and count how often
             extreme_value_count += 1  # the # is 'extreme'
 
-    return extreme_value_count / 100000
+    return extreme_value_count / num_trials
 
 
 if __name__ == "__main__":

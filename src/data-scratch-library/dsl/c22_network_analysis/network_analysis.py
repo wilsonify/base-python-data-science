@@ -1,252 +1,284 @@
+"""
+Graph/network algorithms: BFS shortest paths, betweenness centrality,
+closeness centrality, eigenvector centrality, and PageRank.
+"""
+
 import logging
 from collections import deque
 from functools import partial
+from typing import Any, Callable, Dict, List, Optional, Tuple
 
 from dsl.c04_linear_algebra.e0401_vectors import (
+    distance,
     dot,
     magnitude,
     scalar_multiply,
-    distance,
 )
 from dsl.c04_linear_algebra.e0402_matrices import (
-    get_row,
     get_column,
+    get_row,
     make_matrix,
     shape,
 )
 
 
-def populate_endorsements(users_dict):
-    result = []
-    for user in users_dict:
-        uid = user["id"]
-        n_endorsements = len(user["endorsed_by"])
-        result.append((uid, n_endorsements))
-    return result
+# -- Friend graph construction --------------------------------------------------
 
-
-def get_page_ranks(pr_result):
-    for user_id, pr in pr_result.items():
-        logging.info("%r", f"user_id {user_id}, pr{pr}")
-
-
-def get_eigenvector_centrality(eigenvector_centralities):
-    logging.info("Eigenvector Centrality")
-    for _user_id, centrality in enumerate(eigenvector_centralities):
-        logging.info("%r", "user_id {}, centrality {}".format(_user_id, centrality))
-
-
-def populate_endorsments(users_dict, endorsements):
-    for user in users_dict:
-        user["endorses"] = []  # add one list to track outgoing endorsements
-        user["endorsed_by"] = []  # and another to track endorsements
-    for source_id, target_id in endorsements:
-        users_dict[source_id]["endorses"].append(users_dict[target_id])
-        users_dict[target_id]["endorsed_by"].append(users_dict[source_id])
-    return users_dict
-
-
-def compute_eigenvectors(adjacency_matrix):
-    eigenvector_centralities, _ = find_eigenvector(adjacency_matrix)
-    return eigenvector_centralities
-
-
-def construct_adjacency(users_dict, friendships):
-    n = len(users_dict)
-
-    def entry_fn_friendships(i, j):
-        return 1 if (i, j) in friendships or (j, i) in friendships else 0
-
-    adjacency_matrix = make_matrix(n, n, entry_fn_friendships)
-    return adjacency_matrix
-
-
-def get_closeness(users_dict):
-    logging.info("Closeness Centrality")
-    for user in users_dict:
-        uid = user["id"]
-        centrality = user["closeness_centrality"]
-        logging.info("%r", f"user {uid}, closeness_centrality {centrality}")
-
-
-def get_betweeness(users_dict):
-    logging.info("Betweenness Centrality")
-    for user in users_dict:
-        uid = user["id"]
-        centrality = user["betweenness_centrality"]
-        logging.info("%r", f"user {uid}, betweenness {centrality}")
-
-
-def populate_closeness(users_dict):
-    eps = 0.001
-    for user in users_dict:
-        farness_user = farness(user)
-        closeness_user = 1 / (farness_user + eps)
-        user["closeness_centrality"] = closeness_user
-    return users_dict
-
-
-def populate_shortest_paths(users_dict):
-    users_iter = users_dict if isinstance(users_dict, list) else users_dict.values()
-    for user in users_iter:
-        user["shortest_paths"] = shortest_paths_from(user)
-    return users_dict
-
-
-def populate_betweeness_v1(users_dict):
-    # Legacy compatibility wrapper: delegate to the refactored implementation.
-    # The original v1 implementation was kept historically but the current
-    # `populate_betweeness` is clearer, tested, and less complex.
-    return populate_betweeness(users_dict)
-
-
-def initialize_centrality(users_dict):
-    """Initialize betweenness centrality for all users."""
-    users_iter = users_dict if isinstance(users_dict, list) else users_dict.values()
-    for user in users_iter:
-        user["betweenness_centrality"] = 0.0
-
-
-def process_shortest_paths(source, users_dict):
-    """Update centrality contributions based on shortest paths."""
-    source_id = source["id"]
-    for target_id, paths_item in source["shortest_paths"].items():
-        if source_id < target_id:  # avoid double counting
-            contrib = 1 / len(paths_item)  # contribution to centrality
-            for path in paths_item:
-                update_centrality(path, contrib, source_id, target_id, users_dict)
-
-
-def update_centrality(path, contrib, source_id, target_id, users_dict):
-    """Add contributions to centrality for each user in the path."""
-    for identification in path:
-        if identification not in (source_id, target_id):
-            users_dict[identification]["betweenness_centrality"] += contrib
-
-
-def populate_betweeness(users_dict):
-    """Calculate and populate betweenness centrality for users."""
-    initialize_centrality(users_dict)
-    users_iter = users_dict if isinstance(users_dict, list) else users_dict.values()
-    for source in users_iter:
-        process_shortest_paths(source, users_dict)
-    return users_dict
-
-
-def populate_friends(users_dict, friendships):
-    # initialize friends list
-    users_iter = users_dict if isinstance(users_dict, list) else users_dict.values()
-    for user in users_iter:
+def populate_friends(
+    users: List[Dict[str, Any]], friendships: List[Tuple[int, int]]
+) -> List[Dict[str, Any]]:
+    """Add a ``friends`` list to each user dict."""
+    for user in users:
         user["friends"] = []
-
-    # populate friends list
-    for friend_i, friend_j in friendships:
-        # this works because users[i] is the user whose id is i
-        users_dict[friend_i]["friends"].append(users_dict[friend_j])  # add i as a friend of j
-        users_dict[friend_j]["friends"].append(users_dict[friend_i])  # add j as a friend of i
-    return users_dict
+    for i, j in friendships:
+        users[i]["friends"].append(users[j])
+        users[j]["friends"].append(users[i])
+    return users
 
 
-def shortest_paths_from(from_user_graph):
-    # a dictionary from "user_id" to *all* the shortest paths to that user
-    shortest_paths_to = {from_user_graph["id"]: [[]]}
+# -- Shortest paths (BFS) -------------------------------------------------------
 
-    # a queue of (previous user, next user) that we need to check.
-    frontier = deque((from_user_graph, friend) for friend in from_user_graph["friends"])
+def shortest_paths_from(from_user: Dict[str, Any]) -> Dict[int, List[List[int]]]:
+    """Return all shortest paths from *from_user* to every reachable user."""
+    shortest: Dict[int, List[List[int]]] = {from_user["id"]: [[]]}
+    frontier = deque(
+        (from_user, friend) for friend in from_user["friends"]
+    )
 
-    def _min_path_length(existing_paths):
-        return len(existing_paths[0]) if existing_paths else float("inf")
-
-    def _compute_new_paths(paths_to_prev, user_id, old_paths_to_here):
-        """Return new shortest paths to `user_id` via previous node."""
-        paths_via_prev = [p + [user_id] for p in paths_to_prev]
-        min_len = _min_path_length(old_paths_to_here)
-        # keep only non-duplicate paths not longer than the current minimum
-        return [p for p in paths_via_prev if len(p) <= min_len and p not in old_paths_to_here]
-
-    def _enqueue_new_neighbors(queue, user, known_paths):
-        # add new neighbors to the frontier if we haven't seen them yet
-        for friend in user["friends"]:
-            if friend["id"] not in known_paths:
-                queue.append((user, friend))
-
-    # keep going until we empty the queue
     while frontier:
-        prev_user, user = frontier.popleft()
-        user_id = user["id"]
+        prev, cur = frontier.popleft()
+        uid = cur["id"]
+        paths_to_prev = shortest[prev["id"]]
+        old_paths = shortest.get(uid, [])
+        new_paths = [p + [uid] for p in paths_to_prev]
+        min_len = len(old_paths[0]) if old_paths else float("inf")
+        new_paths = [p for p in new_paths if len(p) <= min_len and p not in old_paths]
+        shortest[uid] = old_paths + new_paths
+        for friend in cur["friends"]:
+            if friend["id"] not in shortest:
+                frontier.append((cur, friend))
 
-        # we already know the shortest path(s) to prev_user
-        paths_to_prev = shortest_paths_to[prev_user["id"]]
-        old_paths_to_here = shortest_paths_to.get(user_id, [])
-
-        new_paths_to_here = _compute_new_paths(paths_to_prev, user_id, old_paths_to_here)
-        shortest_paths_to[user_id] = old_paths_to_here + new_paths_to_here
-
-        _enqueue_new_neighbors(frontier, user, shortest_paths_to)
-
-    return shortest_paths_to
+    return shortest
 
 
-def farness(user):
-    """the sum of the lengths of the shortest paths to each other user"""
+def farness(user: Dict[str, Any]) -> int:
+    """Sum of shortest-path lengths from *user* to every other user."""
     return sum(len(paths[0]) for paths in user["shortest_paths"].values())
 
 
-def matrix_product_entry(a_matrix, b_matrix, i, j):
-    # matrix multiplication
-    return dot(get_row(a_matrix, i), get_column(b_matrix, j))
+def populate_shortest_paths(users: List[Dict[str, Any]]) -> List[Dict[str, Any]]:
+    """Compute and attach ``shortest_paths`` to each user."""
+    for user in users:
+        user["shortest_paths"] = shortest_paths_from(user)
+    return users
 
 
-def matrix_multiply(a_matrix, b_matrix):
-    n1, k1 = shape(a_matrix)
-    n2, k2 = shape(b_matrix)
+# -- Betweenness centrality -----------------------------------------------------
+
+def populate_betweeness(users: List[Dict[str, Any]]) -> List[Dict[str, Any]]:
+    """Compute and attach ``betweenness_centrality`` to each user."""
+    for user in users:
+        user["betweenness_centrality"] = 0.0
+    for source in users:
+        for target_id, paths in source["shortest_paths"].items():
+            if source["id"] < target_id:
+                contrib = 1 / len(paths)
+                for path in paths:
+                    for uid in path:
+                        if uid not in (source["id"], target_id):
+                            users[uid]["betweenness_centrality"] += contrib
+    return users
+
+
+def initialize_centrality(users: List[Dict[str, Any]]) -> List[Dict[str, Any]]:
+    """Reset betweenness centrality values to 0.0."""
+    for user in users:
+        user["betweenness_centrality"] = 0.0
+    return users
+
+
+def update_centrality(
+    path: List[int],
+    contribution: float,
+    source_id: int,
+    target_id: int,
+    users: List[Dict[str, Any]],
+) -> None:
+    """Apply path contribution to intermediate nodes only."""
+    for uid in path:
+        if uid not in (source_id, target_id):
+            users[uid]["betweenness_centrality"] += contribution
+
+
+def process_shortest_paths(
+    source: Dict[str, Any], users: List[Dict[str, Any]]
+) -> List[Dict[str, Any]]:
+    """Update betweenness using one source user's shortest paths."""
+    source_id = source["id"]
+    for target_id, paths in source["shortest_paths"].items():
+        if source_id < target_id:
+            contribution = 1 / len(paths)
+            for path in paths:
+                update_centrality(path, contribution, source_id, target_id, users)
+    return users
+
+
+def populate_betweeness_v1(users: List[Dict[str, Any]]) -> List[Dict[str, Any]]:
+    """Compatibility wrapper using helper-based implementation."""
+    initialize_centrality(users)
+    for source in users:
+        process_shortest_paths(source, users)
+    return users
+
+
+# -- Closeness centrality -------------------------------------------------------
+
+def populate_closeness(
+    users: List[Dict[str, Any]], eps: float = 0.001
+) -> List[Dict[str, Any]]:
+    """Compute and attach ``closeness_centrality`` to each user."""
+    for user in users:
+        user["closeness_centrality"] = 1 / (farness(user) + eps)
+    return users
+
+
+def get_betweeness(users: List[Dict[str, Any]]) -> List[Tuple[int, float]]:
+    """Return and log per-user betweenness centrality."""
+    values = [(u["id"], u["betweenness_centrality"]) for u in users]
+    for uid, value in values:
+        logging.info("user %d betweenness %.4f", uid, value)
+    return values
+
+
+def get_closeness(users: List[Dict[str, Any]]) -> List[Tuple[int, float]]:
+    """Return and log per-user closeness centrality."""
+    values = [(u["id"], u["closeness_centrality"]) for u in users]
+    for uid, value in values:
+        logging.info("user %d closeness %.4f", uid, value)
+    return values
+
+
+# -- Adjacency matrix & eigenvector centrality -----------------------------------
+
+def construct_adjacency(
+    users: List[Dict[str, Any]], friendships: List[Tuple[int, int]]
+) -> List[List[int]]:
+    """Build an adjacency matrix from *friendships*."""
+    n = len(users)
+
+    def entry(i: int, j: int) -> int:
+        return 1 if (i, j) in friendships or (j, i) in friendships else 0
+
+    return make_matrix(n, n, entry)
+
+
+def matrix_product_entry(
+    a: List[List[float]], b: List[List[float]], i: int, j: int
+) -> float:
+    """Dot product of row *i* of *a* with column *j* of *b*."""
+    return dot(get_row(a, i), get_column(b, j))
+
+
+def matrix_multiply(
+    a: List[List[float]], b: List[List[float]]
+) -> List[List[float]]:
+    """Multiply matrices *a* and *b*."""
+    n1, k1 = shape(a)
+    n2, k2 = shape(b)
     if k1 != n2:
         raise ArithmeticError("incompatible shapes!")
-
-    return make_matrix(n1, k2, partial(matrix_product_entry, a_matrix, b_matrix))
-
-
-def vector_as_matrix(v):
-    """returns the vector v (represented as a list) as an n x 1 matrix"""
-    return [[v_i] for v_i in v]
+    return make_matrix(n1, k2, partial(matrix_product_entry, a, b))
 
 
-def vector_from_matrix(v_as_matrix):
-    """returns the n x 1 matrix as a list of values"""
-    return [row[0] for row in v_as_matrix]
+def vector_as_matrix(v: List[float]) -> List[List[float]]:
+    """Convert a vector to an n×1 matrix."""
+    return [[vi] for vi in v]
 
 
-def matrix_operate(a_matrix, v):
-    v_as_matrix = vector_as_matrix(v)
-    product = matrix_multiply(a_matrix, v_as_matrix)
-    return vector_from_matrix(product)
+def vector_from_matrix(m: List[List[float]]) -> List[float]:
+    """Convert an n×1 matrix to a vector."""
+    return [row[0] for row in m]
 
 
-def find_eigenvector(a_matrix, tolerance=0.00001):
-    guess = [1 for __ in a_matrix]
+def matrix_operate(a: List[List[float]], v: List[float]) -> List[float]:
+    """Return the matrix–vector product *a* · *v*."""
+    return vector_from_matrix(matrix_multiply(a, vector_as_matrix(v)))
+
+
+def find_eigenvector(
+    a: List[List[float]], tolerance: float = 1e-5
+) -> Tuple[List[float], float]:
+    """Power-iteration method for the dominant eigenvector."""
+    guess = [1.0 for _ in a]
     while True:
-        result = matrix_operate(a_matrix, guess)
+        result = matrix_operate(a, guess)
         length = magnitude(result)
         next_guess = scalar_multiply(1 / length, result)
         if distance(guess, next_guess) < tolerance:
-            return next_guess, length  # eigenvector, eigenvalue
+            return next_guess, length
         guess = next_guess
 
 
-def page_rank(users, damping=0.85, num_iters=100):
-    logging.info("page_rank")
-    # initially distribute PageRank evenly
-    num_users = len(users)
-    pr = {user["id"]: 1 / num_users for user in users}
-    # this is the small fraction of PageRank
-    # that each node gets each iteration
-    base_pr = (1 - damping) / num_users
-    for __ in range(num_iters):
-        next_pr = {user["id"]: base_pr for user in users}
+def compute_eigenvectors(adjacency_matrix: List[List[int]]) -> List[float]:
+    """Return eigenvector centralities from the adjacency matrix."""
+    centralities, _ = find_eigenvector(adjacency_matrix)
+    return centralities
+
+
+def get_eigenvector_centrality(
+    centralities: List[float],
+) -> List[Tuple[int, float]]:
+    """Return and log eigenvector centrality values."""
+    values = list(enumerate(centralities))
+    for uid, value in values:
+        logging.info("user %d eigenvector %.4f", uid, value)
+    return values
+
+
+# -- Endorsements & PageRank ----------------------------------------------------
+
+def populate_endorsments(
+    users: List[Dict[str, Any]], endorsements: List[Tuple[int, int]]
+) -> List[Dict[str, Any]]:
+    """Add ``endorses`` and ``endorsed_by`` lists to each user."""
+    for user in users:
+        user["endorses"] = []
+        user["endorsed_by"] = []
+    for source_id, target_id in endorsements:
+        users[source_id]["endorses"].append(users[target_id])
+        users[target_id]["endorsed_by"].append(users[source_id])
+    return users
+
+
+def populate_endorsements(
+    users: List[Dict[str, Any]],
+) -> List[Tuple[int, int]]:
+    """Return a list of (user_id, num_endorsements) pairs."""
+    return [(u["id"], len(u["endorsed_by"])) for u in users]
+
+
+def page_rank(
+    users: List[Dict[str, Any]],
+    damping: float = 0.85,
+    num_iters: int = 100,
+) -> Dict[int, float]:
+    """Compute PageRank over the endorsement graph."""
+    n = len(users)
+    pr: Dict[int, float] = {u["id"]: 1 / n for u in users}
+    base = (1 - damping) / n
+    for _ in range(num_iters):
+        next_pr: Dict[int, float] = {u["id"]: base for u in users}
         for user in users:
-            # distribute PageRank to outgoing links
-            links_pr = pr[user["id"]] * damping
+            share = pr[user["id"]] * damping
             for endorsee in user["endorses"]:
-                next_pr[endorsee["id"]] += links_pr / len(user["endorses"])
+                next_pr[endorsee["id"]] += share / len(user["endorses"])
         pr = next_pr
     return pr
+
+
+def get_page_ranks(page_ranks: Dict[int, float]) -> List[Tuple[int, float]]:
+    """Return and log PageRank values sorted by user id."""
+    values = sorted(page_ranks.items(), key=lambda pair: pair[0])
+    for uid, value in values:
+        logging.info("user %d pagerank %.4f", uid, value)
+    return values

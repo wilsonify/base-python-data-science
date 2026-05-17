@@ -1,119 +1,117 @@
+"""
+An in-memory SQL-like table: SELECT, WHERE, GROUP BY, ORDER BY, JOIN.
+"""
+
 from collections import defaultdict
+from typing import Any, Callable, Dict, List, Optional
 
 
 class Table:
-    def __init__(self, columns):
-        self.columns = columns
-        self.rows = []
+    """Simple in-memory row-store table."""
 
-    def __repr__(self):
-        """pretty representation of the table: columns then rows"""
+    def __init__(self, columns: List[str]) -> None:
+        self.columns = columns
+        self.rows: List[Dict[str, Any]] = []
+
+    def __repr__(self) -> str:
         return str(self.columns) + "\n" + "\n".join(str(r) for r in self.rows)
 
-    def insert(self, row_values):
+    def insert(self, row_values: List[Any]) -> None:
+        """Insert a row given as a list of values (one per column)."""
         if len(row_values) != len(self.columns):
             raise TypeError("wrong number of elements")
-        row_dict = dict(zip(self.columns, row_values))
-        self.rows.append(row_dict)
+        self.rows.append(dict(zip(self.columns, row_values)))
 
-    def update(self, updates, predicate):
+    def update(
+        self,
+        updates: Dict[str, Any],
+        predicate: Callable[[Dict[str, Any]], bool],
+    ) -> None:
+        """Apply *updates* to every row matching *predicate*."""
         for row in self.rows:
             if predicate(row):
-                for column, new_value in updates.items():
-                    row[column] = new_value
+                row.update(updates)
 
-    def delete(self, predicate=lambda row: True):
-        """delete all rows matching predicate
-        or all rows if no predicate supplied"""
-        self.rows = [row for row in self.rows if not (predicate(row))]
+    def delete(
+        self, predicate: Callable[[Dict[str, Any]], bool] = lambda row: True
+    ) -> None:
+        """Delete rows matching *predicate* (default: all)."""
+        self.rows = [r for r in self.rows if not predicate(r)]
 
-    def select(self, keep_columns=None, additional_columns=None):
-
-        if keep_columns is None:  # if no columns specified,
-            keep_columns = self.columns  # return all columns
-
+    def select(
+        self,
+        keep_columns: Optional[List[str]] = None,
+        additional_columns: Optional[Dict[str, Callable]] = None,
+    ) -> "Table":
+        """Project columns and/or add computed columns."""
+        if keep_columns is None:
+            keep_columns = self.columns
         if additional_columns is None:
             additional_columns = {}
-
-        # new table for results
-        result_table = Table(keep_columns + list(additional_columns.keys()))
-
+        result = Table(keep_columns + list(additional_columns.keys()))
         for row in self.rows:
-            new_row = [row[column] for column in keep_columns]
-            for column_name, calculation in additional_columns.items():
-                new_row.append(calculation(row))
-            result_table.insert(new_row)
+            new_row = [row[c] for c in keep_columns]
+            for calc in additional_columns.values():
+                new_row.append(calc(row))
+            result.insert(new_row)
+        return result
 
-        return result_table
+    def where(
+        self, predicate: Callable[[Dict[str, Any]], bool] = lambda row: True
+    ) -> "Table":
+        """Return rows matching *predicate*."""
+        tbl = Table(self.columns)
+        tbl.rows = [r for r in self.rows if predicate(r)]
+        return tbl
 
-    def where(self, predicate=lambda row: True):
-        """return only the rows that satisfy the supplied predicate"""
-        where_table = Table(self.columns)
-        where_table.rows = list(filter(predicate, self.rows))
-        return where_table
+    def limit(self, num_rows: Optional[int] = None) -> "Table":
+        """Return at most *num_rows* rows."""
+        tbl = Table(self.columns)
+        tbl.rows = self.rows[:num_rows] if num_rows is not None else list(self.rows)
+        return tbl
 
-    def limit(self, num_rows=None):
-        """return only the first num_rows rows"""
-        limit_table = Table(self.columns)
-        limit_table.rows = self.rows[:num_rows] if num_rows is not None else self.rows
-        return limit_table
-
-    def group_by(self, group_by_columns, aggregates, having=None):
-
-        grouped_rows = defaultdict(list)
-
-        # populate groups
+    def group_by(
+        self,
+        group_by_columns: List[str],
+        aggregates: Dict[str, Callable],
+        having: Optional[Callable] = None,
+    ) -> "Table":
+        """Group rows by *group_by_columns* and apply *aggregates*."""
+        grouped: Dict[tuple, List[Dict[str, Any]]] = defaultdict(list)
         for row in self.rows:
-            key = tuple(row[column] for column in group_by_columns)
-            grouped_rows[key].append(row)
-
-        result_table = Table(group_by_columns + list(aggregates.keys()))
-
-        for key, rows in grouped_rows.items():
+            key = tuple(row[c] for c in group_by_columns)
+            grouped[key].append(row)
+        result = Table(group_by_columns + list(aggregates.keys()))
+        for key, rows in grouped.items():
             if having is None or having(rows):
                 new_row = list(key)
-                for aggregate_name, aggregate_fn in aggregates.items():
-                    new_row.append(aggregate_fn(rows))
-                result_table.insert(new_row)
+                for agg_fn in aggregates.values():
+                    new_row.append(agg_fn(rows))
+                result.insert(new_row)
+        return result
 
-        return result_table
+    def order_by(self, order: Callable) -> "Table":
+        """Return a copy of the table sorted by *order*."""
+        tbl = self.select()
+        tbl.rows.sort(key=order)
+        return tbl
 
-    def order_by(self, order):
-        new_table = self.select()  # make a copy
-        new_table.rows.sort(key=order)
-        return new_table
-
-    def join(self, other_table, left_join=False):
-
-        join_on_columns = [
-            c for c in self.columns if c in other_table.columns  # columns in
-        ]  # both tables
-
-        additional_columns = [
-            c for c in other_table.columns if c not in join_on_columns  # columns only
-        ]  # in right table
-
-        # all columns from left table + additional_columns from right table
-        join_table = Table(self.columns + additional_columns)
+    def join(self, other: "Table", left_join: bool = False) -> "Table":
+        """Inner or left join with *other* on shared column names."""
+        join_cols = [c for c in self.columns if c in other.columns]
+        extra_cols = [c for c in other.columns if c not in join_cols]
+        result = Table(self.columns + extra_cols)
 
         for row in self.rows:
-
-            def is_join(other_row, _row=row):
-                return all(other_row[c] == _row[c] for c in join_on_columns)
-
-            other_rows = other_table.where(is_join).rows
-
-            # each other row that matches this one produces a result row
-            for other_row_ in other_rows:
-                join_table.insert(
-                    [row[c] for c in self.columns]
-                    + [other_row_[c] for c in additional_columns]
+            matches = other.where(
+                lambda o, _r=row: all(o[c] == _r[c] for c in join_cols)
+            ).rows
+            for m in matches:
+                result.insert(
+                    [row[c] for c in self.columns] + [m[c] for c in extra_cols]
                 )
-
-            # if no rows match, and it's a left join, output with Nones
-            if left_join and not other_rows:
-                join_table.insert(
-                    [row[_] for _ in self.columns] + [None for _ in additional_columns]
+            if left_join and not matches:
+                result.insert(
+                    [row[c] for c in self.columns] + [None] * len(extra_cols)
                 )
-
-        return join_table
+        return result

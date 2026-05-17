@@ -1,57 +1,52 @@
-import logging
+"""
+Machine learning utilities: data splitting and classification metrics.
+"""
+
 import random
+from typing import List, Tuple, TypeVar, Any
+
+X = TypeVar("X")
 
 
-#
-# data splitting
-#
-
-
-def split_data(data, prob):
-    """split data into fractions [prob, 1 - prob]"""
-    results = [], []
+def split_data(data: List[X], prob: float) -> Tuple[List[X], List[X]]:
+    """Split *data* into two lists with fractions [prob, 1 - prob]."""
+    results: Tuple[List[X], List[X]] = ([], [])
     for row in data:
         results[0 if random.random() < prob else 1].append(row)
     return results
 
 
-def train_test_split(x, y, test_pct):
-    data = list(zip(x, y))  # pair corresponding values
-    train, test = split_data(data, 1 - test_pct)  # split the dataset of pairs
-    x_train, y_train = list(zip(*train))  # magical un-zip trick
+def train_test_split(
+    x: List[Any], y: List[Any], test_pct: float
+) -> Tuple[List[Any], List[Any], List[Any], List[Any]]:
+    """Split paired *x* / *y* data into train and test sets."""
+    data = list(zip(x, y))
+    train, test = split_data(data, 1 - test_pct)
+    x_train, y_train = list(zip(*train))
     x_test, y_test = list(zip(*test))
     return x_train, x_test, y_train, y_test
 
 
-#
-# correctness
-#
+# ── Classification metrics ───────────────────────────────────────────
 
 
-def accuracy(tp, fp, fn, tn):
-    correct = tp + tn
-    total = tp + fp + fn + tn
-    return correct / total
+def accuracy(tp: int, fp: int, fn: int, tn: int) -> float:
+    """Proportion of correct predictions."""
+    return (tp + tn) / (tp + fp + fn + tn)
 
 
-def precision(tp, fp, fn, tn):
-    logging.debug("%s", "tp = {}".format(tp))
-    logging.debug("%s", "fp = {}".format(fp))
-    logging.debug("%s", "fn = {}".format(fn))
-    logging.debug("%s", "tn = {}".format(tn))
+def precision(tp: int, fp: int, fn: int, tn: int) -> float:
+    """Proportion of positive predictions that are correct."""
     return tp / (tp + fp)
 
 
-def recall(tp, fp, fn, tn):
-    logging.debug("%s", "tp = {}".format(tp))
-    logging.debug("%s", "fp = {}".format(fp))
-    logging.debug("%s", "fn = {}".format(fn))
-    logging.debug("%s", "tn = {}".format(tn))
+def recall(tp: int, fp: int, fn: int, tn: int) -> float:
+    """Proportion of actual positives correctly identified."""
     return tp / (tp + fn)
 
 
-def f1_score(tp, fp, fn, tn):
+def f1_score(tp: int, fp: int, fn: int, tn: int) -> float:
+    """Harmonic mean of precision and recall."""
     p = precision(tp, fp, fn, tn)
     r = recall(tp, fp, fn, tn)
-
     return 2 * p * r / (p + r)

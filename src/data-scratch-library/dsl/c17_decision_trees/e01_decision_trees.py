@@ -1,73 +1,62 @@
+"""
+Example: build a decision tree on interview data and make predictions.
+"""
+
 import logging
 from logging.config import dictConfig
 
-from dsl.c17_decision_trees.decision_trees import partition_entropy_by, build_tree_id3, classify
+from dsl.c17_decision_trees.decision_trees import (
+    partition_entropy_by,
+    build_tree_id3,
+    classify,
+)
+from dsl.c17_decision_trees.data import inputs_list
 
 
-def main():
-    inputs_list = [
-        ({"level": "Senior", "lang": "Java", "tweets": "no", "phd": "no"}, False),
-        ({"level": "Senior", "lang": "Java", "tweets": "no", "phd": "yes"}, False),
-        ({"level": "Mid", "lang": "Python", "tweets": "no", "phd": "no"}, True),
-        ({"level": "Junior", "lang": "Python", "tweets": "no", "phd": "no"}, True),
-        ({"level": "Junior", "lang": "R", "tweets": "yes", "phd": "no"}, True),
-        ({"level": "Junior", "lang": "R", "tweets": "yes", "phd": "yes"}, False),
-        ({"level": "Mid", "lang": "R", "tweets": "yes", "phd": "yes"}, True),
-        ({"level": "Senior", "lang": "Python", "tweets": "no", "phd": "no"}, False),
-        ({"level": "Senior", "lang": "R", "tweets": "yes", "phd": "no"}, True),
-        ({"level": "Junior", "lang": "Python", "tweets": "yes", "phd": "no"}, True),
-        ({"level": "Senior", "lang": "Python", "tweets": "yes", "phd": "yes"}, True),
-        ({"level": "Mid", "lang": "Python", "tweets": "no", "phd": "yes"}, True),
-        ({"level": "Mid", "lang": "Java", "tweets": "yes", "phd": "no"}, True),
-        ({"level": "Junior", "lang": "Python", "tweets": "no", "phd": "yes"}, False),
-    ]
-
-    for _key in ["level", "lang", "tweets", "phd"]:
-        logging.info("%r", "key = {}".format(_key))
-        partition_entropy_key = partition_entropy_by(inputs_list, _key)
-        logging.info("%r", "partition_entropy = {}".format(partition_entropy_key))
+def main() -> None:
+    for key in ["level", "lang", "tweets", "phd"]:
+        ent = partition_entropy_by(inputs_list, key)
+        logging.info("partition entropy by %s = %s", key, ent)
 
     senior_inputs = [
-        (in_put, label) for in_put, label in inputs_list if in_put["level"] == "Senior"
+        (attrs, label) for attrs, label in inputs_list if attrs["level"] == "Senior"
     ]
-
-    for _key in ["lang", "tweets", "phd"]:
-        logging.info("%r", "_key = {}".format(_key))
-        partition_entropy2 = partition_entropy_by(senior_inputs, _key)
-        logging.info("%r", "partition_entropy = {}".format(partition_entropy2))
+    for key in ["lang", "tweets", "phd"]:
+        ent = partition_entropy_by(senior_inputs, key)
+        logging.info("senior partition entropy by %s = %s", key, ent)
 
     logging.info("building the tree")
-    _tree = build_tree_id3(inputs_list)
-    logging.info("%r", "tree = {}".format(_tree))
+    tree = build_tree_id3(inputs_list)
+    logging.info("tree = %s", tree)
 
     logging.info(
-        "%r",
-        "Junior / Java / tweets / no phd {}".format(
-            classify(
-                _tree, {"level": "Junior", "lang": "Java", "tweets": "yes", "phd": "no"}
-            ),
-        ),
+        "Junior / Java / tweets / no phd => %s",
+        classify(tree, {"level": "Junior", "lang": "Java", "tweets": "yes", "phd": "no"}),
     )
-
     logging.info(
-        "%r",
-        "Junior / Java / tweets / phd {}".format(
-            classify(
-                _tree,
-                {"level": "Junior", "lang": "Java", "tweets": "yes", "phd": "yes"},
-            ),
-        ),
+        "Junior / Java / tweets / phd => %s",
+        classify(tree, {"level": "Junior", "lang": "Java", "tweets": "yes", "phd": "yes"}),
     )
-
-    logging.info("%r", "Intern {}".format(classify(_tree, {"level": "Intern"})))
-    logging.info("%r", "Senior {}".format(classify(_tree, {"level": "Senior"})))
+    logging.info("Intern => %s", classify(tree, {"level": "Intern"}))
+    logging.info("Senior => %s", classify(tree, {"level": "Senior"}))
 
 
 if __name__ == "__main__":
-    dictConfig({
-        "version":1,
-        "formatters":{"simple": {"format": """%(asctime)s | %(name)s | %(lineno)s | %(levelname)s | %(message)s"""}},
-        "handlers":{"console": {"class": "logging.StreamHandler", "formatter": "simple"}},
-        "root":{"handlers": ["console"], "level": logging.DEBUG},
-    })
+    dictConfig(
+        {
+            "version": 1,
+            "formatters": {
+                "simple": {
+                    "format": "%(asctime)s | %(name)s | %(lineno)s | %(levelname)s | %(message)s"
+                }
+            },
+            "handlers": {
+                "console": {
+                    "class": "logging.StreamHandler",
+                    "formatter": "simple",
+                }
+            },
+            "root": {"handlers": ["console"], "level": logging.DEBUG},
+        }
+    )
     main()

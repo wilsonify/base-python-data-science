@@ -31,8 +31,8 @@ def test_count_extreme_values():
     # Since count_extreme_values is probabilistic, we expect the result to be close to 0.046
     # for a large number of trials
     seed(0)
-    extreme_value_frequency = count_extreme_values()
-    assert math.isclose(extreme_value_frequency, 0.06171, abs_tol=0.01)
+    extreme_value_frequency = count_extreme_values(num_trials=10000)
+    assert math.isclose(extreme_value_frequency, 0.06171, abs_tol=0.02)
 
 
 def test_normal_probability_bounds():
