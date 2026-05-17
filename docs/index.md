@@ -3,24 +3,49 @@ layout: home
 title: Home
 ---
 
-# Base Python Data Science
+# Base Python Data Science Monorepo
 
-Data Science Without the Dependencies
+This repository is both:
 
-This project demonstrates data science concepts implemented from scratch in Python, without relying on heavy dependencies like NumPy, Pandas, or Scikit-learn. The goal is to understand the underlying algorithms and techniques by building them from the ground up.
+1. a **learning platform** for understanding data science fundamentals from first principles
+2. an **engineering platform** with reusable libraries, APIs, messaging services, OpenAPI specs, Docker assets, Helm charts, and CI/CD automation
 
-## Project Structure
+## Audience
 
-- **data-scratch-library**: Core data science algorithms implemented from scratch
-- **data-scratch-amqp**: AMQP messaging integration
-- **data-scratch-mqtt**: MQTT messaging integration
-- **data-scratch-matplotlib**: Plotting and visualization
-- **REST APIs**: Various REST API implementations in different languages and frameworks
+### Users
+Explore examples, run algorithms locally, and call functionality via API or messaging interfaces.
 
-## Getting Started
+### Developers
+Extend the core libraries, maintain multi-language implementations, and evolve OpenAPI-driven services and clients.
 
-Clone the repository and explore the individual modules in the `src/` directory. Each module has its own README with specific instructions.
+### Administrators / Operators
+Build container images, deploy service workloads (including Helm-based deployment for Node Express), and follow CI/CD release workflows.
 
-## Author
+## Repository structure
 
-Tom Wilson - [GitHub](https://github.com/wilsonify) - [LinkedIn](https://www.linkedin.com/in/tom-andrew-wilson)
+- `src/data-scratch-library`: core Python data science package (`dsl`)
+- `src/data-scratch-matplotlib`: visualization examples
+- `src/data-scratch-scrape`: scraping/data collection examples
+- `src/data-scratch-amqp`: AMQP execution service
+- `src/data-scratch-mqtt`: MQTT execution service
+- `src/data-scratch-node-library`: TypeScript/Node implementation
+- `src/data-scratch-cpp-library`: C++ implementation
+- `src/rest-scratch-flask`: Flask REST API
+- `src/rest-scratch-node-express`: OpenAPI-driven Node Express REST server + Helm chart
+- `src/rest-scratch-pistache`: OpenAPI-driven C++ Pistache server
+- `src/rest-scratch-rust`: OpenAPI-driven Rust server
+- `src/rest-client-ts-node`: OpenAPI-driven TypeScript Node client
+
+## Start here
+
+For full onboarding, setup, validation commands, and operations details, read the root repository guide:
+
+- [`README.md`](../README.md)
+
+Then follow module-level README files for component-specific setup and usage.
+
+## Philosophy
+
+- Prefer explainability over brevity.
+- Prefer explicit instructions over clever shortcuts.
+- Assume technical readers are new to this repository's structure.
