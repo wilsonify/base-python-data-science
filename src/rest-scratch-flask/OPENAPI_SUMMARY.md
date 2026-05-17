@@ -95,7 +95,7 @@ Flask==2.3.3
 Flask-CORS==4.0.0
 flask-swagger-ui==4.11.1  # NEW - for interactive documentation
 marshmallow==3.20.1
-pytest==7.4.2
+pytest==9.0.3
 pytest-flask==1.2.0
 ```
 

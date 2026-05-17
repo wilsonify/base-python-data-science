@@ -19,7 +19,7 @@ setup(
     ],
     extras_require={
         "dev": [
-            "pytest==7.4.2",
+            "pytest==9.0.3",
             "pytest-flask==1.2.0",
         ]
     },
