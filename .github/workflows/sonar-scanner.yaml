@@ -48,6 +48,7 @@ jobs:
             -Dsonar.projectKey=wilsonify-base-python-data-science \
             -Dsonar.sources=src/data-scratch-library \
             -Dsonar.host.url=https://sonarcloud.io \
+            -Dsonar.scanner.skipJreProvisioning=true \
             -Dsonar.login="$SONAR_TOKEN"
 
       - name: Analysis result

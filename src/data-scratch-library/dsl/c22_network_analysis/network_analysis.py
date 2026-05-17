@@ -90,6 +90,47 @@ def populate_betweeness(users: List[Dict[str, Any]]) -> List[Dict[str, Any]]:
     return users
 
 
+def initialize_centrality(users: List[Dict[str, Any]]) -> List[Dict[str, Any]]:
+    """Reset betweenness centrality values to 0.0."""
+    for user in users:
+        user["betweenness_centrality"] = 0.0
+    return users
+
+
+def update_centrality(
+    path: List[int],
+    contribution: float,
+    source_id: int,
+    target_id: int,
+    users: List[Dict[str, Any]],
+) -> None:
+    """Apply path contribution to intermediate nodes only."""
+    for uid in path:
+        if uid not in (source_id, target_id):
+            users[uid]["betweenness_centrality"] += contribution
+
+
+def process_shortest_paths(
+    source: Dict[str, Any], users: List[Dict[str, Any]]
+) -> List[Dict[str, Any]]:
+    """Update betweenness using one source user's shortest paths."""
+    source_id = source["id"]
+    for target_id, paths in source["shortest_paths"].items():
+        if source_id < target_id:
+            contribution = 1 / len(paths)
+            for path in paths:
+                update_centrality(path, contribution, source_id, target_id, users)
+    return users
+
+
+def populate_betweeness_v1(users: List[Dict[str, Any]]) -> List[Dict[str, Any]]:
+    """Compatibility wrapper using helper-based implementation."""
+    initialize_centrality(users)
+    for source in users:
+        process_shortest_paths(source, users)
+    return users
+
+
 # -- Closeness centrality -------------------------------------------------------
 
 def populate_closeness(
@@ -99,6 +140,22 @@ def populate_closeness(
     for user in users:
         user["closeness_centrality"] = 1 / (farness(user) + eps)
     return users
+
+
+def get_betweeness(users: List[Dict[str, Any]]) -> List[Tuple[int, float]]:
+    """Return and log per-user betweenness centrality."""
+    values = [(u["id"], u["betweenness_centrality"]) for u in users]
+    for uid, value in values:
+        logging.info("user %d betweenness %.4f", uid, value)
+    return values
+
+
+def get_closeness(users: List[Dict[str, Any]]) -> List[Tuple[int, float]]:
+    """Return and log per-user closeness centrality."""
+    values = [(u["id"], u["closeness_centrality"]) for u in users]
+    for uid, value in values:
+        logging.info("user %d closeness %.4f", uid, value)
+    return values
 
 
 # -- Adjacency matrix & eigenvector centrality -----------------------------------
@@ -168,6 +225,16 @@ def compute_eigenvectors(adjacency_matrix: List[List[int]]) -> List[float]:
     return centralities
 
 
+def get_eigenvector_centrality(
+    centralities: List[float],
+) -> List[Tuple[int, float]]:
+    """Return and log eigenvector centrality values."""
+    values = list(enumerate(centralities))
+    for uid, value in values:
+        logging.info("user %d eigenvector %.4f", uid, value)
+    return values
+
+
 # -- Endorsements & PageRank ----------------------------------------------------
 
 def populate_endorsments(
@@ -207,3 +274,11 @@ def page_rank(
                 next_pr[endorsee["id"]] += share / len(user["endorses"])
         pr = next_pr
     return pr
+
+
+def get_page_ranks(page_ranks: Dict[int, float]) -> List[Tuple[int, float]]:
+    """Return and log PageRank values sorted by user id."""
+    values = sorted(page_ranks.items(), key=lambda pair: pair[0])
+    for uid, value in values:
+        logging.info("user %d pagerank %.4f", uid, value)
+    return values

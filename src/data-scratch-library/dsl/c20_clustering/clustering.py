@@ -66,10 +66,10 @@ def get_children(cluster: Cluster) -> List[Cluster]:
     return cluster[1]
 
 
-def get_values(cluster: Cluster) -> list:
+def get_values(cluster: Cluster) -> Union[Tuple[Any, ...], List[Any]]:
     """Return all leaf values below *cluster*."""
     if is_leaf(cluster):
-        return list(cluster)
+        return cluster
     return [v for child in get_children(cluster) for v in get_values(child)]
 
 

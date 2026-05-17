@@ -50,6 +50,14 @@ def word_count(documents: Iterable[str]) -> List[Tuple[str, int]]:
     ]
 
 
+def word_count_old(documents: Iterable[str]) -> Dict[str, int]:
+    """Legacy word-count API returning a dictionary."""
+    counts: Counter = Counter()
+    for document in documents:
+        counts.update(tokenize(document))
+    return dict(counts)
+
+
 # ---------- generic MapReduce ----------
 
 def map_reduce(

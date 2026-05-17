@@ -45,10 +45,12 @@ def _unique_interests() -> List[str]:
     return sorted({i for ui in users_interests for i in ui})
 
 
+unique_interests = _unique_interests()
+
+
 def make_user_interest_vector(user_interests: List[str]) -> List[int]:
     """Binary vector: 1 if user has the interest, 0 otherwise."""
-    uniq = _unique_interests()
-    return [1 if interest in user_interests else 0 for interest in uniq]
+    return [1 if interest in user_interests else 0 for interest in unique_interests]
 
 
 def _user_interest_matrix() -> List[List[int]]:
@@ -92,10 +94,9 @@ def user_based_suggestions(
 
 def _interest_user_matrix() -> List[List[int]]:
     uim = _user_interest_matrix()
-    uniq = _unique_interests()
     return [
         [uim[u][j] for u in range(len(uim))]
-        for j in range(len(uniq))
+        for j in range(len(unique_interests))
     ]
 
 
@@ -109,10 +110,9 @@ def _interest_similarities() -> List[List[float]]:
 
 def most_similar_interests_to(interest_id: int) -> List[Tuple[str, float]]:
     """Return interests sorted by descending similarity to *interest_id*."""
-    uniq = _unique_interests()
     sims = _interest_similarities()[interest_id]
     pairs = [
-        (uniq[other_id], sim)
+        (unique_interests[other_id], sim)
         for other_id, sim in enumerate(sims)
         if interest_id != other_id and sim > 0
     ]

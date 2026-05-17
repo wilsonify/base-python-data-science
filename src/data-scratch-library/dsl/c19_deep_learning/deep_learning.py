@@ -86,3 +86,6 @@ def random_tensor(*dims: int, init: str = "normal") -> Tensor:
         variance = len(dims) / sum(dims)
         return random_normal(*dims, variance=variance)
     raise ValueError(f"unknown init: {init}")
+
+
+from .layer import Sigmoid
