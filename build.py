@@ -15,7 +15,9 @@ from typing import List, Dict, Optional
 class BuildPipeline:
     """Build pipeline for all deployable units"""
 
-    def __init__(self, src_dir: Path = None):
+    REQUIREMENTS_FILE = "requirements.txt"
+
+    def __init__(self, src_dir: Optional[Path] = None):
         self.src_dir = src_dir or Path(__file__).parent / "src"
         self.build_dir = Path(__file__).parent / "build"
         self.dist_dir = Path(__file__).parent / "dist"
@@ -121,9 +123,9 @@ class BuildPipeline:
 
         try:
             # Install service dependencies
-            if (service_dir / "requirements.txt").exists():
+            if (service_dir / self.REQUIREMENTS_FILE).exists():
                 result = subprocess.run([
-                    sys.executable, "-m", "pip", "install", "-r", "requirements.txt"
+                    sys.executable, "-m", "pip", "install", "-r", self.REQUIREMENTS_FILE
                 ], capture_output=True, text=True, cwd=service_dir)
                 
                 if result.returncode != 0:
@@ -264,7 +266,7 @@ class BuildPipeline:
         shutil.copytree(service_dir, dist_service_dir / "src", dirs_exist_ok=True)
         
         # Copy requirements and setup files
-        for file_name in ["requirements.txt", "setup.py", "pyproject.toml", "Dockerfile"]:
+        for file_name in [self.REQUIREMENTS_FILE, "setup.py", "pyproject.toml", "Dockerfile"]:
             src_file = service_dir / file_name
             if src_file.exists():
                 shutil.copy2(src_file, dist_service_dir)
@@ -302,6 +304,18 @@ class BuildPipeline:
                 if binary.is_file() and binary.stat().st_mode & 0o111:  # Executable
                     shutil.copy2(binary, dist_service_dir)
 
+    def _build_service_by_type(self, service_name: str, service_type: str) -> bool:
+        """Build a service based on its type"""
+        if service_type == 'node':
+            return self.build_node_service(service_name)
+        elif service_type == 'rust':
+            return self.build_rust_service(service_name)
+        elif service_type == 'python':
+            return self.build_python_service(service_name)
+        else:
+            print(f"⚠️  Unknown service type for {service_name}, skipping")
+            return False
+
     def build_all(self, clean_first: bool = True) -> bool:
         """Build all services in dependency order"""
         print("🚀 Starting build pipeline...")
@@ -324,20 +338,9 @@ class BuildPipeline:
                 print(f"⚠️  Service {service_name} not found, skipping")
                 continue
             
-            # Determine service type and build accordingly
             service_type = self.get_service_type(service_name)
-            
-            if service_type == 'node':
-                if self.build_node_service(service_name):
-                    success_count += 1
-            elif service_type == 'rust':
-                if self.build_rust_service(service_name):
-                    success_count += 1
-            elif service_type == 'python':
-                if self.build_python_service(service_name):
-                    success_count += 1
-            else:
-                print(f"⚠️  Unknown service type for {service_name}, skipping")
+            if self._build_service_by_type(service_name, service_type):
+                success_count += 1
         
         print(f"\n📊 Build Summary: {success_count}/{total_count} services built successfully")
         
