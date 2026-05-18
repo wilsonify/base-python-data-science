@@ -20,7 +20,7 @@ def test_search_tweets():
     client = get_temp_client(CONSUMER_KEY, CONSUMER_SECRET)
     temp_creds = get_authentication_url(client)
     pin_code = authorize_application(temp_creds['auth_url'])
-    final_step = get_final_tokens(client, temp_creds,pin_code)
+    final_step = get_final_tokens(temp_creds, pin_code)
     ACCESS_TOKEN = final_step['oauth_token']
     ACCESS_TOKEN_SECRET = final_step['oauth_token_secret']
     twitter = get_twitter_client(CONSUMER_KEY, CONSUMER_SECRET, ACCESS_TOKEN, ACCESS_TOKEN_SECRET)

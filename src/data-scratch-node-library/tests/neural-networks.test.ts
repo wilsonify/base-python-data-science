@@ -15,7 +15,8 @@ import {
     predict,
     xorExample,
     createNetwork,
-    getNetworkInfo
+    getNetworkInfo,
+    type NeuralNetwork
 } from '../ts-data-scratch/neural_networks';
 
 describe('Neural Networks', () => {
@@ -142,7 +143,7 @@ describe('Neural Networks', () => {
             const network = [
                 [[0.15, 0.20], 0.35], // Input to hidden
                 [[0.25, 0.30], 0.35]  // Hidden to output
-            ];
+            ] as NeuralNetwork;
             
             const inputs = [0.05, 0.10];
             const targets = [0.01, 0.99]; // For 2 outputs (need to adjust network)
@@ -151,7 +152,7 @@ describe('Neural Networks', () => {
             const simpleNetwork = [
                 [[0.15, 0.20], 0.35], // 2 inputs to 1 hidden
                 [[0.25], 0.35]        // 1 hidden to 1 output
-            ];
+            ] as NeuralNetwork;
             
             const simpleTargets = [0.01];
             
@@ -166,7 +167,7 @@ describe('Neural Networks', () => {
             const network = [
                 [[0.1, 0.1], 0.1], // 2 inputs to 1 hidden
                 [[0.1], 0.1]       // 1 hidden to 1 output
-            ];
+            ] as NeuralNetwork;
             
             const result = backpropagation(network, [1, 1], [0]);
             expect(result.gradients).toHaveLength(2);
@@ -175,18 +176,15 @@ describe('Neural Networks', () => {
 
     describe('Weight Updates', () => {
         test('updateWeights should modify network weights', () => {
-            const network = [
-                [[0.5, 0.5], 0.5],
-                [[0.5], 0.5]
-            ];
+            const network = createNetwork([2, 1, 1]);
             
             const gradients = [
                 [[0.1, 0.1], 0.1],
                 [[0.1], 0.1]
-            ];
+            ] as unknown as NeuralNetwork;
             
             const learningRate = 0.1;
-            const updatedNetwork = updateWeights(network, gradients, learningRate);
+            const updatedNetwork = updateWeights(network as any, gradients, learningRate);
             
             expect(updatedNetwork).toHaveLength(2);
             expect(updatedNetwork[0]).toHaveLength(2);
@@ -197,18 +195,15 @@ describe('Neural Networks', () => {
         });
 
         test('updateWeights should handle different learning rates', () => {
-            const network = [
-                [[1, 1], 1],
-                [[1], 1]
-            ];
+            const network = createNetwork([2, 1, 1]);
             
             const gradients = [
                 [[0.1, 0.1], 0.1],
                 [[0.1], 0.1]
-            ];
+            ] as unknown as NeuralNetwork;
             
-            const updated1 = updateWeights(network, gradients, 0.1);
-            const updated2 = updateWeights(network, gradients, 0.5);
+            const updated1 = updateWeights(network as any, gradients, 0.1);
+            const updated2 = updateWeights(network as any, gradients, 0.5);
             
             // Different learning rates should produce different results
             expect(updated1[0][0][0]).not.toBe(updated2[0][0][0]);
@@ -301,7 +296,7 @@ describe('Neural Networks', () => {
 
         test('predict should handle multiple outputs', () => {
             // Create a simple multi-output network manually
-            const network = [
+            const network: NeuralNetwork = [
                 [[0.5, 0.5], 0], // 2 inputs to 2 hidden
                 [[0.5, 0.5], 0]  // 2 hidden to 2 outputs
             ];
@@ -379,7 +374,7 @@ describe('Neural Networks', () => {
 
     describe('Edge Cases', () => {
         test('should handle zero weights', () => {
-            const network = [
+            const network: NeuralNetwork = [
                 [[0, 0], 0],
                 [[0], 0]
             ];
@@ -389,7 +384,7 @@ describe('Neural Networks', () => {
         });
 
         test('should handle very large weights', () => {
-            const network = [
+            const network: NeuralNetwork = [
                 [[100, 100], 0],
                 [[100], 0]
             ];
@@ -399,7 +394,7 @@ describe('Neural Networks', () => {
         });
 
         test('should handle very negative weights', () => {
-            const network = [
+            const network: NeuralNetwork = [
                 [[-100, -100], 0],
                 [[-100], 0]
             ];
@@ -409,7 +404,7 @@ describe('Neural Networks', () => {
         });
 
         test('should handle single input neuron', () => {
-            const network = [
+            const network: NeuralNetwork = [
                 [[0.5], 0],
                 [[0.5], 0]
             ];

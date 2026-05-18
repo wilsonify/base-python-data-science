@@ -262,7 +262,7 @@ def forest_classify_endpoint():
         
         # Train multiple trees (random forest)
         trees = []
-        for i in range(num_trees):
+        for _ in range(num_trees):
             # In a real implementation, you'd use bootstrap sampling
             # For simplicity, we'll train on the same data
             tree = build_tree_id3(formatted_data)

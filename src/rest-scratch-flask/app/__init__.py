@@ -56,7 +56,7 @@ def create_app():
         app.register_blueprint(swaggerui_blueprint, url_prefix=SWAGGER_URL)
     
     # OpenAPI specification endpoint
-    @app.route('/openapi.yaml')
+    @app.route('/openapi.yaml', methods=['GET'])
     def openapi_spec():
         """Serve the OpenAPI specification."""
         try:
@@ -75,7 +75,7 @@ def create_app():
             return jsonify({'error': f'Error serving OpenAPI spec: {str(e)}'}), 500
     
     # Health check endpoint
-    @app.route('/health')
+    @app.route('/health', methods=['GET'])
     def health_check():
         response = {'status': 'healthy', 'message': 'Data Scratch Library API is running'}
         if not CORS_AVAILABLE:
@@ -85,7 +85,7 @@ def create_app():
         return response
     
     # Root endpoint with API info
-    @app.route('/')
+    @app.route('/', methods=['GET'])
     def api_info():
         response = {
             'name': 'Data Scratch Library REST API',

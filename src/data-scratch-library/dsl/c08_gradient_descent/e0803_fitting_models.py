@@ -15,7 +15,6 @@ def linear_gradient(x: float, y: float, theta: Vector) -> Vector:
     slope, intercept = theta
     predicted = slope * x + intercept  # The prediction of the model.
     error = (predicted - y)  # error is (predicted - actual).
-    squared_error = error ** 2
     grad = [2 * error * x, 2 * error]
     return grad
 

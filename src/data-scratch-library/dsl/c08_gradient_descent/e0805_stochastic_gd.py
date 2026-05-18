@@ -1,7 +1,4 @@
-"""
-minimize / maximize
-stochastically
-"""
+# Stochastic gradient descent helpers for minimizing or maximizing a target function.
 import random
 
 from dsl.c04_linear_algebra.e0401_vectors import vector_subtract, scalar_multiply

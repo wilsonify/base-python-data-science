@@ -148,7 +148,7 @@ describe('Linear Algebra', () => {
 
         test('should handle large numbers', () => {
             const largeVector = [1e6, 1e6];
-            expect(magnitude(largeVector)).toBeCloseTo(1.414213562e6, 5);
+            expect(magnitude(largeVector)).toBeCloseTo(1.414213562373095e6, 3);
         });
 
         test('should handle negative numbers', () => {

@@ -33,7 +33,7 @@ const loss = new SSE();
 // Training loop
 function train(epochs: number): void {
     for (let epoch = 0; epoch < epochs; epoch++) {
-        let epochLoss = 0.0;
+        let epochLoss = 0;
         
         for (let i = 0; i < xs.length; i++) {
             const predicted = net.forward(xs[i]);

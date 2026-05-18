@@ -10,9 +10,7 @@ import {
 describe('Machine Learning Utilities', () => {
     describe('Data Splitting', () => {
         test('split_data should split data into train and test sets', () => {
-            const data = [
-                [1, 2], [3, 4], [5, 6], [7, 8], [9, 10], [11, 12]
-            ];
+            const data = Array.from({ length: 1000 }, (_, i) => [i + 1, i + 2]);
             
             const result = split_data(data, 0.3);
             
@@ -26,30 +24,30 @@ describe('Machine Learning Utilities', () => {
             
             // Test set should be approximately 30% of data
             const testRatio = result.test.length / data.length;
-            expect(testRatio).toBeGreaterThan(0.2);
-            expect(testRatio).toBeLessThan(0.4);
+            expect(testRatio).toBeGreaterThan(0.25);
+            expect(testRatio).toBeLessThan(0.35);
         });
 
         test('split_data should handle different probabilities', () => {
-            const data = [[1], [2], [3], [4], [5], [6], [7], [8], [9], [10]];
+            const data = Array.from({ length: 1000 }, (_, i) => [i + 1]);
             
             const result50 = split_data(data, 0.5);
             const result20 = split_data(data, 0.2);
             const result80 = split_data(data, 0.8);
             
-            expect(result50.train.length + result50.test.length).toBe(10);
-            expect(result20.train.length + result20.test.length).toBe(10);
-            expect(result80.train.length + result80.test.length).toBe(10);
+            expect(result50.train.length + result50.test.length).toBe(1000);
+            expect(result20.train.length + result20.test.length).toBe(1000);
+            expect(result80.train.length + result80.test.length).toBe(1000);
             
             // Check approximate ratios
-            expect(result50.test.length / 10).toBeGreaterThan(0.3);
-            expect(result50.test.length / 10).toBeLessThan(0.7);
+            expect(result50.test.length / 1000).toBeGreaterThan(0.45);
+            expect(result50.test.length / 1000).toBeLessThan(0.55);
             
-            expect(result20.test.length / 10).toBeGreaterThan(0.1);
-            expect(result20.test.length / 10).toBeLessThan(0.3);
+            expect(result20.test.length / 1000).toBeGreaterThan(0.15);
+            expect(result20.test.length / 1000).toBeLessThan(0.25);
             
-            expect(result80.test.length / 10).toBeGreaterThan(0.7);
-            expect(result80.test.length / 10).toBeLessThan(0.9);
+            expect(result80.test.length / 1000).toBeGreaterThan(0.75);
+            expect(result80.test.length / 1000).toBeLessThan(0.85);
         });
 
         test('split_data should handle edge probabilities', () => {
@@ -108,8 +106,8 @@ describe('Machine Learning Utilities', () => {
 
     describe('Train Test Split', () => {
         test('train_test_split should split features and labels', () => {
-            const x = [[1, 2], [3, 4], [5, 6], [7, 8]];
-            const y = [0, 1, 0, 1];
+            const x = Array.from({ length: 100 }, (_, i) => [i + 1, i + 2]);
+            const y = Array.from({ length: 100 }, (_, i) => i % 2);
             
             const result = train_test_split(x, y, 0.25);
             
@@ -126,8 +124,8 @@ describe('Machine Learning Utilities', () => {
             
             // Check approximate test ratio
             const testRatio = result.x_test.length / x.length;
-            expect(testRatio).toBeGreaterThan(0.1);
-            expect(testRatio).toBeLessThan(0.4);
+            expect(testRatio).toBeGreaterThan(0.15);
+            expect(testRatio).toBeLessThan(0.35);
         });
 
         test('train_test_split should maintain correspondence between x and y', () => {
@@ -144,17 +142,17 @@ describe('Machine Learning Utilities', () => {
         });
 
         test('train_test_split should handle different test sizes', () => {
-            const x = [[1], [2], [3], [4], [5], [6], [7], [8], [9], [10]];
-            const y = [0, 1, 0, 1, 0, 1, 0, 1, 0, 1];
+            const x = Array.from({ length: 1000 }, (_, i) => [i + 1]);
+            const y = Array.from({ length: 1000 }, (_, i) => i % 2);
             
             const result20 = train_test_split(x, y, 0.2);
             const result50 = train_test_split(x, y, 0.5);
             
-            expect(result20.x_test.length / 10).toBeGreaterThan(0.1);
-            expect(result20.x_test.length / 10).toBeLessThan(0.3);
+            expect(result20.x_test.length / 1000).toBeGreaterThan(0.15);
+            expect(result20.x_test.length / 1000).toBeLessThan(0.25);
             
-            expect(result50.x_test.length / 10).toBeGreaterThan(0.3);
-            expect(result50.x_test.length / 10).toBeLessThan(0.7);
+            expect(result50.x_test.length / 1000).toBeGreaterThan(0.45);
+            expect(result50.x_test.length / 1000).toBeLessThan(0.55);
         });
 
         test('train_test_split should handle edge cases', () => {
@@ -267,7 +265,7 @@ describe('Machine Learning Utilities', () => {
         });
 
         test('f1_score should be between 0 and 1', () => {
-            expect(f1_score(50, 10, 50, 10)).toBeCloseTo(0.5, 4);
+            expect(f1_score(50, 10, 50, 10)).toBeCloseTo(0.625, 4);
             expect(f1_score(100, 0, 0, 100)).toBe(1);
             expect(f1_score(0, 100, 0, 0)).toBe(0);
         });

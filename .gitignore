@@ -154,3 +154,8 @@ node_modules/
 
 # Misc
 *.pdf
+*.zip
+
+*.dec*
+
+*coverage*

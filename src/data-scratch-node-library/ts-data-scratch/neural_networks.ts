@@ -56,7 +56,7 @@ export function feedForward(network: NeuralNetwork, inputs: number[]): {
     const outputs: number[][] = [inputs];
     let currentInput = inputs;
 
-    for (const [layerIdx, layer] of network.entries()) {
+    for (const layer of network) {
         const [flattenedWeights, bias] = layer;
         
         // Determine the matrix dimensions
@@ -121,8 +121,8 @@ export function backpropagation(
     
     for (let i = 0; i < outputLayer[0].length; i++) {
         let weightGradient = 0;
-        for (let j = 0; j < outputDelta.length; j++) {
-            weightGradient += outputDelta[j] * prevOutput[i];
+        for (const delta of outputDelta) {
+            weightGradient += delta * prevOutput[i];
         }
         outputWeightsGradient.push(weightGradient);
     }
@@ -142,12 +142,12 @@ export function backpropagation(
         const nextLayerWeights = network[layerIdx + 1][0];
         const layerDelta: number[] = [];
         
-        for (let i = 0; i < layerOutput.length; i++) {
+        for (const outputValue of layerOutput) {
             let error = 0;
-            for (let j = 0; j < currentDelta.length; j++) {
-                error += currentDelta[j] * nextLayerWeights[j];
+            for (const [j, delta] of currentDelta.entries()) {
+                error += delta * nextLayerWeights[j];
             }
-            const delta = error * sigmoidDerivative(layerOutput[i]);
+            const delta = error * sigmoidDerivative(outputValue);
             layerDelta.push(delta);
         }
         
@@ -155,8 +155,8 @@ export function backpropagation(
         const weightsGradient: number[] = [];
         for (let i = 0; i < layer[0].length; i++) {
             let weightGradient = 0;
-            for (let j = 0; j < layerDelta.length; j++) {
-                weightGradient += layerDelta[j] * prevOutput[i];
+            for (const delta of layerDelta) {
+                weightGradient += delta * prevOutput[i];
             }
             weightsGradient.push(weightGradient);
         }
@@ -213,12 +213,12 @@ export function trainSimpleNetwork(
     network: NeuralNetwork;
     finalError: number;
     errors: number[];
+    epochs: number;
 } {
     if (trainingData.length === 0) {
         throw new Error('Training data cannot be empty');
     }
     
-    const inputSize = trainingData[0].inputs.length;
     const outputSize = trainingData[0].target.length;
     
     // Initialize network with random weights
@@ -264,7 +264,8 @@ export function trainSimpleNetwork(
     return {
         network: currentNetwork,
         finalError: errors[errors.length - 1],
-        errors
+        errors,
+        epochs: errors.length,
     };
 }
 
@@ -372,8 +373,8 @@ export function exampleUsage(): void {
     // Feed-forward network
     console.log('\nFeed-Forward Network:');
     const network: NeuralNetwork = [
-        [[0.5, -0.5], 0.0], // Hidden layer
-        [[1.0, 1.0], 0.0]   // Output layer
+        [[0.5, -0.5], 0], // Hidden layer
+        [[1, 1], 0]   // Output layer
     ];
     const ffResult = feedForward(network, [1, 1]);
     console.log(`Network output: [${ffResult.finalOutput.map(v => v.toFixed(4)).join(', ')}]`);

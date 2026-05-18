@@ -2,9 +2,10 @@
 
 export function split_data(data:Array<Array<number>>, prob:number) {
     // split data into fractions [prob, 1 - prob]
+    const normalizedProb = Math.min(Math.max(prob, 0), 1)
     const results = { "train":[] as Array<Array<number>>, "test":[] as Array<Array<number>> }
     for (const row of data) {
-        if (Math.random() < prob) {
+        if (Math.random() < normalizedProb) {
             results["test"].push(row)
         } else {
             results["train"].push(row)
@@ -14,6 +15,10 @@ export function split_data(data:Array<Array<number>>, prob:number) {
 }
 
 export function train_test_split(x:Array<Array<number>>, y:Array<number>, test_pct:number) {
+    if (x.length !== y.length) {
+        throw new Error('x and y must have the same length')
+    }
+    const normalizedPct = Math.min(Math.max(test_pct, 0), 1)
     const results = {
         "x_train":[] as Array<Array<number>>,
         "y_train":[] as Array<number>,
@@ -22,7 +27,7 @@ export function train_test_split(x:Array<Array<number>>, y:Array<number>, test_p
     }
     for (const [i, x_i] of x.entries()) {
         const y_i = y[i]
-        if (Math.random() < test_pct) {
+        if (Math.random() < normalizedPct) {
             results["x_test"].push(x_i)
             results["y_test"].push(y_i)
         } else {
@@ -52,5 +57,15 @@ export function recall(tp:number, fp:number, fn:number, tn:number) {
 export function f1_score(tp:number, fp:number, fn:number, tn:number) {
     const p = precision(tp, fp, fn, tn)
     const r = recall(tp, fp, fn, tn)
+
+    if (Number.isNaN(p) && Number.isNaN(r)) {
+        return NaN
+    }
+    if (Number.isNaN(p) || Number.isNaN(r)) {
+        return 0
+    }
+    if (p + r === 0) {
+        return 0
+    }
     return 2 * p * r / (p + r)
 }

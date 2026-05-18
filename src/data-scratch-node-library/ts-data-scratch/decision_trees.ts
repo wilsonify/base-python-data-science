@@ -229,38 +229,51 @@ export function treeAccuracy(tree: TreeNode, testData: DataPoint[]): number {
 
 // Random Forest implementation
 export class RandomForest {
-    private trees: TreeNode[] = [];
-    private attributes: string[] = [];
-    private numTrees: number = 0;
-    private sampleSize: number = 0;
+    public trees: TreeNode[] = [];
+    public attributes: string[] = [];
+    private readonly numTrees: number;
+    private readonly sampleSize: number;
+    private readonly maxDepth: number;
 
-    constructor(numTrees: number = 10, sampleSize: number = 0.7) {
+    constructor(
+        data: DataPoint[] = [],
+        attributes: string[] = [],
+        numTrees: number = 10,
+        sampleSize: number = 0.7,
+        maxDepth: number = 10
+    ) {
         this.numTrees = numTrees;
         this.sampleSize = sampleSize;
+        this.maxDepth = maxDepth;
+
+        if (data.length > 0) {
+            this.train(data, attributes);
+        }
     }
 
     // Train the random forest
     train(data: DataPoint[], attributes: string[]): void {
+        if (data.length === 0) {
+            throw new Error('Training data cannot be empty');
+        }
+
         this.attributes = attributes;
         this.trees = [];
 
-        const actualSampleSize = Math.floor(data.length * this.sampleSize);
+        const actualSampleSize = Math.max(1, Math.floor(data.length * this.sampleSize));
 
         for (let i = 0; i < this.numTrees; i++) {
-            // Bootstrap sample (sample with replacement)
             const bootstrapSample: DataPoint[] = [];
             for (let j = 0; j < actualSampleSize; j++) {
                 const randomIndex = Math.floor(Math.random() * data.length);
                 bootstrapSample.push(data[randomIndex]);
             }
 
-            // Random subset of attributes (sqrt(n) for classification)
-            const numAttributes = Math.floor(Math.sqrt(attributes.length));
+            const numAttributes = Math.max(1, Math.floor(Math.sqrt(attributes.length)));
             const shuffledAttributes = [...attributes].sort(() => Math.random() - 0.5);
             const selectedAttributes = shuffledAttributes.slice(0, numAttributes);
 
-            // Build tree
-            const tree = buildTree(bootstrapSample, selectedAttributes);
+            const tree = buildTree(bootstrapSample, selectedAttributes, 0, this.maxDepth);
             this.trees.push(tree);
         }
     }
@@ -272,8 +285,21 @@ export class RandomForest {
         }
 
         const votes = this.trees.map(tree => classify(tree, dataPoint));
-        const trueVotes = votes.filter(vote => vote).length;
+        const trueVotes = votes.filter(Boolean).length;
         return trueVotes > votes.length / 2;
+    }
+
+    predict(dataPoint: Record<string, any>): boolean {
+        return this.classify(dataPoint);
+    }
+
+    calculateAccuracy(data: DataPoint[]): number {
+        if (data.length === 0) {
+            return 0;
+        }
+
+        const correct = data.filter(point => this.predict(point.features) === point.label).length;
+        return correct / data.length;
     }
 
     // Get forest information

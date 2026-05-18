@@ -96,7 +96,7 @@ describe('Probability Functions', () => {
         });
 
         test('normal_probability_between should calculate P(a < X < b)', () => {
-            expect(normal_probability_between(-1, 1, 0, 1)).toBeCloseTo(0.6826, 4);
+            expect(normal_probability_between(-1, 1, 0, 1)).toBeCloseTo(0.6827, 4);
             expect(normal_probability_between(-2, 2, 0, 1)).toBeCloseTo(0.9545, 4);
         });
 
@@ -155,11 +155,11 @@ describe('Probability Functions', () => {
             expect(pmf).toHaveLength(11); // 0 to 10 successes
             
             // Probabilities should sum to 1
-            const sum = pmf.reduce((a, b) => a + b, 0);
+            const sum = pmf.reduce((a: number, b: number) => a + b, 0);
             expect(sum).toBeCloseTo(1, 6);
             
             // All probabilities should be between 0 and 1
-            pmf.forEach(p => {
+            pmf.forEach((p: number) => {
                 expect(p).toBeGreaterThanOrEqual(0);
                 expect(p).toBeLessThanOrEqual(1);
             });

@@ -88,8 +88,6 @@ def k_means(data, k, initial_assignments=None, max_iterations=100):
     if not data or k <= 0:
         return [], []
 
-    n = len(data)
-
     # Initialize assignments and means
     assignments, means = _k_means_initialize(data, k, initial_assignments)
 

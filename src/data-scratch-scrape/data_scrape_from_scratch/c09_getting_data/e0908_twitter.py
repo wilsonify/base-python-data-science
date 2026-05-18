@@ -26,7 +26,7 @@ def authorize_application(url: str) -> str:
     return pin_code
 
 
-def get_final_tokens(client: Twython, temp_creds: Dict, pin_code: str) -> Dict:
+def get_final_tokens(temp_creds: Dict, pin_code: str) -> Dict:
     """Exchange the PIN code for the final OAuth tokens."""
     auth_client = Twython(CONSUMER_KEY,
                           CONSUMER_SECRET,
@@ -96,7 +96,7 @@ if __name__ == "__main__":
     temp_client = get_temp_client(CONSUMER_KEY, CONSUMER_SECRET)
     temp_creds = get_authentication_url(temp_client)
     pin_code = authorize_application(temp_creds['auth_url'])
-    final_tokens = get_final_tokens(temp_client, temp_creds, pin_code)
+    final_tokens = get_final_tokens(temp_creds, pin_code)
 
     # Get authenticated twitter client
     twitter = get_twitter_client(CONSUMER_KEY, CONSUMER_SECRET, final_tokens['oauth_token'],

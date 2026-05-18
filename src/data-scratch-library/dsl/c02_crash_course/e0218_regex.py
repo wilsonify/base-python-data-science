@@ -23,4 +23,4 @@ def re_count_ab(word_str: str):
 
 def re_digits_to_dashes(word_str: str):
     # Replace digits with dashes
-    return re.sub("[0-9]", "-", word_str)
+    return re.sub(r"\d", "-", word_str)

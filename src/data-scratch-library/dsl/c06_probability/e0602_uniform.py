@@ -8,6 +8,6 @@ def uniform_cdf(x, a=0, b=1):
     if x < a:
         return 0
     if a < x < b:
-        return (x - a) / (b - a)  # e.g. P(X < 0.4) = 0.4
+        return (x - a) / (b - a)
     if b <= x:
         return 1

@@ -81,7 +81,7 @@ export class NaiveBayesClassifier {
     private wordProbs: WordProbabilities = new Map();
     private spamPrior: number = 0;
     private hamPrior: number = 0;
-    private smoothing: number = 0.5;
+    private readonly smoothing: number;
     private isTrained: boolean = false;
 
     constructor(smoothing: number = 0.5) {

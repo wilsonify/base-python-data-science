@@ -407,7 +407,8 @@ function printBasicClusteringResults(result: KMeansResult): void {
         console.log(`\nCluster ${i}:`);
         console.log(`  Centroid: [${cluster.centroid.map(v => v.toFixed(2)).join(', ')}]`);
         console.log(`  Size: ${cluster.points.length}`);
-        console.log(`  Points: [${cluster.points.map(p => `[${p.join(', ')}]`).join(', ')}]`);
+        const pointStrings = cluster.points.map(p => `[${p.join(', ')}]`);
+        console.log(`  Points: [${pointStrings.join(', ')}]`);
     });
 }
 

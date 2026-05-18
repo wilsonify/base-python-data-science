@@ -19,7 +19,7 @@ def sum_of_squares_gradient(v):
 
 def main():
     # pick a random starting point
-    v = [random.uniform(-10, 10) for i in range(3)]
+    v = [random.uniform(-10, 10) for _ in range(3)]
 
     for epoch in range(1000):
         grad = sum_of_squares_gradient(v)
