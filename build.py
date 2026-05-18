@@ -284,18 +284,23 @@ class BuildPipeline:
                 else:
                     shutil.copytree(item, dist_service_dir / item.name, dirs_exist_ok=True)
 
+    def _copy_service_tree(self, service_dir: Path, dist_service_dir: Path, excluded_name: str) -> None:
+        """Copy a service tree to the distribution directory, excluding one directory."""
+        for item in service_dir.iterdir():
+            if item.name == excluded_name:
+                continue
+            if item.is_file():
+                shutil.copy2(item, dist_service_dir)
+            else:
+                shutil.copytree(item, dist_service_dir / item.name, dirs_exist_ok=True)
+
     def create_rust_distribution(self, service_name: str, service_dir: Path) -> None:
         """Create distribution package for Rust service"""
         dist_service_dir = self.dist_dir / service_name
         dist_service_dir.mkdir(parents=True, exist_ok=True)
         
         # Copy source files
-        for item in service_dir.iterdir():
-            if item.name != "target":
-                if item.is_file():
-                    shutil.copy2(item, dist_service_dir)
-                else:
-                    shutil.copytree(item, dist_service_dir / item.name, dirs_exist_ok=True)
+        self._copy_service_tree(service_dir, dist_service_dir, "target")
         
         # Copy the compiled binary
         target_dir = service_dir / "target" / "release"

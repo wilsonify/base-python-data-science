@@ -7,7 +7,7 @@ export function tensorShape(tensor: Tensor): number[] {
     const sizes: number[] = [];
     while (Array.isArray(tensor) && tensor.length > 0 && typeof tensor[0] !== 'number') {
         sizes.push(tensor.length);
-        tensor = tensor[0] as Tensor;
+        tensor = tensor[0];
     }
     if (Array.isArray(tensor) && typeof tensor[0] === 'number') {
         sizes.push(tensor.length);
@@ -99,13 +99,11 @@ export function randomUniform(...dims: number[]): Tensor {
 function boxMuller(): number {
     const u1 = Math.random();
     const u2 = Math.random();
-    return Math.sqrt(-2.0 * Math.log(u1)) * Math.cos(2.0 * Math.PI * u2);
-}
-
+      return Math.sqrt(-2 * Math.log(u1)) * Math.cos(2 * Math.PI * u2);
 export function randomNormal(
     dims: number[],
-    mean: number = 0.0,
-    variance: number = 1.0
+    mean: number = 0,
+    variance: number = 1
 ): Tensor {
     if (dims.length === 1) {
         return Array.from({ length: dims[0] }, () => 
@@ -126,7 +124,7 @@ export function randomTensor(...dims: number[]): Tensor {
         return randomUniform(...dims);
     } else if (init === 'xavier') {
         const variance = dims.length / dims.reduce((sum, dim) => sum + dim, 0);
-        return randomNormal(dims, 0.0, variance);
+        return randomNormal(dims, 0, variance);
     } else {
         throw new Error(`unknown init: ${init}`);
     }
@@ -142,7 +140,7 @@ export function randomTensorWithInit(...dimsAndInit: [...number[], string]): Ten
         return randomUniform(...dims);
     } else if (init === 'xavier') {
         const variance = dims.length / dims.reduce((sum, dim) => sum + dim, 0);
-        return randomNormal(dims, 0.0, variance);
+        return randomNormal(dims, 0, variance);
     } else {
         throw new Error(`unknown init: ${init}`);
     }

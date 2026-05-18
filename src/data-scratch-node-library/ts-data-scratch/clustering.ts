@@ -107,7 +107,7 @@ function calculateNewMeans(points: Point[], assignments: number[], k: number, ol
     for (let i = 0; i < k; i++) {
         if (clusters[i].length > 0) {
             newMeans.push(vector_mean(clusters[i]));
-        } else if (oldMeans && oldMeans[i]) {
+        } else if (oldMeans?.[i]) {
             newMeans.push(oldMeans[i]);
         } else {
             newMeans.push(new Array(points[0].length).fill(0));
@@ -147,8 +147,6 @@ export function kMeans(
     if (k > points.length) {
         throw new Error('Number of clusters cannot exceed number of points');
     }
-    
-    const dimensions = points[0].length;
     
     // Initialize means (randomly select k points as initial centroids)
     let means: Point[] = initializeRandomMeans(points, k);
@@ -291,7 +289,7 @@ function _detectElbowPoint(errors: number[]): number {
         const improvement1 = errors[i - 1] - errors[i];
         const improvement2 = errors[i] - errors[i + 1];
         // protect against division by zero
-        const relativeImprovement = improvement2 !== 0 ? improvement1 / improvement2 : improvement1;
+        const relativeImprovement = improvement2 === 0 ? improvement1 : improvement1 / improvement2;
 
         if (relativeImprovement > maxImprovement) {
             maxImprovement = relativeImprovement;
@@ -358,8 +356,8 @@ function _computeClusterError(cluster: Cluster): number {
 // Helper: compute errors for all clusters in a result
 function _computeAllClusterErrors(result: KMeansResult): number[] {
     const errors: number[] = [];
-    for (let i = 0; i < result.clusters.length; i++) {
-        errors.push(_computeClusterError(result.clusters[i]));
+    for (const cluster of result.clusters) {
+        errors.push(_computeClusterError(cluster));
     }
     return errors;
 }

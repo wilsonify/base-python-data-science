@@ -115,10 +115,10 @@ def _get_working_constants() -> Dict[str, str]:
         }
 
 
-def _working_map(WORKING_DATA_MODULE: str, e1004: str, e1006: str, e1007: str, e1008: str, e1009: str) -> Dict[str, str]:
+def _working_map(working_data_module: str, e1004: str, e1006: str, e1008: str) -> Dict[str, str]:
     return {
-        'parse_rows': WORKING_DATA_MODULE + '.e1001_univariate',
-        'bucketize': WORKING_DATA_MODULE + '.e1001_univariate',
+        'parse_rows': working_data_module + '.e1001_univariate',
+        'bucketize': working_data_module + '.e1001_univariate',
         'scale': e1008,
         'rescale': e1008,
         'clean_rows': e1006,
@@ -126,7 +126,7 @@ def _working_map(WORKING_DATA_MODULE: str, e1004: str, e1006: str, e1007: str, e
     }
 
 
-def _discover_dsl_functions(existing: Dict[str, str]) -> Dict[str, str]:
+def _discover_dsl_functions_with_pkgutil(existing: Dict[str, str]) -> Dict[str, str]:
     module_mappings: Dict[str, str] = {}
     try:
         import pkgutil
@@ -142,76 +142,102 @@ def _discover_dsl_functions(existing: Dict[str, str]) -> Dict[str, str]:
                 if obj_name not in existing and obj_name not in module_mappings:
                     module_mappings[obj_name] = mod_name
     except Exception:
-        # Filesystem fallback: try to discover functions by parsing .py files
-        try:
-            import ast
-            base_candidate = os.path.normpath(os.path.join(current_dir, os.pardir, os.pardir, os.pardir, 'data-scratch-library', 'dsl'))
-            if os.path.isdir(base_candidate):
-                for root, _, files in os.walk(base_candidate):
-                    for fname in files:
-                        if not fname.endswith('.py'):
-                            continue
-                        fpath = os.path.join(root, fname)
-                        try:
-                            with open(fpath, 'r', encoding='utf-8') as fh:
-                                src = fh.read()
-                            parsed = ast.parse(src)
-                        except Exception:
-                            continue
-
-                        rel = os.path.relpath(fpath, base_candidate)
-                        mod_name = 'dsl.' + rel.replace(os.sep, '.')[:-3]
-
-                        for node in parsed.body:
-                            if isinstance(node, ast.FunctionDef):
-                                if node.name not in existing and node.name not in module_mappings:
-                                    module_mappings[node.name] = mod_name
-        except Exception:
-            return {}
-
+        pass
     return module_mappings
 
 
-def get_all_library_functions() -> Dict[str, Any]:
-    functions: Dict[str, Any] = {}
+def _discover_ast_function_definitions(fpath: str, base_candidate: str, existing: Dict[str, str], module_mappings: Dict[str, str]) -> None:
+    try:
+        with open(fpath, 'r', encoding='utf-8') as fh:
+            src = fh.read()
+        parsed = ast.parse(src)
+    except Exception:
+        return
+
+    rel = os.path.relpath(fpath, base_candidate)
+    mod_name = 'dsl.' + rel.replace(os.sep, '.')[:-3]
+
+    for node in parsed.body:
+        if isinstance(node, ast.FunctionDef):
+            if node.name not in existing and node.name not in module_mappings:
+                module_mappings[node.name] = mod_name
+
+
+def _discover_dsl_functions_with_ast(existing: Dict[str, str]) -> Dict[str, str]:
     module_mappings: Dict[str, str] = {}
+    try:
+        import ast
+        base_candidate = os.path.normpath(
+            os.path.join(current_dir, os.pardir, os.pardir, os.pardir, 'data-scratch-library', 'dsl')
+        )
+        if os.path.isdir(base_candidate):
+            for root, _, files in os.walk(base_candidate):
+                for fname in files:
+                    if not fname.endswith('.py'):
+                        continue
+                    fpath = os.path.join(root, fname)
+                    _discover_ast_function_definitions(fpath, base_candidate, existing, module_mappings)
+    except Exception:
+        pass
+    return module_mappings
 
-    def _populate_module_mappings(target: Dict[str, str]) -> None:
-        grouped = _define_grouped_modules()
-        for module_const, fnames in grouped.items():
-            for fn in fnames:
-                target[fn] = module_const
 
-        ML_MODULE = 'dsl.c11_machine_learning.machine_learning'
-        for fn in ['split_data', 'train_test_split', 'accuracy', 'precision', 'recall', 'f1_score']:
-            target[fn] = ML_MODULE
+def _discover_dsl_functions(existing: Dict[str, str]) -> Dict[str, str]:
+    module_mappings = _discover_dsl_functions_with_pkgutil(existing)
+    module_mappings.update(_discover_dsl_functions_with_ast(existing))
+    return module_mappings
 
-        wc = _get_working_constants()
-        working_map = _working_map(wc['WORKING_DATA_MODULE'], wc['WORKING_E1004'], wc['WORKING_E1006'], wc['WORKING_E1007'], wc['WORKING_E1008'], wc['WORKING_E1009'])
-        target.update(working_map)
 
-        discovered = _discover_dsl_functions(target)
-        target.update(discovered)
+def _discover_dsl_functions(existing: Dict[str, str]) -> Dict[str, str]:
+    module_mappings = _discover_dsl_functions_with_pkgutil(existing)
+    module_mappings.update(_discover_dsl_functions_with_ast(existing))
+    return module_mappings
 
-        target['mysqrt'] = 'dsl.c02_crash_course.e0203_functions'
-        target['strength'] = 'dsl.c06_probability.e0604_binom'
 
-    def _create_strategies(source: Dict[str, str]) -> Dict[str, Any]:
-        out: Dict[str, Any] = {}
-        WARNING_IMPORT_FMT = 'Warning: Could not import {} from {}: {}'
-        for func_name, module_path in source.items():
+def _populate_module_mappings(target: Dict[str, str]) -> None:
+    grouped = _define_grouped_modules()
+    for module_const, fnames in grouped.items():
+        for fn in fnames:
+            target[fn] = module_const
+
+    ML_MODULE = 'dsl.c11_machine_learning.machine_learning'
+    for fn in ['split_data', 'train_test_split', 'accuracy', 'precision', 'recall', 'f1_score']:
+        target[fn] = ML_MODULE
+
+    wc = _get_working_constants()
+    working_map = _working_map(
+        wc['WORKING_DATA_MODULE'],
+        wc['WORKING_E1004'],
+        wc['WORKING_E1006'],
+        wc['WORKING_E1008'],
+    )
+    target.update(working_map)
+
+    discovered = _discover_dsl_functions(target)
+    target.update(discovered)
+
+    target['mysqrt'] = 'dsl.c02_crash_course.e0203_functions'
+    target['strength'] = 'dsl.c06_probability.e0604_binom'
+
+
+def _create_strategies(source: Dict[str, str]) -> Dict[str, Any]:
+    out: Dict[str, Any] = {}
+    WARNING_IMPORT_FMT = 'Warning: Could not import {} from {}: {}'
+    for func_name, module_path in source.items():
+        try:
+            out[func_name] = create_dynamic_strategy(module_path, func_name)
+        except Exception:
             try:
-                out[func_name] = create_dynamic_strategy(module_path, func_name)
+                print(WARNING_IMPORT_FMT.format(func_name, module_path, 'ImportError'))
             except Exception:
-                try:
-                    print(WARNING_IMPORT_FMT.format(func_name, module_path, 'ImportError'))
-                except Exception:
-                    pass
-        return out
+                pass
+    return out
 
+
+def get_all_library_functions() -> Dict[str, Any]:
+    module_mappings: Dict[str, str] = {}
     _populate_module_mappings(module_mappings)
-    functions = _create_strategies(module_mappings)
-    return functions
+    return _create_strategies(module_mappings)
 
 
 # Build strategies at import time (best-effort)

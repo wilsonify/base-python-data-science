@@ -56,8 +56,8 @@ export function feedForward(network: NeuralNetwork, inputs: number[]): {
     const outputs: number[][] = [inputs];
     let currentInput = inputs;
 
-    for (let layerIdx = 0; layerIdx < network.length; layerIdx++) {
-        const [flattenedWeights, bias] = network[layerIdx];
+    for (const [layerIdx, layer] of network.entries()) {
+        const [flattenedWeights, bias] = layer;
         
         // Determine the matrix dimensions
         const inputSize = currentInput.length;

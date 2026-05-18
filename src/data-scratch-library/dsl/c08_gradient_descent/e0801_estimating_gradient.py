@@ -21,10 +21,10 @@ def difference_quotient(f: Callable[[float], float | list[float]], x: float, h: 
 
 
 def partial_difference_quotient(
-        f: Callable[[Vector], float],
+        f: Callable[[Vector], float | list[float]],
         v: Vector,
         i: int,
-        h: float) -> float:
+        h: float) -> float | list[float]:
     """
     Returns the i-th partial difference quotient of f at v
     """

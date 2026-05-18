@@ -22,8 +22,14 @@ def train_test_split(
     """Split paired *x* / *y* data into train and test sets."""
     data = list(zip(x, y))
     train, test = split_data(data, 1 - test_pct)
-    x_train, y_train = list(zip(*train))
-    x_test, y_test = list(zip(*test))
+    if train:
+        x_train, y_train = map(list, zip(*train))
+    else:
+        x_train, y_train = [], []
+    if test:
+        x_test, y_test = map(list, zip(*test))
+    else:
+        x_test, y_test = [], []
     return x_train, x_test, y_train, y_test
 
 
@@ -35,12 +41,12 @@ def accuracy(tp: int, fp: int, fn: int, tn: int) -> float:
     return (tp + tn) / (tp + fp + fn + tn)
 
 
-def precision(tp: int, fp: int, fn: int, tn: int) -> float:
+def precision(tp: int, fp: int, _fn: int, _tn: int) -> float:
     """Proportion of positive predictions that are correct."""
     return tp / (tp + fp)
 
 
-def recall(tp: int, fp: int, fn: int, tn: int) -> float:
+def recall(tp: int, _fp: int, fn: int, _tn: int) -> float:
     """Proportion of actual positives correctly identified."""
     return tp / (tp + fn)
 

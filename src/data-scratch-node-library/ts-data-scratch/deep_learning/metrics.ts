@@ -4,6 +4,18 @@
 import { Tensor, tensorCombine, tensorSum, zerosLike, is1d } from './index';
 import { Layer } from './layer';
 
+function copyTensor(source: Tensor, target: Tensor): void {
+    if (is1d(source)) {
+        for (let i = 0; i < (source as number[]).length; i++) {
+            (target as number[])[i] = (source as number[])[i];
+        }
+    } else {
+        for (let i = 0; i < (source as Tensor[]).length; i++) {
+            copyTensor((source as Tensor[])[i], (target as Tensor[])[i]);
+        }
+    }
+}
+
 export function softmax(tensor: Tensor): Tensor {
     if (is1d(tensor)) {
         // Subtract largest value for numerical stability
@@ -45,7 +57,7 @@ export abstract class Optimizer {
 }
 
 export class GradientDescent extends Optimizer {
-    private learningRate: number;
+    private readonly learningRate: number;
 
     constructor(learningRate: number = 0.1) {
         super();
@@ -55,39 +67,27 @@ export class GradientDescent extends Optimizer {
     step(layer: Layer): void {
         const params = layer.params();
         const grads = layer.grads();
-        
+
         for (let i = 0; i < params.length; i++) {
             const param = params[i];
             const grad = grads[i];
-            
+
             // Update param using gradient step
             const updatedParam = tensorCombine(
                 (p, g) => p - g * this.learningRate,
                 param,
                 grad
             );
-            
-            // Copy updated values back to param (in-place update)
-            this.copyTensor(updatedParam, param);
-        }
-    }
 
-    private copyTensor(source: Tensor, target: Tensor): void {
-        if (is1d(source)) {
-            for (let i = 0; i < (source as number[]).length; i++) {
-                (target as number[])[i] = (source as number[])[i];
-            }
-        } else {
-            for (let i = 0; i < (source as Tensor[]).length; i++) {
-                this.copyTensor((source as Tensor[])[i], (target as Tensor[])[i]);
-            }
+            // Copy updated values back to param (in-place update)
+            copyTensor(updatedParam, param);
         }
     }
 }
 
 export class Momentum extends Optimizer {
-    private learningRate: number;
-    private momentum: number;
+    private readonly learningRate: number;
+    private readonly momentum: number;
     private updates: Tensor[] = [];
 
     constructor(learningRate: number, momentum: number = 0.9) {
@@ -99,7 +99,7 @@ export class Momentum extends Optimizer {
     step(layer: Layer): void {
         const params = layer.params();
         const grads = layer.grads();
-        
+
         // If we have no previous updates, start with all zeros
         if (this.updates.length === 0) {
             this.updates = grads.map(grad => zerosLike(grad));
@@ -109,42 +109,29 @@ export class Momentum extends Optimizer {
             const update = this.updates[i];
             const param = params[i];
             const grad = grads[i];
-            
+
             // Apply momentum
             const newUpdate = tensorCombine(
                 (u, g) => this.momentum * u + (1 - this.momentum) * g,
                 update,
                 grad
             );
-            
+
             // Copy new update back
-            this.copyTensor(newUpdate, update);
-            
+            copyTensor(newUpdate, update);
+
             // Then take a gradient step
             const updatedParam = tensorCombine(
                 (p, u) => p - this.learningRate * u,
                 param,
                 update
             );
-            
-            // Copy updated values back to param
-            this.copyTensor(updatedParam, param);
-        }
-    }
 
-    private copyTensor(source: Tensor, target: Tensor): void {
-        if (is1d(source)) {
-            for (let i = 0; i < (source as number[]).length; i++) {
-                (target as number[])[i] = (source as number[])[i];
-            }
-        } else {
-            for (let i = 0; i < (source as Tensor[]).length; i++) {
-                this.copyTensor((source as Tensor[])[i], (target as Tensor[])[i]);
-            }
+            // Copy updated values back to param
+            copyTensor(updatedParam, param);
         }
     }
 }
-
 export class SoftmaxCrossEntropy extends Loss {
     loss(predicted: Tensor, actual: Tensor): number {
         // Apply softmax to get probabilities

@@ -77,7 +77,7 @@ def score_logistic(
     y_test: List[int],
 ) -> Tuple[float, float]:
     """Return (precision, recall) on the test set."""
-    tp = fp = tn = fn = 0
+    tp = fp = fn = 0
     for x_i, y_i in zip(x_test, y_test):
         pred = logistic(dot(beta_hat, x_i))
         if y_i == 1 and pred >= 0.5:
@@ -86,8 +86,6 @@ def score_logistic(
             fn += 1
         elif pred >= 0.5:
             fp += 1
-        else:
-            tn += 1
     precision = tp / (tp + fp) if (tp + fp) else 0.0
     recall = tp / (tp + fn) if (tp + fn) else 0.0
     return precision, recall

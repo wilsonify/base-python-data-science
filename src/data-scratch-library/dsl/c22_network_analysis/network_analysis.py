@@ -77,16 +77,9 @@ def populate_shortest_paths(users: List[Dict[str, Any]]) -> List[Dict[str, Any]]
 
 def populate_betweeness(users: List[Dict[str, Any]]) -> List[Dict[str, Any]]:
     """Compute and attach ``betweenness_centrality`` to each user."""
-    for user in users:
-        user["betweenness_centrality"] = 0.0
+    initialize_centrality(users)
     for source in users:
-        for target_id, paths in source["shortest_paths"].items():
-            if source["id"] < target_id:
-                contrib = 1 / len(paths)
-                for path in paths:
-                    for uid in path:
-                        if uid not in (source["id"], target_id):
-                            users[uid]["betweenness_centrality"] += contrib
+        process_shortest_paths(source, users)
     return users
 
 

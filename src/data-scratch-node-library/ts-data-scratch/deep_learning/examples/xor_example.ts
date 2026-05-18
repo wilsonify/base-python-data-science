@@ -3,7 +3,6 @@
 
 import { Sequential, Linear, Sigmoid } from '../layer';
 import { GradientDescent, SSE } from '../metrics';
-import { Tensor } from '../index';
 
 // Training data
 const xs: number[][] = [
@@ -52,7 +51,7 @@ function train(epochs: number): void {
 
 // Test the trained network
 function test(): void {
-    console.log('\\nTesting XOR network:');
+    console.log(String.raw`\nTesting XOR network:`);
     for (let i = 0; i < xs.length; i++) {
         const predicted = net.forward(xs[i]);
         console.log(`Input: [${xs[i]}], Predicted: ${(predicted[0] as number).toFixed(3)}, Actual: ${ys[i][0]}`);
@@ -65,7 +64,7 @@ train(3000);
 test();
 
 // Print final weights
-console.log('\\nFinal weights:');
+console.log(String.raw`\nFinal weights:`);
 const params = net.params();
 for (let i = 0; i < params.length; i++) {
     console.log(`Parameter ${i}:`, params[i]);

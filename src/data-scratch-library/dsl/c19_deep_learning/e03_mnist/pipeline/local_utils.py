@@ -14,7 +14,7 @@ class Config:
     """Local configuration class."""
     
     def __init__(self, config_dict: Dict[str, Any]):
-        self.config = config_dict
+        self.config_data = config_dict
         for key, value in config_dict.items():
             setattr(self, key.lower(), value)
     
@@ -27,11 +27,11 @@ class Config:
     
     def to_dict(self) -> Dict[str, Any]:
         """Convert config to dictionary."""
-        return self.config
+        return self.config_data
     
     def __getattr__(self, name: str) -> Any:
         """Get attribute with case-insensitive access."""
-        return self.config.get(name.upper())
+        return self.config_data.get(name.upper())
 
 
 def save_local_file(data: Any, filepath: str) -> None:

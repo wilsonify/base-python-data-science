@@ -67,44 +67,51 @@ def _get_working_constants() -> Dict[str, str]:
         }
 
 
-def _working_map(WORKING_DATA_MODULE, WORKING_E1004, WORKING_E1006, WORKING_E1007, WORKING_E1008, WORKING_E1009):
+def _working_map(
+    working_data_module,
+    working_e1004,
+    working_e1006,
+    working_e1007,
+    working_e1008,
+    working_e1009,
+):
     return {
-        'bucketize': WORKING_DATA_MODULE + '.e1001_univariate',
-        'make_histogram': WORKING_DATA_MODULE + '.e1001_univariate',
-        'correlation_matrix': WORKING_DATA_MODULE + '.e1003_multivariate',
-        'random_normal': WORKING_DATA_MODULE + '.e1002_bivariate',
-        'demo_deque': WORKING_DATA_MODULE + '.e1000_circular_buffer',
-        'create_stock_price_namedtuple': WORKING_E1004,
-        'create_stock_price': WORKING_E1004,
-        'create_price_dict': WORKING_E1004,
-        'parse_row': WORKING_E1006,
-        'try_parse_row': WORKING_E1006,
-        'process_csv': WORKING_E1006,
-        'max_stock_price': WORKING_E1007,
-        'max_prices_by_symbol': WORKING_E1007,
-        'pct_change': WORKING_E1007,
-        'day_over_day_changes': WORKING_E1007,
-        'group_prices_by_symbol': WORKING_E1007,
-        'find_largest_and_smallest_changes': WORKING_E1007,
-        'average_daily_change_by_month': WORKING_E1007,
-        'create_stock_price_dataclass': WORKING_DATA_MODULE + '.e1005_dataclass',
-        'vector_mean': WORKING_E1008,
-        'standard_deviation': WORKING_E1008,
-        'scale': WORKING_E1008,
-        'rescale': WORKING_E1008,
-        'simple_trange': WORKING_E1009,
-        'de_mean': WORKING_E1009,
-        'direction': WORKING_E1009,
-        'directional_variance': WORKING_E1009,
-        'directional_variance_gradient': WORKING_E1009,
-        'first_principal_component': WORKING_E1009,
-        'project': WORKING_E1009,
-        'remove_projection_from_vector': WORKING_E1009,
-        'remove_projection': WORKING_E1009,
+        'bucketize': working_data_module + '.e1001_univariate',
+        'make_histogram': working_data_module + '.e1001_univariate',
+        'correlation_matrix': working_data_module + '.e1003_multivariate',
+        'random_normal': working_data_module + '.e1002_bivariate',
+        'demo_deque': working_data_module + '.e1000_circular_buffer',
+        'create_stock_price_namedtuple': working_e1004,
+        'create_stock_price': working_e1004,
+        'create_price_dict': working_e1004,
+        'parse_row': working_e1006,
+        'try_parse_row': working_e1006,
+        'process_csv': working_e1006,
+        'max_stock_price': working_e1007,
+        'max_prices_by_symbol': working_e1007,
+        'pct_change': working_e1007,
+        'day_over_day_changes': working_e1007,
+        'group_prices_by_symbol': working_e1007,
+        'find_largest_and_smallest_changes': working_e1007,
+        'average_daily_change_by_month': working_e1007,
+        'create_stock_price_dataclass': working_data_module + '.e1005_dataclass',
+        'vector_mean': working_e1008,
+        'standard_deviation': working_e1008,
+        'scale': working_e1008,
+        'rescale': working_e1008,
+        'simple_trange': working_e1009,
+        'de_mean': working_e1009,
+        'direction': working_e1009,
+        'directional_variance': working_e1009,
+        'directional_variance_gradient': working_e1009,
+        'first_principal_component': working_e1009,
+        'project': working_e1009,
+        'remove_projection_from_vector': working_e1009,
+        'remove_projection': working_e1009,
     }
 
 
-def _discover_dsl_functions(existing: Dict[str, str]) -> Dict[str, str]:
+def _discover_dsl_functions_with_pkgutil(existing: Dict[str, str]) -> Dict[str, str]:
     module_mappings: Dict[str, str] = {}
     try:
         import pkgutil
@@ -119,35 +126,49 @@ def _discover_dsl_functions(existing: Dict[str, str]) -> Dict[str, str]:
             for obj_name, obj in inspect.getmembers(mod, inspect.isfunction):
                 if obj_name not in existing and obj_name not in module_mappings:
                     module_mappings[obj_name] = mod_name
-    except ImportError:
-        # Filesystem fallback
-        try:
-            import ast
-            candidate = os.path.join(os.path.dirname(__file__), os.pardir, os.pardir, os.pardir, 'data-scratch-library', 'dsl')
-            candidate = os.path.normpath(candidate)
-            if os.path.isdir(candidate):
-                for root, _, files in os.walk(candidate):
-                    for fname in files:
-                        if not fname.endswith('.py'):
-                            continue
-                        fpath = os.path.join(root, fname)
-                        try:
-                            with open(fpath, 'r', encoding='utf-8') as fh:
-                                src = fh.read()
-                            parsed = ast.parse(src)
-                        except Exception:
-                            continue
+    except Exception:
+        pass
+    return module_mappings
 
-                        rel = os.path.relpath(fpath, candidate)
-                        mod_name = 'dsl.' + rel.replace(os.sep, '.')[:-3]
 
-                        for node in parsed.body:
-                            if isinstance(node, ast.FunctionDef):
-                                if node.name not in existing and node.name not in module_mappings:
-                                    module_mappings[node.name] = mod_name
-        except Exception:
-            pass
+def _discover_ast_function_definitions(fpath: str, base_candidate: str, existing: Dict[str, str], module_mappings: Dict[str, str]) -> None:
+    try:
+        with open(fpath, 'r', encoding='utf-8') as fh:
+            src = fh.read()
+        parsed = ast.parse(src)
+    except Exception:
+        return
 
+    rel = os.path.relpath(fpath, base_candidate)
+    mod_name = 'dsl.' + rel.replace(os.sep, '.')[:-3]
+
+    for node in parsed.body:
+        if isinstance(node, ast.FunctionDef):
+            if node.name not in existing and node.name not in module_mappings:
+                module_mappings[node.name] = mod_name
+
+
+def _discover_dsl_functions_with_ast(existing: Dict[str, str]) -> Dict[str, str]:
+    module_mappings: Dict[str, str] = {}
+    try:
+        import ast
+        candidate = os.path.join(os.path.dirname(__file__), os.pardir, os.pardir, os.pardir, 'data-scratch-library', 'dsl')
+        candidate = os.path.normpath(candidate)
+        if os.path.isdir(candidate):
+            for root, _, files in os.walk(candidate):
+                for fname in files:
+                    if not fname.endswith('.py'):
+                        continue
+                    fpath = os.path.join(root, fname)
+                    _discover_ast_function_definitions(fpath, candidate, existing, module_mappings)
+    except Exception:
+        pass
+    return module_mappings
+
+
+def _discover_dsl_functions(existing: Dict[str, str]) -> Dict[str, str]:
+    module_mappings = _discover_dsl_functions_with_pkgutil(existing)
+    module_mappings.update(_discover_dsl_functions_with_ast(existing))
     return module_mappings
 def create_dynamic_strategy(module_path: str, function_name: str):
     """Dynamically create a strategy function that wraps a library function"""
@@ -173,56 +194,61 @@ def create_dynamic_strategy(module_path: str, function_name: str):
     return dynamic_strategy
 
 
-def get_all_library_functions():
-    """Discover all functions in the data-scratch-library"""
-    functions: Dict[str, Any] = {}
-    module_mappings: Dict[str, str] = {}
+def _populate_module_mappings(target: Dict[str, str]) -> None:
+    """Populate the provided mapping with known module/function relationships."""
+    grouped = _define_grouped_modules()
 
-    def _populate_module_mappings(target: Dict[str, str]) -> None:
-        """Populate the provided mapping with known module/function relationships."""
-        grouped = _define_grouped_modules()
+    # Populate from grouped definitions
+    for module_const, fnames in grouped.items():
+        for fn in fnames:
+            target[fn] = module_const
 
-        # Populate from grouped definitions
-        for module_const, fnames in grouped.items():
-            for fn in fnames:
-                target[fn] = module_const
+    # Machine learning group
+    ML_MODULE = 'dsl.c11_machine_learning.machine_learning'
+    for fn in ['split_data', 'train_test_split', 'accuracy', 'precision', 'recall', 'f1_score']:
+        target[fn] = ML_MODULE
 
-        # Machine learning group
-        ML_MODULE = 'dsl.c11_machine_learning.machine_learning'
-        for fn in ['split_data', 'train_test_split', 'accuracy', 'precision', 'recall', 'f1_score']:
-            target[fn] = ML_MODULE
+    # Working-with-data mappings
+    wc = _get_working_constants()
+    working_map = _working_map(
+        wc['WORKING_DATA_MODULE'],
+        wc['WORKING_E1004'],
+        wc['WORKING_E1006'],
+        wc['WORKING_E1007'],
+        wc['WORKING_E1008'],
+        wc['WORKING_E1009'],
+    )
+    target.update(working_map)
 
-        # Working-with-data mappings
-        wc = _get_working_constants()
-        working_map = _working_map(wc['WORKING_DATA_MODULE'], wc['WORKING_E1004'], wc['WORKING_E1006'], wc['WORKING_E1007'], wc['WORKING_E1008'], wc['WORKING_E1009'])
-        target.update(working_map)
+    # Add discovered functions (best-effort)
+    discovered = _discover_dsl_functions(target)
+    target.update(discovered)
 
-        # Add discovered functions (best-effort)
-        discovered = _discover_dsl_functions(target)
-        target.update(discovered)
+    # Utilities
+    target['mysqrt'] = 'dsl.c02_crash_course.e0203_functions'
+    target['strength'] = 'dsl.c06_probability.e0604_binom'
 
-        # Utilities
-        target['mysqrt'] = 'dsl.c02_crash_course.e0203_functions'
-        target['strength'] = 'dsl.c06_probability.e0604_binom'
 
-    def _create_strategies_from_mappings(source: Dict[str, str]) -> Dict[str, Any]:
-        out: Dict[str, Any] = {}
-        WARNING_IMPORT_FMT = 'Warning: Could not import {} from {}: {}'
+def _create_strategies_from_mappings(source: Dict[str, str]) -> Dict[str, Any]:
+    out: Dict[str, Any] = {}
+    WARNING_IMPORT_FMT = 'Warning: Could not import {} from {}: {}'
 
-        for func_name, module_path in source.items():
+    for func_name, module_path in source.items():
+        try:
+            out[func_name] = create_dynamic_strategy(module_path, func_name)
+        except ImportError as e:
             try:
-                out[func_name] = create_dynamic_strategy(module_path, func_name)
-            except ImportError as e:
-                try:
-                    print(WARNING_IMPORT_FMT.format(func_name, module_path, e))
-                except Exception:
-                    pass
+                print(WARNING_IMPORT_FMT.format(func_name, module_path, e))
+            except Exception:
+                pass
 
-        return out
+    return out
 
+
+def get_all_library_functions() -> Dict[str, Any]:
+    module_mappings: Dict[str, str] = {}
     _populate_module_mappings(module_mappings)
-    functions = _create_strategies_from_mappings(module_mappings)
-    return functions
+    return _create_strategies_from_mappings(module_mappings)
 
 
 # Create all dynamic strategies

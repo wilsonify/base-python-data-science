@@ -71,7 +71,7 @@ function trainWithSSE(epochs: number): void {
 
     console.log('Training with SSE loss...');
     for (let epoch = 0; epoch < epochs; epoch++) {
-        let epochLoss = 0.0;
+        let epochLoss = 0;
         
         for (let i = 0; i < xs.length; i++) {
             const predicted = net.forward(xs[i]);
@@ -100,10 +100,10 @@ function trainWithSoftmaxCrossEntropy(epochs: number): void {
     const optimizer = new Momentum(0.1, 0.9);
     const loss = new SoftmaxCrossEntropy();
 
-    console.log('\\nTraining with SoftmaxCrossEntropy loss...');
+    console.log(String.raw`\nTraining with SoftmaxCrossEntropy loss...`);
     for (let epoch = 0; epoch < epochs; epoch++) {
-        let epochLoss = 0.0;
-        
+        let epochLoss = 0;
+
         for (let i = 0; i < xs.length; i++) {
             const predicted = net2.forward(xs[i]);
             epochLoss += loss.loss(predicted, ys[i]);
@@ -111,7 +111,7 @@ function trainWithSoftmaxCrossEntropy(epochs: number): void {
             net2.backward(gradient);
             optimizer.step(net2);
         }
-        
+
         const accuracy = fizzBuzzAccuracy(101, 1024, net2);
         if (epoch % 20 === 0) {
             console.log(`fb loss: ${epochLoss.toFixed(3)} acc: ${accuracy.toFixed(2)}`);
@@ -119,7 +119,7 @@ function trainWithSoftmaxCrossEntropy(epochs: number): void {
     }
 
     // Test results
-    console.log(`\\nTest results (SSE): ${fizzBuzzAccuracy(1, 101, net).toFixed(2)}`);
+    console.log(String.raw`\nTest results (SSE): ${fizzBuzzAccuracy(1, 101, net).toFixed(2)}`);
     console.log(`Test results (SoftmaxCrossEntropy): ${fizzBuzzAccuracy(1, 101, net2).toFixed(2)}`);
 }
 

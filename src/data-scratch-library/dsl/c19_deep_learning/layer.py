@@ -65,10 +65,11 @@ class Sequential(Layer):
     def __init__(self, layers: List[Layer]) -> None:
         self.layers = layers
 
-    def forward(self, input: Tensor) -> Tensor:
+    def forward(self, inputs: Tensor) -> Tensor:
+        output = inputs
         for layer in self.layers:
-            input = layer.forward(input)
-        return input
+            output = layer.forward(output)
+        return output
 
     def backward(self, gradient: Tensor) -> Tensor:
         for layer in reversed(self.layers):

@@ -1,7 +1,7 @@
 // Model serialization utilities for deep learning framework
 // Ported from Python io module
 
-import { readFileSync, writeFileSync } from 'fs';
+import { readFileSync, writeFileSync } from 'node:fs';
 import { Layer } from './layer';
 import { Tensor, tensorShape } from './index';
 
