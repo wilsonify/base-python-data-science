@@ -1,121 +1,148 @@
-/*
-A decision tree uses a tree structure to represent a number of possible decision paths and an outcome for each path.
+#include "decision_trees.h"
+#include <algorithm>
+#include <map>
+#include <stdexcept>
 
-*/
+using LabeledData = std::vector<std::pair<std::unordered_map<std::string,std::string>, std::string>>;
 
-import logging
-import math
-from collections import Counter, defaultdict
-from functools import partial
-from logging.config import dictConfig
-
-from dsl import config
-
-
-double entropy(class_probabilities) {
-    /* given a list of class probabilities, compute the entropy */
-    return sum(-p * math.log(p, 2) for p in class_probabilities if p)
+double entropy(const std::vector<double>& class_probabilities) {
+    double result = 0.0;
+    for (double p : class_probabilities)
+        if (p > 0.0) result += -p * std::log2(p);
+    return result;
 }
 
-double get_class_probabilities(labels) {
-    total_count = len(labels)
-    return [count / total_count for count in Counter(labels).values()]
+std::vector<double> get_class_probabilities(const std::vector<std::string>& labels) {
+    std::map<std::string, int> counts;
+    for (const auto& label : labels)
+        ++counts[label];
+    double total = static_cast<double>(labels.size());
+    std::vector<double> probs;
+    probs.reserve(counts.size());
+    for (const auto& [label, count] : counts)
+        probs.push_back(count / total);
+    return probs;
 }
 
-double data_entropy(labeled_data) {
-    labels = [label for _, label in labeled_data]
-    probabilities = get_class_probabilities(labels)
-    return entropy(probabilities)
+double data_entropy(const LabeledData& labeled_data) {
+    std::vector<std::string> labels;
+    labels.reserve(labeled_data.size());
+    for (const auto& [attrs, label] : labeled_data)
+        labels.push_back(label);
+    return entropy(get_class_probabilities(labels));
 }
 
-double partition_entropy(subsets) {
-    /* find the entropy from this partition of data into subsets */
-    total_count = sum(len(subset) for subset in subsets)
-
-    return sum(data_entropy(subset) * len(subset) / total_count for subset in subsets)
+double partition_entropy(const std::vector<LabeledData>& subsets) {
+    size_t total_count = 0;
+    for (const auto& subset : subsets)
+        total_count += subset.size();
+    double result = 0.0;
+    for (const auto& subset : subsets)
+        result += data_entropy(subset) * static_cast<double>(subset.size()) / total_count;
+    return result;
 }
 
-double group_by(items, key_fn) {
-    /*returns a defaultdict(list), where each input item
-    is in the list whose key is key_fn(item)*/
-    groups = defaultdict(list)
-    for item in items:
-        key = key_fn(item)
-        groups[key].append(item)
-    return groups
+double partition_entropy_by(const LabeledData& inputs, const std::string& attribute) {
+    std::map<std::string, LabeledData> groups;
+    for (const auto& item : inputs) {
+        auto it = item.first.find(attribute);
+        std::string key = (it != item.first.end()) ? it->second : "";
+        groups[key].push_back(item);
+    }
+    std::vector<LabeledData> subsets;
+    subsets.reserve(groups.size());
+    for (auto& [k, v] : groups)
+        subsets.push_back(std::move(v));
+    return partition_entropy(subsets);
 }
 
-double partition_by(inputs, attribute) {
-    /*returns a dict of inputs partitioned by the attribute
-    each input is a pair (attribute_dict, label)*/
-    return group_by(inputs, lambda x: x[0][attribute])
-}
-
-double partition_entropy_by(inputs, attribute) {
-    /* computes the entropy corresponding to the given partition */
-    partitions = partition_by(inputs, attribute)
-    return partition_entropy(partitions.values())
-}
-
-double classify(tree, inputs) {
-    /* classify the input using the given decision tree */
-
-    // if this is a leaf node, return its value
-    if tree in [True, False]:
-        return tree
-
-    // otherwise find the correct subtree
-    attribute, subtree_dict = tree
-
-    subtree_key = inputs.get(attribute)  // None if input is missing attribute
-
-    if subtree_key not in subtree_dict:  // if no subtree for key,
-        subtree_key = None  // we'll use the None subtree
-
-    subtree = subtree_dict[subtree_key]  // choose the appropriate subtree
-    return classify(subtree, inputs)  // and use it to classify the input
-}
-
-double build_tree_id3(inputs, split_candidates=None) {
-    // if this is our first pass,
-    // all keys of the first input are split candidates
-    if split_candidates is None:
-        split_candidates = inputs[0][0].keys()
-
-    // count Trues and Falses in the inputs
-    num_inputs = len(inputs)
-    num_trues = len([label for item, label in inputs if label])
-    num_falses = num_inputs - num_trues
-
-    if num_trues == 0:  // if only Falses are left
-        return False  // return a "False" leaf
-
-    if num_falses == 0:  // if only Trues are left
-        return True  // return a "True" leaf
-
-    if not split_candidates:  // if no split candidates left
-        return num_trues >= num_falses  // return the majority leaf
-
-    // otherwise, split on the best attribute
-    best_attribute = min(split_candidates, key=partial(partition_entropy_by, inputs))
-
-    partitions = partition_by(inputs, best_attribute)
-    new_candidates = [a for a in split_candidates if a != best_attribute]
-
-    // recursively build the subtrees
-    subtrees = {
-        attribute: build_tree_id3(subset, new_candidates)
-        for attribute, subset in partitions.items()
+std::shared_ptr<TreeNode> build_tree_id3(const LabeledData& inputs, std::vector<std::string> split_candidates) {
+    if (split_candidates.empty() && !inputs.empty()) {
+        // First call: collect all attribute keys
+        for (const auto& [attrs, label] : inputs)
+            for (const auto& [key, val] : attrs)
+                split_candidates.push_back(key);
+        std::sort(split_candidates.begin(), split_candidates.end());
+        split_candidates.erase(std::unique(split_candidates.begin(), split_candidates.end()), split_candidates.end());
     }
 
-    subtrees[None] = num_trues > num_falses  // default case
+    size_t num_trues  = 0;
+    size_t num_falses = 0;
+    for (const auto& [attrs, label] : inputs) {
+        if (label == "True" || label == "true" || label == "1") ++num_trues;
+        else ++num_falses;
+    }
 
-    return best_attribute, subtrees
+    if (num_trues == 0) {
+        auto leaf = std::make_shared<TreeNode>();
+        leaf->is_leaf = true;
+        leaf->leaf_value = false;
+        return leaf;
+    }
+    if (num_falses == 0) {
+        auto leaf = std::make_shared<TreeNode>();
+        leaf->is_leaf = true;
+        leaf->leaf_value = true;
+        return leaf;
+    }
+    if (split_candidates.empty()) {
+        auto leaf = std::make_shared<TreeNode>();
+        leaf->is_leaf = true;
+        leaf->leaf_value = (num_trues >= num_falses);
+        return leaf;
+    }
 
+    // Find best split attribute
+    std::string best_attr = split_candidates[0];
+    double best_entropy = partition_entropy_by(inputs, best_attr);
+    for (const auto& attr : split_candidates) {
+        double e = partition_entropy_by(inputs, attr);
+        if (e < best_entropy) {
+            best_entropy = e;
+            best_attr = attr;
+        }
+    }
+
+    // Partition by best attribute
+    std::map<std::string, LabeledData> partitions;
+    for (const auto& item : inputs) {
+        auto it = item.first.find(best_attr);
+        std::string key = (it != item.first.end()) ? it->second : "";
+        partitions[key].push_back(item);
+    }
+
+    // Remove best_attr from candidates
+    std::vector<std::string> new_candidates;
+    for (const auto& attr : split_candidates)
+        if (attr != best_attr) new_candidates.push_back(attr);
+
+    auto node = std::make_shared<TreeNode>();
+    node->is_leaf = false;
+    node->split_attribute = best_attr;
+
+    for (auto& [val, subset] : partitions)
+        node->children[val] = build_tree_id3(subset, new_candidates);
+
+    // Default child: majority label
+    auto default_leaf = std::make_shared<TreeNode>();
+    default_leaf->is_leaf = true;
+    default_leaf->leaf_value = (num_trues > num_falses);
+    node->default_child = default_leaf;
+
+    return node;
 }
-double forest_classify(trees, inputs) {
-    votes = [classify(tree, inputs) for tree in trees]
-    vote_counts = Counter(votes)
-    return vote_counts.most_common(1)[0][0]
 
+bool classify(const std::shared_ptr<TreeNode>& tree, const std::unordered_map<std::string,std::string>& inputs) {
+    if (tree->is_leaf)
+        return tree->leaf_value;
+
+    auto it = inputs.find(tree->split_attribute);
+    if (it == inputs.end())
+        return classify(tree->default_child, inputs);
+
+    auto child_it = tree->children.find(it->second);
+    if (child_it == tree->children.end())
+        return classify(tree->default_child, inputs);
+
+    return classify(child_it->second, inputs);
 }

@@ -1,154 +1,149 @@
-import operator
-import random
+#include "gradient_descent.h"
+#include <cmath>
+#include <algorithm>
+#include <numeric>
+#include <random>
 
-from dsl.linear_algebra import (
-    vector_subtract,
-    scalar_multiply,
-)
-
-
-double sum_of_squares(v) {
-    /* computes the sum of squared elements in v */
-    return sum(v_i ** 2 for v_i in v)
+double grad_sum_of_squares(const std::vector<double>& v) {
+    double result = 0.0;
+    for (double vi : v) result += vi * vi;
+    return result;
 }
 
-double difference_quotient(f, x, h) {
-    try:
-        return (f(x + h) - f(x)) / h
-    except TypeError:
-        diff = map(operator.sub, f(x + h), f(x))
-        return [_ / h for _ in diff]
+double difference_quotient(std::function<double(double)> f, double x, double h) {
+    return (f(x + h) - f(x)) / h;
 }
 
-double partial_difference_quotient(f, v, i, h) {
-    // add h to just the i-th element of v
-    w = [v_j + (h if j == i else 0) for j, v_j in enumerate(v)]
-    try:
-        return (f(w) - f(v)) / h
-    except TypeError:
-        diff = map(operator.sub, f(w), f(v))
-        return [_ / h for _ in diff]
+double partial_difference_quotient(std::function<double(const std::vector<double>&)> f,
+                                    const std::vector<double>& v, int i, double h) {
+    std::vector<double> w = v;
+    w[i] += h;
+    return (f(w) - f(v)) / h;
 }
 
-double estimate_gradient(f, v, h=0.00001) {
-    return [partial_difference_quotient(f, v, i, h) for i, _ in enumerate(v)]
+std::vector<double> estimate_gradient(std::function<double(const std::vector<double>&)> f,
+                                       const std::vector<double>& v, double h) {
+    std::vector<double> result(v.size());
+    for (size_t i = 0; i < v.size(); ++i)
+        result[i] = partial_difference_quotient(f, v, static_cast<int>(i), h);
+    return result;
 }
 
-double step(v, direction, step_size) {
-    /* move step_size in the direction from v */
-    return [v_i + step_size * direction_i for v_i, direction_i in zip(v, direction)]
+std::vector<double> grad_step(const std::vector<double>& v, const std::vector<double>& direction, double step_size) {
+    return vector_add(v, scalar_multiply(step_size, direction));
 }
 
-double sum_of_squares_gradient(v) {
-    return [2 * v_i for v_i in v]
+std::vector<double> sum_of_squares_gradient(const std::vector<double>& v) {
+    std::vector<double> result(v.size());
+    for (size_t i = 0; i < v.size(); ++i)
+        result[i] = 2.0 * v[i];
+    return result;
 }
 
-double safe(f) {
-    /* define a new function that wraps f and return it */
+std::vector<double> minimize_batch(
+    std::function<double(const std::vector<double>&)> target_fn,
+    std::function<std::vector<double>(const std::vector<double>&)> gradient_fn,
+    std::vector<double> theta_0,
+    double tolerance) {
 
-    // noinspection PyBroadException
-    double safe_f(*args, **kwargs) {
-        // noinspection PyPep8
-        try:
-            return f(*args, **kwargs)
-        except:
-            return float("inf")  // this means "infinity" in Python
+    const std::vector<double> step_sizes = {100.0, 10.0, 1.0, 0.1, 0.01, 0.001, 0.0001, 0.00001};
+    std::vector<double> theta = theta_0;
+    double value = target_fn(theta);
+
+    while (true) {
+        std::vector<double> gradient = gradient_fn(theta);
+        std::vector<double> next_theta = theta;
+        double next_value = std::numeric_limits<double>::infinity();
+
+        for (double step_size : step_sizes) {
+            std::vector<double> candidate = grad_step(theta, gradient, -step_size);
+            double candidate_value = target_fn(candidate);
+            if (candidate_value < next_value) {
+                next_value = candidate_value;
+                next_theta = candidate;
+            }
+        }
+
+        if (std::abs(value - next_value) < tolerance)
+            return theta;
+
+        theta = next_theta;
+        value = next_value;
     }
-    return safe_f
 }
 
-//
-//
-// minimize / maximize batch
-//
-//
+std::vector<double> maximize_batch(
+    std::function<double(const std::vector<double>&)> target_fn,
+    std::function<std::vector<double>(const std::vector<double>&)> gradient_fn,
+    std::vector<double> theta_0,
+    double tolerance) {
 
-
-double minimize_batch(target_fn, gradient_fn, theta_0, tolerance=0.000001) {
-    /* use gradient descent to find theta that minimizes target function */
-
-    step_sizes = [100, 10, 1, 0.1, 0.01, 0.001, 0.0001, 0.00001]
-
-    theta = theta_0  // set theta to initial value
-    target_fn = safe(target_fn)  // safe version of target_fn
-    value = target_fn(theta)  // value we're minimizing
-
-    while True:
-        gradient = gradient_fn(theta)
-        next_thetas = [step(theta, gradient, -step_size) for step_size in step_sizes]
-
-        // choose the one that minimizes the error function
-        next_theta = min(next_thetas, key=target_fn)
-        next_value = target_fn(next_theta)
-
-        // stop if we're "converging"
-        if abs(value - next_value) < tolerance:
-            return theta
-        else:
-            theta, value = next_theta, next_value
+    auto neg_target = [&](const std::vector<double>& v) { return -target_fn(v); };
+    auto neg_gradient = [&](const std::vector<double>& v) {
+        auto g = gradient_fn(v);
+        for (auto& x : g) x = -x;
+        return g;
+    };
+    return minimize_batch(neg_target, neg_gradient, theta_0, tolerance);
 }
 
-double negate(f) {
-    /* return a function that for any input x returns -f(x) */
-    return lambda *args, **kwargs: -f(*args, **kwargs)
+std::vector<double> minimize_stochastic(
+    std::function<double(const std::vector<double>&, double, const std::vector<double>&)> target_fn,
+    std::function<std::vector<double>(const std::vector<double>&, double, const std::vector<double>&)> gradient_fn,
+    const std::vector<std::vector<double>>& x,
+    const std::vector<double>& y,
+    std::vector<double> theta_0,
+    double alpha_0) {
 
+    std::mt19937 rng(42);
+    std::vector<double> theta = theta_0;
+    double alpha = alpha_0;
+    std::vector<double> min_theta = theta;
+    double min_value = std::numeric_limits<double>::infinity();
+    int iterations_with_no_improvement = 0;
+
+    std::vector<size_t> indices(x.size());
+    std::iota(indices.begin(), indices.end(), 0);
+
+    while (iterations_with_no_improvement < 100) {
+        double value = 0.0;
+        for (size_t i = 0; i < x.size(); ++i)
+            value += target_fn(x[i], y[i], theta);
+
+        if (value < min_value) {
+            min_theta = theta;
+            min_value = value;
+            iterations_with_no_improvement = 0;
+            alpha = alpha_0;
+        } else {
+            ++iterations_with_no_improvement;
+            alpha *= 0.9;
+        }
+
+        std::shuffle(indices.begin(), indices.end(), rng);
+        for (size_t idx : indices) {
+            auto gradient_i = gradient_fn(x[idx], y[idx], theta);
+            theta = vector_subtract(theta, scalar_multiply(alpha, gradient_i));
+        }
+    }
+    return min_theta;
 }
-double negate_all(f) {
-    /* the same when f returns a list of numbers */
-    return lambda *args, **kwargs: [-y for y in f(*args, **kwargs)]
 
-}
-double maximize_batch(target_fn, gradient_fn, theta_0, tolerance=0.000001) {
-    return minimize_batch(
-        negate(target_fn), negate_all(gradient_fn), theta_0, tolerance
-    )
+std::vector<double> maximize_stochastic(
+    std::function<double(const std::vector<double>&, double, const std::vector<double>&)> target_fn,
+    std::function<std::vector<double>(const std::vector<double>&, double, const std::vector<double>&)> gradient_fn,
+    const std::vector<std::vector<double>>& x,
+    const std::vector<double>& y,
+    std::vector<double> theta_0,
+    double alpha_0) {
 
-
-//
-// minimize / maximize stochastic
-//
-
-
-double in_random_order(data) {
-    /* generator that returns the elements of data in random order */
-    indexes = [i for i, _ in enumerate(data)]  // create a list of indexes
-    random.shuffle(indexes)  // shuffle them
-    for i in indexes:  // return the data in that order
-        yield data[i]
-}
-
-double minimize_stochastic(target_fn, gradient_fn, x, y, theta_0, alpha_0=0.01) {
-    data = list(zip(x, y))
-    theta = theta_0  // initial guess
-    alpha = alpha_0  // initial step size
-    min_theta, min_value = None, float("inf")  // the minimum so far
-    iterations_with_no_improvement = 0
-
-    // if we ever go 100 iterations with no improvement, stop
-    while iterations_with_no_improvement < 100:
-        value = sum(target_fn(x_i, y_i, theta) for x_i, y_i in data)
-
-        if value < min_value:
-            // if we've found a new minimum, remember it
-            // and go back to the original step size
-            min_theta, min_value = theta, value
-            iterations_with_no_improvement = 0
-            alpha = alpha_0
-        else:
-            // otherwise we're not improving, so try shrinking the step size
-            iterations_with_no_improvement += 1
-            alpha *= 0.9
-
-        // and take a gradient step for each of the data points
-        for x_i, y_i in in_random_order(data):
-            gradient_i = gradient_fn(x_i, y_i, theta)
-            theta = vector_subtract(theta, scalar_multiply(alpha, gradient_i))
-
-    return min_theta
-
-}
-double maximize_stochastic(target_fn, gradient_fn, x, y, theta_0, alpha_0=0.01) {
-    return minimize_stochastic(
-        negate(target_fn), negate_all(gradient_fn), x, y, theta_0, alpha_0
-    )
+    auto neg_target = [&](const std::vector<double>& xi, double yi, const std::vector<double>& t) {
+        return -target_fn(xi, yi, t);
+    };
+    auto neg_gradient = [&](const std::vector<double>& xi, double yi, const std::vector<double>& t) {
+        auto g = gradient_fn(xi, yi, t);
+        for (auto& v : g) v = -v;
+        return g;
+    };
+    return minimize_stochastic(neg_target, neg_gradient, x, y, theta_0, alpha_0);
 }

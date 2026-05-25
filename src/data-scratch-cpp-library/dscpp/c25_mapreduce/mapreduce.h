@@ -1,14 +1,34 @@
-#include "naive_bayes.h"
+#pragma once
+#include <functional>
+#include <map>
+#include <string>
+#include <vector>
 
-double word_count_old(documents);
-double wc_mapper(document);
-double wc_reducer(word, counts);
-double word_count(documents);
-double map_reduce(inputs, mapper, reducer);
-double reduce_with(aggregation_fn, key, values);
-double values_reducer(aggregation_fn);
-double most_popular_word_reducer(user, words_and_counts);
-double most_popular_word_reducer(user, words_and_counts);
-double liker_mapper(status_update);
-double matrix_multiply_mapper(m, element);
-double matrix_multiply_reducer(m, key, indexed_values);
+std::map<std::string, int> word_count_old(const std::vector<std::string>& documents);
+
+std::vector<std::pair<std::string, int>> wc_mapper(const std::string& document);
+std::vector<std::pair<std::string, int>> word_count(const std::vector<std::string>& documents);
+
+template<typename K, typename V, typename R>
+std::vector<R> map_reduce(
+    const std::vector<std::string>& inputs,
+    std::function<std::vector<std::pair<K, V>>(const std::string&)> mapper,
+    std::function<std::vector<R>(const K&, const std::vector<V>&)> reducer) {
+
+    std::map<K, std::vector<V>> collector;
+    for (const auto& input : inputs) {
+        auto pairs = mapper(input);
+        for (auto& [k, v] : pairs)
+            collector[k].push_back(v);
+    }
+
+    std::vector<R> result;
+    for (auto& [k, vs] : collector) {
+        auto reduced = reducer(k, vs);
+        result.insert(result.end(), reduced.begin(), reduced.end());
+    }
+    return result;
+}
+
+std::vector<std::pair<std::string, int>> matrix_multiply_mapper_A(int m, int i, int j, double value);
+std::vector<std::pair<std::string, int>> matrix_multiply_mapper_B(int m, int i, int j, double value);
