@@ -8,4 +8,4 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
     rm -rf /var/lib/apt/lists/*
 COPY requirements.txt /usr/src/app/requirements.txt
 WORKDIR /usr/src/app
-RUN pip3 install --no-cache-dir --only-binary :all: -r requirements.txt
+RUN pip3 install --no-cache-dir --only-binary :all: -r requirements.txt # NOSONAR

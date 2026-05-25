@@ -14,8 +14,6 @@ struct LabeledPoint {
     T label;
 
     LabeledPoint() = default;
-
-    // Three-way comparison operator synthesizes ==, <, <=, >, >= automatically
     auto operator<=>(const LabeledPoint& other) const = default;
 };
 

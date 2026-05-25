@@ -72,7 +72,7 @@ std::vector<int> data_scientists_who_like(std::string_view target_interest,
 
 std::map<int, int> most_common_interests_with(int user_id,
     const std::unordered_map<int, std::vector<std::string>>& interests_by_user_id,
-    const std::unordered_map<std::string, std::vector<int>, std::hash<std::string_view>, std::equal_to<>>& user_ids_by_interest) {
+    const std::unordered_map<std::string, std::vector<int>, TransparentStringHash, std::equal_to<>>& user_ids_by_interest) {
     std::map<int, int> counter;
     for (const auto& interest : interests_by_user_id.at(user_id)) {
         for (const auto& interested_user_id : user_ids_by_interest.at(interest)) {
@@ -125,7 +125,7 @@ std::map<std::string, int, std::less<>> create_words_and_counts(const std::vecto
 
 std::map<std::string, double, std::less<>> create_average_salary_by_bucket(
     const std::vector<std::pair<double, double>>& salaries_and_tenures) {
-    std::unordered_map<std::string, std::vector<double>, std::hash<std::string_view>, std::equal_to<>> salary_by_tenure_bucket;
+    std::unordered_map<std::string, std::vector<double>, TransparentStringHash, std::equal_to<>> salary_by_tenure_bucket;
     for (const auto& [salary, tenure] : salaries_and_tenures) {
         std::string bucket = tenure_bucket(tenure);
         salary_by_tenure_bucket[bucket].push_back(salary);
@@ -167,9 +167,9 @@ std::unordered_map<int, std::vector<std::string>> create_interests_by_user(
     return interests_by_user_id;
 }
 
-std::unordered_map<std::string, std::vector<int>, std::hash<std::string_view>, std::equal_to<>> create_users_by_interest(
+std::unordered_map<std::string, std::vector<int>, TransparentStringHash, std::equal_to<>> create_users_by_interest(
     const std::vector<std::pair<int, std::string>>& interests_list) {
-    std::unordered_map<std::string, std::vector<int>, std::hash<std::string_view>, std::equal_to<>> user_ids_by_interest;
+    std::unordered_map<std::string, std::vector<int>, TransparentStringHash, std::equal_to<>> user_ids_by_interest;
     for (const auto& [user_id, interest] : interests_list) {
         user_ids_by_interest[interest].push_back(user_id);
     }

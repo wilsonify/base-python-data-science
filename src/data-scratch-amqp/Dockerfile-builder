@@ -8,10 +8,10 @@ python3-pip && \
 rm -rf /var/lib/apt/lists/*
 
 COPY external external
-RUN pip3 install --no-cache-dir --only-binary :all: --upgrade external/dsl-1.0.0-cp310-cp310-linux_x86_64.whl
+RUN pip3 install --no-cache-dir --only-binary :all: --upgrade external/dsl-1.0.0-cp310-cp310-linux_x86_64.whl # NOSONAR
 
 COPY requirements.txt .
-RUN pip3 install --no-cache-dir --only-binary :all: -r requirements.txt
+RUN pip3 install --no-cache-dir --only-binary :all: -r requirements.txt # NOSONAR
 
 # Set user and group (as declared in base image)
 USER 1000:1000

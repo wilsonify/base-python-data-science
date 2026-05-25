@@ -13,6 +13,12 @@
 #include <vector>
 
 
+struct TransparentStringHash {
+    using is_transparent = void;
+    std::size_t operator()(std::string_view sv) const noexcept {
+        return std::hash<std::string_view>{}(sv);
+    }
+};
 // Struct representing a user with an ID and a list of friends (pointers to other User objects).
 struct User {
     int id;
@@ -40,7 +46,7 @@ std::vector<int> data_scientists_who_like(std::string_view target_interest,
 
 std::map<int, int> most_common_interests_with(int user_id,
     const std::unordered_map<int, std::vector<std::string>>& interests_by_user_id,
-    const std::unordered_map<std::string, std::vector<int>, std::hash<std::string_view>, std::equal_to<>>& user_ids_by_interest);
+    const std::unordered_map<std::string, std::vector<int>, TransparentStringHash, std::equal_to<>>& user_ids_by_interest);
 
 void read_most_common_words(const std::map<std::string, int, std::less<>>& words_and_counts);
 
@@ -60,7 +66,7 @@ std::unordered_map<double, std::vector<double>> create_salary_by_tenure(
 std::unordered_map<int, std::vector<std::string>> create_interests_by_user(
     const std::vector<std::pair<int, std::string>>& interests_list);
 
-std::unordered_map<std::string, std::vector<int>, std::hash<std::string_view>, std::equal_to<>> create_users_by_interest(
+std::unordered_map<std::string, std::vector<int>, TransparentStringHash, std::equal_to<>> create_users_by_interest(
     const std::vector<std::pair<int, std::string>>& interests_list);
 
 void read_avg_connections(const std::vector<User>& users_list);

@@ -121,7 +121,7 @@ def evaluate_all_runs():
     for run_id in unique_run_ids:
         try:
             evaluate_run(run_id)
-        except Exception as e:
+        except Exception:
             logging.exception(f"Evaluation failed for run_id={run_id}")
             continue
 

@@ -4,12 +4,20 @@
 #include <unordered_map>
 #include <vector>
 #include <string>
+#include <string_view>
 #include <tuple>
 #include <cmath>       // for std::log and std::exp
 #include <sstream>     // for std::stringstream
 #include <cctype>      // for std::tolower
 
-// Tokenize a message into lowercase words
+struct TransparentStringHash {
+    using is_transparent = void;
+    std::size_t operator()(std::string_view sv) const noexcept {
+        return std::hash<std::string_view>{}(sv);
+    }
+};
+
+// Tokenize into lowercase words
 std::vector<std::string> tokenize(const std::string& message) {
     std::vector<std::string> tokens;
     std::string token;
@@ -26,8 +34,8 @@ std::vector<std::string> tokenize(const std::string& message) {
 }
 
 // Count words in a training set, distinguishing between spam and non-spam
-std::unordered_map<std::string, std::pair<int, int>, std::hash<std::string_view>, std::equal_to<>> count_words(const std::vector<std::pair<std::string, bool>>& training_set) {
-    std::unordered_map<std::string, std::pair<int, int>, std::hash<std::string_view>, std::equal_to<>> counts;
+std::unordered_map<std::string, std::pair<int, int>, TransparentStringHash, std::equal_to<>> count_words(const std::vector<std::pair<std::string, bool>>& training_set) {
+    std::unordered_map<std::string, std::pair<int, int>, TransparentStringHash, std::equal_to<>> counts;
 
     for (const auto& [message, is_spam] : training_set) {
         auto words = tokenize(message);
@@ -46,7 +54,7 @@ std::unordered_map<std::string, std::pair<int, int>, std::hash<std::string_view>
 
 // Calculate the probabilities of each word being in a spam or non-spam message
 std::vector<std::tuple<std::string, double, double>> word_probabilities(
-    const std::unordered_map<std::string, std::pair<int, int>, std::hash<std::string_view>, std::equal_to<>>& counts,
+    const std::unordered_map<std::string, std::pair<int, int>, TransparentStringHash, std::equal_to<>>& counts,
     int total_spams,
     int total_non_spams,
     double k = 0.5)
