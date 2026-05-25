@@ -1,8 +1,8 @@
-def conditional_message(_):
+def conditional_message(x):
     """Returns a message based on conditional checks."""
-    if 1 > 2:
+    if x > 2:
         return "if only 1 were greater than two..."
-    elif 1 > 3:
+    elif x > 3:
         return "elif stands for 'else i'"
     else:
         return "when all else fails use else (if you want to)"

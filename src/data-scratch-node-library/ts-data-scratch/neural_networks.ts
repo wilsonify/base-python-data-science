@@ -103,7 +103,7 @@ export function backpropagation(
     const { outputs, finalOutput } = feedForward(network, inputs);
     
     // Calculate output layer error (delta)
-    const outputLayer = network[network.length - 1];
+    const outputLayer = network.at(-1)!;
     const outputDelta: number[] = [];
     
     for (let i = 0; i < finalOutput.length; i++) {
@@ -117,7 +117,7 @@ export function backpropagation(
     
     // Calculate output layer gradients
     const outputWeightsGradient: number[] = [];
-    const prevOutput = outputs[outputs.length - 2];
+    const prevOutput = outputs.at(-2)!;
     
     for (let i = 0; i < outputLayer[0].length; i++) {
         let weightGradient = 0;
@@ -263,7 +263,7 @@ export function trainSimpleNetwork(
     
     return {
         network: currentNetwork,
-        finalError: errors[errors.length - 1],
+        finalError: errors.at(-1)!,
         errors,
         epochs: errors.length,
     };

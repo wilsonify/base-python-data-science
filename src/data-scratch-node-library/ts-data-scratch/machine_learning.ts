@@ -59,7 +59,7 @@ export function f1_score(tp:number, fp:number, fn:number, tn:number) {
     const r = recall(tp, fp, fn, tn)
 
     if (Number.isNaN(p) && Number.isNaN(r)) {
-        return NaN
+        return Number.NaN
     }
     if (Number.isNaN(p) || Number.isNaN(r)) {
         return 0

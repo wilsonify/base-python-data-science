@@ -115,7 +115,7 @@ def objective(trial: Trial, base_config: Config, study_id: str) -> float:
         val_loss = metrics_obj.get("train_cross_loss", 1.0)
         return val_loss
     except Exception as e:
-        logging.error(f"Trial failed [{run_id}]: {e}")
+        logging.exception(f"Trial failed [{run_id}]")
         return float("inf")
 
 

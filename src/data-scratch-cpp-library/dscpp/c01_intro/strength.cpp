@@ -1,4 +1,5 @@
 #include "strength.h"
+#include <ranges>
 
 double strength(double actual, double expected)
 {
@@ -11,12 +12,10 @@ double strength(double actual, double expected)
 std::vector<double> strength_vector(std::vector<double> actual, std::vector<double> expected)
 {
     std::vector<double> result;
-    std::vector<double> input;
     result.resize(expected.size());
-    std::transform(
-        expected.begin(), expected.end(), // interate over these
-        actual.begin(), // access corresponding from here
-        result.begin(), // save results here
+    std::ranges::transform(
+        expected, actual,
+        result.begin(),
         strength
         );
     return result;

@@ -3,7 +3,7 @@ USER root
 RUN mkdir -p /usr/src/app
 COPY . /usr/src/app
 WORKDIR /usr/src/app
-RUN pip3 install .
+RUN pip3 install --no-cache-dir --only-binary :all: .
 RUN pyinstaller \
 --noconfirm \
 --onedir \

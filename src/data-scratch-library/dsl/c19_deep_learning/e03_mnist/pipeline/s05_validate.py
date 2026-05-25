@@ -166,7 +166,7 @@ def main_eval_all():
             logging.info(f"Evaluating {i + 1}/{len(run_ids)}: {run_id}")
             main_eval_one(run_id)
         except Exception as e:
-            logging.error(f"Error evaluating run {run_id}: {e}")
+            logging.exception(f"Error evaluating run {run_id}")
             continue
 
 

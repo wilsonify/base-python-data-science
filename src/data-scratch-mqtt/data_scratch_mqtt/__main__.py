@@ -103,7 +103,7 @@ def on_message(client, userdata, msg):
             payload=json.dumps(error_response).encode("utf-8"),
             qos=0
         )
-        logging.error(f"JSON decode error: {e}")
+        logging.exception("JSON decode error")
         
     except Exception as e:
         # Handle any other errors
