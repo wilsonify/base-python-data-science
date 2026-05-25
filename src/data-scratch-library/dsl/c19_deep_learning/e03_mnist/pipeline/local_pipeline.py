@@ -224,8 +224,8 @@ def run_complete_pipeline(config_path: str = "config.json") -> Dict[str, Any]:
         
         return final_results
         
-    except Exception as e:
-        logger.error(f"Pipeline failed with error: {e}")
+    except Exception:
+        logger.exception("Pipeline failed with error")
         raise
 
 

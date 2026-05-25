@@ -1,3 +1,4 @@
 FROM ubuntu:22.04
-RUN apt-get update && apt-get install -y xz-utils ca-certificates && \
+RUN apt-get update && apt-get install -y --no-install-recommends xz-utils ca-certificates && \
+    rm -rf /var/lib/apt/lists/* && \
     groupadd cnb --gid 1000 && useradd --uid 1000 --gid 1000 -m -s /bin/bash cnb

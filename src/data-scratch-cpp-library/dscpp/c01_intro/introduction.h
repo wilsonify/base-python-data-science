@@ -4,13 +4,21 @@
 #include <iterator>
 #include <map>
 #include <numeric>
+#include <ranges>
 #include <sstream>
 #include <string>
+#include <string_view>
 #include <unordered_map>
 #include <unordered_set>
 #include <vector>
 
 
+struct TransparentStringHash {
+    using is_transparent = void;
+    std::size_t operator()(std::string_view sv) const noexcept {
+        return std::hash<std::string_view>{}(sv);
+    }
+};
 // Struct representing a user with an ID and a list of friends (pointers to other User objects).
 struct User {
     int id;
@@ -33,20 +41,20 @@ bool not_friends(const User& user, const User& other_user);
 
 std::map<int, int> friends_of_friend_ids(const User& user);
 
-std::vector<int> data_scientists_who_like(const std::string& target_interest, 
+std::vector<int> data_scientists_who_like(std::string_view target_interest, 
     const std::vector<std::pair<int, std::string>>& interests_list);
 
 std::map<int, int> most_common_interests_with(int user_id,
     const std::unordered_map<int, std::vector<std::string>>& interests_by_user_id,
-    const std::unordered_map<std::string, std::vector<int>>& user_ids_by_interest);
+    const std::unordered_map<std::string, std::vector<int>, TransparentStringHash, std::equal_to<>>& user_ids_by_interest);
 
-void read_most_common_words(const std::map<std::string, int>& words_and_counts);
+void read_most_common_words(const std::map<std::string, int, std::less<>>& words_and_counts);
 
 void read_num_friends_by_id(const std::vector<User>& users_list);
 
-std::map<std::string, int> create_words_and_counts(const std::vector<std::pair<int, std::string>>& interests_list);
+std::map<std::string, int, std::less<>> create_words_and_counts(const std::vector<std::pair<int, std::string>>& interests_list);
 
-std::map<std::string, double> create_average_salary_by_bucket(
+std::map<std::string, double, std::less<>> create_average_salary_by_bucket(
     const std::vector<std::pair<double, double>>& salaries_and_tenures);
 
 std::unordered_map<double, double> create_average_salary_by_tenure(
@@ -58,7 +66,7 @@ std::unordered_map<double, std::vector<double>> create_salary_by_tenure(
 std::unordered_map<int, std::vector<std::string>> create_interests_by_user(
     const std::vector<std::pair<int, std::string>>& interests_list);
 
-std::unordered_map<std::string, std::vector<int>> create_users_by_interest(
+std::unordered_map<std::string, std::vector<int>, TransparentStringHash, std::equal_to<>> create_users_by_interest(
     const std::vector<std::pair<int, std::string>>& interests_list);
 
 void read_avg_connections(const std::vector<User>& users_list);

@@ -2,6 +2,7 @@
 
 #include "../c04_linear_algebra/linear_algebra.h"
 #include <map>
+#include <ranges>
 #include <string>
 #include <vector>
 #include <algorithm>
@@ -9,8 +10,8 @@
 
 // Basic statistics functions
 double bucketize(double point, double bucket_size);
-std::map<std::string, int> Counter(const std::vector<double>& array);
-std::map<std::string, int> make_histogram(const std::vector<double>& points, double bucket_size);
+std::map<std::string, int, std::less<>> Counter(const std::vector<double>& array);
+std::map<std::string, int, std::less<>> make_histogram(const std::vector<double>& points, double bucket_size);
 std::vector<std::vector<double>> correlation_matrix(const std::vector<std::vector<double>>& data);
 
 // Central tendency

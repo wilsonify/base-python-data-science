@@ -1,12 +1,8 @@
 #pragma once
 
 #include <vector>
-#include <functional>
 #include <stdexcept>
 #include <cmath>
-
-// Type alias for bivariate function
-using BivariateFunction = std::function<double(int, int)>;
 
 // Scalar operations
 double scalar_add(double a, double b);
@@ -29,7 +25,18 @@ double distance(const std::vector<double>& v, const std::vector<double>& w);
 std::pair<int, int> shape(const std::vector<std::vector<double>>& a_matrix);
 std::vector<double> get_row(const std::vector<std::vector<double>>& a_matrix, int i);
 std::vector<double> get_column(const std::vector<std::vector<double>>& a_matrix, int j);
-std::vector<std::vector<double>> make_matrix(int num_rows, int num_cols, BivariateFunction entry_fn);
+
+template<typename F>
+std::vector<std::vector<double>> make_matrix(int num_rows, int num_cols, F entry_fn) {
+    std::vector<std::vector<double>> result(num_rows, std::vector<double>(num_cols));
+    for (int i = 0; i < num_rows; ++i) {
+        for (int j = 0; j < num_cols; ++j) {
+            result[i][j] = entry_fn(i, j);
+        }
+    }
+    return result;
+}
+
 double is_diagonal(int i, int j);
 extern const std::vector<std::vector<double>> identity_matrix;
 std::vector<std::vector<double>> matrix_add(const std::vector<std::vector<double>>& a_matrix, const std::vector<std::vector<double>>& b_matrix);

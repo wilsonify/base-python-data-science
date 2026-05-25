@@ -239,7 +239,7 @@ def _validate_and_convert_network_payload(data, require_target=False):
     if require_target:
         return converted_network, inputs, data['target']
 
-    return converted_network, inputs
+    return converted_network, inputs, None
 
 
 @neural_networks_bp.route('/feed_forward', methods=['POST'])
@@ -270,7 +270,7 @@ def _feed_forward_route(data):
     if not data:
         raise ValueError(ERR_NO_JSON)
 
-    converted_network, inputs = _validate_and_convert_network_payload(data)
+    converted_network, inputs, _ = _validate_and_convert_network_payload(data)
     outputs = feed_forward(converted_network, inputs)
 
     return {

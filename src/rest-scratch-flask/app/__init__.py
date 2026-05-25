@@ -19,9 +19,10 @@ def create_app():
     """Application factory pattern."""
     app = Flask(__name__)
     
-    # Enable CORS if available
+    # Enable CORS with restricted origins (allow localhost for development)
     if CORS_AVAILABLE:
-        CORS(app)
+        allowed_origins = os.environ.get('ALLOWED_ORIGINS', 'http://localhost:3000,http://localhost:5000').split(',')
+        CORS(app, origins=allowed_origins)
     
     # Register blueprints
     from app.routes.knn import knn_bp

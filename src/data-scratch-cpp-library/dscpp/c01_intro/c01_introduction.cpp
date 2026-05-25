@@ -59,7 +59,7 @@ std::map<int, int> friends_of_friend_ids(const User& user) {
     return counter;
 }
 
-std::vector<int> data_scientists_who_like(const std::string& target_interest,
+std::vector<int> data_scientists_who_like(std::string_view target_interest,
     const std::vector<std::pair<int, std::string>>& interests_list) {
     std::vector<int> result;
     for (const auto& [user_id, interest] : interests_list) {
@@ -72,7 +72,7 @@ std::vector<int> data_scientists_who_like(const std::string& target_interest,
 
 std::map<int, int> most_common_interests_with(int user_id,
     const std::unordered_map<int, std::vector<std::string>>& interests_by_user_id,
-    const std::unordered_map<std::string, std::vector<int>>& user_ids_by_interest) {
+    const std::unordered_map<std::string, std::vector<int>, TransparentStringHash, std::equal_to<>>& user_ids_by_interest) {
     std::map<int, int> counter;
     for (const auto& interest : interests_by_user_id.at(user_id)) {
         for (const auto& interested_user_id : user_ids_by_interest.at(interest)) {
@@ -84,7 +84,7 @@ std::map<int, int> most_common_interests_with(int user_id,
     return counter;
 }
 
-void read_most_common_words(const std::map<std::string, int>& words_and_counts) {
+void read_most_common_words(const std::map<std::string, int, std::less<>>& words_and_counts) {
     std::cout << "MOST COMMON WORDS" << std::endl;
     for (const auto& [word, count] : words_and_counts) {
         if (count > 1) {
@@ -99,7 +99,7 @@ void read_num_friends_by_id(const std::vector<User>& users_list) {
         num_friends_by_id.emplace_back(user.id, number_of_friends(user));
     }
 
-    std::sort(num_friends_by_id.begin(), num_friends_by_id.end(),
+    std::ranges::sort(num_friends_by_id,
         [](const std::pair<int, int>& a, const std::pair<int, int>& b) {
             return b.second < a.second;
         });
@@ -110,8 +110,8 @@ void read_num_friends_by_id(const std::vector<User>& users_list) {
     }
 }
 
-std::map<std::string, int> create_words_and_counts(const std::vector<std::pair<int, std::string>>& interests_list) {
-    std::map<std::string, int> words_and_counts;
+std::map<std::string, int, std::less<>> create_words_and_counts(const std::vector<std::pair<int, std::string>>& interests_list) {
+    std::map<std::string, int, std::less<>> words_and_counts;
     for (const auto& [user_id, interest] : interests_list) {
         std::istringstream iss(interest);
         std::string word;
@@ -123,15 +123,15 @@ std::map<std::string, int> create_words_and_counts(const std::vector<std::pair<i
     return words_and_counts;
 }
 
-std::map<std::string, double> create_average_salary_by_bucket(
+std::map<std::string, double, std::less<>> create_average_salary_by_bucket(
     const std::vector<std::pair<double, double>>& salaries_and_tenures) {
-    std::unordered_map<std::string, std::vector<double>> salary_by_tenure_bucket;
+    std::unordered_map<std::string, std::vector<double>, TransparentStringHash, std::equal_to<>> salary_by_tenure_bucket;
     for (const auto& [salary, tenure] : salaries_and_tenures) {
         std::string bucket = tenure_bucket(tenure);
         salary_by_tenure_bucket[bucket].push_back(salary);
     }
 
-    std::map<std::string, double> average_salary_by_bucket;
+    std::map<std::string, double, std::less<>> average_salary_by_bucket;
     for (const auto& [bucket, salaries] : salary_by_tenure_bucket) {
         double sum_salaries = std::accumulate(salaries.begin(), salaries.end(), 0.0);
         average_salary_by_bucket[bucket] = sum_salaries / salaries.size();
@@ -167,9 +167,9 @@ std::unordered_map<int, std::vector<std::string>> create_interests_by_user(
     return interests_by_user_id;
 }
 
-std::unordered_map<std::string, std::vector<int>> create_users_by_interest(
+std::unordered_map<std::string, std::vector<int>, TransparentStringHash, std::equal_to<>> create_users_by_interest(
     const std::vector<std::pair<int, std::string>>& interests_list) {
-    std::unordered_map<std::string, std::vector<int>> user_ids_by_interest;
+    std::unordered_map<std::string, std::vector<int>, TransparentStringHash, std::equal_to<>> user_ids_by_interest;
     for (const auto& [user_id, interest] : interests_list) {
         user_ids_by_interest[interest].push_back(user_id);
     }

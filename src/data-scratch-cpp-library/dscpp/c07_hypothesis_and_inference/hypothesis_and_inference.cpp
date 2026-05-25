@@ -1,152 +1,108 @@
-import math
-import random
+#include "hypothesis_and_inference.h"
+#include <cmath>
+#include <random>
+#include <algorithm>
+#include <numeric>
 
-from dsl.probability import normal_cdf, inverse_normal_cdf
-
-
-double normal_approximation_to_binomial(n, p) {
-    /* finds mu and sigma corresponding to a Binomial(n, p) */
-    mu = p * n
-    sigma = math.sqrt(p * (1 - p) * n)
-    return mu, sigma
+std::pair<double,double> normal_approximation_to_binomial(int n, double p) {
+    double mu = p * n;
+    double sigma = std::sqrt(p * (1.0 - p) * n);
+    return {mu, sigma};
 }
 
-//////////
-//
-// probabilities a normal lies in an interval
-//
-////////////
-
-// the normal cdf _is_ the probability the variable is below a threshold
-normal_probability_below = normal_cdf
-
-
-// it's above the threshold if it's not below the threshold
-double normal_probability_above(lo, mu=0.0, sigma=1.0) {
-    return 1 - normal_cdf(lo, mu, sigma)
+double normal_probability_below(double x, double mu, double sigma) {
+    return normal_cdf(x, mu, sigma);
 }
 
-// it's between if it's less than hi, but not less than lo
-double normal_probability_between(lo, hi, mu=0.0, sigma=1.0) {
-    return normal_cdf(hi, mu, sigma) - normal_cdf(lo, mu, sigma)
+double normal_probability_above(double lo, double mu, double sigma) {
+    return 1.0 - normal_cdf(lo, mu, sigma);
 }
 
-// it's outside if it's not between
-double normal_probability_outside(lo, hi, mu=0.0, sigma=1.0) {
-    return 1 - normal_probability_between(lo, hi, mu, sigma)
+double normal_probability_between(double lo, double hi, double mu, double sigma) {
+    return normal_cdf(hi, mu, sigma) - normal_cdf(lo, mu, sigma);
 }
 
-////////////
-//
-//  normal bounds
-//
-////////////
-
-
-double normal_upper_bound(probability, mu=0.0, sigma=1.0) {
-    /* returns the z for which P(Z <= z) = probability */
-    return inverse_normal_cdf(probability, mu, sigma)
+double normal_probability_outside(double lo, double hi, double mu, double sigma) {
+    return 1.0 - normal_probability_between(lo, hi, mu, sigma);
 }
 
-double normal_lower_bound(probability, mu=0.0, sigma=1.0) {
-    /* returns the z for which P(Z >= z) = probability */
-    return inverse_normal_cdf(1 - probability, mu, sigma)
+double normal_upper_bound(double probability, double mu, double sigma) {
+    return inverse_normal_cdf(probability, mu, sigma);
 }
 
-double normal_two_sided_bounds(probability, mu=0.0, sigma=1.0) {
-    /*returns the symmetric (about the mean) bounds
-    that contain the specified probability*/
-    tail_probability = (1 - probability) / 2
-
-    // upper bound should have tail_probability above it
-    upper_bound = normal_lower_bound(tail_probability, mu, sigma)
-
-    // lower bound should have tail_probability below it
-    lower_bound = normal_upper_bound(tail_probability, mu, sigma)
-
-    return lower_bound, upper_bound
-
+double normal_lower_bound(double probability, double mu, double sigma) {
+    return inverse_normal_cdf(1.0 - probability, mu, sigma);
 }
-double two_sided_p_value(x, mu=0.0, sigma=1.0) {
-    if x >= mu:
-        // if x is greater than the mean, the tail is above x
-        return 2 * normal_probability_above(x, mu, sigma)
-    else:
-        // if x is less than the mean, the tail is below x
-        return 2 * normal_probability_below(x, mu, sigma)
+
+std::pair<double,double> normal_two_sided_bounds(double probability, double mu, double sigma) {
+    double tail = (1.0 - probability) / 2.0;
+    double lower = normal_upper_bound(tail, mu, sigma);
+    double upper = normal_lower_bound(tail, mu, sigma);
+    return {lower, upper};
+}
+
+double two_sided_p_value(double x, double mu, double sigma) {
+    if (x >= mu)
+        return 2.0 * normal_probability_above(x, mu, sigma);
+    else
+        return 2.0 * normal_probability_below(x, mu, sigma);
+}
+
+double upper_p_value(double x, double mu, double sigma) {
+    return normal_probability_above(x, mu, sigma);
+}
+
+double lower_p_value(double x, double mu, double sigma) {
+    return normal_probability_below(x, mu, sigma);
 }
 
 double count_extreme_values() {
-    extreme_value_count = 0
-    for _ in range(100000):
-        num_heads = sum(
-            1 if random.random() < 0.5 else 0 for _ in range(1000)  // count // of heads
-        )  // in 1000 flips
-        if num_heads >= 530 or num_heads <= 470:  // and count how often
-            extreme_value_count += 1  // the // is 'extreme'
-
-    return extreme_value_count / 100000
+    std::mt19937 rng(42);
+    std::uniform_real_distribution<double> dist(0.0, 1.0);
+    int extreme_value_count = 0;
+    for (int i = 0; i < 100000; ++i) {
+        int num_heads = 0;
+        for (int j = 0; j < 1000; ++j) {
+            if (dist(rng) < 0.5) ++num_heads;
+        }
+        if (num_heads >= 530 || num_heads <= 470)
+            ++extreme_value_count;
+    }
+    return extreme_value_count / 100000.0;
 }
 
-upper_p_value = normal_probability_above
-lower_p_value = normal_probability_below
-
-
-////
-//
-// P-hacking
-//
-////
-
-
-double run_experiment() {
-    /* flip a fair coin 1000 times, True = heads, False = tails */
-    return [random.random() < 0.5 for _ in range(1000)]
+std::vector<bool> run_experiment() {
+    static std::mt19937 rng(std::random_device{}());
+    std::uniform_real_distribution<double> dist(0.0, 1.0);
+    std::vector<bool> flips(1000);
+    for (int i = 0; i < 1000; ++i)
+        flips[i] = dist(rng) < 0.5;
+    return flips;
 }
 
-double reject_fairness(experiment) {
-    /* using the 5% significance levels */
-    num_heads = len([flip for flip in experiment if flip])
-    return num_heads < 469 or num_heads > 531
+bool reject_fairness(const std::vector<bool>& experiment) {
+    int num_heads = 0;
+    for (bool flip : experiment) if (flip) ++num_heads;
+    return num_heads < 469 || num_heads > 531;
 }
 
-////
-//
-// running an A/B test
-//
-////
-
-
-double estimated_parameters(std::vector<std::vector<double>> n_matrix, double n) {
-    p = n / n_matrix
-    sigma = math.sqrt(p * (1 - p) / n_matrix)
-    return p, sigma
+std::pair<double,double> estimated_parameters(int n, int x) {
+    double p = static_cast<double>(x) / n;
+    double sigma = std::sqrt(p * (1.0 - p) / n);
+    return {p, sigma};
 }
 
-double a_b_test_statistic(
-     std::vector<std::vector<double>> a_matrix, 
-     double a_weight, 
-     std::vector<std::vector<double>> b_matrix,
-      double b_weight) {
-    density_a, sigma_a = estimated_parameters(a_matrix, a_weight)
-    density_b, sigma_b = estimated_parameters(b_matrix, b_weight)
-    return (density_b - density_a) / math.sqrt(sigma_a ** 2 + sigma_b ** 2)
+double a_b_test_statistic(int n_a, int a_weight, int n_b, int b_weight) {
+    auto [a_p, a_sig] = estimated_parameters(n_a, a_weight);
+    auto [b_p, b_sig] = estimated_parameters(n_b, b_weight);
+    return (b_p - a_p) / std::sqrt(a_sig * a_sig + b_sig * b_sig);
 }
 
-////
-//
-// Bayesian Inference
-//
-////
-
-
-double normalizer(alpha, beta) {
-    /* a normalizing constant so that the total probability is 1 */
-    return math.gamma(alpha) * math.gamma(beta) / math.gamma(alpha + beta)
+double normalizer(double alpha, double beta) {
+    return std::tgamma(alpha) * std::tgamma(beta) / std::tgamma(alpha + beta);
 }
 
-double beta_pdf(x, alpha, beta) {
-    if x < 0 or x > 1:  // no weight outside of [0, 1]
-        return 0
-    return x ** (alpha - 1) * (1 - x) ** (beta - 1) / normalizer(alpha, beta)
+double beta_pdf(double x, double alpha, double beta) {
+    if (x < 0.0 || x > 1.0) return 0.0;
+    return std::pow(x, alpha - 1.0) * std::pow(1.0 - x, beta - 1.0) / normalizer(alpha, beta);
 }

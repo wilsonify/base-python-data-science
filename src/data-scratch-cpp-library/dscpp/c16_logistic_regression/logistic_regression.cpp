@@ -1,81 +1,78 @@
-import logging
-import math
-from functools import reduce, partial
+#include "logistic_regression.h"
+#include <cmath>
 
-from dsl.gradient_descent import maximize_batch, maximize_stochastic
-from dsl.linear_algebra import dot, vector_add
-
-
-double logistic(x) {
-    return 1.0 / (1 + math.exp(-x))
+double logistic(double x) {
+    return 1.0 / (1.0 + std::exp(-x));
 }
 
-double logistic_prime(x) {
-    return logistic(x) * (1 - logistic(x))
+double logistic_prime(double x) {
+    return logistic(x) * (1.0 - logistic(x));
 }
 
-double logistic_log_likelihood_i(x_i, y_i, beta) {
-    if y_i == 1:
-        return math.log(logistic(dot(x_i, beta)))
-    else:
-        return math.log(1 - logistic(dot(x_i, beta)))
+double logistic_log_likelihood_i(const std::vector<double>& x_i, double y_i, const std::vector<double>& beta) {
+    if (y_i == 1.0)
+        return std::log(logistic(dot(x_i, beta)));
+    else
+        return std::log(1.0 - logistic(dot(x_i, beta)));
 }
 
-double logistic_log_likelihood(x, y, beta) {
-    return sum(logistic_log_likelihood_i(x_i, y_i, beta) for x_i, y_i in zip(x, y))
+double logistic_log_likelihood(const std::vector<std::vector<double>>& x, const std::vector<double>& y, const std::vector<double>& beta) {
+    double total = 0.0;
+    for (size_t i = 0; i < x.size(); ++i)
+        total += logistic_log_likelihood_i(x[i], y[i], beta);
+    return total;
 }
 
-double logistic_log_partial_ij(x_i, y_i, beta, j) {
-    /*here i is the index of the data point,
-    j the index of the derivative*/
-
-    return (y_i - logistic(dot(x_i, beta))) * x_i[j]
-
+std::vector<double> logistic_log_partial_gradient_i(const std::vector<double>& x_i, double y_i, const std::vector<double>& beta) {
+    double factor = y_i - logistic(dot(x_i, beta));
+    std::vector<double> result(x_i.size());
+    for (size_t j = 0; j < x_i.size(); ++j)
+        result[j] = factor * x_i[j];
+    return result;
 }
-double logistic_log_gradient_i(x_i, y_i, beta) {
-    /*the gradient of the log likelihood
-    corresponding to the i-th data point*/
 
-    return [logistic_log_partial_ij(x_i, y_i, beta, j) for j, _ in enumerate(beta)]
-
+std::vector<double> logistic_log_gradient(const std::vector<std::vector<double>>& x, const std::vector<double>& y, const std::vector<double>& beta) {
+    std::vector<double> result(beta.size(), 0.0);
+    for (size_t i = 0; i < x.size(); ++i) {
+        auto grad_i = logistic_log_partial_gradient_i(x[i], y[i], beta);
+        result = vector_add(result, grad_i);
+    }
+    return result;
 }
-double logistic_log_gradient(x, y, beta) {
-    return reduce(
-        vector_add, [logistic_log_gradient_i(x_i, y_i, beta) for x_i, y_i in zip(x, y)]
-    )
 
+LogisticScore score_logistic(const std::vector<double>& beta_hat,
+                              const std::vector<std::vector<double>>& x_test,
+                              const std::vector<double>& y_test) {
+    int tp = 0, fp = 0, fn = 0;
+    for (size_t i = 0; i < x_test.size(); ++i) {
+        double predict = logistic(dot(beta_hat, x_test[i]));
+        if (y_test[i] == 1.0 && predict >= 0.5)      ++tp;
+        else if (y_test[i] == 1.0)                    ++fn;
+        else if (predict >= 0.5)                      ++fp;
+    }
+    double precision = (tp + fp > 0) ? static_cast<double>(tp) / (tp + fp) : 0.0;
+    double recall    = (tp + fn > 0) ? static_cast<double>(tp) / (tp + fn) : 0.0;
+    return {precision, recall};
 }
-double score_logistic(beta_hat, x_test, y_test) {
-    true_positives = 0
-    false_positives = 0
-    true_negatives = 0
-    false_negatives = 0
-    for _x_i, _y_i in zip(x_test, y_test):
-        predict = logistic(dot(beta_hat, _x_i))
 
-        if _y_i == 1 and predict >= 0.5:  // TP: paid and we predict paid
-            true_positives += 1
-        elif _y_i == 1:  // FN: paid and we predict unpaid
-            false_negatives += 1
-        elif predict >= 0.5:  // FP: unpaid and we predict paid
-            false_positives += 1
-        else:  // TN: unpaid and we predict unpaid
-            true_negatives += 1
-    precision = true_positives / (true_positives + false_positives)
-    recall = true_positives / (true_positives + false_negatives)
-    return precision, recall
+std::vector<double> logistic_fit(const std::vector<std::vector<double>>& x, const std::vector<double>& y) {
+    std::vector<double> beta_0 = {1.0, 1.0, 1.0};
 
-}
-double logistic_fit(x, y) {
-    /*
-    maximize log likelihood using gradient descent, from a random starting point
-    */
-    logging.info("logistic regression")
-    fn = partial(logistic_log_likelihood, x, y)
-    gradient_fn = partial(logistic_log_gradient, x, y)
-    beta_0 = [1, 1, 1]
-    beta_1 = maximize_batch(fn, gradient_fn, beta_0)
-    beta_hat = maximize_stochastic(logistic_log_likelihood_i, logistic_log_gradient_i, x, y, beta_1)
-    logging.info("%r", "beta stochastic {}".format(beta_hat))
-    return beta_hat
+    auto fn = [&](const std::vector<double>& beta) {
+        return logistic_log_likelihood(x, y, beta);
+    };
+    auto gradient_fn = [&](const std::vector<double>& beta) {
+        return logistic_log_gradient(x, y, beta);
+    };
+
+    auto beta_1 = maximize_batch(fn, gradient_fn, beta_0);
+
+    auto target_i = [](const std::vector<double>& x_i, double y_i, const std::vector<double>& beta) {
+        return logistic_log_likelihood_i(x_i, y_i, beta);
+    };
+    auto gradient_i = [](const std::vector<double>& x_i, double y_i, const std::vector<double>& beta) {
+        return logistic_log_partial_gradient_i(x_i, y_i, beta);
+    };
+
+    return maximize_stochastic(target_i, gradient_i, x, y, beta_1);
 }

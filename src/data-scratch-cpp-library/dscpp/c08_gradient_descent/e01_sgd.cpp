@@ -1,41 +1,54 @@
-import logging
-import random
-from logging.config import dictConfig
+#include <iostream>
+#include <random>
+#include <vector>
+#include "gradient_descent.h"
+#include "../c04_linear_algebra/linear_algebra.h"
 
-from dsl.c08_gradient_descent.gradient_descent import sum_of_squares_gradient, step, sum_of_squares, minimize_batch
-from dsl.c04_linear_algebra.linear_algebra import distance
+int main() {
+    std::mt19937 rng(42);
+    std::uniform_int_distribution<int> dist(-10, 10);
 
+    std::vector<double> v = {
+        static_cast<double>(dist(rng)),
+        static_cast<double>(dist(rng)),
+        static_cast<double>(dist(rng))
+    };
 
-def main():
-    logging.info("using the gradient")
-    _v = [random.randint(-10, 10) for _ in range(3)]
-    _tolerance = 0.0000001
-    max_iter = 1000
-    for i in range(max_iter):
-        # print v, sum_of_squares(v)
-        _gradient = sum_of_squares_gradient(_v)  # compute the gradient at v
-        next_v = step(_v, _gradient, -0.01)  # take a negative gradient step
-        if distance(next_v, _v) < _tolerance:  # stop if we're converging
-            break
-        _v = next_v  # continue if we're not
+    double tolerance = 0.0000001;
+    int max_iter = 1000;
 
-    logging.info("%r", "minimum v {}".format(_v))
-    logging.info("%r", "minimum value {}".format(sum_of_squares(_v)))
-    logging.info("using minimize_batch")
+    std::cout << "using the gradient\n";
+    for (int i = 0; i < max_iter; ++i) {
+        auto gradient = sum_of_squares_gradient(v);
+        auto next_v = grad_step(v, gradient, -0.01);
+        if (distance(next_v, v) < tolerance)
+            break;
+        v = next_v;
+    }
 
-    _v = [random.randint(-10, 10) for _ in range(3)]
+    std::cout << "minimum v:";
+    for (double vi : v) std::cout << " " << vi;
+    std::cout << "\n";
+    std::cout << "minimum value: " << sum_of_squares(v) << "\n";
 
-    _v = minimize_batch(sum_of_squares, sum_of_squares_gradient, _v)
+    std::cout << "using minimize_batch\n";
+    rng.seed(42);
+    v = {
+        static_cast<double>(dist(rng)),
+        static_cast<double>(dist(rng)),
+        static_cast<double>(dist(rng))
+    };
 
-    logging.info("%r", "minimum v  = {}".format(_v))
-    logging.info("%r", "minimum value = {}".format(sum_of_squares(_v)))
+    v = minimize_batch(
+        [](const std::vector<double>& x) { return sum_of_squares(x); },
+        sum_of_squares_gradient,
+        v
+    );
 
+    std::cout << "minimum v =";
+    for (double vi : v) std::cout << " " << vi;
+    std::cout << "\n";
+    std::cout << "minimum value = " << sum_of_squares(v) << "\n";
 
-if __name__ == "__main__":
-    dictConfig(dict(
-        version=1,
-        formatters={"simple": {"format": """%(asctime)s | %(name)s | %(lineno)s | %(levelname)s | %(message)s"""}},
-        handlers={"console": {"class": "logging.StreamHandler", "formatter": "simple"}},
-        root={"handlers": ["console"], "level": logging.DEBUG},
-    ))
-    main()
+    return 0;
+}

@@ -114,8 +114,8 @@ def objective(trial: Trial, base_config: Config, study_id: str) -> float:
         metrics_obj = download_npz(BUCKET, metrics_key)
         val_loss = metrics_obj.get("train_cross_loss", 1.0)
         return val_loss
-    except Exception as e:
-        logging.error(f"Trial failed [{run_id}]: {e}")
+    except Exception:
+        logging.exception(f"Trial failed [{run_id}]")
         return float("inf")
 
 

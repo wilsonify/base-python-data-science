@@ -1,102 +1,169 @@
-import math
-from collections import defaultdict, Counter
+#include "recommender_systems.h"
+#include <algorithm>
+#include <map>
+#include <set>
 
-from dsl.linear_algebra import dot
-
-
-
-double most_popular_new_interests(user_interests, max_results=5) {
-    suggestions = [
-        (interest, frequency)
-        for interest, frequency in popular_interests
-        if interest not in user_interests
-    ]
-    return suggestions[:max_results]
+double cosine_similarity(const std::vector<double>& v, const std::vector<double>& w) {
+    double denom = std::sqrt(dot(v, v) * dot(w, w));
+    if (denom == 0.0) return 0.0;
+    return dot(v, w) / denom;
 }
 
-//
-// user-based filtering
-//
+std::vector<std::pair<std::string, int>> most_popular_new_interests(
+    const std::vector<std::string>& user_interests,
+    const std::vector<std::pair<std::string, int>>& popular_interests,
+    int max_results) {
 
-
-double cosine_similarity(v, w) {
-    return dot(v, w) / math.sqrt(dot(v, v) * dot(w, w))
+    std::set<std::string> current(user_interests.begin(), user_interests.end());
+    std::vector<std::pair<std::string, int>> result;
+    for (const auto& [interest, freq] : popular_interests) {
+        if (current.find(interest) == current.end()) {
+            result.push_back({interest, freq});
+            if (static_cast<int>(result.size()) >= max_results) break;
+        }
+    }
+    return result;
 }
 
-double make_user_interest_vector(user_interests) {
-    /*given a list of interests, produce a vector whose i-th element is 1
-    if unique_interests[i] is in the list, 0 otherwise*/
-    return [1 if interest in user_interests else 0 for interest in unique_interests]
+std::vector<int> make_user_interest_vector(
+    const std::vector<std::string>& user_interests,
+    const std::vector<std::string>& unique_interests) {
 
+    std::set<std::string> current(user_interests.begin(), user_interests.end());
+    std::vector<int> result;
+    result.reserve(unique_interests.size());
+    for (const auto& interest : unique_interests)
+        result.push_back(current.count(interest) ? 1 : 0);
+    return result;
 }
 
-double most_similar_users_to(user_id) {
-    pairs = [
-        (other_user_id, similarity)  // find other
-        for other_user_id, similarity in enumerate(  // users with
-            user_similarities[user_id]
-        )  // nonzero
-        if user_id != other_user_id and similarity > 0
-    ]  // similarity
+std::vector<std::vector<double>> compute_user_similarities(
+    const std::vector<std::vector<int>>& user_interest_matrix) {
 
-    return sorted(
-        pairs, key=lambda pair: pair[1], reverse=True  // sort them  // most similar
-    )  // first
+    size_t n = user_interest_matrix.size();
+    std::vector<std::vector<double>> sims(n, std::vector<double>(n, 0.0));
+
+    for (size_t i = 0; i < n; ++i) {
+        std::vector<double> vi(user_interest_matrix[i].begin(), user_interest_matrix[i].end());
+        for (size_t j = 0; j < n; ++j) {
+            std::vector<double> vj(user_interest_matrix[j].begin(), user_interest_matrix[j].end());
+            sims[i][j] = cosine_similarity(vi, vj);
+        }
+    }
+    return sims;
 }
 
-double user_based_suggestions(user_id, include_current_interests=False) {
-    // sum up the similarities
-    suggestions = defaultdict(float)
-    for other_user_id, similarity in most_similar_users_to(user_id):
-        for interest in users_interests[other_user_id]:
-            suggestions[interest] += similarity
+std::vector<std::pair<int, double>> most_similar_users_to(
+    int user_id,
+    const std::vector<std::vector<double>>& user_similarities) {
 
-    // convert them to a sorted list
-    suggestions = sorted(suggestions.items(), key=lambda pair: pair[1], reverse=True)
-
-    // and (maybe) exclude already-interests
-    if include_current_interests:
-        return suggestions
-    else:
-        return [
-            (suggestion, weight)
-            for suggestion, weight in suggestions
-            if suggestion not in users_interests[user_id]
-        ]
-
-}
-//
-// Item-Based Collaborative Filtering
-//
-
-
-double most_similar_interests_to(interest_id) {
-    similarities = interest_similarities[interest_id]
-    pairs = [
-        (unique_interests[other_interest_id], similarity)
-        for other_interest_id, similarity in enumerate(similarities)
-        if interest_id != other_interest_id and similarity > 0
-    ]
-    return sorted(pairs, key=lambda pair: pair[1], reverse=True)
+    std::vector<std::pair<int, double>> pairs;
+    const auto& row = user_similarities[user_id];
+    for (size_t i = 0; i < row.size(); ++i) {
+        if (static_cast<int>(i) != user_id && row[i] > 0.0)
+            pairs.push_back({static_cast<int>(i), row[i]});
+    }
+    std::sort(pairs.begin(), pairs.end(),
+              [](const auto& a, const auto& b) { return a.second > b.second; });
+    return pairs;
 }
 
-double item_based_suggestions(user_id, include_current_interests=False) {
-    suggestions = defaultdict(float)
-    user_interest_vector = user_interest_matrix[user_id]
-    for interest_id, is_interested in enumerate(user_interest_vector):
-        if is_interested == 1:
-            similar_interests = most_similar_interests_to(interest_id)
-            for interest, similarity in similar_interests:
-                suggestions[interest] += similarity
+std::vector<std::pair<std::string, double>> user_based_suggestions(
+    int user_id,
+    const std::vector<std::vector<double>>& user_similarities,
+    const std::vector<std::vector<std::string>>& users_interests,
+    bool include_current_interests) {
 
-    suggestions = sorted(suggestions.items(), key=lambda pair: pair[1], reverse=True)
+    std::map<std::string, double> suggestions;
+    for (const auto& [other_user_id, similarity] : most_similar_users_to(user_id, user_similarities)) {
+        for (const auto& interest : users_interests[other_user_id])
+            suggestions[interest] += similarity;
+    }
 
-    if include_current_interests:
-        return suggestions
-    else:
-        return [
-            (suggestion, weight)
-            for suggestion, weight in suggestions
-            if suggestion not in users_interests[user_id]
-        ]
+    std::vector<std::pair<std::string, double>> result(suggestions.begin(), suggestions.end());
+    std::sort(result.begin(), result.end(),
+              [](const auto& a, const auto& b) { return a.second > b.second; });
+
+    if (include_current_interests)
+        return result;
+
+    const auto& current = users_interests[user_id];
+    std::set<std::string> current_set(current.begin(), current.end());
+    std::vector<std::pair<std::string, double>> filtered;
+    for (const auto& [interest, score] : result)
+        if (!current_set.count(interest))
+            filtered.push_back({interest, score});
+    return filtered;
+}
+
+std::vector<std::vector<double>> compute_interest_similarities(
+    const std::vector<std::vector<int>>& user_interest_matrix,
+    int num_interests) {
+
+    // Transpose to interest_user_matrix
+    size_t num_users = user_interest_matrix.size();
+    std::vector<std::vector<int>> interest_user_matrix(num_interests, std::vector<int>(num_users, 0));
+    for (size_t u = 0; u < num_users; ++u)
+        for (int i = 0; i < num_interests; ++i)
+            interest_user_matrix[i][u] = user_interest_matrix[u][i];
+
+    std::vector<std::vector<double>> sims(num_interests, std::vector<double>(num_interests, 0.0));
+    for (int i = 0; i < num_interests; ++i) {
+        std::vector<double> vi(interest_user_matrix[i].begin(), interest_user_matrix[i].end());
+        for (int j = 0; j < num_interests; ++j) {
+            std::vector<double> vj(interest_user_matrix[j].begin(), interest_user_matrix[j].end());
+            sims[i][j] = cosine_similarity(vi, vj);
+        }
+    }
+    return sims;
+}
+
+std::vector<std::pair<std::string, double>> most_similar_interests_to(
+    int interest_id,
+    const std::vector<std::vector<double>>& interest_similarities,
+    const std::vector<std::string>& unique_interests) {
+
+    const auto& row = interest_similarities[interest_id];
+    std::vector<std::pair<std::string, double>> pairs;
+    for (size_t i = 0; i < row.size(); ++i) {
+        if (static_cast<int>(i) != interest_id && row[i] > 0.0)
+            pairs.push_back({unique_interests[i], row[i]});
+    }
+    std::sort(pairs.begin(), pairs.end(),
+              [](const auto& a, const auto& b) { return a.second > b.second; });
+    return pairs;
+}
+
+std::vector<std::pair<std::string, double>> item_based_suggestions(
+    int user_id,
+    const std::vector<std::vector<int>>& user_interest_matrix,
+    const std::vector<std::vector<double>>& interest_similarities,
+    const std::vector<std::string>& unique_interests,
+    const std::vector<std::vector<std::string>>& users_interests,
+    bool include_current_interests) {
+
+    std::map<std::string, double> suggestions;
+    const auto& user_vec = user_interest_matrix[user_id];
+    for (size_t i = 0; i < user_vec.size(); ++i) {
+        if (user_vec[i] == 1) {
+            for (const auto& [interest, sim] : most_similar_interests_to(
+                    static_cast<int>(i), interest_similarities, unique_interests))
+                suggestions[interest] += sim;
+        }
+    }
+
+    std::vector<std::pair<std::string, double>> result(suggestions.begin(), suggestions.end());
+    std::sort(result.begin(), result.end(),
+              [](const auto& a, const auto& b) { return a.second > b.second; });
+
+    if (include_current_interests)
+        return result;
+
+    const auto& current = users_interests[user_id];
+    std::set<std::string> current_set(current.begin(), current.end());
+    std::vector<std::pair<std::string, double>> filtered;
+    for (const auto& [interest, score] : result)
+        if (!current_set.count(interest))
+            filtered.push_back({interest, score});
+    return filtered;
 }

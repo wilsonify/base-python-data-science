@@ -2,6 +2,7 @@
 
 #include "../c04_linear_algebra/linear_algebra.h"
 #include "../c05_statistics/stats.h"
+#include <compare>
 #include <vector>
 #include <string>
 #include <map>
@@ -11,19 +12,9 @@ template<typename T>
 struct LabeledPoint {
     std::vector<double> point;
     T label;
-    
-    // Equality operator for testing
-    bool operator==(const LabeledPoint& other) const {
-        return point == other.point && label == other.label;
-    }
-    
-    // Less than operator for sorting
-    bool operator<(const LabeledPoint& other) const {
-        if (point != other.point) {
-            return point < other.point;
-        }
-        return label < other.label;
-    }
+
+    LabeledPoint() = default;
+    auto operator<=>(const LabeledPoint& other) const = default;
 };
 
 template<typename T>
