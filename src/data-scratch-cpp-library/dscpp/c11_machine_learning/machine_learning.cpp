@@ -13,7 +13,7 @@ static std::mt19937 gen(rd());
 SplitData split_data(const std::vector<std::vector<double>>& data, double prob) {
     // split data into fractions [prob, 1 - prob]
     SplitData results;
-    std::uniform_real_distribution<> dis(0.0, 1.0);
+    std::uniform_real_distribution dis(0.0, 1.0);
     
     for (const auto& row : data) {
         if (dis(gen) < prob) {
@@ -33,7 +33,7 @@ TrainTestSplit train_test_split(const std::vector<std::vector<double>>& x,
     }
     
     TrainTestSplit results;
-    std::uniform_real_distribution<> dis(0.0, 1.0);
+    std::uniform_real_distribution dis(0.0, 1.0);
     
     for (size_t i = 0; i < x.size(); ++i) {
         if (dis(gen) < test_pct) {
@@ -54,12 +54,12 @@ double accuracy(double tp, double fp, double fn, double tn) {
     return (total == 0) ? 0.0 : correct / total;
 }
 
-double precision(double tp, double fp, double fn, double tn) {
+double precision(double tp, double fp, [[maybe_unused]] double fn, [[maybe_unused]] double tn) {
     double denominator = tp + fp;
     return (denominator == 0) ? 0.0 : tp / denominator;
 }
 
-double recall(double tp, double fp, double fn, double tn) {
+double recall(double tp, [[maybe_unused]] double fp, double fn, [[maybe_unused]] double tn) {
     double denominator = tp + fn;
     return (denominator == 0) ? 0.0 : tp / denominator;
 }

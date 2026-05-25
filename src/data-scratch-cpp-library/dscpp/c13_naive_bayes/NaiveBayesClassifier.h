@@ -4,7 +4,7 @@
 class NaiveBayesClassifier
 {
 public:
-    NaiveBayesClassifier(double k = 0.5);
+    explicit NaiveBayesClassifier(double k = 0.5);
     void train(const std::vector<std::pair<std::string, bool>>& training_set);
     double classify(const std::string& message);
 

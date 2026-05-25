@@ -13,8 +13,8 @@ double bucketize(double point, double bucket_size) {
     return bucket_size * std::floor(point / bucket_size);
 }
 
-std::map<std::string, int> Counter(const std::vector<double>& array) {
-    std::map<std::string, int> count;
+std::map<std::string, int, std::less<>> Counter(const std::vector<double>& array) {
+    std::map<std::string, int, std::less<>> count;
     for (double val : array) {
         std::string key = std::to_string(val);
         count[key]++;
@@ -22,7 +22,7 @@ std::map<std::string, int> Counter(const std::vector<double>& array) {
     return count;
 }
 
-std::map<std::string, int> make_histogram(const std::vector<double>& points, double bucket_size) {
+std::map<std::string, int, std::less<>> make_histogram(const std::vector<double>& points, double bucket_size) {
     // buckets the points and counts how many in each bucket
     std::vector<double> counting;
     for (double point : points) {
@@ -61,7 +61,7 @@ double median(std::vector<double> v) {
     }
     
     // finds the 'middle-most' value of v
-    std::sort(v.begin(), v.end());
+    std::ranges::sort(v);
     int n = static_cast<int>(v.size());
     int midpoint = n / 2;
 
@@ -80,7 +80,7 @@ double quantile(std::vector<double> x, double p) {
     }
     
     // returns the pth-percentile value in x
-    std::sort(x.begin(), x.end());
+    std::ranges::sort(x);
     int p_index = static_cast<int>(std::floor(p * x.size()));
     p_index = std::max(0, std::min(p_index, static_cast<int>(x.size()) - 1));
     return x[p_index];
@@ -95,14 +95,14 @@ std::vector<double> mode(const std::vector<double>& x) {
     }
     
     int max_count = 0;
-    for (const auto& pair : counts) {
-        max_count = std::max(max_count, pair.second);
+    for (const auto& [key, count] : counts) {
+        max_count = std::max(max_count, count);
     }
     
     std::vector<double> result;
-    for (const auto& pair : counts) {
-        if (pair.second == max_count) {
-            result.push_back(std::stod(pair.first));
+    for (const auto& [key, count] : counts) {
+        if (count == max_count) {
+            result.push_back(std::stod(key));
         }
     }
     return result;

@@ -1,5 +1,6 @@
 #include "NaiveBayesClassifier.h"
 #include <algorithm>   // for std::count_if
+#include <ranges>
 #include <unordered_map>
 #include <vector>
 #include <string>
@@ -25,12 +26,10 @@ std::vector<std::string> tokenize(const std::string& message) {
 }
 
 // Count words in a training set, distinguishing between spam and non-spam
-std::unordered_map<std::string, std::pair<int, int>> count_words(const std::vector<std::pair<std::string, bool>>& training_set) {
-    std::unordered_map<std::string, std::pair<int, int>> counts;
+std::unordered_map<std::string, std::pair<int, int>, std::hash<std::string_view>, std::equal_to<>> count_words(const std::vector<std::pair<std::string, bool>>& training_set) {
+    std::unordered_map<std::string, std::pair<int, int>, std::hash<std::string_view>, std::equal_to<>> counts;
 
-    for (const auto& pair : training_set) {
-        const std::string& message = pair.first;
-        bool is_spam = pair.second;
+    for (const auto& [message, is_spam] : training_set) {
         auto words = tokenize(message);
 
         for (const auto& word : words) {
@@ -47,17 +46,15 @@ std::unordered_map<std::string, std::pair<int, int>> count_words(const std::vect
 
 // Calculate the probabilities of each word being in a spam or non-spam message
 std::vector<std::tuple<std::string, double, double>> word_probabilities(
-    const std::unordered_map<std::string, std::pair<int, int>>& counts,
+    const std::unordered_map<std::string, std::pair<int, int>, std::hash<std::string_view>, std::equal_to<>>& counts,
     int total_spams,
     int total_non_spams,
     double k = 0.5)
 {
     std::vector<std::tuple<std::string, double, double>> probabilities;
 
-    for (const auto& entry : counts) {
-        const std::string& word = entry.first;
-        int spam_count = entry.second.first;
-        int non_spam_count = entry.second.second;
+    for (const auto& [word, counts_pair] : counts) {
+        auto [spam_count, non_spam_count] = counts_pair;
 
         double p_word_given_spam = (spam_count + k) / (total_spams + 2 * k);
         double p_word_given_non_spam = (non_spam_count + k) / (total_non_spams + 2 * k);
@@ -79,7 +76,7 @@ double get_spam_probability(
     double log_prob_if_not_spam = 0.0;
 
     for (const auto& [word, prob_if_spam, prob_if_not_spam] : word_probs) {
-        bool word_in_message = std::find(message_words.begin(), message_words.end(), word) != message_words.end();
+        bool word_in_message = std::ranges::find(message_words, word) != message_words.end();
 
         if (word_in_message) {
             log_prob_if_spam += std::log(prob_if_spam);

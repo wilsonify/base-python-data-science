@@ -13,14 +13,13 @@ static std::mt19937 gen(rd());
 
 // Error function and normal distribution
 double erf(double x) {
-    double a1 = 0.254829592;
-    double a2 = -0.284496736;
-    double a3 = 1.421413741;
-    double a4 = -1.453152027;
-    double a5 = 1.061405429;
-    double p = 0.3275911;
-    double sign = 1;
-    if (x < 0) { sign = -1; }
+    const double a1 = 0.254829592;
+    const double a2 = -0.284496736;
+    const double a3 = 1.421413741;
+    const double a4 = -1.453152027;
+    const double a5 = 1.061405429;
+    const double p = 0.3275911;
+    const double sign = (x < 0) ? -1.0 : 1.0;
     x = std::abs(x);
     double t = 1.0 / (1.0 + p * x);
     double y = 1.0 - (((((a5 * t + a4) * t) + a3) * t + a2) * t + a1) * t * std::exp(-x * x);
@@ -54,12 +53,10 @@ double normal_cdf(double x, double mu, double sigma) {
     return (1.0 + erf((x - mu) / std::sqrt(2.0) / sigma)) / 2.0;
 }
 
-double inverse_normal_cdf(double p, double mu, double sigma, double tolerance) {
+double inverse_normal_cdf(double p, [[maybe_unused]] double mu, [[maybe_unused]] double sigma, double tolerance) {
     /* find approximate inverse using binary search */
     double low_z = -10.0;
-    double low_p = 0.0;
     double hi_z = 10.0;
-    double hi_p = 1.0;
     double mid_z = (low_z + hi_z) / 2.0;
 
     while (hi_z - low_z > tolerance) {
@@ -68,10 +65,8 @@ double inverse_normal_cdf(double p, double mu, double sigma, double tolerance) {
 
         if (mid_p < p) {
             low_z = mid_z;
-            low_p = mid_p;
         } else if (mid_p > p) {
             hi_z = mid_z;
-            hi_p = mid_p;
         } else {
             break;
         }
@@ -85,24 +80,24 @@ std::string random_choice(const std::vector<std::string>& choices) {
     if (choices.empty()) {
         return "";
     }
-    std::uniform_int_distribution<> dis(0, choices.size() - 1);
+    std::uniform_int_distribution dis(0, static_cast<int>(choices.size()) - 1);
     return choices[dis(gen)];
 }
 
 std::string random_kid() {
-    static std::vector<std::string> choices = {"boy", "girl"};
+    static const std::vector<std::string> choices = {"boy", "girl"};
     return random_choice(choices);
 }
 
 double random_normal() {
     // returns a random draw from a standard normal distribution
-    std::uniform_real_distribution<> dis(0.0, 1.0);
+    std::uniform_real_distribution dis(0.0, 1.0);
     return inverse_normal_cdf(dis(gen));
 }
 
 // Probability distributions
 int bernoulli_trial(double p) {
-    std::uniform_real_distribution<> dis(0.0, 1.0);
+    std::uniform_real_distribution dis(0.0, 1.0);
     return (dis(gen) < p) ? 1 : 0;
 }
 

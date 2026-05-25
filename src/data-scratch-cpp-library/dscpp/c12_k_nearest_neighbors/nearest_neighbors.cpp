@@ -4,6 +4,7 @@
 #include "nearest_neighbors.h"
 #include <algorithm>
 #include <random>
+#include <ranges>
 #include <stdexcept>
 
 // Random number generator
@@ -94,7 +95,7 @@ T knnClassify(int k, const std::vector<LabeledPoint<T>>& labeledPoints,
     
     // Create a copy and sort by distance
     std::vector<LabeledPoint<T>> sortedPoints = labeledPoints;
-    std::sort(sortedPoints.begin(), sortedPoints.end(), 
+    std::ranges::sort(sortedPoints, 
               [&newPoint](const LabeledPoint<T>& a, const LabeledPoint<T>& b) {
                   return distance(a.point, newPoint) < distance(b.point, newPoint);
               });
@@ -125,7 +126,7 @@ KnnResult<T> knnClassifyWithDistance(int k,
     
     // Create a copy and sort by distance
     std::vector<LabeledPoint<T>> sortedPoints = labeledPoints;
-    std::sort(sortedPoints.begin(), sortedPoints.end(), 
+    std::ranges::sort(sortedPoints, 
               [&newPoint](const LabeledPoint<T>& a, const LabeledPoint<T>& b) {
                   return distance(a.point, newPoint) < distance(b.point, newPoint);
               });
@@ -164,7 +165,7 @@ T weightedKnnClassify(int k, const std::vector<LabeledPoint<T>>& labeledPoints,
     
     // Create a copy and sort by distance
     std::vector<LabeledPoint<T>> sortedPoints = labeledPoints;
-    std::sort(sortedPoints.begin(), sortedPoints.end(), 
+    std::ranges::sort(sortedPoints, 
               [&newPoint](const LabeledPoint<T>& a, const LabeledPoint<T>& b) {
                   return distance(a.point, newPoint) < distance(b.point, newPoint);
               });
@@ -212,7 +213,7 @@ double knnCrossValidate(int k, const std::vector<LabeledPoint<T>>& labeledPoints
     
     // Shuffle the data
     std::vector<LabeledPoint<T>> shuffled = labeledPoints;
-    std::shuffle(shuffled.begin(), shuffled.end(), gen);
+    std::ranges::shuffle(shuffled, gen);
     
     int foldSize = static_cast<int>(shuffled.size()) / folds;
     int correctPredictions = 0;

@@ -1,4 +1,5 @@
 #include "mysqrt.h"
+#include <iostream>
 
 double mysqrt(double x)
 {
@@ -13,8 +14,7 @@ double mysqrt(double x)
     result = x;
 
     // do ten iterations
-    int i;
-    for (i = 0; i < 10; ++i)
+    for (int i = 0; i < 10; ++i)
     {
         if (result <= 0)
         {
@@ -22,7 +22,7 @@ double mysqrt(double x)
         }
         delta = x - (result * result);
         result = result + 0.5 * delta / result;
-        fprintf(stdout, "Computing sqrt of %g to be %g\n", x, result);
+        std::cout << "Computing sqrt of " << x << " to be " << result << "\n";
     }
     return result;
 }
