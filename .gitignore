@@ -41,6 +41,7 @@ pip-delete-this-directory.txt
 htmlcov/
 .hypothesis/
 .pytest_cache/
+.ruff_cache/
 .tox/
 .nox/
 .coverage
@@ -129,7 +130,8 @@ dmypy.json
 .idea/
 
 #vscode
-.vscode/
+.vscode/*
+!.vscode/settings.json
 
 
 # gitignore template for Jupyter Notebooks
