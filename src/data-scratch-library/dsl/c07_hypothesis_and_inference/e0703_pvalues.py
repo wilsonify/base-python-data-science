@@ -14,6 +14,11 @@ def two_sided_p_value(x, mu=0.0, sigma=1.0):
         return 2 * normal_probability_below(x, mu, sigma)
 
 
+def upper_p_value(x, mu=0.0, sigma=1.0):
+    """Returns the probability of observing a value >= x under N(mu, sigma)."""
+    return normal_probability_above(x, mu, sigma)
+
+
 def count_extreme_values(num_trials=100000):
     extreme_value_count = 0
     for _ in range(num_trials):
