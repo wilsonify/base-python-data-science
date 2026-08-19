@@ -99,7 +99,9 @@ export function randomUniform(...dims: number[]): Tensor {
 function boxMuller(): number {
     const u1 = Math.random();
     const u2 = Math.random();
-      return Math.sqrt(-2 * Math.log(u1)) * Math.cos(2 * Math.PI * u2);
+    return Math.sqrt(-2 * Math.log(u1)) * Math.cos(2 * Math.PI * u2);
+}
+
 export function randomNormal(
     dims: number[],
     mean: number = 0,

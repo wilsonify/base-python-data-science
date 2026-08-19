@@ -67,28 +67,32 @@ export function median(v: Array<number>): number {
 
 
 export function quantile(x: Array<number>, p: number): number {
-    // returns the pth-percentile value in x
-    const p_index = Math.floor(p * x.length)
-    return x.slice().sort((a, b) => a - b)[p_index]
+    if (x.length === 0 || p < 0 || p > 1) return Number.NaN;
+    const sorted = x.slice().sort((a, b) => a - b);
+    if (p === 0) return sorted[0];
+    if (p === 1) return sorted[sorted.length - 1];
+    const position = p * (sorted.length - 1);
+    const lower = Math.floor(position);
+    const upper = Math.ceil(position);
+    if (lower === upper) return sorted[lower];
+    return sorted[lower] + (position - lower) * (sorted[upper] - sorted[lower]);
 }
 
 
-export function mode(x: Array<number>): Array<number> {
-    // returns a list, might be more than one mode
+export function mode(x: Array<number>): number {
     const counts = Counter(x)
     const max_count = Math.max(...counts.values())
-    const result: number[] = [];
     for (let [key, value] of counts) {
         if (value === max_count) {
-            result.push(Number(key));
+            return Number(key);
         }
     }
-    return result
-
+    return Number.NaN;
 }
 
 export function data_range(x:Array<number>) {
     // "range" already means something in Python, so we'll use a different name
+    if (x.length === 0) return Number.NaN;
     return Math.max(...x) - Math.min(...x)
 }
 
@@ -126,7 +130,7 @@ export function interquartile_range(x: Array<number>) {
 
 export function covariance(x: Array<number>, y: Array<number>) {
     const n = x.length
-    if (n < 2) {
+    if (n < 2 || n !== y.length) {
         return Number.NaN
     }
     return dot(de_mean(x), de_mean(y)) / (n - 1)
@@ -134,11 +138,7 @@ export function covariance(x: Array<number>, y: Array<number>) {
 
 export function correlation(x: Array<number>, y: Array<number>) {
     const n = x.length
-    if (n < 2) {
-        return Number.NaN
-    }
-    const n2 = y.length
-    if (n2 < 2) {
+    if (n < 2 || n !== y.length) {
         return Number.NaN
     }
     const eps = 0.0001
@@ -146,5 +146,29 @@ export function correlation(x: Array<number>, y: Array<number>) {
     const stdev_y = standard_deviation(y)
     const divisor = (stdev_x * stdev_y) + eps
     return covariance(x, y) / divisor
+}
+
+export function range(x: Array<number>): number {
+    return data_range(x);
+}
+
+export function skewness(x: Array<number>): number {
+    const n = x.length;
+    if (n < 3) return Number.NaN;
+    const meanVal = mean(x);
+    const sd = standard_deviation(x);
+    if (sd === 0) return Number.NaN;
+    const m3 = x.reduce((sum, xi) => sum + Math.pow((xi - meanVal) / sd, 3), 0) / n;
+    return (n * (n + 1)) / ((n - 1) * (n - 2)) * m3;
+}
+
+export function kurtosis(x: Array<number>): number {
+    const n = x.length;
+    if (n < 4) return Number.NaN;
+    const meanVal = mean(x);
+    const sd = standard_deviation(x);
+    if (sd === 0) return Number.NaN;
+    const m4 = x.reduce((sum, xi) => sum + Math.pow((xi - meanVal) / sd, 4), 0) / n;
+    return m4 - 3;
 }
 

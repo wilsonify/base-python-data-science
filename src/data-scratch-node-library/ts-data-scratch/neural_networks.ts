@@ -16,7 +16,7 @@ export function sigmoidDerivative(x: number): number {
 }
 
 export function stepFunction(x: number): number {
-    return x >= 0 ? 1 : 0;
+    return x > 0 ? 1 : 0;
 }
 
 export function tanh(x: number): number {
@@ -118,13 +118,12 @@ export function backpropagation(
     // Calculate output layer gradients
     const outputWeightsGradient: number[] = [];
     const prevOutput = outputs.at(-2)!;
+    const prevSize = prevOutput.length;
     
-    for (let i = 0; i < outputLayer[0].length; i++) {
-        let weightGradient = 0;
-        for (const delta of outputDelta) {
-            weightGradient += delta * prevOutput[i];
+    for (let o = 0; o < finalOutput.length; o++) {
+        for (let i = 0; i < prevSize; i++) {
+            outputWeightsGradient.push(outputDelta[o] * prevOutput[i]);
         }
-        outputWeightsGradient.push(weightGradient);
     }
     
     const outputBiasGradient = outputDelta.reduce((sum, delta) => sum + delta, 0);
@@ -137,28 +136,28 @@ export function backpropagation(
         const layer = network[layerIdx];
         const layerOutput = outputs[layerIdx + 1];
         const prevOutput = outputs[layerIdx];
+        const currentSize = layerOutput.length;
         
         // Calculate delta for this layer
         const nextLayerWeights = network[layerIdx + 1][0];
         const layerDelta: number[] = [];
         
-        for (const outputValue of layerOutput) {
+        for (let h = 0; h < currentSize; h++) {
             let error = 0;
-            for (const [j, delta] of currentDelta.entries()) {
-                error += delta * nextLayerWeights[j];
+            for (let o = 0; o < currentDelta.length; o++) {
+                const flatWeightIndex = o * currentSize + h;
+                error += currentDelta[o] * nextLayerWeights[flatWeightIndex];
             }
-            const delta = error * sigmoidDerivative(outputValue);
+            const delta = error * sigmoidDerivative(layerOutput[h]);
             layerDelta.push(delta);
         }
         
         // Calculate weight gradients for this layer
         const weightsGradient: number[] = [];
-        for (let i = 0; i < layer[0].length; i++) {
-            let weightGradient = 0;
-            for (const delta of layerDelta) {
-                weightGradient += delta * prevOutput[i];
+        for (let h = 0; h < currentSize; h++) {
+            for (let i = 0; i < prevOutput.length; i++) {
+                weightsGradient.push(layerDelta[h] * prevOutput[i]);
             }
-            weightsGradient.push(weightGradient);
         }
         
         const biasGradient = layerDelta.reduce((sum, delta) => sum + delta, 0);
@@ -220,15 +219,16 @@ export function trainSimpleNetwork(
     }
     
     const outputSize = trainingData[0].target.length;
+    const inputSize = trainingData[0].inputs.length;
     
     // Initialize network with random weights
-        const network: NeuralNetwork = [
+    const network: NeuralNetwork = [
         [
-            new Array(hiddenNeurons).fill(0).map(() => Math.random() * 2 - 1),
+            Array.from({ length: hiddenNeurons * inputSize }, () => Math.random() * 2 - 1),
             Math.random() * 2 - 1
         ],
         [
-            new Array(outputSize).fill(0).map(() => Math.random() * 2 - 1),
+            Array.from({ length: outputSize * hiddenNeurons }, () => Math.random() * 2 - 1),
             Math.random() * 2 - 1
         ]
     ];

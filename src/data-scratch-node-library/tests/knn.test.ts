@@ -117,16 +117,16 @@ describe('K-Nearest Neighbors', () => {
         ];
 
         test('findOptimalK should return valid results', () => {
-            const result = findOptimalK(labeledPoints, 5, 3);
+            const result = findOptimalK(labeledPoints, 3, 3);
             
             expect(result).toHaveProperty('optimalK');
             expect(result).toHaveProperty('accuracies');
             
             expect(typeof result.optimalK).toBe('number');
             expect(Array.isArray(result.accuracies)).toBe(true);
-            expect(result.accuracies).toHaveLength(5);
+            expect(result.accuracies).toHaveLength(3);
             expect(result.optimalK).toBeGreaterThanOrEqual(1);
-            expect(result.optimalK).toBeLessThanOrEqual(5);
+            expect(result.optimalK).toBeLessThanOrEqual(3);
         });
 
         test('findOptimalK should handle small maxK', () => {

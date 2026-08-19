@@ -329,7 +329,7 @@ describe('Decision Trees', () => {
             }
             
             for (let i = 0; i < 50; i++) {
-                const features = {};
+                const features: Record<string, any> = {};
                 attributes.forEach(attr => {
                     features[attr] = `value${i % 3}`;
                 });
@@ -436,7 +436,7 @@ describe('Decision Trees', () => {
             ];
             
             expect(() => {
-                buildDecisionTree(malformedData, ['attr']);
+                buildDecisionTree(malformedData as any, ['attr']);
             }).toThrow();
         });
 

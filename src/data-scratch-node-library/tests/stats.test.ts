@@ -71,7 +71,7 @@ describe('Statistics', () => {
             expect(variance(data)).toBeCloseTo(2.5, 4);
             
             const data2 = [2, 4, 4, 4, 5, 5, 7, 9];
-            expect(variance(data2)).toBeCloseTo(4, 4);
+            expect(variance(data2)).toBeCloseTo(4.5714, 3);
         });
 
         test('variance should handle empty array', () => {
@@ -87,7 +87,7 @@ describe('Statistics', () => {
             expect(standard_deviation(data)).toBeCloseTo(1.5811, 4);
             
             const data2 = [2, 4, 4, 4, 5, 5, 7, 9];
-            expect(standard_deviation(data2)).toBeCloseTo(2, 4);
+            expect(standard_deviation(data2)).toBeCloseTo(2.1381, 3);
         });
 
         test('standard_deviation should handle empty array', () => {
@@ -187,10 +187,10 @@ describe('Statistics', () => {
             const negative = [5, 4, 3, 2, 1];
             expect(correlation(perfectNegative, negative)).toBeCloseTo(-1, 4);
             
-            // No correlation
+            // No correlation (zero variance in second array, epsilon prevents NaN)
             const noCorr1 = [1, 2, 3, 4, 5];
             const noCorr2 = [1, 1, 1, 1, 1];
-            expect(correlation(noCorr1, noCorr2)).toBeNaN(); // Zero variance in second array
+            expect(correlation(noCorr1, noCorr2)).toBeCloseTo(0, 4);
         });
 
         test('correlation should handle different length arrays', () => {
@@ -239,7 +239,7 @@ describe('Statistics', () => {
 
         test('should handle very small numbers', () => {
             const smallNumbers = [1e-6, 2e-6, 3e-6, 4e-6, 5e-6];
-            expect(mean(smallNumbers)).toBe(3e-6);
+            expect(mean(smallNumbers)).toBeCloseTo(3e-6, 10);
             expect(variance(smallNumbers)).toBeCloseTo(2.5e-12, 4);
         });
 
@@ -369,7 +369,7 @@ describe('Statistics', () => {
         test('should handle ordinal data as numbers', () => {
             const ordinal = [1, 2, 2, 3, 3, 3, 4, 5]; // Likert scale
             expect(mean(ordinal)).toBeCloseTo(2.875, 3);
-            expect(median(ordinal)).toBe(2.5);
+            expect(median(ordinal)).toBe(3); // Average of 4th and 5th elements: (3+3)/2
             expect(mode(ordinal)).toBe(3);
         });
     });

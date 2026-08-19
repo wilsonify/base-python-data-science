@@ -192,31 +192,34 @@ export function buildDecisionTree(
     attributes: string[],
     maxDepth: number = 10
 ): TreeNode {
+    if (attributes === null || attributes === undefined) {
+        throw new Error('Attributes cannot be null or undefined');
+    }
     return buildTree(data, attributes, 0, maxDepth);
 }
 
 // Print the decision tree (for debugging/visualization)
-export function printTree(tree: TreeNode, indent: string = ''): void {
+export function printTree(tree: TreeNode, indent: string = ''): string {
     if (tree.prediction !== undefined) {
-        console.log(`${indent}Predict: ${tree.prediction}`);
-        return;
+        return `${indent}Predict: ${tree.prediction}`;
     }
 
     if (tree.attribute !== undefined && tree.value !== undefined) {
-        console.log(`${indent}If ${tree.attribute} = ${tree.value}`);
+        let result = `${indent}If ${tree.attribute} = ${tree.value}`;
         if (tree.trueBranch) {
-            console.log(`${indent}  → True:`);
-            printTree(tree.trueBranch, indent + '    ');
+            result += `\n${indent}  → True:\n${printTree(tree.trueBranch, indent + '    ')}`;
         }
         if (tree.falseBranch) {
-            console.log(`${indent}  → False:`);
-            printTree(tree.falseBranch, indent + '    ');
+            result += `\n${indent}  → False:\n${printTree(tree.falseBranch, indent + '    ')}`;
         }
+        return result;
     }
+    return '';
 }
 
 // Calculate tree accuracy
 export function treeAccuracy(tree: TreeNode, testData: DataPoint[]): number {
+    if (testData.length === 0) return 0;
     let correct = 0;
     for (const point of testData) {
         const prediction = classify(tree, point.features);
@@ -242,13 +245,15 @@ export class RandomForest {
         sampleSize: number = 0.7,
         maxDepth: number = 10
     ) {
+        if (data.length === 0) {
+            throw new Error('Training data cannot be empty');
+        }
+
         this.numTrees = numTrees;
         this.sampleSize = sampleSize;
         this.maxDepth = maxDepth;
 
-        if (data.length > 0) {
-            this.train(data, attributes);
-        }
+        this.train(data, attributes);
     }
 
     // Train the random forest
@@ -355,7 +360,7 @@ export function exampleUsage(): void {
 
     // Random Forest example
     console.log('\nRandom Forest Example:');
-    const forest = new RandomForest(5, 0.8);
+    const forest = new RandomForest(exampleData, candidateAttributes, 5, 0.8);
     forest.train(exampleData, candidateAttributes);
     
     console.log('Forest Info:', forest.getInfo());

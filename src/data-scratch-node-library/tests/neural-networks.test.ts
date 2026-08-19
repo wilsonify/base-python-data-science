@@ -242,8 +242,8 @@ describe('Neural Networks', () => {
             const result1 = trainSimpleNetwork(trainingData, 2, 0.1, 50);
             const result2 = trainSimpleNetwork(trainingData, 4, 0.1, 50);
             
-            expect(result1.network).toHaveLength(3); // Input + Hidden + Output
-            expect(result2.network).toHaveLength(3);
+            expect(result1.network).toHaveLength(2); // Hidden + Output
+            expect(result2.network).toHaveLength(2);
         });
 
         test('trainSimpleNetwork should handle different learning rates', () => {
@@ -312,9 +312,9 @@ describe('Neural Networks', () => {
             
             expect(network).toHaveLength(2); // Input->Hidden + Hidden->Output layers
             
-            // Check dimensions
-            expect(network[0][0]).toHaveLength(3); // Input to hidden: 2 inputs -> 3 hidden
-            expect(network[1][0]).toHaveLength(1); // Hidden to output: 3 hidden -> 1 output
+            // Check dimensions (flattened: inputSize * outputSize)
+            expect(network[0][0]).toHaveLength(6); // 2 inputs * 3 hidden = 6
+            expect(network[1][0]).toHaveLength(3); // 3 hidden * 1 output = 3
             
             // Check types
             expect(typeof network[0][1]).toBe('number'); // Bias
@@ -325,8 +325,8 @@ describe('Neural Networks', () => {
             const network1 = createNetwork([1, 2, 1]);
             const network2 = createNetwork([3, 5, 2]);
             
-            expect(network1[0][0]).toHaveLength(2);
-            expect(network2[0][0]).toHaveLength(5);
+            expect(network1[0][0]).toHaveLength(2);  // 1 * 2 = 2
+            expect(network2[0][0]).toHaveLength(15); // 3 * 5 = 15
         });
 
         test('getNetworkInfo should return network information', () => {
@@ -339,7 +339,7 @@ describe('Neural Networks', () => {
             expect(info).toHaveProperty('totalParameters');
             
             expect(info.layers).toBe(2);
-            expect(info.neuronsPerLayer).toEqual([3, 1]);
+            expect(info.neuronsPerLayer).toEqual([6, 3]); // Flat weight counts: 2*3=6, 3*1=3
             expect(typeof info.totalWeights).toBe('number');
             expect(typeof info.totalParameters).toBe('number');
         });
@@ -395,8 +395,8 @@ describe('Neural Networks', () => {
 
         test('should handle very negative weights', () => {
             const network: NeuralNetwork = [
-                [[-100, -100], 0],
-                [[-100], 0]
+                [[-100, -100, -100, -100], 0],  // 2 inputs -> 2 hidden (4 flat weights)
+                [[-100, -100], -100]             // 2 hidden -> 1 output with strong negative bias
             ];
             
             const result = feedForward(network, [1, 1]);
