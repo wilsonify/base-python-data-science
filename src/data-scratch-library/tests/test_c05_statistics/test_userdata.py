@@ -1,5 +1,5 @@
 from os import remove
-from os.path import exists
+from os.path import exists, abspath
 from pathlib import Path
 
 import pytest
@@ -7,6 +7,7 @@ import pytest
 from dsl.c05_statistics.c01_userdata import UserData
 
 FIXTURE_DIR = Path(__file__).parent
+DATA_DIR = Path(abspath(FIXTURE_DIR / ".." / ".." / ".." / ".." / "data"))
 
 
 @pytest.fixture(name="ud01")
@@ -31,6 +32,6 @@ def test_to_json(ud01):
 
 def test_from_json(ud01):
     """Test the from_json method."""
-    loaded_user_data = UserData.from_json(FIXTURE_DIR / "example_user_data.json")
+    loaded_user_data = UserData.from_json(DATA_DIR / "example_user_data.json")
     assert len(loaded_user_data.daily_minutes) == 5
     assert len(loaded_user_data.num_friends) == 5
