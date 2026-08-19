@@ -1,9 +1,13 @@
 from collections import Counter
 from os import remove
-from os.path import abspath, dirname
+from pathlib import Path
+
+import pytest
 
 from dsl.c01_intro import User, Friendship, Interest, Network
 from dsl.c01_intro.c04_salary_from_tenure import SalaryTenure
+
+FIXTURE_DIR = Path(__file__).parent
 
 
 def network01():
@@ -148,9 +152,8 @@ def test_read_user_connections():
     network.read_user_connections(uid=1)
 
 
-def test_from_json():
-    network = network01()
-    in_json_file_path = abspath(f"{dirname(__file__)}/../../../../data/example_network.json")
+def test_from_json(network01):
+    in_json_file_path = FIXTURE_DIR / "example_network.json"
     loaded_network = Network.from_json(in_json_file_path)
     assert loaded_network.users == [User(id=0, name='User 0', friends=[]), User(id=1, name='User 1', friends=[]),
                                     User(id=2, name='User 2', friends=[])]
@@ -164,13 +167,7 @@ def test_from_json():
                                                    SalaryTenure(salary=90000, tenure=8.0)]
 
 
-def test_to_json():
-    network = network01()
-    network.to_json("network.out.json")
-    remove("network.out.json")
-
-
-if __name__ == "__main__":
-    from test_runner import TestRunner
-    runner = TestRunner()
-    runner.run_file(__file__)
+def test_to_json(network01):
+    out_path = FIXTURE_DIR / "network.out.json"
+    network01.to_json(out_path)
+    remove(out_path)
