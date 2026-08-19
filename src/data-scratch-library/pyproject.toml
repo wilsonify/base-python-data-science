@@ -11,8 +11,9 @@ keywords = ["datascience", "python"]
 [project.urls]
 homepage = "https://github.com/wilsonify/base-python-data-science"
 
-[tool.setuptools]
-packages = ["dsl"]
+[tool.setuptools.packages.find]
+where = ["."]
+include = ["dsl*"]
 
 [tool.pytest.ini_options]
 testpaths = ["tests"]
