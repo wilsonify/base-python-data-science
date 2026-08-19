@@ -1,11 +1,11 @@
 #!/usr/bin/bash
-# STACK_ID: io.wilsonfiy.stacks.ubuntu
+# STACK_ID: io.wilsonify.stacks.ubuntu
 # BASE_IMAGE: bpds/ubuntu-base:ubuntu
 #
 
 set -e
 
-ID_PREFIX="io.wilsonfiy.stacks"
+ID_PREFIX="io.wilsonify.stacks"
 REPO_PREFIX=bpds/ubuntu
 PLATFORM=amd64
 DIR=$(pwd)
