@@ -3,7 +3,7 @@ project(data-scratch-cpp-library-tests LANGUAGES CXX)
 set(VERSION_MAJOR 1)
 set(VERSION_MINOR 0)
 
-set(CMAKE_CXX_STANDARD 17) # Use C++17 for better testing features
+set(CMAKE_CXX_STANDARD 20) # Use C++20 for ranges, operator<=>, and other modern features
 set(CMAKE_CXX_FLAGS="-g -O0 -Wall -W -Wshadow -Wunused-variable -Wunused-parameter -Wunused-function -Wunused -Wno-system-headers -Wno-deprecated -Woverloaded-virtual -Wwrite-strings -fprofile-arcs -ftest-coverage")
 set(CMAKE_C_FLAGS="-g -O0 -Wall -W -fprofile-arcs -ftest-coverage")
 set(CMAKE_SHARED_LINKER_FLAGS="-fprofile-arcs -ftest-coverage")

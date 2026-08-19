@@ -1,3 +1,4 @@
+#pragma once
 
 #include "gradient_descent.h"
 #include "linear_algebra.h"

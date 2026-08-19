@@ -1,3 +1,5 @@
+#pragma once
+
 #include "stats.h"
 
 double predict(alpha, beta, x_i) ;

@@ -1,3 +1,5 @@
+#pragma once
+
 #include "manipulation.h"
 
 double percent_price_change(yesterday, today) ;

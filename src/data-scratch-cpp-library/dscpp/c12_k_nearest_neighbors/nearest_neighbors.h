@@ -13,7 +13,6 @@ struct LabeledPoint {
     std::vector<double> point;
     T label;
 
-    LabeledPoint() = default;
     auto operator<=>(const LabeledPoint& other) const = default;
 };
 

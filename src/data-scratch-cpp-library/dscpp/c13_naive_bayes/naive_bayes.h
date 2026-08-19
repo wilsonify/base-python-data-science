@@ -1,3 +1,4 @@
+#pragma once
 
 double tokenize(message);
 double count_words(training_set);

@@ -1,3 +1,5 @@
+#pragma once
+
 #include "linear_algebra.h"
 
 double squared_clustering_errors(inputs, k);
