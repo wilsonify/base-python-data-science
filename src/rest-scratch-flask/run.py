@@ -9,12 +9,13 @@ from app import create_app
 # Create and configure the Flask app
 app = create_app()
 
-if __name__ == '__main__':
-    # Get configuration from environment variables
+
+def main():
+    """Entry point for the console script."""
     host = os.environ.get('FLASK_HOST', '127.0.0.1')
     port = int(os.environ.get('FLASK_PORT', 5000))
     debug = os.environ.get('FLASK_DEBUG', 'False').lower() == 'true'
-    
+
     print("Starting Data Scratch Library REST API...")
     print(f"Server: http://{host}:{port}")
     print(f"Debug mode: {debug}")
@@ -25,5 +26,9 @@ if __name__ == '__main__':
     print(f"  - Clustering: http://{host}:{port}/api/clustering")
     print(f"  - Neural Networks: http://{host}:{port}/api/neural-networks")
     print(f"  - Health check: http://{host}:{port}/health")
-    
+
     app.run(host=host, port=port, debug=debug)
+
+
+if __name__ == '__main__':
+    main()

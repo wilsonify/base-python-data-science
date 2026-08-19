@@ -26,7 +26,7 @@ setup(
     python_requires=">=3.7",
     entry_points={
         "console_scripts": [
-            "data-scratch-api=run:app",
+            "data-scratch-api=run:main",
         ],
     },
 )

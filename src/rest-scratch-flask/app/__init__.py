@@ -1,5 +1,6 @@
 from flask import Flask, jsonify, send_from_directory
 import os
+import logging
 
 # Try to import CORS, but make it optional
 try:
@@ -18,6 +19,7 @@ except ImportError:
 def create_app():
     """Application factory pattern."""
     app = Flask(__name__)
+    logger = logging.getLogger(__name__)
     
     # Enable CORS with restricted origins (allow localhost for development)
     if CORS_AVAILABLE:
@@ -73,7 +75,8 @@ def create_app():
             else:
                 return jsonify({'error': 'OpenAPI specification not found'}), 404
         except Exception as e:
-            return jsonify({'error': f'Error serving OpenAPI spec: {str(e)}'}), 500
+            logger.exception('Error serving OpenAPI spec')
+            return jsonify({'error': 'Error serving OpenAPI specification'}), 500
     
     # Health check endpoint
     @app.route('/health', methods=['GET'])

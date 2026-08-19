@@ -1,8 +1,10 @@
 from flask import Blueprint, request, jsonify
+import logging
 
 from dsl.c12_k_nearest_neighbors.nearest_neighbors import knn_classify
 
 knn_bp = Blueprint('knn', __name__)
+logger = logging.getLogger(__name__)
 
 # Common response messages (reduce duplicated string literals)
 ERR_NO_JSON = 'No JSON data provided'
@@ -68,7 +70,8 @@ def classify_point():
         })
         
     except Exception as e:
-        return jsonify({'error': f'Classification failed: {str(e)}'}), 500
+        logger.exception('Classification failed')
+        return jsonify({'error': 'Classification failed due to an internal error'}), 500
 
 
 @knn_bp.route('/batch_classify', methods=['POST'])
@@ -129,7 +132,8 @@ def batch_classify():
         })
         
     except Exception as e:
-        return jsonify({'error': f'Batch classification failed: {str(e)}'}), 500
+        logger.exception('Batch classification failed')
+        return jsonify({'error': 'Batch classification failed due to an internal error'}), 500
 
 
 @knn_bp.route('/info', methods=['GET'])

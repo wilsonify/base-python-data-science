@@ -1,8 +1,10 @@
 from flask import Blueprint, request, jsonify
+import logging
 
 from dsl.c17_decision_trees.decision_trees import build_tree_id3, classify, forest_classify
 
 decision_trees_bp = Blueprint('decision_trees', __name__)
+logger = logging.getLogger(__name__)
 
 # Common response messages (reduce duplicated string literals)
 ERR_NO_JSON = 'No JSON data provided'
@@ -80,7 +82,8 @@ def train_tree():
         })
         
     except Exception as e:
-        return jsonify({'error': f'Training failed: {str(e)}'}), 500
+        logger.exception('Training failed')
+        return jsonify({'error': 'Training failed due to an internal error'}), 500
 
 
 @decision_trees_bp.route('/classify', methods=['POST'])
@@ -140,7 +143,8 @@ def classify_instance():
         })
         
     except Exception as e:
-        return jsonify({'error': f'Classification failed: {str(e)}'}), 500
+        logger.exception('Classification failed')
+        return jsonify({'error': 'Classification failed due to an internal error'}), 500
 
 
 @decision_trees_bp.route('/batch_classify', methods=['POST'])
@@ -210,7 +214,8 @@ def batch_classify():
         })
         
     except Exception as e:
-        return jsonify({'error': f'Batch classification failed: {str(e)}'}), 500
+        logger.exception('Batch classification failed')
+        return jsonify({'error': 'Batch classification failed due to an internal error'}), 500
 
 
 @decision_trees_bp.route('/forest_classify', methods=['POST'])
@@ -279,7 +284,8 @@ def forest_classify_endpoint():
         })
         
     except Exception as e:
-        return jsonify({'error': f'Forest classification failed: {str(e)}'}), 500
+        logger.exception('Forest classification failed')
+        return jsonify({'error': 'Forest classification failed due to an internal error'}), 500
 
 
 @decision_trees_bp.route('/info', methods=['GET'])

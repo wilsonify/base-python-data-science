@@ -170,6 +170,28 @@ class TestNaiveBayes:
         assert 'algorithm' in data
         assert 'parameters' in data
 
+    def test_naive_bayes_train_success(self, client, headers):
+        """Test successful Naive Bayes training."""
+        data = {
+            "training_data": [
+                {"message": "buy viagra now", "is_spam": True},
+                {"message": "hello friend", "is_spam": False},
+                {"message": "cheap pills online", "is_spam": True}
+            ],
+            "smoothing": 0.5
+        }
+
+        response = client.post('/api/naive-bayes/train',
+                             data=json.dumps(data),
+                             headers=headers)
+        assert response.status_code == 200
+
+        result = json.loads(response.data)
+        assert result['status'] == 'trained'
+        assert result['training_samples'] == 3
+        assert result['spam_samples'] == 2
+        assert result['ham_samples'] == 1
+
 
 class TestDecisionTrees:
     """Test Decision Trees endpoints."""
@@ -226,6 +248,48 @@ class TestDecisionTrees:
         assert 'algorithm' in data
         assert 'parameters' in data
 
+    def test_decision_tree_train_success(self, client, headers):
+        """Test successful decision tree training."""
+        data = {
+            "training_data": [
+                {"features": {"level": "Senior", "lang": "Java"}, "label": True},
+                {"features": {"level": "Junior", "lang": "Python"}, "label": False},
+                {"features": {"level": "Senior", "lang": "Python"}, "label": True}
+            ],
+            "split_candidates": ["level", "lang"]
+        }
+
+        response = client.post('/api/decision-trees/train',
+                             data=json.dumps(data),
+                             headers=headers)
+        assert response.status_code == 200
+
+        result = json.loads(response.data)
+        assert result['status'] == 'trained'
+        assert result['training_samples'] == 3
+
+    def test_decision_tree_forest_classify(self, client, headers):
+        """Test decision tree forest classification."""
+        data = {
+            "instance": {"level": "Senior", "lang": "Java"},
+            "num_trees": 3,
+            "training_data": [
+                {"features": {"level": "Senior", "lang": "Java"}, "label": True},
+                {"features": {"level": "Junior", "lang": "Python"}, "label": False},
+                {"features": {"level": "Senior", "lang": "Python"}, "label": True}
+            ]
+        }
+
+        response = client.post('/api/decision-trees/forest_classify',
+                             data=json.dumps(data),
+                             headers=headers)
+        assert response.status_code == 200
+
+        result = json.loads(response.data)
+        assert 'prediction' in result
+        assert isinstance(result['prediction'], bool)
+        assert result['num_trees'] == 3
+
 
 class TestClustering:
     """Test Clustering endpoints."""
@@ -274,6 +338,24 @@ class TestClustering:
         data = json.loads(response.data)
         assert 'algorithms' in data
         assert 'parameters' in data
+
+    def test_clustering_optimal_k(self, client, headers):
+        """Test finding optimal k using elbow method."""
+        data = {
+            "data": [[1.0, 2.0], [3.0, 4.0], [5.0, 6.0], [1.1, 2.1], [3.1, 4.1]],
+            "max_k": 3,
+            "runs_per_k": 1
+        }
+
+        response = client.post('/api/clustering/optimal_k',
+                             data=json.dumps(data),
+                             headers=headers)
+        assert response.status_code == 200
+
+        result = json.loads(response.data)
+        assert 'results' in result
+        assert 'recommended_k' in result
+        assert len(result['results']) == 3
 
 
 class TestNeuralNetworks:
@@ -365,6 +447,54 @@ class TestNeuralNetworks:
         data = json.loads(response.data)
         assert 'algorithms' in data
         assert 'functions' in data
+
+    def test_backpropagation(self, client, headers):
+        """Test backpropagation gradient calculation."""
+        data = {
+            "network": [
+                [[0.5, -0.5], 0.0],
+                [[1.0, 1.0], 0.0]
+            ],
+            "inputs": [1.0, 1.0],
+            "target": [1.0]
+        }
+
+        response = client.post('/api/neural-networks/backpropagation',
+                             data=json.dumps(data),
+                             headers=headers)
+        assert response.status_code == 200
+
+        result = json.loads(response.data)
+        assert 'network_output' in result
+        assert 'target' in result
+        assert 'gradients' in result
+        assert result['num_layers'] == 2
+
+    def test_simple_train(self, client, headers):
+        """Test simple neural network training."""
+        data = {
+            "training_data": [
+                {"inputs": [0, 0], "target": [0]},
+                {"inputs": [0, 1], "target": [1]},
+                {"inputs": [1, 0], "target": [1]},
+                {"inputs": [1, 1], "target": [0]}
+            ],
+            "hidden_neurons": 2,
+            "learning_rate": 0.1,
+            "epochs": 10
+        }
+
+        response = client.post('/api/neural-networks/simple_train',
+                             data=json.dumps(data),
+                             headers=headers)
+        assert response.status_code == 200
+
+        result = json.loads(response.data)
+        assert result['status'] == 'training_completed'
+        assert result['training_samples'] == 4
+        assert 'final_error' in result
+        assert result['network_structure']['input_dim'] == 2
+        assert result['network_structure']['output_dim'] == 1
 
 
 class TestErrorHandling:

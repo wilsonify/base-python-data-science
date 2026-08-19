@@ -1,5 +1,6 @@
 from flask import Blueprint, request, jsonify
 import random
+import logging
 
 from dsl.c18_neural_networks.neural_networks import (
     sigmoid, step_function, perceptron_output, neuron_output,
@@ -7,6 +8,7 @@ from dsl.c18_neural_networks.neural_networks import (
 )
 
 neural_networks_bp = Blueprint('neural_networks', __name__)
+logger = logging.getLogger(__name__)
 
 # Common response messages
 ERR_NO_JSON = 'No JSON data provided'
@@ -63,7 +65,8 @@ def calculate_sigmoid():
         })
         
     except Exception as e:
-        return jsonify({'error': f'Sigmoid calculation failed: {str(e)}'}), 500
+        logger.exception('Sigmoid calculation failed')
+        return jsonify({'error': 'Sigmoid calculation failed due to an internal error'}), 500
 
 
 @neural_networks_bp.route('/step', methods=['POST'])
@@ -99,7 +102,8 @@ def calculate_step():
         })
         
     except Exception as e:
-        return jsonify({'error': f'Step function calculation failed: {str(e)}'}), 500
+        logger.exception('Step function calculation failed')
+        return jsonify({'error': 'Step function calculation failed due to an internal error'}), 500
 
 
 @neural_networks_bp.route('/perceptron', methods=['POST'])
@@ -156,7 +160,8 @@ def perceptron_predict():
         })
         
     except Exception as e:
-        return jsonify({'error': f'Perceptron prediction failed: {str(e)}'}), 500
+        logger.exception('Perceptron prediction failed')
+        return jsonify({'error': 'Perceptron prediction failed due to an internal error'}), 500
 
 
 @neural_networks_bp.route('/neuron', methods=['POST'])
@@ -207,7 +212,8 @@ def neuron_activate():
         })
         
     except Exception as e:
-        return jsonify({'error': f'Neuron activation failed: {str(e)}'}), 500
+        logger.exception('Neuron activation failed')
+        return jsonify({'error': 'Neuron activation failed due to an internal error'}), 500
 
 
 def _validate_and_convert_network_payload(data, require_target=False):
@@ -263,7 +269,8 @@ def network_feed_forward():
     except ValueError as e:
         return jsonify({'error': str(e)}), 400
     except Exception as e:
-        return jsonify({'error': f'Feed-forward propagation failed: {str(e)}'}), 500
+        logger.exception('Feed-forward propagation failed')
+        return jsonify({'error': 'Feed-forward propagation failed due to an internal error'}), 500
 
 
 def _feed_forward_route(data):
@@ -304,7 +311,8 @@ def calculate_backpropagation():
     except ValueError as e:
         return jsonify({'error': str(e)}), 400
     except Exception as e:
-        return jsonify({'error': f'Backpropagation failed: {str(e)}'}), 500
+        logger.exception('Backpropagation failed')
+        return jsonify({'error': 'Backpropagation failed due to an internal error'}), 500
 
 
 def _backprop_route(data):
@@ -327,20 +335,22 @@ def _backprop_route(data):
 
 
 def _init_network(input_dim: int, hidden_neurons: int, output_dim: int):
-    """Initialize a simple random network: hidden neurons followed by output neurons.
+    """Initialize a simple random network with hidden and output layers.
 
-    Returns a list of [weights, bias] for each neuron.
+    Each neuron is represented as a flat list [w1, w2, ..., bias] compatible
+    with the DSL's feed_forward (which appends a bias input of 1 automatically).
     """
-    net = []
+    hidden_layer = []
     for _ in range(hidden_neurons):
-        weights = [random.uniform(-1, 1) for _ in range(input_dim)]
-        bias = random.uniform(-1, 1)
-        net.append([weights, bias])
+        weights = [random.uniform(-1, 1) for _ in range(input_dim + 1)]
+        hidden_layer.append(weights)
+
+    output_layer = []
     for _ in range(output_dim):
-        weights = [random.uniform(-1, 1) for _ in range(hidden_neurons)]
-        bias = random.uniform(-1, 1)
-        net.append([weights, bias])
-    return net
+        weights = [random.uniform(-1, 1) for _ in range(hidden_neurons + 1)]
+        output_layer.append(weights)
+
+    return [hidden_layer, output_layer]
 
 
 def _run_simple_training(net, data, epochs_count):
@@ -411,7 +421,8 @@ def simple_training():
     except ValueError as e:
         return jsonify({'error': str(e)}), 400
     except Exception as e:
-        return jsonify({'error': f'Training failed: {str(e)}'}), 500
+        logger.exception('Training failed')
+        return jsonify({'error': 'Training failed due to an internal error'}), 500
 
 
 def _simple_training_route(data, input_dim, output_dim):

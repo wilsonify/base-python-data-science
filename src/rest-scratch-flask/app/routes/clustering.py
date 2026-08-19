@@ -1,8 +1,11 @@
 from flask import Blueprint, request, jsonify
 import random
+import logging
 
 from dsl.c04_linear_algebra.e0401_vectors import distance, squared_distance
 from dsl.c05_statistics.e0501_central_tendancy import mean
+
+logger = logging.getLogger(__name__)
 
 # Helper functions for clustering
 def vector_mean(vectors):
@@ -247,7 +250,8 @@ def perform_kmeans():
     except ValueError as e:
         return jsonify({'error': str(e)}), 400
     except Exception as e:
-        return jsonify({'error': f'K-means clustering failed: {str(e)}'}), 500
+        logger.exception('K-means clustering failed')
+        return jsonify({'error': 'K-means clustering failed due to an internal error'}), 500
 
 
 def _perform_kmeans_route(data):
@@ -320,7 +324,8 @@ def analyze_clustering():
         return jsonify(result)
         
     except Exception as e:
-        return jsonify({'error': f'Clustering analysis failed: {str(e)}'}), 500
+        logger.exception('Clustering analysis failed')
+        return jsonify({'error': 'Clustering analysis failed due to an internal error'}), 500
 
 
 def _analyze_clustering_core(points, assignments, means):
@@ -381,7 +386,8 @@ def find_optimal_k():
     except ValueError as e:
         return jsonify({'error': str(e)}), 400
     except Exception as e:
-        return jsonify({'error': f'Optimal k analysis failed: {str(e)}'}), 500
+        logger.exception('Optimal k analysis failed')
+        return jsonify({'error': 'Optimal k analysis failed due to an internal error'}), 500
 
 
 def _find_optimal_k_route(data):
