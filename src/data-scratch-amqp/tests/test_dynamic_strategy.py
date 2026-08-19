@@ -109,8 +109,8 @@ class TestDynamicStrategy(unittest.TestCase):
         # Check that key functions are present
         key_functions = [
             'vector_add', 'dot', 'magnitude', 'mean', 'median',
-            'normal_cd', 'bernoulli_trial', 'accuracy', 'split_data',
-            'knn_classify', 'logistic', 'entropy', 'page_rank'
+            'normal_cdf', 'bernoulli_trial', 'accuracy', 'split_data',
+            'knn_classify', 'logistic', 'variance', 'covariance'
         ]
         
         for func_name in key_functions:
@@ -126,7 +126,7 @@ class TestDynamicStrategy(unittest.TestCase):
         self.assertGreater(len(dynamic_strategies), 200)
         
         # Should contain key functions
-        key_functions = ['vector_add', 'mean', 'normal_cd', 'accuracy']
+        key_functions = ['vector_add', 'mean', 'normal_cdf', 'accuracy']
         for func_name in key_functions:
             self.assertIn(func_name, dynamic_strategies)
 
