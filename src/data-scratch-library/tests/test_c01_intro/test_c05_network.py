@@ -1,5 +1,6 @@
 from collections import Counter
 from os import remove
+from os.path import abspath, dirname
 from pathlib import Path
 
 import pytest
@@ -8,6 +9,7 @@ from dsl.c01_intro import User, Friendship, Interest, Network
 from dsl.c01_intro.c04_salary_from_tenure import SalaryTenure
 
 FIXTURE_DIR = Path(__file__).parent
+DATA_DIR = Path(abspath(f"{dirname(__file__)}/../../../../data"))
 
 
 def network01():
@@ -19,10 +21,10 @@ def network01():
             Friendship(user1_id=1, user2_id=2)
         ],
         interests=[
-            Interest(user_id=0, interest="Python"),
-            Interest(user_id=1, interest="Data Science"),
-            Interest(user_id=1, interest="Python"),
-            Interest(user_id=2, interest="Machine Learning"),
+            Interest(user_id=0, interest_name="Python"),
+            Interest(user_id=1, interest_name="Data Science"),
+            Interest(user_id=1, interest_name="Python"),
+            Interest(user_id=2, interest_name="Machine Learning"),
         ],
         salaries_and_tenures=[
             SalaryTenure(salary=50000, tenure=2.5),
@@ -152,22 +154,23 @@ def test_read_user_connections():
     network.read_user_connections(uid=1)
 
 
-def test_from_json(network01):
-    in_json_file_path = FIXTURE_DIR / "example_network.json"
+def test_from_json():
+    in_json_file_path = DATA_DIR / "example_network.json"
     loaded_network = Network.from_json(in_json_file_path)
     assert loaded_network.users == [User(id=0, name='User 0', friends=[]), User(id=1, name='User 1', friends=[]),
                                     User(id=2, name='User 2', friends=[])]
     assert loaded_network.friendships == [Friendship(user1_id=0, user2_id=1), Friendship(user1_id=1, user2_id=2)]
-    assert loaded_network.interests == [Interest(user_id=0, interest='Python'),
-                                        Interest(user_id=1, interest='Data Science'),
-                                        Interest(user_id=1, interest='Python'),
-                                        Interest(user_id=2, interest='Machine Learning')]
+    assert loaded_network.interests == [Interest(user_id=0, interest_name='Python'),
+                                        Interest(user_id=1, interest_name='Data Science'),
+                                        Interest(user_id=1, interest_name='Python'),
+                                        Interest(user_id=2, interest_name='Machine Learning')]
     assert loaded_network.salaries_and_tenures == [SalaryTenure(salary=50000, tenure=2.5),
                                                    SalaryTenure(salary=70000, tenure=3.0),
                                                    SalaryTenure(salary=90000, tenure=8.0)]
 
 
-def test_to_json(network01):
+def test_to_json():
+    network = network01()
     out_path = FIXTURE_DIR / "network.out.json"
-    network01.to_json(out_path)
+    network.to_json(out_path)
     remove(out_path)
