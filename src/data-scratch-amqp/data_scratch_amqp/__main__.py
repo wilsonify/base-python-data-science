@@ -75,7 +75,7 @@ def route_callback(ch, method, properties, body):
             properties=properties,
             body=body
         )
-    except:  # pylint:disable=bare-except # noqa
+    except Exception:
 
         payload['status_code'] = 400
         logging.exception("failed to consume message")
@@ -83,7 +83,7 @@ def route_callback(ch, method, properties, body):
             exchange=fail_exchange,
             routing_key=routing_key,
             properties=properties,
-            body=body
+            body=json.dumps(payload).encode('utf-8')
         )
         if properties.reply_to is not None:
             ch.basic_publish(
