@@ -38,6 +38,8 @@ def minimize_stochastic(target_fn, gradient_fn, x, y, theta_0, alpha_0=0.01):
         # and take a gradient step for each of the data points
         for x_i, y_i in in_random_order(data):
             gradient_i = gradient_fn(x_i, y_i, theta)
+            # clip gradient to prevent overflow
+            gradient_i = [max(-1e6, min(1e6, g)) for g in gradient_i]
             theta = vector_subtract(theta, scalar_multiply(alpha, gradient_i))
 
     return min_theta
