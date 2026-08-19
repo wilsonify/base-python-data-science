@@ -48,14 +48,14 @@ class Network:
         self.user_ids_by_interest = defaultdict(list)
         for interest_obj in self.interests:
             # Append the user_id to the list for the corresponding interest
-            self.user_ids_by_interest[interest_obj.interest].append(interest_obj.user_id)
+            self.user_ids_by_interest[interest_obj.interest_name].append(interest_obj.user_id)
 
     def create_interests_by_user(self):
         """Populate interests_by_user_id with interests linked to user IDs."""
         self.interests_by_user_id = defaultdict(list)  # Ensure it's instance-specific
 
         for interest_obj in self.interests:
-            self.interests_by_user_id[interest_obj.user_id].append(interest_obj.interest)
+            self.interests_by_user_id[interest_obj.user_id].append(interest_obj.interest_name)
 
     def create_salary_by_tenure(self):
         # keys are years
@@ -75,7 +75,7 @@ class Network:
         return [
             interest.user_id  # Access user_id from the Interest object
             for interest in self.interests  # Iterate over Interest objects
-            if interest.interest == target_interest  # Check if the interest matches
+            if interest.interest_name == target_interest  # Check if the interest matches
         ]
 
     def most_common_interests_with(self,user_id):
@@ -91,7 +91,7 @@ class Network:
         self.words_and_counts = Counter(
             word
             for interest_obj in self.interests
-            for word in interest_obj.interest.lower().split()
+            for word in interest_obj.interest_name.lower().split()
         )
 
     def read_most_common_words(self):
@@ -155,7 +155,7 @@ class Network:
             interests=[
                 Interest(
                     user_id=interest_dict["user_id"],
-                    interest=interest_dict["interest"]
+                    interest_name=interest_dict["interest"]
                 ) for interest_dict in dictionary["interests"]
             ],
             salaries_and_tenures=[
