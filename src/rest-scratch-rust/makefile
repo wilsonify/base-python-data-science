@@ -9,7 +9,7 @@ all: clean dist/image-latest.tar
 clean:
 	rm -rf build
 	rm -rf dist
-	rm -rf generated/node_modules
+	rm -rf generated/target
 	rm -rf generated/dist
 	rm -f make-dag.png
 
@@ -19,20 +19,17 @@ build/VERSION.txt:
 dist/VERSION.txt:
 	mkdir -p dist && $(call ver_file, $@)
 
-generated/node_modules/VERSION.txt:
-	cd generated && npm install && cd .. && $(call ver_file, $@)
+generated/target/VERSION.txt:
+	cd generated && cargo build --release && cd .. && $(call ver_file, $@)
 
-dist/index.js: generated/node_modules/VERSION.txt
-	cd generated && npx webpack
+dist/index.js: generated/target/VERSION.txt
+	cp generated/target/release/rest-scratch-rust dist/index.js
 
 generated/dist/api/openapi.yaml:
 	mkdir -p generated/dist/api && cp generated/api/openapi.yaml generated/dist/api/openapi.yaml
 
-generated/dist/node_modules/VERSION.txt:
-	mkdir -p generated/dist/node_modules && cp -R generated/node_modules generated/dist
-
-start: dist/index.js generated/dist/api/openapi.yaml generated/dist/node_modules/VERSION.txt
-	cd generated && node dist/index.js
+start: dist/index.js generated/dist/api/openapi.yaml
+	./dist/index.js
 
 build/docker-build-base.txt: build/VERSION.txt
 	docker build -f Dockerfile-base -t rsr-base-image:1.0.0 --platform=amd64 . && $(call ver_file, $@)
