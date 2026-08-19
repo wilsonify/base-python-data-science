@@ -127,7 +127,7 @@ def main():
     logging.debug(f"MQTT_HOST = {MQTT_HOST}")
     logging.debug(f"MQTT_PORT = {MQTT_PORT}")
     logging.debug(f"MQTT_TOPIC = {MQTT_TOPIC}")
-    logging.debug(f"MQTT_USER = {MQTT_USER}")
+    logging.debug("MQTT_USER is set")
     client = mqtt.Client(protocol=mqtt.MQTTv311)
 
     logging.info("start setting callback")
