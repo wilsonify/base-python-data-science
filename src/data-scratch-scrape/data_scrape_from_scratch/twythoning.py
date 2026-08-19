@@ -9,7 +9,7 @@ class MyStreamer(TwythonStreamer):
     """
 
     def __init__(self):
-        super.__init__()
+        super().__init__()
         self.tweets = []
 
     def on_success(self, data):
