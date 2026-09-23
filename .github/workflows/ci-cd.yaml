@@ -19,6 +19,7 @@ concurrency:
 env:
   IMAGE_NAME: ghcr.io/${{ github.repository }}/dsl
   FORCE_JAVASCRIPT_ACTIONS_TO_NODE24: "true"
+  # Bump this when upgrading SonarSource/sonarqube-scan-action so cached scanner binaries are refreshed.
   SONAR_SCAN_ACTION_CACHE_VERSION: "scan-action-v8"
 
 jobs:
