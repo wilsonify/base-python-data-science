@@ -126,7 +126,7 @@ jobs:
         uses: actions/cache@v4
         with:
           path: ~/.sonar/cache
-          key: ${{ runner.os }}-sonar-${{ env.SONAR_SCAN_ACTION_CACHE_VERSION }}-${{ hashFiles('sonar-project.properties') }}
+          key: ${{ runner.os }}-sonar-${{ env.SONAR_SCAN_ACTION_CACHE_VERSION }}
           restore-keys: |
             ${{ runner.os }}-sonar-${{ env.SONAR_SCAN_ACTION_CACHE_VERSION }}-
 
