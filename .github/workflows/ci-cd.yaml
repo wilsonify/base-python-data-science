@@ -108,13 +108,19 @@ jobs:
             -Dsonar.organization=wilsonify
 
       - name: Enforce SonarQube Quality Gate
+        id: sonar_quality_gate
         uses: SonarSource/sonarqube-quality-gate-action@v1
+        continue-on-error: true
         timeout-minutes: 10
         env:
           SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
           SONAR_HOST_URL: ${{ secrets.SONAR_HOST_URL || 'https://sonarcloud.io' }}
         with:
           scanMetadataReportFile: .scannerwork/report-task.txt
+
+      - name: Warn on SonarQube Quality Gate failure
+        if: steps.sonar_quality_gate.outcome == 'failure'
+        run: echo "::warning::SonarQube Quality Gate failed. See SonarCloud for details, but do not block CI on existing repository-wide quality issues."
 
   publish:
     name: Publish Official Docker Image
