@@ -124,9 +124,9 @@ jobs:
         uses: actions/cache@v4
         with:
           path: ~/.sonar/cache
-          key: ${{ runner.os }}-sonar-${{ hashFiles('sonar-project.properties') }}
+          key: ${{ runner.os }}-sonar-v8-${{ hashFiles('sonar-project.properties') }}
           restore-keys: |
-            ${{ runner.os }}-sonar-
+            ${{ runner.os }}-sonar-v8-
 
       - name: Set up Java 17
         uses: actions/setup-java@v4
