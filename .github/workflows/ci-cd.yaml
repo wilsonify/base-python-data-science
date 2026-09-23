@@ -42,7 +42,8 @@ jobs:
           python -m pip install -e src/data-scratch-library
 
       - name: Run tests
-        run: python -m pytest src/data-scratch-library/tests/ --cov=dsl --cov-report=term-missing --cov-report=xml --cov-branch --cov-fail-under=90
+        working-directory: src/data-scratch-library
+        run: python -m pytest
 
   build_image:
     name: Build and Validate Docker Image
