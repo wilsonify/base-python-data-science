@@ -40,7 +40,15 @@ jobs:
             test-requirements.txt
             src/data-scratch-library/pyproject.toml
 
+      - name: Cache project virtualenv
+        id: cache-venv
+        uses: actions/cache@v4
+        with:
+          path: .venv
+          key: ${{ runner.os }}-py312-venv-${{ hashFiles('requirements.txt', 'test-requirements.txt', 'src/data-scratch-library/pyproject.toml') }}
+
       - name: Install dependencies
+        if: steps.cache-venv.outputs.cache-hit != 'true'
         run: |
           python -m venv .venv
           .venv/bin/python -m pip install --upgrade pip
