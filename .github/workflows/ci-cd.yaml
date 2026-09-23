@@ -42,14 +42,15 @@ jobs:
 
       - name: Install dependencies
         run: |
-          python -m pip install --upgrade pip
-          python -m pip install -r test-requirements.txt
-          python -m pip install -r requirements.txt
-          python -m pip install -e src/data-scratch-library
+          python -m venv .venv
+          .venv/bin/python -m pip install --upgrade pip
+          .venv/bin/pip install -r test-requirements.txt
+          .venv/bin/pip install -r requirements.txt
+          .venv/bin/pip install -e src/data-scratch-library
 
       - name: Run tests
         working-directory: src/data-scratch-library
-        run: python -m pytest --cov=dsl --cov-report=xml:coverage.xml
+        run: ../../.venv/bin/pytest --cov=dsl --cov-report=xml:coverage.xml
 
       - name: Upload coverage report
         uses: actions/upload-artifact@v4
@@ -121,7 +122,8 @@ jobs:
         with:
           path: ~/.sonar/cache
           key: ${{ runner.os }}-sonar
-          restore-keys: ${{ runner.os }}-sonar
+          restore-keys: |
+            ${{ runner.os }}-sonar-
 
       - name: Set up Java 17
         uses: actions/setup-java@v4
