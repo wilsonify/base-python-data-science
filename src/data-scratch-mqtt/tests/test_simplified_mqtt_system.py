@@ -5,7 +5,7 @@ Tests the dynamic strategy system without requiring a running MQTT broker
 
 import json
 import pytest
-from unittest.mock import Mock, MagicMock
+from unittest.mock import Mock, MagicMock, patch
 
 from data_scratch_mqtt import echo_strategy, dynamic_strategies, Strategy
 from data_scratch_mqtt.config import MQTT_TOPIC
@@ -50,7 +50,7 @@ def test_dynamic_strategies_loaded():
     assert len(dynamic_strategies) > 80  # Should have many strategies
     assert 'vector_add' in dynamic_strategies
     assert 'mean' in dynamic_strategies
-    assert 'normal_cd' in dynamic_strategies
+    assert 'normal_cdf' in dynamic_strategies
     assert 'accuracy' in dynamic_strategies
 
 
@@ -62,7 +62,11 @@ def test_dynamic_strategy_error_handling():
         msg = MockMQTTMessage({"v": [1, 2, 3], "w": [4, 5, 6], "strategy": "vector_add"})
         
         strategy = Strategy(dynamic_strategies['vector_add'], client, None, msg)
-        strategy.execute()
+        with patch(
+            "data_scratch_mqtt.strategies_library.dynamic_strategy.importlib.import_module",
+            side_effect=ModuleNotFoundError("No module named 'dsl'"),
+        ):
+            strategy.execute()
         
         # Should get an error response due to missing dsl library
         assert len(client.published_messages) == 1
@@ -89,19 +93,17 @@ def test_strategy_with_missing_parameters():
 
 def test_strategy_with_optional_parameters():
     """Test strategy behavior with optional parameters"""
-    # Test a strategy that has optional parameters
-    if 'mean' in dynamic_strategies:
+    # Test a strategy that has optional parameters (normal_cdf has optional mu=0.0, sigma=1.0)
+    if 'normal_cdf' in dynamic_strategies:
         client = MockMQTTClient()
-        msg = MockMQTTMessage({"xs": [1, 2, 3, 4, 5], "strategy": "mean"})
+        msg = MockMQTTMessage({"x": 0.0, "strategy": "normal_cdf"})
         
-        strategy = Strategy(dynamic_strategies['mean'], client, None, msg)
+        strategy = Strategy(dynamic_strategies['normal_cdf'], client, None, msg)
         strategy.execute()
         
-        # Should get an error response due to missing dsl library
         assert len(client.published_messages) == 1
         response = json.loads(client.published_messages[0]['payload'])
-        # Even though parameters are correct, it will fail due to missing dsl library
-        assert 'error' in response
+        assert response == pytest.approx(0.5)
 
 
 def test_custom_reply_to_and_correlation_id():

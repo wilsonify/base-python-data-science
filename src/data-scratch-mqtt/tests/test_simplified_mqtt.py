@@ -5,6 +5,7 @@ Simple test to verify the simplified MQTT system works correctly
 
 import os
 import json
+from unittest.mock import patch
 import pytest
 
 def test_imports():
@@ -20,7 +21,7 @@ def test_imports():
     print(f"✓ Dynamic strategies loaded: {len(dynamic_strategies)} strategies")
     
     # Test that key strategies are available
-    key_strategies = ['vector_add', 'mean', 'normal_cd', 'accuracy']
+    key_strategies = ['vector_add', 'mean', 'normal_cdf', 'accuracy']
     for strategy in key_strategies:
         assert strategy in dynamic_strategies, f"{strategy} strategy missing"
         print(f"✓ {strategy} strategy available")
@@ -90,7 +91,11 @@ def test_dynamic_strategy_error_handling():
         msg = MockMessage({"v": [1, 2, 3], "w": [4, 5, 6], "strategy": "vector_add"})
         
         strategy = Strategy(dynamic_strategies['vector_add'], client, None, msg)
-        strategy.execute()  # Don't pass arguments - Strategy class handles payload parsing
+        with patch(
+            "data_scratch_mqtt.strategies_library.dynamic_strategy.importlib.import_module",
+            side_effect=ModuleNotFoundError("No module named 'dsl'"),
+        ):
+            strategy.execute()  # Don't pass arguments - Strategy class handles payload parsing
         
         # Verify the error response
         assert len(client.published_messages) == 1, "Expected 1 published message"
